@@ -1,0 +1,6 @@
+<Bindings>
+    <Binding name="CLICK OpenPvpArenaFocusUpButton:LeftButton"  description="Arena focus up." category="OpenPvp"/>
+    <Binding name="CLICK OpenPvpArenaFocusDownButton:LeftButton"  description="Arena focus down" category="OpenPvp"/>
+    <Binding name="CLICK OpenPvpArenaTargetUpButton:LeftButton"  description="Arena target up." category="OpenPvp"/>
+    <Binding name="CLICK OpenPvpArenaTargetDownButton:LeftButton"  description="Arena target down" category="OpenPvp"/>
+</Bindings>

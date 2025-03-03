@@ -1,0 +1,13 @@
+## Interface: 110500
+## Title: OpenPvpBartender4Plugin
+## Version: 1.0.1
+## IconTexture: Interface/Icons/INV_Drink_05
+## Notes:
+## DefaultState: Enabled
+## Dependencies: OpenPvp, Bartender4
+
+init.lua
+
+src/core/ui/bar/driver/BT4MicroMenuDriver.lua
+src/core/ui/bar/driver/BT4ActionBarDriver.lua
+src/core/ui/bar/driver/BT4BagBarDriver.lua

@@ -1,0 +1,12 @@
+## Interface: 110500
+## Title: OpenPvpWeakAurasPlugin
+## Version: 1.0.1
+## IconTexture: Interface/AddOns/WeakAuras/Media/Textures/icon.blp
+## Notes:
+## DefaultState: Enabled
+## Dependencies: OpenPvp, WeakAuras
+
+init.lua
+
+src/core/base/event.lua
+src/core/base/WeakAuraTimer.lua
