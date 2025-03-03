@@ -1,4 +1,4 @@
-## Interface: 110500
+## Interface: 110100, 110007, 110005
 ## Title: OpenPvpBartender4Plugin
 ## Version: 1.0.1
 ## IconTexture: Interface/Icons/INV_Drink_05
