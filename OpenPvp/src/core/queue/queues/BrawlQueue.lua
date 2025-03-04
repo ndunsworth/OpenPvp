@@ -166,15 +166,18 @@ local function opvp_brawl_queue_ctor()
     opvp.Queue.BRAWL = opvp.BrawlQueue(opvp.PvpType.BATTLEGROUND, opvp.PvpFlag.BRAWL, "", "");
     opvp.Queue.EVENT = opvp.BrawlQueue(opvp.PvpType.BATTLEGROUND, bit.bor(opvp.PvpFlag.BRAWL, opvp.PvpFlag.EVENT), "", "");
 
-    opvp.OnLoadingScreenEnd:connect(
-        opvp.Queue.BRAWL,
-        opvp.Queue.BRAWL.updateInfo
-    );
+    opvp.Queue.BRAWL:updateInfo();
+    opvp.Queue.EVENT:updateInfo();
 
-    opvp.OnLoadingScreenEnd:connect(
-        opvp.Queue.EVENT,
-        opvp.Queue.EVENT.updateInfo
-    );
+    --~ opvp.OnLoadingScreenEnd:connect(
+        --~ opvp.Queue.BRAWL,
+        --~ opvp.Queue.BRAWL.updateInfo
+    --~ );
+
+    --~ opvp.OnLoadingScreenEnd:connect(
+        --~ opvp.Queue.EVENT,
+        --~ opvp.Queue.EVENT.updateInfo
+    --~ );
 end
 
 opvp.OnAddonLoad:register(opvp_brawl_queue_ctor);

@@ -121,15 +121,18 @@ local function opvp_rand_bg_queue_ctor()
     opvp.Queue.RANDOM_BATTLEGROUND      = opvp.RandomBattlegroundQueue(0,                 RANDOM_BATTLEGROUND,      BONUS_BUTTON_RANDOM_BG_DESC);
     opvp.Queue.RANDOM_EPIC_BATTLEGROUND = opvp.RandomBattlegroundQueue(opvp.PvpFlag.EPIC, RANDOM_EPIC_BATTLEGROUND, BONUS_BUTTON_RANDOM_LARGE_BG_DESC);
 
-    opvp.OnLoadingScreenEnd:connect(
-        opvp.Queue.RANDOM_BATTLEGROUND,
-        opvp.Queue.RANDOM_BATTLEGROUND.updateInfo
-    );
+    opvp.Queue.RANDOM_BATTLEGROUND:updateInfo();
+    opvp.Queue.RANDOM_EPIC_BATTLEGROUND:updateInfo();
 
-    opvp.OnLoadingScreenEnd:connect(
-        opvp.Queue.RANDOM_EPIC_BATTLEGROUND,
-        opvp.Queue.RANDOM_EPIC_BATTLEGROUND.updateInfo
-    );
+    --~ opvp.OnLoadingScreenEnd:connect(
+        --~ opvp.Queue.RANDOM_BATTLEGROUND,
+        --~ opvp.Queue.RANDOM_BATTLEGROUND.updateInfo
+    --~ );
+
+    --~ opvp.OnLoadingScreenEnd:connect(
+        --~ opvp.Queue.RANDOM_EPIC_BATTLEGROUND,
+        --~ opvp.Queue.RANDOM_EPIC_BATTLEGROUND.updateInfo
+    --~ );
 
     RequestRandomBattlegroundInstanceInfo();
     RequestPVPRewards();
