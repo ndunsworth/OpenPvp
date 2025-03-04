@@ -187,7 +187,7 @@ function opvp.OptionDatabaseFrame:createOptionCategory(path, option, parent)
         self._cur_category = frame.category;
 
         header_text = string.format(
-            "%s - v%s",
+            "%s - %s",
             self._db:name(),
             self._db:version()
         );

@@ -42,7 +42,7 @@ function opvp.OptionDatabase:instance()
 end
 
 function opvp.OptionDatabase:init(name, description, version)
-    self._profile    = opvp.ProfileOption(name, description, version);
+    self._profile    = opvp.ProfileOption(name, name, description, version);
     self._error      = "";
     self._save_valid = "";
 
@@ -227,7 +227,11 @@ local function opvp_opt_db_on_logout()
 end
 
 local function opvp_opt_db_ctor()
-    opvp_opt_db_singleton = opvp.OptionDatabase("OpenPvp", "OpenPvp");
+    opvp_opt_db_singleton = opvp.OptionDatabase(
+        "OpenPvp",
+        "OpenPvp",
+        opvp.VERSION
+    );
 
     opvp.event.PLAYER_LOGIN:connect(opvp_opt_db_on_login);
 

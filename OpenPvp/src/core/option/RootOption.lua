@@ -29,6 +29,12 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function parse_version(str)
+    local major, minor, release = string.match(str, "(%d+)%.(%d+)v(%d+)");
+
+    if major ~= nil then
+        return major, minor, release;
+    end
+
     return string.match(str, "(%d+)%.(%d+)");
 end
 
@@ -40,18 +46,26 @@ function opvp.RootOption:init(key, name, description, version)
     self._error = "";
 
     if version ~= nil then
-        self._major_ver, self._minor_ver = parse_version(version);
+        self._major_ver, self._minor_ver, self._release_ver = parse_version(version);
 
         if self._major_ver ~= nil then
-            self._major_ver = tonumber(self._major_ver);
-            self._minor_ver = tonumber(self._minor_ver);
+            self._major_ver   = tonumber(self._major_ver);
+            self._minor_ver   = tonumber(self._minor_ver);
+
+            if self._release_ver ~= nil then
+                self._release_ver = tonumber(self._release_ver);
+            else
+                self._release_ver = 1;
+            end
         else
-            self._major_ver = 1;
-            self._minor_version = 0;
+            self._major_ver     = 1;
+            self._minor_ver     = 0;
+            self._release_ver   = 1;
         end
     else
-        self._major_ver = 1;
-        self._minor_ver = 0;
+        self._major_ver   = 1;
+        self._minor_ver   = 0;
+        self._release_ver = 1;
     end
 
     self._cat_type = opvp.OptionCategory.ROOT_CATEGORY;
@@ -111,7 +125,11 @@ function opvp.RootOption:majorVersion()
 end
 
 function opvp.RootOption:minorVersion()
-    return self._major_ver;
+    return self._minor_ver;
+end
+
+function opvp.RootOption:releaseVersion()
+    return self._release_ver;
 end
 
 function opvp.RootOption:toScript()
@@ -124,8 +142,9 @@ end
 
 function opvp.RootOption:version()
     return string.format(
-        "%d.%d",
+        "%d.%dv%d",
         self._major_ver,
-        self._minor_ver
+        self._minor_ver,
+        self._release_ver
     );
 end

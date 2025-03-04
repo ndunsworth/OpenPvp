@@ -28,6 +28,17 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+opvp.MAJOR_VERSION   = 1;
+opvp.MINOR_VERSION   = 0;
+opvp.RELEASE_VERSION = 1;
+
+opvp.VERSION         = string.format(
+    "%d.%dv%d",
+    opvp.MAJOR_VERSION,
+    opvp.MINOR_VERSION,
+    opvp.RELEASE_VERSION
+);
+
 opvp.UNKNOWN_CLASS = 0;
 opvp.DEATH_KNIGHT  = 6;
 opvp.DEMON_HUNTER  = 12;
