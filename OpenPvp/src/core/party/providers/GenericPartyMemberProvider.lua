@@ -461,6 +461,12 @@ function opvp.GenericPartyMemberProvider:_onMemberInspectInt(guid, valid)
     if valid == true then
         self:_onMemberInspect(member, 0);
     else
+        opvp.printDebug(
+            "opvp.GenericPartyMemberProvider:_onMemberInspectInt, failed %s=%d",
+            member:nameOrId(),
+            guid
+        );
+
         self:_memberInspect(member);
     end
 end
