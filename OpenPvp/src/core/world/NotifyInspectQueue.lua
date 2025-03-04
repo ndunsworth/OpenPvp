@@ -78,10 +78,10 @@ function opvp.NotifyInspectQueueItem:requestInspect()
     end
 
     if CanInspect(token) == true then
-        --~ opvp.printDebug(
-            --~ "NotifyRequest(%s): Requested",
-            --~ self._id
-        --~ );
+        opvp.printDebug(
+            "NotifyRequest(%s): Requested",
+            self._id
+        );
 
         NotifyInspect(token);
 
@@ -113,7 +113,7 @@ function opvp.NotifyInspectQueue:init()
     self._timeout       = 30;
     self._retries       = 3;
     self._connected     = false;
-    self._request_delay = 0.1;
+    self._request_delay = 3;
     self._request_last  = GetTime();
 
     self._timer_sleep:setTriggerLimit(1);
@@ -348,6 +348,8 @@ function opvp.NotifyInspectQueue:_onRequestReady(guid)
         self:_removeItem(item, index);
 
         item:notifyInspect(true);
+
+        self._request_last = 0;
 
         self:_advance();
     end
