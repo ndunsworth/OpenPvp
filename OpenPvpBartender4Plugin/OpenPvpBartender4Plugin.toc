@@ -2,6 +2,7 @@
 ## Title: OpenPvpBartender4Plugin
 ## Version: 1.0.1
 ## IconTexture: Interface/Icons/INV_Drink_05
+## Category-enUS: Pvp
 ## Notes:
 ## DefaultState: Enabled
 ## Dependencies: OpenPvp, Bartender4

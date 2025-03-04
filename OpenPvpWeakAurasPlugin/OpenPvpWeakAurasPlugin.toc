@@ -2,6 +2,7 @@
 ## Title: OpenPvpWeakAurasPlugin
 ## Version: 1.0.1
 ## IconTexture: Interface/AddOns/WeakAuras/Media/Textures/icon.blp
+## Category-enUS: Pvp
 ## Notes:
 ## DefaultState: Enabled
 ## Dependencies: OpenPvp, WeakAuras

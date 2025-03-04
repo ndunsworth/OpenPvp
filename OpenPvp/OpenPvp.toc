@@ -2,11 +2,14 @@
 ## Title: OpenPvp
 ## Version: 1.0.1
 ## IconTexture: Interface/Icons/achievement_pvp_legion08
+## Category-enUS: Pvp
 ## Notes:
-## OptionalDeps: WeakAuras
 ## SavedVariables: OpenPvpGlobalSettingsDB
 ## SavedVariablesPerCharacter: OpenPvpLocalSettingsDB
-## Category-enUS: Pvp
+## LoadOnDemand: 0
+## DefaultState: Enabled
+## OptionalDependencies: ChatThrottleLib, LibStub, LibSharedMedia-3.0
+## X-Wago-ID: b6mbkyKP
 
 libs/ChatThrottleLib/ChatThrottleLib.lua
 libs/LibStub/LibStub.lua
