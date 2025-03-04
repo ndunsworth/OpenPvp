@@ -376,7 +376,8 @@ function opvp.QueueManager:_updateBattlefieldStatus(index)
     end
 
     opvp.printDebug(
-        "opvp.QueueManager:_updateBattlefieldStatus, %s, %d, %d",
+        "opvp.QueueManager:_updateBattlefieldStatus[%d], %s, %d, %d",
+        index,
         queue:name(),
         queue_status,
         queue:status()
@@ -462,7 +463,7 @@ function opvp.QueueManager:_updateLFGStatus()
         queue_status == opvp.QueueStatus.READY
     ) then
         self._active = queue;
-        self._active_index = index;
+        self._active_index = 4;
 
         --~ We let PLAYER_ENTERING_BATTLEGROUND handle this status
         --~ through opvp.QueueManager:_onMatchEntered()
