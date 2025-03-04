@@ -158,7 +158,7 @@ opvp.locale.enUS = {
     MATCH_FRIENDLY_TEAM               = "Team",
     MATCH_HOSTILE_PLAYER              = "Enemy Player",
     MATCH_HOSTILE_TEAM                = "Enemy Team",
-    MATCH_TRINKET_USED                = "Match | Trinket %s - %s (%s |c%s%s|r)",
+    MATCH_TRINKET_USED                = "Match | Trinket %s - %s (|c%s%s %s|r)",
     MATCH_TRINKET_USED_WITH_SPEC      = "Match | Trinket %s - %s (|c%s%s %s|r)",
 
     OPTION_CHANGE_IN_COMBAT_ERR       = "Option | Tried to change the value of \"%s\" while in combat lockdown",
