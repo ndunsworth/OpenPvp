@@ -95,7 +95,7 @@ opvp.Role.ROLES = {
 };
 
 opvp_role_name_lookup = {
-    [DAMAGER] = opvp.Role.DPS,
-    [HEALER]  = opvp.Role.HEALER,
-    [TANK]    = opvp.Role.TANK,
+    ["DAMAGER"] = opvp.Role.DPS,
+    ["HEALER"]  = opvp.Role.HEALER,
+    ["TANK"]    = opvp.Role.TANK,
 };
