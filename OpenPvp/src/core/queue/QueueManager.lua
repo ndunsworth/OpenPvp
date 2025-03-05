@@ -211,6 +211,10 @@ function opvp.QueueManager:_findPvpQueue(
         --~ tostring(longDescription)
     --~ );
 
+    if mapName == nil then
+        mapName = "";
+    end
+
    for n=1, self._queues:size() do
         local q = self._queues:item(n);
 
