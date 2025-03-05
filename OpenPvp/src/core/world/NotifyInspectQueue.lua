@@ -106,14 +106,14 @@ opvp.NotifyInspectQueue = opvp.CreateClass();
 function opvp.NotifyInspectQueue:init()
     self._queue         = opvp.List();
     self._pool          = opvp.Pool(40, opvp.NotifyInspectQueueItem);
-    self._timer         = opvp.Timer(5);
+    self._timer         = opvp.Timer(3);
     self._timer_sleep   = opvp.Timer(90);
     self._req           = nil;
     self._req_index     = 0;
-    self._timeout       = 30;
+    self._timeout       = 15;
     self._retries       = 3;
     self._connected     = false;
-    self._request_delay = 3;
+    self._request_delay = 0.1;
     self._request_last  = GetTime();
 
     self._timer_sleep:setTriggerLimit(1);

@@ -432,10 +432,14 @@ function opvp.GenericPartyMemberProvider:_onMemberInspect(member, mask)
         GetInspectSpecialization(member:id())
     );
 
-    if spec:isValid() == true and spec:id() ~= member:spec() then
-        mask = bit.bor(mask, opvp.PartyMember.SPEC_FLAG);
+    if spec:isValid() == true then
+        if spec:id() ~= member:spec() then
+            mask = bit.bor(mask, opvp.PartyMember.SPEC_FLAG);
 
-        member:_setSpec(spec);
+            member:_setSpec(spec);
+        end
+    else
+        self:_memberInspect(member)
     end
 
     --~ opvp.printDebug(
