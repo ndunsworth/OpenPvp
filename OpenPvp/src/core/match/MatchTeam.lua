@@ -62,7 +62,7 @@ function opvp.MatchTeam:id()
 end
 
 function opvp.MatchTeam:identifierName()
-    if self._hostile == true then
+    if self:isHostile() == true then
         return opvp.strs.MATCH_HOSTILE_TEAM;
     else
         return opvp.strs.MATCH_FRIENDLY_TEAM;
