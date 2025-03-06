@@ -159,8 +159,8 @@ function opvp.GenericPartyMemberProvider:_disconnect()
 
     self._members:clear();
 
-    self._player    = nil;
-    self._leader    = nil;
+    self._player = nil;
+    self._leader = nil;
 end
 
 function opvp.GenericPartyMemberProvider:_disconnectSignals()
@@ -280,6 +280,12 @@ end
 
 function opvp.GenericPartyMemberProvider:_memberInspect(member)
     if member:isGuidKnown() == true then
+        opvp.printDebug(
+            "opvp.GenericPartyMemberProvider:_memberInspect, %s=%s",
+            member:nameOrId(),
+            member:guid()
+        );
+
         return opvp.inspect:register(
             member:guid(),
             self,
@@ -291,19 +297,33 @@ function opvp.GenericPartyMemberProvider:_memberInspect(member)
 end
 
 function opvp.GenericPartyMemberProvider:_onConnected()
-    opvp.PartyMemberProvider._onConnected(self);
+    if self:hasPlayer() == true then
+        if self._player == nil then
+            self._player = self:_createMember("player", opvp.player.guid());
 
-    if (
-        self:hasPlayer() == true and
-        opvp.party.isReloading(self._category) == true and
-        self:_categorySize() > 1
-    ) then
-        self:_onGroupRosterUpdate();
+            self._player:_setFlags(opvp.PartyMember.PLAYER_FLAG, true);
+            self._player:_setFaction(opvp.player.factionInfo());
+            self._player:_setRace(opvp.player.raceInfo());
+            self._player:_setSex(opvp.player.sex());
+            self._player:_setSpec(opvp.player.specInfo());
+            self._player:_setName(opvp.player.name());
 
-        self._leader = self:findMemberByUnitId(
-            opvp.party.utils.leader(self._category)
-        );
+            self:_onRosterBeginUpdate();
+
+            self._members:append(self._player);
+
+            self:_onRosterEndUpdate({self._player}, {}, {});
+        end
+
+        if (
+            opvp.party.isReloading(self._category) == true and
+            self:_categorySize() > 1
+        ) then
+            self:_onGroupRosterUpdate();
+        end
     end
+
+    opvp.PartyMemberProvider._onConnected(self);
 end
 
 function opvp.GenericPartyMemberProvider:_onGroupLeaderChanged()
@@ -337,6 +357,10 @@ function opvp.GenericPartyMemberProvider:_onGroupRosterUpdate()
     end
 
     self:_scanMembers();
+
+    if self:hasPlayer() == true and self._leader == nil then
+        self:_onGroupLeaderChanged();
+    end
 end
 
 function opvp.GenericPartyMemberProvider:_onInstanceGroupJoined(category, guid)
@@ -466,7 +490,8 @@ function opvp.GenericPartyMemberProvider:_onMemberInspectInt(guid, valid)
         self:_onMemberInspect(member, 0);
     else
         opvp.printDebug(
-            "opvp.GenericPartyMemberProvider:_onMemberInspectInt, failed %s=%d",
+            "opvp.GenericPartyMemberProvider:_onMemberInspectInt, failed [%s] %s=%d",
+            tostring(CanInspect(member:guid())),
             member:nameOrId(),
             guid
         );
@@ -620,20 +645,9 @@ function opvp.GenericPartyMemberProvider:_scanMembers()
     end
 
     if self:hasPlayer() == true and self:isParty() == true then
-        if self._player == nil then
-            self._player = self:_createMember("player");
-
-            self._player:_setFlags(opvp.PartyMember.PLAYER_FLAG, true);
-            self._player:_setFaction(opvp.player.factionInfo());
-            self._player:_setRace(opvp.player.raceInfo());
-            self._player:_setSex(opvp.player.sex());
-            self._player:_setSpec(opvp.player.specInfo());
-            self._player:_setName(opvp.player.name());
-        else
-            self._members:removeItem(self._player);
-        end
-
         assert(self._player ~= nil);
+
+        self._members:removeItem(self._player);
     end
 
     for n=1, party_count do
@@ -668,23 +682,10 @@ function opvp.GenericPartyMemberProvider:_scanMembers()
 
     self._members:swap(members);
 
-    if self:hasPlayer() == true then
-        if self:isParty() == true then
-            assert(self._player ~= nil);
+    if self:hasPlayer() == true and self:isParty() == true then
+        assert(self._player ~= nil);
 
-            self._members:append(self._player);
-        elseif self._player == nil then
-            self._player = self:findMemberByGuid(opvp.player.guid());
-
-            assert(self._player ~= nil);
-
-            self._player:_setFlags(opvp.PartyMember.PLAYER_FLAG, true);
-            self._player:_setFaction(opvp.player.factionInfo());
-            self._player:_setRace(opvp.player.raceInfo());
-            self._player:_setSex(opvp.player.sex());
-            self._player:_setSpec(opvp.player.specInfo());
-            self._player:_setName(opvp.player.name());
-        end
+        self._members:append(self._player);
     end
 
     self:_onRosterEndUpdate(
