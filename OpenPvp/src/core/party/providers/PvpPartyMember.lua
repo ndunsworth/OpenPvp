@@ -65,11 +65,6 @@ function opvp.PvpPartyMember:_reset(mask)
 
     if bit.band(mask, opvp.PartyMember.TEAM_FLAG) then
         self._team = nil;
-
-        self:_setFlags(
-            opvp.PartyMember.TEAM_FLAG,
-            false
-        );
     end
 end
 
