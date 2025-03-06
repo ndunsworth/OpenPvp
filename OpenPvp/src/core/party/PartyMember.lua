@@ -285,7 +285,7 @@ function opvp.PartyMember:_reset(mask)
         end
     end
 
-    self._mask = bit.bxor(self._mask, mask);
+    self._mask = bit.band(self._mask, bit.bnot(mask));
 end
 
 function opvp.PartyMember:_setAlive(state)
@@ -489,7 +489,7 @@ function opvp.PartyMember:_updateCharacterInfoById()
         end
     end
 
-    return bit.bxor(self._mask, old_mask);
+    return bit.band(bit.bnot(old_mask), self._mask);
 end
 
 function opvp.PartyMember:_updateCharacterInfoByGuid()
@@ -565,7 +565,7 @@ function opvp.PartyMember:_updateCharacterInfoByGuid()
         end
     end
 
-    return bit.bxor(self._mask, old_mask);
+    return bit.band(bit.bnot(old_mask), self._mask);
 end
 
 function opvp.PartyMember:_updateCharacterRaceSex()
@@ -603,7 +603,7 @@ function opvp.PartyMember:_updateCharacterRaceSexById()
         end
     end
 
-    return bit.bxor(self._mask, old_mask);
+    return bit.band(bit.bnot(old_mask), self._mask);
 end
 
 function opvp.PartyMember:_updateCharacterRaceSexByGuid()
@@ -635,5 +635,5 @@ function opvp.PartyMember:_updateCharacterRaceSexByGuid()
         end
     end
 
-    return bit.bxor(self._mask, old_mask);
+    return bit.band(bit.bnot(old_mask), self._mask);
 end
