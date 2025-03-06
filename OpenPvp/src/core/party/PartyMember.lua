@@ -243,11 +243,7 @@ function opvp.PartyMember:specInfo()
 end
 
 function opvp.PartyMember:_reset(mask)
-
-    if (
-        mask == opvp.PartyMember.ALL_FLAGS or
-        bit.band(mask, opvp.PartyMember.CHARACTER_FLAGS) == opvp.PartyMember.CHARACTER_FLAGS
-    ) then
+    if bit.band(mask, opvp.PartyMember.CHARACTER_FLAGS) == opvp.PartyMember.CHARACTER_FLAGS then
         self._guid    = "";
         self._id      = "";
         self._faction = opvp.Faction.NEUTRAL;
@@ -261,7 +257,7 @@ function opvp.PartyMember:_reset(mask)
         end
 
         if bit.band(mask, opvp.PartyMember.ID_FLAG) ~= 0 then
-            self._guid = "";
+            self._id = "";
         end
 
         if bit.band(mask, opvp.PartyMember.NAME_FLAG) ~= 0 then
