@@ -33,11 +33,9 @@ opvp.PartyMemberFactory = opvp.CreateClass();
 function opvp.PartyMemberFactory:init(cache)
     if cache ~= nil then
         assert(opvp.IsInstance(cache, opvp.PartyMemberFactoryCache));
-
-        self._cache = cache;
-    else
-        self._cache = nil;
     end
+
+    self._cache = cache;
 end
 
 function opvp.PartyMemberFactory:create(unitId, guid)
@@ -89,9 +87,7 @@ function opvp.PartyMemberFactory:setCache(cache)
         assert(opvp.IsInstance(cache, opvp.PartyMemberFactoryCache));
     end
 
-    if cache ~= self._cache then
-        self._cache = cache;
-    end
+    self._cache = cache;
 end
 
 function opvp.PartyMemberFactory:_create()
