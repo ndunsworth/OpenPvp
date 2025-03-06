@@ -163,43 +163,6 @@ function opvp.MiniMapButton:unregister()
     self._frame:Hide();
 end
 
-function opvp.MiniMapButton:_onDragBegin()
-    self._frame:StartMoving();
-    self._frame:SetScript("OnUpdate", function() self:_onDragUpdate(); end);
-
-    self._moving = true;
-end
-
-function opvp.MiniMapButton:_onDragEnd()
-    self._frame:StopMovingOrSizing();
-    self._frame:SetScript("OnUpdate", nil);
-
-    self._moving = false;
-end
-
-function opvp.MiniMapButton:_onDragUpdate()
-    local x, y = GetCursorPosition();
-    local scale = UIParent:GetEffectiveScale() or 1;
-
-    x = x / scale;
-    y = y / scale;
-
-    local center_x, center_y = Minimap:GetCenter();
-
-    local angle = math.atan2(y - center_y, x - center_x);
-
-    self:setPosition(math.deg(angle));
-end
-
-function opvp.MiniMapButton:_onMouseClick(button)
-end
-
-function opvp.MiniMapButton:_onEnter(frame)
-end
-
-function opvp.MiniMapButton:_onLeave(frame)
-end
-
 function opvp.MiniMapButton:_initializeWidget()
     local button = CreateFrame("Button", self:name() .. "MiniMapButton", Minimap);
 
@@ -255,4 +218,41 @@ function opvp.MiniMapButton:_initializeWidget()
         radius * cos(self._position),
         radius * sin(self._position)
     );
+end
+
+function opvp.MiniMapButton:_onDragBegin()
+    self._frame:StartMoving();
+    self._frame:SetScript("OnUpdate", function() self:_onDragUpdate(); end);
+
+    self._moving = true;
+end
+
+function opvp.MiniMapButton:_onDragEnd()
+    self._frame:StopMovingOrSizing();
+    self._frame:SetScript("OnUpdate", nil);
+
+    self._moving = false;
+end
+
+function opvp.MiniMapButton:_onDragUpdate()
+    local x, y = GetCursorPosition();
+    local scale = UIParent:GetEffectiveScale() or 1;
+
+    x = x / scale;
+    y = y / scale;
+
+    local center_x, center_y = Minimap:GetCenter();
+
+    local angle = math.atan2(y - center_y, x - center_x);
+
+    self:setPosition(math.deg(angle));
+end
+
+function opvp.MiniMapButton:_onMouseClick(button)
+end
+
+function opvp.MiniMapButton:_onEnter(frame)
+end
+
+function opvp.MiniMapButton:_onLeave(frame)
 end
