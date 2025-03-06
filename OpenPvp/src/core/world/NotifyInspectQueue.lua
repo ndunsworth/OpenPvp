@@ -78,10 +78,12 @@ function opvp.NotifyInspectQueueItem:requestInspect()
     end
 
     if CanInspect(token) == true then
-        opvp.printDebug(
-            "NotifyRequest(%s): Requested",
-            self._id
-        );
+        --~ opvp.printDebug(
+            --~ "NotifyRequest(%s): Requested",
+            --~ self._id
+        --~ );
+
+        ClearInspectPlayer();
 
         NotifyInspect(token);
 
@@ -110,7 +112,7 @@ function opvp.NotifyInspectQueue:init()
     self._timer_sleep   = opvp.Timer(90);
     self._req           = nil;
     self._req_index     = 0;
-    self._timeout       = 15;
+    self._timeout       = 60;
     self._retries       = 3;
     self._connected     = false;
     self._request_delay = 0.1;
@@ -348,8 +350,6 @@ function opvp.NotifyInspectQueue:_onRequestReady(guid)
         self:_removeItem(item, index);
 
         item:notifyInspect(true);
-
-        self._request_last = 0;
 
         self:_advance();
     end
