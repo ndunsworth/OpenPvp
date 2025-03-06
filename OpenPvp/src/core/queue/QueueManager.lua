@@ -315,7 +315,11 @@ function opvp.QueueManager:_onLoad()
 end
 
 function opvp.QueueManager:_onMatchEntered()
-    assert(self._active ~= nil);
+    if self._active == nil and opvp.system.isReload() == true then
+        self:_initializeQueues();
+    else
+        assert(self._active ~= nil);
+    end
 
     opvp.printDebug(
         "opvp.QueueManager:_onMatchEntered(\"%s\"), begin",
