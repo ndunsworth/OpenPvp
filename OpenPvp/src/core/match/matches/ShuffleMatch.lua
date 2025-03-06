@@ -40,9 +40,12 @@ function opvp.ShuffleMatch:init(queue, description)
     local cache = opvp.PartyMemberFactoryCache(6);
 
     cache:setMemberClearFlags(
-        bit.bxor(
-            opvp.PartyMember.STATE_FLAGS,
-            opvp.PartyMember.PLAYER_FLAG
+        bit.bor(
+            opvp.PartyMember.ID_FLAG,
+            bit.band(
+                opvp.PartyMember.STATE_FLAGS,
+                bit.bnot(opvp.PartyMember.PLAYER_FLAG)
+            )
         )
     );
 
