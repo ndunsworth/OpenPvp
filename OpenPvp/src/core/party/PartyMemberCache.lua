@@ -32,19 +32,24 @@ opvp.PartyMemberFactoryCache = opvp.CreateClass(opvp.PartyMemberFactory);
 
 function opvp.PartyMemberFactoryCache:init(limit)
     self._cache      = opvp.List();
-    self._limit      = max(0, limit);
     self._reset_mask = opvp.PartyMember.ALL_FLAGS;
     self._clean_mask = bit.bor(
         opvp.PartyMember.STATE_FLAGS,
         opvp.PartyMember.SPEC_FLAG,
         opvp.PartyMember.ID_FLAG
     );
+
+    if opvp.is_number(limit) then
+        self._limit = max(0, limit);
+    else
+        self._limit = 0;
+    end
 end
 
 function opvp.PartyMemberFactoryCache:find(guid)
     local member;
 
-    for n=self._cache:size(), 1, -1 do
+    for n=1, self._cache:size() do
         member = self._cache:item(n);
 
         if (
@@ -98,21 +103,23 @@ function opvp.PartyMemberFactoryCache:setLimit(limit)
     if limit == 0 then
         self:clear();
 
+        self._limit = limit;
+
         return;
     end
 
     if limit < self._cache:size() then
-        local last = self._cache:size();
+        local last_index = self._cache:size();
         local index = limit + 1;
 
         local member;
 
-        for n=limit + 1, last do
+        for n=limit + 1, last_index do
             member = self._cache:item(n);
 
             self._destroyMember(member);
 
-            self._cache:removeIndex(index);
+            self._cache:removeIndex(n);
         end
     end
 
