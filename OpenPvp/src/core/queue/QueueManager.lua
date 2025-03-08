@@ -258,7 +258,7 @@ function opvp.QueueManager:_findPvpQueue(
             elseif gameType == "Limited Time Event" or mapName == opvp.Queue.EVENT:name() then
                 queue = opvp.Queue.EVENT;
             elseif C_PvP.IsBattleground() == true then
-                if opvp.system.isReload() == true then
+                if opvp.system.isLoading() == true then
                     local bg_info_size = GetNumBattlegroundTypes();
 
                     for n=1, bg_info_size do
@@ -315,7 +315,7 @@ function opvp.QueueManager:_onLoad()
 end
 
 function opvp.QueueManager:_onMatchEntered()
-    if self._active == nil and opvp.system.isReload() == true then
+    if self._active == nil and opvp.system.isLoading() == true then
         self:_initializeQueues();
     else
         assert(self._active ~= nil);
