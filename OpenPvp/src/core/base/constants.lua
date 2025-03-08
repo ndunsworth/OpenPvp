@@ -30,7 +30,7 @@ local opvp = OpenPvp;
 
 opvp.MAJOR_VERSION   = 1;
 opvp.MINOR_VERSION   = 0;
-opvp.RELEASE_VERSION = 3;
+opvp.RELEASE_VERSION = 4;
 
 opvp.VERSION         = string.format(
     "%d.%dv%d",
