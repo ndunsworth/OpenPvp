@@ -280,11 +280,11 @@ end
 
 function opvp.GenericPartyMemberProvider:_memberInspect(member)
     if member:isGuidKnown() == true then
-        opvp.printDebug(
-            "opvp.GenericPartyMemberProvider:_memberInspect, %s=%s",
-            member:nameOrId(),
-            member:guid()
-        );
+        --~ opvp.printDebug(
+            --~ "opvp.GenericPartyMemberProvider:_memberInspect, %s=%s",
+            --~ member:nameOrId(),
+            --~ member:guid()
+        --~ );
 
         return opvp.inspect:register(
             member:guid(),
