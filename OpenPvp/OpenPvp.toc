@@ -337,6 +337,7 @@ src/feature/audio/EnemyTrinketUsedSoundEffect.lua
 src/feature/audio/FriendlyTrinketUsedSoundEffect.lua
 src/feature/audio/LoginGreetingsSoundEffect.lua
 src/feature/audio/LogoutGoodbySoundEffect.lua
+src/feature/audio/MuteEarthenNpcIdle.lua
 src/feature/audio/NetomaticSoundEffect.lua
 src/feature/audio/PingEmoteSoundEffect.lua
 src/feature/audio/PlayerSpecChangeSoundEffect.lua

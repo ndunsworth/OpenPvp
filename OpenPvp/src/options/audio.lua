@@ -37,6 +37,32 @@ local function opvp_options_audio_init()
 
     opvp.options.audio.category:setCategoryType(opvp.OptionCategory.CHILD_CATEGORY);
 
+    opvp.options.audio.general= {};
+
+    opvp.options.audio.general.category = opvp.options.audio.category:createCategory("General", "General", "", opvp.OptionCategory.GROUP_CATEGORY);
+
+    opvp.options.audio.general.muteEarthenNpcIdle = opvp.options.audio.general.category:createOption(
+        opvp.Option.BOOL,
+        "MuteEarthenNpcIdle",
+        "Mute Earthen NPC Idle",
+        [[
+Adds Earthen Male/Female NPC idle sounds to the games MuteSoundFile list.
+
+Does not alter the volume of any sound channels.]],
+        true
+    );
+
+    --~ opvp.options.audio.general.mutePvpAreaNpcFights = opvp.options.audio.general.category:createOption(
+        --~ opvp.Option.BOOL,
+        --~ "MutePvpAreaNpc",
+        --~ "Mute Pvp Area NPC Fighting",
+        --~ [[
+--~ Adds various fighting sounds for NPC fighting to the games MuteSoundFile list.
+
+--~ Does not alter the volume of any sound channels.]],
+        --~ true
+    --~ );
+
     opvp.options.audio.soundeffect = {};
 
     opvp.options.audio.soundeffect.category = opvp.options.audio.category:createCategory("SoundEffect", "Sound Effect", "", opvp.OptionCategory.GROUP_CATEGORY);
