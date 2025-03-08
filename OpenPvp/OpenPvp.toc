@@ -172,6 +172,7 @@ src/core/map/maps/unknown.lua
 src/core/map/maps/arenas/ashamesfall.lua
 src/core/map/maps/arenas/blackrookhold.lua
 src/core/map/maps/arenas/bladesedge.lua
+src/core/map/maps/arenas/cageofcarnage.lua
 src/core/map/maps/arenas/dalaran.lua
 src/core/map/maps/arenas/empyreandomain.lua
 src/core/map/maps/arenas/engmacrucible.lua

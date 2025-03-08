@@ -59,6 +59,7 @@ opvp.InstanceId = {
     ASHAMANES_FALL             = 1552,
     BLACK_ROOK_HOLD_ARENA      = 1504,
     BLADES_EDGE_ARENA          = 1672,
+    CAGE_OF_CARNAGE            = 2759,
     DALARAN_SEWERS             =  617,
     EMPYREAN_DOMAIN            = 2373,
     ENIGMA_ARENA               = 2511,
