@@ -407,6 +407,10 @@ function opvp.unit.isGhost(unitId)
     return UnitIsGhost(unitId);
 end
 
+function opvp.unit.isInspectable(unitId)
+    return CanInspect(unitId);
+end
+
 function opvp.unit.isSameUnit(unitId1, unitId2)
     return UnitIsUnit(unitId1, unitId2);
 end

@@ -77,7 +77,7 @@ function opvp.NotifyInspectQueueItem:requestInspect()
         end
     end
 
-    if CanInspect(token) == true then
+    if opvp.unit.isInspectable(token) == true then
         --~ opvp.printDebug(
             --~ "NotifyRequest(%s): Requested",
             --~ self._id
