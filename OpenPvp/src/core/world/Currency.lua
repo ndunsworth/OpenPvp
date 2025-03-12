@@ -332,6 +332,10 @@ function opvp.currency.bloodyToken()
     return opvp.Currency.BLOODY_TOKEN:quantity();
 end
 
+function opvp.currency.bloodyTokenEarned()
+    return opvp.Currency.BLOODY_TOKEN:earned();
+end
+
 function opvp.currency.bloodyTokenInfo()
     return opvp.Currency.BLOODY_TOKEN:info();
 end
@@ -342,6 +346,10 @@ end
 
 function opvp.currency.conquest()
     return opvp.Currency.CONQUEST:quantity();
+end
+
+function opvp.currency.conquestEarned()
+    return opvp.Currency.CONQUEST:earned();
 end
 
 function opvp.currency.conquestInfo()
