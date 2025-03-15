@@ -186,8 +186,8 @@ opvp.locale.enUS = {
     PARTY_CHANGED_TO_PARTY            = "%s | Converted to Party",
     PARTY_CHANGED_TO_RAID             = "%s | Converted to Raid",
 
-    PLAYER_SPEC                       = "Player | Spec - |c%2$s%1$s|r",
-    PLAYER_SPEC_CHANGED               = "Player | Spec Changed - |c%2$s%1$s|r",
+    PLAYER_SPEC                       = "Player | Spec - |c%s%s|r",
+    PLAYER_SPEC_CHANGED               = "Player | Spec Changed - |c%s%s|r",
 
     POI_NOT_CONTESTED                 = "Neutral",
     POI_ALLIANCE_CONTESTED            = "Alliance Contested",

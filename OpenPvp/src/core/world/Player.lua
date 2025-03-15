@@ -553,16 +553,18 @@ function opvp.Player:_onSpecChanged()
     self._spec = spec;
 
     if old_spec ~= opvp.ClassSpec.UNKNOWN then
-        opvp.printMessage(
+        opvp.printMessageOrDebug(
+            opvp.options.announcements.player.specChanged:value(),
             opvp.strs.PLAYER_SPEC_CHANGED,
-            spec:name(),
-            self._class:color():GenerateHexColor()
+            self._class:color():GenerateHexColor(),
+            spec:name()
         );
     else
-        opvp.printMessage(
+        opvp.printMessageOrDebug(
+            opvp.options.announcements.player.specChanged:value(),
             opvp.strs.PLAYER_SPEC,
-            spec:name(),
-            self._class:color():GenerateHexColor()
+            self._class:color():GenerateHexColor(),
+            spec:name()
         );
     end
 
