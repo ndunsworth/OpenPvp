@@ -170,7 +170,8 @@ function opvp.OpenPvpMiniMapButton:addCurrencyTooltip(tooltip)
                     opvp.Currency.CONQUEST:name()
                 ),
                 string.format(
-                    "%d/%d",
+                    "%d/%d/%d",
+                    opvp.currency.conquest(),
                     opvp.currency.conquestEarned(),
                     opvp.currency.conquestMax()
                 ),
@@ -199,7 +200,8 @@ function opvp.OpenPvpMiniMapButton:addCurrencyTooltip(tooltip)
                     opvp.Currency.BLOODY_TOKEN:name()
                 ),
                 string.format(
-                    "%d/%d",
+                    "%d/%d/%d",
+                    opvp.currency.bloodyToken(),
                     opvp.currency.bloodyTokenEarned(),
                     opvp.currency.bloodyTokenMax()
                 ),
