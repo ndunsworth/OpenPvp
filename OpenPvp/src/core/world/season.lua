@@ -61,7 +61,7 @@ function opvp.season.achievementId()
 end
 
 function opvp.season.achievementProgress()
-    local id = OpenPvp.season.achievementId();
+    local id = opvp.season.achievementId();
 
     if id == 0 then
         return 0, 0;
@@ -85,7 +85,7 @@ function opvp.season.chapter()
 end
 
 function opvp.season.isActive()
-    return GetCurrentArenaSeason() ~= 0;
+    return opvp.season.season() ~= 0;
 end
 
 function opvp.season.season()
