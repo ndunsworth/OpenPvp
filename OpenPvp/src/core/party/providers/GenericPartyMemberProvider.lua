@@ -279,7 +279,7 @@ function opvp.GenericPartyMemberProvider:_findMemberByGuid2(unitId, guid, create
 end
 
 function opvp.GenericPartyMemberProvider:_memberInspect(member)
-    if member:isGuidKnown() == true then
+    if member:isGuidKnown() == true and member:isPlayer() == false then
         --~ opvp.printDebug(
             --~ "opvp.GenericPartyMemberProvider:_memberInspect, %s=%s",
             --~ member:nameOrId(),
@@ -491,7 +491,7 @@ function opvp.GenericPartyMemberProvider:_onMemberInspectInt(guid, valid)
     else
         opvp.printDebug(
             "opvp.GenericPartyMemberProvider:_onMemberInspectInt, failed [%s] %s=%d",
-            tostring(CanInspect(member:guid())),
+            tostring(opvp.unit.isInspectable(member:guid())),
             member:nameOrId(),
             guid
         );
