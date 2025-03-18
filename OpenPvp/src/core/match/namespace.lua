@@ -123,8 +123,6 @@ function opvp.match.utils.opponentSpec(index)
 
         return opvp.ClassSpec:fromSpecId(spec_id), sex;
     else
-        print("opvp.match.utils.opponentSpec", index, spec_id, sex);
-
         return opvp.ClassSpec.UNKNOWN, opvp.Sex.NEUTRAL;
     end
 end
