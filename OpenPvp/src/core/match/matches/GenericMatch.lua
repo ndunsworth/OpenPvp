@@ -41,8 +41,6 @@ function opvp.GenericMatch:init(queue, description)
     };
 
     self._friendly_provider = opvp.PvpPartyMemberProvider(opvp.PvpPartyMemberFactory());
-    self._friendly_cache    = opvp.PvpPartyMemberProvider(opvp.PvpPartyMemberFactory());
-    self._enemy_provider    = nil;
     self._enemy_provider    = nil;
 
     self._player_side = 0;
@@ -147,13 +145,8 @@ function opvp.GenericMatch:_initializeTeams()
         self._friendly_provider = opvp.TestPartyMemberProvider(true);
         self._enemy_provider = opvp.TestPartyMemberProvider();
 
-        self._friendly_provider:_setFactory(
-            opvp.PvpPartyMemberFactory()
-        );
-
-        self._enemy_provider:_setFactory(
-            opvp.PvpPartyMemberFactory()
-        );
+        self._friendly_provider:_setFactory(opvp.PvpPartyMemberFactory());
+        self._enemy_provider:_setFactory(opvp.PvpPartyMemberFactory());
     end
 
     self._enemy_provider:_setHostile(true);

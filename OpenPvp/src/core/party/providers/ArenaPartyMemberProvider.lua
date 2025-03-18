@@ -99,6 +99,8 @@ function opvp.ArenaPartyMemberProvider:_connectSignals()
             self._onOpponentSpecUpdate
         );
     end
+
+    opvp.PvpPartyMemberProvider._connectSignals(self);
 end
 
 function opvp.ArenaPartyMemberProvider:_disconnectSignals()
@@ -111,6 +113,8 @@ function opvp.ArenaPartyMemberProvider:_disconnectSignals()
     opvp.event.UNIT_HEALTH:disconnect(self, self._onUnitHealth);
     opvp.event.UNIT_NAME_UPDATE:disconnect(self, self._onUnitNameUpdate);
     opvp.event.UNIT_IN_RANGE_UPDATE:disconnect(self, self._onUnitRangeUpdate);
+
+    opvp.PvpPartyMemberProvider._disconnectSignals(self);
 end
 
 function opvp.ArenaPartyMemberProvider:_findMemberByGuid(unitId, create)
@@ -249,18 +253,19 @@ function opvp.ArenaPartyMemberProvider:_setTeamSize(size)
 end
 
 function opvp.ArenaPartyMemberProvider:_updateMember(unitId, member, created)
-    local mask = bit.bor(
+    return bit.bor(
         opvp.PvpPartyMemberProvider._updateMember(self, unitId, member),
-        self:_updateMemberSpec(unitId, member)
+        self:_updateMemberScore(member),
+        self:_updateMemberSpec(member)
     );
 end
 
-function opvp.ArenaPartyMemberProvider:_updateMemberSpec(unitId, member)
+function opvp.ArenaPartyMemberProvider:_updateMemberSpec(member)
     if member:isSpecKnown() == true then
         return 0;
     end
 
-    local index = self:unitIdGroupIndex(unitId);
+    local index = self:unitIdGroupIndex(member:id());
 
     if index < 1 then
         return 0;
@@ -277,7 +282,7 @@ function opvp.ArenaPartyMemberProvider:_updateMemberSpec(unitId, member)
     if member:isSexKnown() == false then
         member:_setSex(sex);
 
-        return opvp.PartyMember.SEX_FLAG;
+        return bit.bor(opvp.PartyMember.SPEC_FLAG, opvp.PartyMember.SEX_FLAG);
     else
         return opvp.PartyMember.SPEC_FLAG;
     end
