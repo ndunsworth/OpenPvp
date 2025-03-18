@@ -141,6 +141,7 @@ function opvp.MuteNPCDialogMatchFeature:init(option)
     self._map         = opvp.InstanceId.UNKNOWN;
     self._map_ids     = opvp.List:createFromArray(
         {
+            opvp.InstanceId.CAGE_OF_CARNAGE,
             opvp.InstanceId.ENIGMA_ARENA,
             opvp.InstanceId.ENIGMA_CRUCIBLE,
             opvp.InstanceId.HOOK_POINT,
