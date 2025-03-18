@@ -403,6 +403,14 @@ local function opvp_options_announcements_init()
         false
     );
 
+    opvp.options.announcements.queue.readyCheck = opvp.options.announcements.queue.category:createOption(
+        opvp.Option.BOOL,
+        "ReadyCheck",
+        "Ready Check",
+        "",
+        false
+    );
+
     opvp.options.announcements.queue.suspended = opvp.options.announcements.queue.category:createOption(
         opvp.Option.BOOL,
         "Suspended",

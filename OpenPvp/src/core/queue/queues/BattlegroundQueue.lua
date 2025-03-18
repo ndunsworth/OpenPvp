@@ -73,6 +73,7 @@ function opvp.BattlegroundInfo:init(index)
     self._mask             = 0;
     self._enabled          = false;
     self._player_level_min = GetMaxLevelForPlayerExpansion();
+    self._players_max      = 0;
 
     self:update();
 end
@@ -123,6 +124,10 @@ function opvp.BattlegroundInfo:map()
     return self._map;
 end
 
+function opvp.BattlegroundInfo:teamSize()
+    return self._team_size;
+end
+
 function opvp.BattlegroundInfo:update()
     if self._index == 0 then
         return;
@@ -146,7 +151,9 @@ function opvp.BattlegroundInfo:update()
     self._desc      = mapDescription;
     self._map       = opvp.Map:createFromInstanceId(bgInstanceID);
 
-    if maxPlayers >= 35 then
+    self._team_size = maxPlayers;
+
+    if self._team_size >= 35 then
         self._mask = opvp.PvpFlag.EPIC;
     else
         self._mask = 0;
@@ -211,6 +218,10 @@ end
 
 function opvp.BattlegroundQueue:name()
     return self._info:name();
+end
+
+function opvp.BattlegroundQueue:teamSizeMaximum()
+    return self._info:teamSize();
 end
 
 function opvp.BattlegroundQueue:_createMatchDescription(map)

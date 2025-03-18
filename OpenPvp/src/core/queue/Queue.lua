@@ -41,11 +41,15 @@ opvp.QueueStatus = {
 opvp.Queue = opvp.CreateClass();
 
 function opvp.Queue:init(id, mask)
-    self._id          = id;
-    self._mask        = mask;
-    self._queue_index = 0;
-    self._queue_time  = 0;
-    self._status      = opvp.QueueStatus.NOT_QUEUED;
+    self._id                   = id;
+    self._mask                 = mask;
+    self._queue_index          = 0;
+    self._queue_time           = 0;
+    self._status               = opvp.QueueStatus.NOT_QUEUED;
+    self._ready_check          = false;
+    self._ready_check_accepted = 0;
+    self._ready_check_declined = 0;
+    self._ready_check_size     = 0;
 
     self.statusChanged = opvp.Signal("opvp.Queue.queueStatusChanged");
 end
@@ -120,6 +124,27 @@ end
 
 function opvp.Queue:isReady()
     return self._status == opvp.QueueStatus.READY;
+end
+
+function opvp.Queue:isReadyCheck()
+    return self._ready_check;
+end
+
+function opvp.Queue:readyCheckAccepted()
+    return self._ready_check_accepted;
+end
+
+function opvp.Queue:readyCheckDeclined()
+    return self._ready_check_declined;
+end
+
+function opvp.Queue:readyCheckPending()
+    return (
+        self._ready_check_size - (
+            self._ready_check_accepted +
+            self._ready_check_declined
+        )
+    );
 end
 
 function opvp.Queue:logStatus()
@@ -258,7 +283,9 @@ function opvp.Queue:_logStatus(newStatus, oldStatus, elapsed, estimate, override
                         opvp.time.formatSeconds(estimate)
                     );
                 else
-                    msg = opvp.strs.QUEUE_REJOINED:format(self:name());
+                    msg = opvp.strs.QUEUE_REJOINED:format(
+                        self:name()
+                    );
                 end
             end
 
@@ -323,22 +350,67 @@ function opvp.Queue:_logStatus(newStatus, oldStatus, elapsed, estimate, override
     end
 end
 
+function opvp.Queue:_onReadyCheckBegin()
+    self._ready_check = true;
+
+    if self._ready_check_accepted > 0 then
+        opvp.printMessageOrDebug(
+            opvp.options.announcements.queue.readyCheck:value(),
+            opvp.strs.QUEUE_READY_CHECK,
+            self:name(),
+            self._ready_check_accepted,
+            self._ready_check_size
+        );
+    end
+
+    opvp.queue.readyCheckBegin:emit(self);
+end
+
+function opvp.Queue:_onReadyCheckEnd()
+    local msg;
+
+    if self._ready_check_declined == 0 then
+        msg = opvp.strs.QUEUE_READY_CHECK;
+    else
+        msg = opvp.strs.QUEUE_READY_CHECK_FAILED;
+    end
+
+    opvp.printMessageOrDebug(
+        opvp.options.announcements.queue.readyCheck:value(),
+        msg,
+        self:name(),
+        self._ready_check_accepted,
+        self._ready_check_size
+    );
+
+    self._ready_check = false;
+
+    opvp.queue.readyCheckEnd:emit(self);
+end
+
+function opvp.Queue:_onReadyCheckUpdate()
+    opvp.printMessageOrDebug(
+        opvp.options.announcements.queue.readyCheck:value(),
+        opvp.strs.QUEUE_READY_CHECK,
+        self:name(),
+        self._ready_check_accepted,
+        self._ready_check_size
+    );
+
+    opvp.queue.readyCheckUpdate:emit(self);
+end
+
 function opvp.Queue:_onStatusActive()
     self._status = opvp.QueueStatus.ACTIVE;
 end
 
 function opvp.Queue:_onStatusJoin()
-    --~ stupid when a bg is finished it goes from active to queued again
-    --~ that or i have a bug :x
-    if self._status == opvp.QueueStatus.ACTIVE then
-        return;
-    end
-
     self._status = opvp.QueueStatus.QUEUED;
 end
 
 function opvp.Queue:_onStatusLeave()
     self._queue_time = 0;
+
     self._status     = opvp.QueueStatus.NOT_QUEUED;
 end
 

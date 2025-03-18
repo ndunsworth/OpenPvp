@@ -30,12 +30,6 @@ local opvp = OpenPvp;
 
 opvp.RatedQueue = opvp.CreateClass(opvp.PvpQueue);
 
-function opvp.RatedQueue:init(id, bracket)
-    opvp.PvpQueue.init(self, id, bracket:type(), bracket:mask());
-
-    self._bracket = bracket;
-end
-
 function opvp.RatedQueue:fromBracketIndex(index)
     for n=1, #opvp.RatedQueue.QUEUES do
         local queue = opvp.RatedQueue.QUEUES[n];
@@ -48,8 +42,22 @@ function opvp.RatedQueue:fromBracketIndex(index)
     return nil;
 end
 
+function opvp.RatedQueue:init(id, bracket)
+    opvp.PvpQueue.init(self, id, bracket:type(), bracket:mask());
+
+    self._bracket = bracket;
+end
+
+function opvp.RatedQueue:bonusRoles()
+    return self._bracket:bonusRoles();
+end
+
 function opvp.RatedQueue:bracket()
     return self._bracket;
+end
+
+function opvp.RatedQueue:canQueue()
+    return self._bracket:isEnabled();
 end
 
 function opvp.RatedQueue:hasDailyWin()
@@ -60,10 +68,6 @@ function opvp.RatedQueue:hasMinimumItemLevel()
     return self._bracket:hasMinimumItemLevel();
 end
 
-function opvp.RatedQueue:canQueue()
-    return self._bracket:isEnabled();
-end
-
 function opvp.RatedQueue:name()
     return self._bracket:name();
 end
@@ -72,8 +76,8 @@ function opvp.RatedQueue:minimumItemLevel()
     return self._bracket:minimumItemLevel();
 end
 
-function opvp.RatedQueue:bonusRoles()
-    return self._bracket:bonusRoles();
+function opvp.RatedQueue:teamSizeMaximum()
+    return self._bracket:teamSize();
 end
 
 function opvp.RatedQueue:_createMatchDescription(map)

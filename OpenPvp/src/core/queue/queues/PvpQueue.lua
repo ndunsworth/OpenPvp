@@ -200,6 +200,14 @@ function opvp.PvpQueue:queueTimeEstimated()
     end
 end
 
+function opvp.PvpQueue:teamSizeMaximum()
+    return 1;
+end
+
+function opvp.PvpQueue:teamSizeMinimum()
+    return self:teamSizeMaximum();
+end
+
 function opvp.PvpQueue:_createMatch(map, isTest)
     if map == nil or map:isValid() == false then
         return nil;
@@ -216,6 +224,51 @@ end
 
 function opvp.PvpQueue:_createMatchDescription(map)
     return nil;
+end
+
+function opvp.PvpQueue:_onPvpRolePopupHide(info)
+    if self._ready_check == false then
+        return;
+    end
+
+    self._ready_check_accepted = info.numPlayersAccepted;
+    self._ready_check_declined = info.numPlayersDeclined;
+
+    self:_onReadyCheckEnd();
+end
+
+function opvp.PvpQueue:_onPvpRolePopupShow(info)
+    if self._ready_check == false then
+        if info.totalNumPlayers == 0 then
+            self._ready_check_size = self:teamSizeMaximum();
+
+            self._ready_check_accepted = self._ready_check_size;
+            self._ready_check_declined = 0;
+
+            self:_onReadyCheckBegin();
+
+            self:_onReadyCheckEnd();
+        else
+            self._ready_check_size = info.totalNumPlayers;
+
+            self._ready_check_accepted = info.numPlayersAccepted;
+            self._ready_check_declined = info.numPlayersDeclined;
+
+            self:_onReadyCheckBegin();
+        end
+    else
+        if info.totalNumPlayers == 0 then
+            self._ready_check_accepted = self._ready_check_size;
+            self._ready_check_declined = 0;
+
+            self:_onReadyCheckEnd();
+        else
+            self._ready_check_accepted = info.numPlayersAccepted;
+            self._ready_check_declined = info.numPlayersDeclined;
+
+            self:_onReadyCheckUpdate();
+        end
+    end
 end
 
 function opvp.PvpQueue:_onStatusChanged(index, status)
@@ -296,4 +349,16 @@ function opvp.PvpQueue:_onStatusChanged(index, status)
     );
 
     self.statusChanged:emit(status, old_status);
+end
+
+function opvp.PvpQueue:_onStatusJoin()
+    --~ stupid when a bg is finished it goes from active to queued again
+    --~ that or i have a bug :x
+    if self._status ~= opvp.QueueStatus.ACTIVE then
+        self._status = opvp.QueueStatus.QUEUED;
+    end
+end
+
+function opvp.PvpQueue:_onStatusLeave()
+    opvp.Queue._onStatusLeave(self);
 end

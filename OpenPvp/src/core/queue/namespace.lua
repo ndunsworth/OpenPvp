@@ -32,8 +32,12 @@ local opvp_queue_mgr_singleton;
 
 opvp.queue = {};
 
-opvp.queue.activeChanged = opvp.Signal("opvp.queue.activeChanged");
-opvp.queue.statusChanged = opvp.Signal("opvp.queue.statusChanged");
+opvp.queue.activeChanged    = opvp.Signal("opvp.queue.activeChanged");
+opvp.queue.statusChanged    = opvp.Signal("opvp.queue.statusChanged");
+
+opvp.queue.readyCheckBegin  = opvp.Signal("opvp.queue.readyCheckBegin");
+opvp.queue.readyCheckUpdate = opvp.Signal("opvp.queue.readyCheckUpdate");
+opvp.queue.readyCheckEnd    = opvp.Signal("opvp.queue.readyCheckEnd");
 
 function opvp.queue.active()
     return opvp_queue_mgr_singleton:active();

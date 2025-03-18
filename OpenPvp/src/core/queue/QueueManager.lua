@@ -345,13 +345,15 @@ function opvp.QueueManager:_onReload()
 end
 
 function opvp.QueueManager:_onPvpRolePopupHide(info)
-    --~ print("opvp.QueueManager:_onPvpRolePopupHide");
-    --~ DevTools_Dump(info);
+    if self._active ~= nil then
+        self._active:_onPvpRolePopupHide(info)
+    end
 end
 
 function opvp.QueueManager:_onPvpRolePopupShow(info)
-    --~ print("opvp.QueueManager:_onPvpRolePopupShow");
-    --~ DevTools_Dump(info);
+    if self._active ~= nil then
+        self._active:_onPvpRolePopupShow(info)
+    end
 end
 
 function opvp.QueueManager:_removeQueue(queue)
