@@ -2,7 +2,7 @@
 ## Title: OpenPvp
 ## Version: 1.0.2
 ## IconTexture: Interface/Icons/achievement_pvp_legion08
-## Category-enUS: Pvp
+## Category-enUS: PvP
 ## Notes:
 ## SavedVariables: OpenPvpGlobalSettingsDB
 ## SavedVariablesPerCharacter: OpenPvpLocalSettingsDB
