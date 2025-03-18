@@ -122,7 +122,7 @@ function opvp.ArenaPartyMemberProvider:_findMemberByGuid(unitId, create)
 end
 
 function opvp.ArenaPartyMemberProvider:_memberInspect(member)
-    local mask = self:_updateMemberSpec(member:id(), member);
+    local mask = self:_updateMemberSpec(member);
 
     if mask ~= 0 and self:isUpdatingRoster() == false then
         self:_onMemberInfoUpdate(member, mask);
