@@ -749,7 +749,8 @@ opvp.RatingBracket.ARENA_2V2 = opvp.RatingBracket(
 );
 
 opvp.RatingBracket.ARENA_3V3 = opvp.RatingBracket(
-    opvp.BracketId.ARENA_3V3, opvp.PvpType.ARENA,
+    opvp.BracketId.ARENA_3V3,
+    opvp.PvpType.ARENA,
     2,
     3,
     3,
