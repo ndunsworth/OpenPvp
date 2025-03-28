@@ -209,11 +209,11 @@ function opvp.TestPartyMemberProvider:_onConnected()
 
         if self._player ~= nil then
             self._player:_setFlags(opvp.PartyMember.PLAYER_FLAG, true);
-
             self._player:_setFaction(opvp.player.factionInfo());
             self._player:_setRace(opvp.player.raceInfo());
             self._player:_setSex(opvp.player.sex());
             self._player:_setSpec(opvp.player.specInfo());
+            self._player:_setName(opvp.player.name());
 
             self:_onRosterBeginUpdate();
 
