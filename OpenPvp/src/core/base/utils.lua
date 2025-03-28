@@ -48,6 +48,26 @@ function opvp.utils.chatTypeColor(id)
     end
 end
 
+function opvp.utils.colorNumber(n, r, g, b)
+    if (
+        r ~= nil and
+        g ~= nil and
+        b ~= nil
+    ) then
+        return opvp.utils.colorStringRGB(tostring(n), r, g, b)
+    else
+        return tostring(n);
+    end
+end
+
+function opvp.utils.colorNumberPosNeg(n, pr, pg, pb, nr, ng, nb)
+    if n < 0 then
+        return opvp.utils.colorNumber(n, nr, ng, nb)
+    else
+        return opvp.utils.colorNumber(n, pr, pg, pb)
+    end
+end
+
 function opvp.utils.colorStringChatType(str, id)
     local color = opvp.utils.chatTypeColor(id);
 
