@@ -66,6 +66,8 @@ function opvp.MatchTest:init()
     self._countdown_active = false;
     self._simulate         = false;
     self._party_index      = 0;
+    self._outcome_status   = opvp.MatchWinner.WON;
+    self._outcome_team     = nil;
 
     self._warmup_timer  = opvp.Timer(1);
     self._active_timer  = opvp.Timer(5);
@@ -133,6 +135,10 @@ function opvp.MatchTest:match()
     return self._match;
 end
 
+function opvp.MatchTest:outcome()
+    return self._outcome_status, self._outcome_team;
+end
+
 function opvp.MatchTest:start()
     if (
         self._match ~= nil and
@@ -171,12 +177,19 @@ function opvp.MatchTest:stop()
 
     self:_onMatchExit();
 
-    self._active = false;
+    self._active           = false;
+    self._outcome_status   = opvp.MatchWinner.WON;
+    self._outcome_team     = nil;
 end
 
 function opvp.MatchTest:_onMatchComplete()
     self._warmup_timer:stop();
     self._active_timer:stop();
+
+    if self._match:isShuffle() == true then
+        self._outcome_status = opvp.MatchWinner.DRAW;
+        self._outcome_team   = nil;
+    end
 
     self._match:_onMatchStateChanged(
         opvp.MatchStatus.COMPLETE,
@@ -192,21 +205,6 @@ function opvp.MatchTest:_onMatchEntered()
     end
 
     self._match:_onMatchEntered();
-end
-
-function opvp.MatchTest:_onMatchJoined()
-    self._match:_onMatchJoined();
-
-    self._party_index = self._party_index + 1;
-
-    self._match:_onPartyAboutToJoin(
-        opvp.PartyCategory.INSTANCE,
-        string.format(
-            "TestParty-%s-0-%08x",
-            GetRealmID(),
-            self._party_index
-        )
-    );
 end
 
 function opvp.MatchTest:_onMatchExit()
@@ -230,6 +228,21 @@ function opvp.MatchTest:_onMatchExit()
 
     self._match:_close();
     self._match = nil;
+end
+
+function opvp.MatchTest:_onMatchJoined()
+    self._match:_onMatchJoined();
+
+    self._party_index = self._party_index + 1;
+
+    self._match:_onPartyAboutToJoin(
+        opvp.PartyCategory.INSTANCE,
+        string.format(
+            "TestParty-%s-0-%08x",
+            GetRealmID(),
+            self._party_index
+        )
+    );
 end
 
 function opvp.MatchTest:_onMatchRoundActive()
@@ -295,15 +308,11 @@ function opvp.MatchTest:_onMatchRoundComplete()
     end
 
     if self._match:isBattleground() == true then
-        self._match:_setOutcome(
-            opvp.MatchWinner.WON,
-            self._match:playerTeam()
-        );
+        self._outcome_status = opvp.MatchWinner.WON;
+        self._outcome_team   = self._match:playerTeam();
     else
-        self._match:_setOutcome(
-            opvp.MatchWinner.LOST,
-            self._match:opponentTeam()
-        );
+        self._outcome_status = opvp.MatchWinner.LOST;
+        self._outcome_team   = self._match:opponentTeam();
     end
 
     self._match:_onMatchStateChanged(

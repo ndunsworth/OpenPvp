@@ -47,6 +47,7 @@ function opvp.Queue:init(id, mask)
     self._queue_time           = 0;
     self._status               = opvp.QueueStatus.NOT_QUEUED;
     self._ready_check          = false;
+    self._ready_check_attempts = 0;
     self._ready_check_accepted = 0;
     self._ready_check_declined = 0;
     self._ready_check_size     = 0;
@@ -78,6 +79,14 @@ function opvp.Queue:hasDailyWin()
     return false;
 end
 
+function opvp.Queue:hasMinimumItemLevel()
+    return false;
+end
+
+function opvp.Queue:hasReadyCheck()
+    return false;
+end
+
 function opvp.Queue:hasRoleBonus(roleType)
     local roles = self:bonusRoles();
 
@@ -87,10 +96,6 @@ function opvp.Queue:hasRoleBonus(roleType)
         end
     end
 
-    return false;
-end
-
-function opvp.Queue:hasMinimumItemLevel()
     return false;
 end
 
@@ -352,6 +357,7 @@ end
 
 function opvp.Queue:_onReadyCheckBegin()
     self._ready_check = true;
+    self._ready_check_attempts = self._ready_check_attempts + 1;
 
     if self._ready_check_accepted > 0 then
         opvp.printMessageOrDebug(
@@ -405,6 +411,8 @@ function opvp.Queue:_onStatusActive()
 end
 
 function opvp.Queue:_onStatusJoin()
+    self._ready_check_attempts = 0;
+
     self._status = opvp.QueueStatus.QUEUED;
 end
 

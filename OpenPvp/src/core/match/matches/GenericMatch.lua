@@ -197,7 +197,7 @@ function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
     if self:isTest() == true then
          self._friendly_team:initialize(category, guid);
 
-        if opvp.match.isSimulation() then
+        if opvp.match.isSimulation() == true then
              self._friendly_provider:addMembers(
                 self:matchTeamSize() - 1
             );
@@ -209,12 +209,12 @@ function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
     end
 end
 
-function opvp.GenericMatch:_onMatchComplete(surrendered)
+function opvp.GenericMatch:_onMatchComplete()
     if self:isRoundBased() == false and self:isActive() == true then
         self:_onMatchRoundComplete();
     end
 
-    opvp.Match._onMatchComplete(self, surrendered);
+    opvp.Match._onMatchComplete(self);
 end
 
 function opvp.GenericMatch:_onMatchExit()
@@ -260,17 +260,17 @@ function opvp.GenericMatch:_onMatchRoundWarmup()
 end
 
 function opvp.GenericMatch:_updateOutcome()
+    local winning_status;
+    local winning_team;
+
     if self:isTest() == true then
-        return;
-    end
-
-    local winning_status = opvp.match.utils.winner();
-    local winning_team = nil;
-
-    if winning_status == opvp.MatchWinner.WON then
-        winning_team = self:playerTeam();
+        winning_status, winning_team = opvp.match.manager():tester():outcome();
     else
-        winning_team = self:opponentTeam();
+        if winning_status == opvp.MatchWinner.WON then
+            winning_team = self:playerTeam();
+        else
+            winning_team = self:opponentTeam();
+        end
     end
 
     self:_setOutcome(winning_status, winning_team);

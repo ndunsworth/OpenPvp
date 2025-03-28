@@ -151,6 +151,8 @@ opvp.locale.enUS = {
     MATCH_PLAYER_LEAVE_WITH_SPEC      = "Match | %s Left - %s (|c%s%s %s|r)",
     MATCH_PLAYER_SPEC_CHANGED         = "Match | %s Spec - %s (|c%s%s %s|r)",
 
+    MATCH_SCORE_SHUFFLE               = "Match Score | %s (|c%s%s %s|r) - wins=%d, mmr=%d/%d/%s, cr=%d/%d/%s",
+
     MATCH_FEATURE_ACTIVATED           = "Match | Feature - %s (activated)",
     MATCH_FEATURE_DEACTIVATED         = "Match | Feature - %s (deactivated)",
 
@@ -211,7 +213,7 @@ opvp.locale.enUS = {
     QUEUE_READY                       = "Queue | Ready - %s",
     QUEUE_READY_WITH_WAIT_TIME        = "Queue | Ready - %s (%s in queue)",
     QUEUE_READY_CHECK                 = "Queue | Ready Check - %s (%d/%d)",
-    QUEUE_READY_CHECK_FAILED          = "Queue | Ready Check Failed - %s (%d/%d)",
+    QUEUE_READY_CHECK_FAILED          = "Queue | Ready Check - %s (%d/%d) Failed",
     QUEUE_REJOINED                    = "Queue | Rejoined - %s",
     QUEUE_REJOINED_WITH_EST_TIME      = "Queue | Rejoined - %s (estimated time %s)",
     QUEUE_REJOINED_WITH_WAIT_TIME     = "Queue | Rejoined - %s",

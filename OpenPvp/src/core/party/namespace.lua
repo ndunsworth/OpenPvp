@@ -30,6 +30,27 @@ local opvp = OpenPvp;
 
 local opvp_party_mgr_singleton;
 
+local opvp_party_members_cmp_lookup_default = {};
+
+opvp_party_members_cmp_lookup_default[opvp.RoleType.HEALER + 1] = 0;
+opvp_party_members_cmp_lookup_default[opvp.RoleType.TANK + 1]   = 1;
+opvp_party_members_cmp_lookup_default[opvp.RoleType.DPS + 1]    = 2;
+opvp_party_members_cmp_lookup_default[opvp.RoleType.NONE + 1]   = 3;
+
+local function opvp_party_member_cmp_by_role(a, b, lookup)
+    local a_role = lookup[a:role():id() + 1];
+    local b_role = lookup[b:role():id() + 1];
+
+    if a_role > b_role then
+        return false;
+    else
+        return (
+            a_role < b_role or
+            a:nameOrId():lower() < b:nameOrId():lower()
+        );
+    end
+end
+
 opvp.party = {};
 
 opvp.party.aboutToJoin = opvp.Signal("opvp.party.aboutToJoin");
@@ -174,6 +195,22 @@ end
 
 function opvp.party.utils.size(category)
     return GetNumGroupMembers(category);
+end
+
+function opvp.party.utils.sortMembersByRole(members, lookup)
+    local result = opvp.List:createCopyFromArray(members);
+
+    if lookup == nil or opvp.is_func(lookup) == false then
+        lookup = opvp_party_members_cmp_lookup_default;
+    end
+
+    result:sort(
+        function(a, b)
+            opvp_party_member_cmp_by_role(a, b, lookup)
+        end
+    );
+
+    return result:release();
 end
 
 function opvp.party.utils.token(category)

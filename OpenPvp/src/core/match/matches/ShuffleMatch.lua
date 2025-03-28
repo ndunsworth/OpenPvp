@@ -54,9 +54,11 @@ function opvp.ShuffleMatch:init(queue, description)
 
     local map = description:map();
 
+    self._score_emit      = false;
     self._round           = 0;
     self._rounds_mask     = 0;
     self._rounds_won      = 0;
+    self._rounds_lost     = 0;
     self._gold_widget     = map:widget("GoldTeamPlayersRemaining");
     self._purp_widget     = map:widget("PurpleTeamPlayersRemaining");
 
@@ -100,11 +102,7 @@ function opvp.ShuffleMatch:roundMask()
 end
 
 function opvp.ShuffleMatch:roundsLost()
-    if self:isComplete() == true then
-        return 6 - self._rounds_won;
-    else
-        return (self:round() - 1) - self._rounds_won;
-    end
+    return self._rounds_lost;
 end
 
 function opvp.ShuffleMatch:roundsWon()
@@ -114,7 +112,8 @@ end
 function opvp.ShuffleMatch:statusNext()
     if (
         self._status == opvp.MatchStatus.ROUND_COMPLETE and
-        self._round <= 5
+        self._round < 6 and
+        self:isRoundKnown(6) == false
     ) then
         return opvp.MatchStatus.ROUND_WARMUP;
     else
@@ -171,30 +170,43 @@ function opvp.ShuffleMatch:_isAlreadyInProgress(status)
     );
 end
 
-function opvp.ShuffleMatch:_onMatchComplete(surrendered)
-    if surrendered == true then
-        opvp.GenericMatch._onMatchComplete(self, surrendered);
+function opvp.ShuffleMatch:_onMatchComplete()
+    if self:surrendered() == false then
+        local draw_round = math.floor(((self._round + 1) * 0.5) + 0.5);
 
-        return;
+        if self._rounds_won == draw_round then
+            self:_setOutcome(opvp.MatchWinner.DRAW, nil);
+        elseif self._rounds_won > draw_round then
+            self:_setOutcome(opvp.MatchWinner.WON, nil);
+        else
+            self:_setOutcome(opvp.MatchWinner.LOST, nil);
+        end
     end
 
-    local draw_round = math.floor(((self._round + 1) * 0.5) + 0.5);
+    opvp.GenericMatch._onMatchComplete(self);
 
-    if self._rounds_won == draw_round then
-        self:_setOutcome(opvp.MatchWinner.DRAW, nil);
-    elseif self._rounds_won > draw_round then
-        self:_setOutcome(opvp.MatchWinner.WON, nil);
-    else
-        self:_setOutcome(opvp.MatchWinner.LOST, nil);
-    end
-
-    opvp.GenericMatch._onMatchComplete(self, surrendered);
 end
 
 function opvp.ShuffleMatch:_onMatchEntered()
-    self._round       = 0;
-    self._rounds_mask = 0;
-    self._rounds_won  = 0;
+    if self:isTest() == true then
+        self._round = 5;
+        self._rounds_mask = bit.bor(
+            self:roundFlag(1),
+            self:roundFlag(2),
+            self:roundFlag(3),
+            self:roundFlag(4),
+            self:roundFlag(5)
+        );
+        self._rounds_won  = 3;
+        self._rounds_lost = 2;
+    else
+        self._round       = 0;
+        self._rounds_mask = 0;
+        self._rounds_won  = 0;
+        self._rounds_lost = 0;
+    end
+
+    self._score_emit = true;
 
     opvp.GenericMatch._onMatchEntered(self);
 end
@@ -221,7 +233,7 @@ end
 function opvp.ShuffleMatch:_onMatchRoundComplete()
     opvp.GenericMatch._onMatchRoundComplete(self);
 
-    if self._round < 5 then
+    if self:surrendered() == false and self._round < 5 then
         --~ Sadly blizz starts swaping people over to the other team before it
         --~ moves you.  Otherwise we would link the shutdown of the players
         --~ team with the opponents
@@ -240,6 +252,81 @@ function opvp.ShuffleMatch:_onMatchRoundWarmup()
     opvp.GenericMatch._onMatchRoundWarmup(self);
 end
 
+function opvp.ShuffleMatch:_onUpdateScore()
+    if (
+        self._score_emit == false or
+        self:isComplete() == false or
+        self:isTest() == true
+    ) then
+        return;
+    end
+
+    local members = opvp.List();
+
+    members:merge(self:teammates());
+    members:merge(self:opponents());
+
+    members = opvp.party.utils.sortMembersByRole(members);
+
+    local member;
+    local score_info;
+    local cls;
+    local spec;
+    local wins;
+    local do_msg = opvp.options.announcements.match.scorePlayerRatings:value();
+
+    for n=1, #members do
+        member = members[n];
+
+        score_info = C_PvP.GetScoreInfoByPlayerGuid(member:guid());
+
+        if score_info ~= nil then
+            cls = member:classInfo();
+            spec = member:specInfo();
+
+            if score_info.stats ~= nil and #score_info.stats > 0 then
+                wins = score_info.stats[1].pvpStatValue;
+            else
+                wins = 0;
+            end
+
+            opvp.printMessageOrDebug(
+                do_msg,
+                opvp.strs.MATCH_SCORE_SHUFFLE,
+                member:nameOrId(),
+                cls:color():GenerateHexColor(),
+                spec:name(),
+                cls:name(),
+                wins,
+                score_info.prematchMMR,
+                score_info.postmatchMMR,
+                opvp.utils.colorNumberPosNeg(
+                    score_info.postmatchMMR - score_info.prematchMMR,
+                    0.25,
+                    1,
+                    0.25,
+                    1,
+                    0.25,
+                    0.25
+                ),
+                score_info.rating,
+                score_info.rating + score_info.ratingChange,
+                opvp.utils.colorNumberPosNeg(
+                    score_info.ratingChange,
+                    0.25,
+                    1,
+                    0.25,
+                    1,
+                    0.25,
+                    0.25
+                )
+            );
+        end
+    end
+
+    self._score_emit = false;
+end
+
 function opvp.ShuffleMatch:_updateOutcome()
     if (
         self:isTest() == true or
@@ -247,6 +334,14 @@ function opvp.ShuffleMatch:_updateOutcome()
         self._purp_widget == nil
     ) then
         opvp.GenericMatch._updateOutcome(self);
+
+        if self:isTest() == true and self:isComplete() == false then
+            if self:isWinner() == true then
+                self._rounds_won = self._rounds_won + 1;
+            else
+                self._rounds_lost = self._rounds_lost + 1;
+            end
+        end
 
         return;
     end
@@ -280,6 +375,8 @@ function opvp.ShuffleMatch:_updateOutcome()
 
             self:_setOutcome(opvp.MatchWinner.WON, self:opponentTeam());
         else
+            self._rounds_lost = self._rounds_lost + 1;
+
             self:_setOutcome(opvp.MatchWinner.LOST, self:playerTeam());
         end
     else
@@ -288,6 +385,8 @@ function opvp.ShuffleMatch:_updateOutcome()
 
             self:_setOutcome(opvp.MatchWinner.WON, self:opponentTeam());
         else
+            self._rounds_lost = self._rounds_lost + 1;
+
             self:_setOutcome(opvp.MatchWinner.LOST, self:playerTeam());
         end
     end

@@ -480,6 +480,8 @@ function opvp.Match:_close()
         );
 
         opvp.event.START_TIMER:disconnect(self, self._onStartTimer);
+
+        opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onUpdateScore);
     end
 
     self._countdown_timer:stop();
@@ -587,11 +589,7 @@ function opvp.Match:_onCountdownUpdate(timeRemaining, totalTime)
     opvp.match.countdown:emit(timeRemaining, totalTime);
 end
 
-function opvp.Match:_onMatchComplete(surrendered)
-    self._surrendered = surrendered;
-
-    self:_setStatus(opvp.MatchStatus.COMPLETE);
-
+function opvp.Match:_onMatchComplete()
     local msg;
     local elapsed = self:timeElapsed();
 
@@ -624,6 +622,8 @@ function opvp.Match:_onMatchComplete(surrendered)
             opvp.time.formatSeconds(expire)
         );
     end
+
+    self:_setStatus(opvp.MatchStatus.COMPLETE);
 end
 
 function opvp.Match:_onMatchEntered()
@@ -643,6 +643,7 @@ function opvp.Match:_onMatchEntered()
         );
 
         opvp.event.START_TIMER:connect(self, self._onStartTimer);
+        opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onUpdateScore);
     end
 
     self:_setOutcome(opvp.MatchWinner.NONE, nil);
@@ -742,6 +743,13 @@ function opvp.Match:_onMatchRoundWarmup()
 end
 
 function opvp.Match:_onMatchStateChanged(status, expected)
+    opvp.printDebug(
+        "opvp.Match._onMatchStateChanged, current_status=%s, new_status=%s, expected_status=%s",
+        opvp.Match:nameForStatus(self._status),
+        opvp.Match:nameForStatus(status),
+        opvp.Match:nameForStatus(expected)
+    );
+
     if status == expected then
         if status == opvp.MatchStatus.ROUND_WARMUP then
             self:_onMatchRoundWarmup();
@@ -750,7 +758,7 @@ function opvp.Match:_onMatchStateChanged(status, expected)
         elseif status == opvp.MatchStatus.ROUND_COMPLETE then
             self:_onMatchRoundComplete();
         elseif status == opvp.MatchStatus.COMPLETE then
-            self:_onMatchComplete(false);
+            self:_onMatchComplete();
         elseif status == opvp.MatchStatus.EXIT then
             self:_onMatchExit();
         end
@@ -759,14 +767,22 @@ function opvp.Match:_onMatchStateChanged(status, expected)
     end
 
     if (
-        self._status == opvp.MatchStatus.ROUND_WARMUP and
+        (
+            self._status == opvp.MatchStatus.ROUND_WARMUP or
+            expected == opvp.MatchStatus.ROUND_WARMUP
+        ) and
         (
             status == opvp.MatchStatus.ROUND_COMPLETE or
             status == opvp.MatchStatus.COMPLETE
         )
     ) then
-        self:_onMatchRoundComplete();
-        self:_onMatchComplete(true);
+        self._surrendered = true;
+
+        if self._status == opvp.MatchStatus.ROUND_ACTIVE then
+            self:_onMatchRoundComplete();
+        end
+
+        self:_onMatchComplete();
 
         return true;
     elseif (
@@ -781,7 +797,7 @@ function opvp.Match:_onMatchStateChanged(status, expected)
         --~ to determine Enum.PvPMatchSate is redic design.
 
         self:_onMatchRoundComplete();
-        self:_onMatchComplete(false);
+        self:_onMatchComplete();
 
         return true;
     end
@@ -879,6 +895,10 @@ function opvp.Match:_onTrintetUsed(guid, name, spellId, hostile)
     if member ~= nil then
         self:_onMemberTrintetUsed(member, spellId);
     end
+end
+
+function opvp.Match:_onUpdateScore()
+
 end
 
 function opvp.Match:_setOutcome(outcome, team)

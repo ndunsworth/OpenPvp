@@ -106,6 +106,10 @@ function opvp.MatchManager:match()
     return self._match;
 end
 
+function opvp.MatchManager:tester()
+    return self._match_test;
+end
+
 function opvp.MatchManager:_onMatchComplete()
     if self._match == nil then
         return;
@@ -223,7 +227,10 @@ function opvp.MatchManager:_onQueueEnd(queue)
     end
 
     if self._match:isComplete() == false then
-        self._match:_onMatchComplete(true);
+        self._match:_onMatchStateChanged(
+            opvp.MatchStatus.COMPLETE,
+            self._match:statusNext()
+        );
     end
 
     self._match:_onMatchExit();
@@ -268,6 +275,10 @@ function opvp.MatchManager:_onQueueStart(queue)
 end
 
 function opvp.MatchManager:_onQueueStatusChanged(queue)
+    if queue:isPvp() == false then
+        return;
+    end
+
     if queue:isActive() == true then
         self:_onQueueStart(queue);
     elseif (
