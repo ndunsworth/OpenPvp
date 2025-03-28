@@ -233,11 +233,18 @@ local function opvp_init_test_slash_cmds()
                     end
                 end
 
+                local map = opvp.Map.NAGRAND_ARENA;
+                local simulate = string.lower(args) == "simulate";
+
                 mgr:beginTest(
                     opvp.PvpType.ARENA,
                     opvp.Map.NAGRAND_ARENA,
-                    opvp.PvpFlag.SHUFFLE,
-                    args == "countdown"
+                    bit.bor(
+                        opvp.PvpFlag.RATED,
+                        opvp.PvpFlag.ROUND,
+                        opvp.PvpFlag.SHUFFLE
+                    ),
+                    simulate
                 );
             end,
             "shuffle",
