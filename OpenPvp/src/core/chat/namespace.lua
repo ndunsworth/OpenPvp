@@ -100,3 +100,19 @@ function opvp.chat.emote(id, unitId)
 
     emote:emote(unitId);
 end
+
+function opvp.chat.isEnabled()
+    return not C_SocialRestrictions.IsChatDisabled();
+end
+
+function opvp.chat.isSilenced()
+    return not C_SocialRestrictions.IsSilenced();
+end
+
+function opvp.chat.isSquelched()
+    return not C_SocialRestrictions.IsSquelched();
+end
+
+function opvp.chat.setEnabled(state)
+    C_SocialRestrictions.SetChatDisabled(not state)
+end

@@ -47,6 +47,8 @@ opvp.event.VARIABLES_LOADED                    = opvp.EventRegistrySignal("VARIA
 opvp.event.COMBAT_LOG_EVENT_UNFILTERED         = opvp.EventRegistrySignal("COMBAT_LOG_EVENT_UNFILTERED");
 
 --~ Chat events
+opvp.event.CHAT_DISABLED_CHANGED               = opvp.EventRegistrySignal("CHAT_DISABLED_CHANGED");
+opvp.event.CHAT_DISABLED_CHANGE_FAILED         = opvp.EventRegistrySignal("CHAT_DISABLED_CHANGE_FAILED");
 opvp.event.CHAT_MSG_ADDON                      = opvp.EventRegistrySignal("CHAT_MSG_ADDON");
 opvp.event.CHAT_MSG_EMOTE                      = opvp.EventRegistrySignal("CHAT_MSG_EMOTE");
 opvp.event.CHAT_MSG_GUILD                      = opvp.EventRegistrySignal("CHAT_MSG_GUILD");
