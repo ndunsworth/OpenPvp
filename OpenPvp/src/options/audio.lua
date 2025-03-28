@@ -52,6 +52,13 @@ Does not alter the volume of any sound channels.]],
         true
     );
 
+    opvp.options.audio.general.muteInsuranceTierSfx = opvp.options.audio.general.category:createOption(
+        opvp.Option.BOOL,
+        "MuteInsuranceTierSfx",
+        "Mute Undermine Tier Insurance SFX",
+        false
+    );
+
     --~ opvp.options.audio.general.mutePvpAreaNpcFights = opvp.options.audio.general.category:createOption(
         --~ opvp.Option.BOOL,
         --~ "MutePvpAreaNpc",

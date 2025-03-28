@@ -144,6 +144,14 @@ local function opvp_options_announcements_init()
         false
     );
 
+    opvp.options.announcements.match.scorePlayerRatings= opvp.options.announcements.match.category:createOption(
+        opvp.Option.BOOL,
+        "ScorePlayerRatings",
+        "Score (Player Ratings)",
+        "",
+        false
+    );
+
     opvp.options.announcements.player = {};
 
     opvp.options.announcements.player.category = opvp.options.announcements.category:createCategory(
@@ -166,6 +174,14 @@ local function opvp_options_announcements_init()
         "Notifies you when a pvp currency is capped.",
         true
     );
+
+    opvp.options.announcements.player.pvpCurrencyCappedTest = opvp.options.announcements.player.category:createOption(
+        opvp.Option.BUTTON,
+        "PvpCurrencyCappedTest",
+        opvp_chat_filter_icon
+    );
+
+    opvp.options.announcements.player.pvpCurrencyCappedTest:setFlags(opvp.Option.NEW_LINE_FLAG, false);
 
     opvp.options.announcements.player.specChanged = opvp.options.announcements.player.category:createOption(
         opvp.Option.BOOL,
