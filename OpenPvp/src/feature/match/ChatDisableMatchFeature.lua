@@ -74,17 +74,21 @@ function opvp.ChatDisableMatchFeature:onLogoutDeactivate()
 end
 
 function opvp.ChatDisableMatchFeature:_onFeatureActivated()
-    C_SocialRestrictions.SetChatDisabled(true);
+    if opvp.chat.isEnabled() == true then
+        opvp.chat.setEnabled(false)
 
-    opvp.private.state.ui.restore.chat:setValue(true);
+        opvp.private.state.ui.restore.chat:setValue(true);
+    end
 
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
 function opvp.ChatDisableMatchFeature:_onFeatureDeactivated()
-    C_SocialRestrictions.SetChatDisabled(false);
+    if opvp.private.state.ui.restore.chat:value() == true then
+        opvp.chat.setEnabled(true);
 
-    opvp.private.state.ui.restore.chat:setValue(false);
+        opvp.private.state.ui.restore.chat:setValue(false);
+    end
 
     opvp.MatchOptionFeature._onFeatureDeactivated(self);
 end
