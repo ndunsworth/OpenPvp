@@ -92,9 +92,13 @@ end
 function opvp.Currency:isCapped()
     local info = self:info();
 
-    local free_cur = info.limit - info.quantity;
-
-    return (info.limit > 0 and info.limit == info.quantity);
+    return (
+        info.limit > 0 and
+        (
+            info.limit == info.quantity or
+            info.limit == info.earned
+        )
+    );
 end
 
 function opvp.Currency:name()
@@ -143,6 +147,7 @@ function opvp.CurrencyManager:init(id)
     opvp.match.exit:connect(self, self._onMatchExit);
 
     opvp.OnLogin:register(self, self._onLogin);
+    opvp.OnLoginReload:register(self, self._onLoginReload);
 end
 
 function opvp.CurrencyManager:currency(id)
@@ -230,21 +235,21 @@ function opvp.CurrencyManager:_checkPvpCurrencies()
     if self:_checkHonor() == true then
         table.insert(
             currencies,
-            {opvp.Currency.HONOR:name(), opvp.Currency.HONOR:quantity()}
+            {opvp.Currency.HONOR:name(), opvp.Currency.HONOR:quantityMax()}
         );
     end
 
     if self:_checkBloodyToken() == true then
         table.insert(
             currencies,
-            {opvp.Currency.BLOODY_TOKEN:name(), opvp.Currency.BLOODY_TOKEN:quantity()}
+            {opvp.Currency.BLOODY_TOKEN:name(), opvp.Currency.BLOODY_TOKEN:quantityMax()}
         );
     end
 
     if self:_checkConquest() == true then
         table.insert(
             currencies,
-            {opvp.Currency.CONQUEST:name(), opvp.Currency.CONQUEST:quantity()}
+            {opvp.Currency.CONQUEST:name(), opvp.Currency.CONQUEST:quantityMax()}
         );
     end
 
@@ -274,7 +279,7 @@ function opvp.CurrencyManager:_checkPvpCurrencies()
 
         opvp.notify.pvp(
             opvp.strs.PVP_CURRENCIES_CAPPED,
-            table.concat(msgs, ", w")
+            table.concat(msgs, ", ")
         );
     end
 end
@@ -292,9 +297,29 @@ function opvp.CurrencyManager:_onLogin()
     );
 end
 
+function opvp.CurrencyManager:_onLoginReload()
+    opvp.options.announcements.player.pvpCurrencyCappedTest.clicked:connect(
+        self,
+        self._onTest
+    );
+end
+
 function opvp.CurrencyManager:_onMatchExit()
     if opvp.match.isTest() == false then
         opvp.OnLoadingScreenEnd:connect(self, self._checkPvpCurrencies);
+    end
+end
+
+function opvp.CurrencyManager:_onTest(button, state)
+    if state == false then
+        opvp.notify.pvp(
+            opvp.Currency.HONOR:name() .. " " .. opvp.strs.CAPPED,
+            string.format(
+                "%d/%d",
+                opvp.Currency.HONOR:quantityMax(),
+                opvp.Currency.HONOR:quantityMax()
+            )
+        );
     end
 end
 
