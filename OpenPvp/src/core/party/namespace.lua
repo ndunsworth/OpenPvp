@@ -198,7 +198,16 @@ function opvp.party.utils.size(category)
 end
 
 function opvp.party.utils.sortMembersByRole(members, lookup)
-    local result = opvp.List:createCopyFromArray(members);
+    local result;
+
+    if opvp.IsInstance(members, opvp.List) == true then
+        result = opvp.List:createFromArray(members:items());
+    elseif opvp.is_table(members) == true then
+        result = opvp.List:createCopyFromArray(members);
+    else
+        --~ ERROR!
+        return {};
+    end
 
     if lookup == nil or opvp.is_func(lookup) == false then
         lookup = opvp_party_members_cmp_lookup_default;
