@@ -30,7 +30,7 @@ local opvp = OpenPvp;
 
 opvp.MAJOR_VERSION   = 1;
 opvp.MINOR_VERSION   = 0;
-opvp.RELEASE_VERSION = 5;
+opvp.RELEASE_VERSION = 6;
 
 opvp.VERSION         = string.format(
     "%d.%dv%d",
@@ -88,6 +88,10 @@ opvp.PvpFlag = {
     SKIRMISH   = bit.lshift(1, 15),
     VEHICLE    = bit.lshift(1, 16),
     ZONE       = bit.lshift(1, 17)
+};
+
+opvp.PvpStatId = {
+    ROUNDS_WON = 1015
 };
 
 opvp.LootMethod = {

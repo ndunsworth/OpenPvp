@@ -1,6 +1,6 @@
 ## Interface: 110100, 110007, 110005
 ## Title: OpenPvp
-## Version: 1.0.2
+## Version: 1.0.6
 ## IconTexture: Interface/Icons/achievement_pvp_legion08
 ## Category-enUS: PvP
 ## Notes:
@@ -338,6 +338,7 @@ src/feature/audio/FriendlyTrinketUsedSoundEffect.lua
 src/feature/audio/LoginGreetingsSoundEffect.lua
 src/feature/audio/LogoutGoodbySoundEffect.lua
 src/feature/audio/MuteEarthenNpcIdle.lua
+src/feature/audio/MuteInsuranceSoundEffect.lua
 src/feature/audio/NetomaticSoundEffect.lua
 src/feature/audio/PingEmoteSoundEffect.lua
 src/feature/audio/PlayerSpecChangeSoundEffect.lua
