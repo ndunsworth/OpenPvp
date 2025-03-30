@@ -302,6 +302,10 @@ function opvp.CurrencyManager:_onLoginReload()
         self,
         self._onTest
     );
+
+    self:_checkBloodyToken();
+    self:_checkConquest();
+    self:_checkHonor();
 end
 
 function opvp.CurrencyManager:_onMatchExit()
