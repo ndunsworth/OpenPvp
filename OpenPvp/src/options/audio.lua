@@ -55,7 +55,7 @@ Does not alter the volume of any sound channels.]],
     opvp.options.audio.general.muteInsuranceTierSfx = opvp.options.audio.general.category:createOption(
         opvp.Option.BOOL,
         "MuteInsuranceTierSfx",
-        "Mute Undermine Tier Insurance SFX",
+        "Mute Undermine Tier SFX (Insurance)",
         false
     );
 
