@@ -281,6 +281,8 @@ function opvp.ShuffleMatch:_onUpdateScore()
         score_info = C_PvP.GetScoreInfoByPlayerGuid(member:guid());
 
         if score_info ~= nil then
+            self._score_emit = false;
+
             cls = member:classInfo();
             spec = member:specInfo();
 
@@ -323,8 +325,6 @@ function opvp.ShuffleMatch:_onUpdateScore()
             );
         end
     end
-
-    self._score_emit = false;
 end
 
 function opvp.ShuffleMatch:_updateOutcome()
