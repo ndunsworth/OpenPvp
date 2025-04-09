@@ -54,7 +54,7 @@ function opvp.utils.colorNumber(n, r, g, b)
         g ~= nil and
         b ~= nil
     ) then
-        return opvp.utils.colorStringRGB(tostring(n), r, g, b)
+        return opvp.utils.colorStringRGB(tostring(n), r, g, b);
     else
         return tostring(n);
     end
@@ -62,9 +62,11 @@ end
 
 function opvp.utils.colorNumberPosNeg(n, pr, pg, pb, nr, ng, nb)
     if n < 0 then
-        return opvp.utils.colorNumber(n, nr, ng, nb)
+        return opvp.utils.colorNumber(n, nr, ng, nb);
+    elseif n > 0 then
+        return opvp.utils.colorNumber(n, pr, pg, pb);
     else
-        return opvp.utils.colorNumber(n, pr, pg, pb)
+        return tostring(n);
     end
 end
 
