@@ -98,6 +98,7 @@ function opvp.CombatLogFilterManager:removeFilter(filter)
 
         return;
     end
+
     if (
         self._filters:removeItem(filter) == true and
         self._filters:isEmpty() == true
