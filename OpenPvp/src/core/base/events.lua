@@ -118,6 +118,8 @@ opvp.event.NAME_PLATE_UNIT_REMOVED             = opvp.EventRegistrySignal("NAME_
 opvp.event.BARBER_SHOP_APPEARANCE_APPLIED      = opvp.EventRegistrySignal("BARBER_SHOP_APPEARANCE_APPLIED");
 opvp.event.PLAYER_ALIVE                        = opvp.EventRegistrySignal("PLAYER_ALIVE");
 opvp.event.PLAYER_CAMPING                      = opvp.EventRegistrySignal("PLAYER_CAMPING");
+opvp.event.PLAYER_CONTROL_GAINED               = opvp.EventRegistrySignal("PLAYER_CONTROL_GAINED");
+opvp.event.PLAYER_CONTROL_LOST                 = opvp.EventRegistrySignal("PLAYER_CONTROL_LOST");
 opvp.event.PLAYER_DEAD                         = opvp.EventRegistrySignal("PLAYER_DEAD");
 opvp.event.PLAYER_EQUIPMENT_CHANGED            = opvp.EventRegistrySignal("PLAYER_EQUIPMENT_CHANGED");
 opvp.event.PLAYER_FLAGS_CHANGED                = opvp.EventRegistrySignal("PLAYER_FLAGS_CHANGED");
@@ -137,6 +139,8 @@ opvp.event.SPELL_UPDATE_COOLDOWN               = opvp.EventRegistrySignal("SPELL
 opvp.event.SPELL_UPDATE_ICON                   = opvp.EventRegistrySignal("SPELL_UPDATE_ICON");
 opvp.event.SPELL_UPDATE_CHARGES                = opvp.EventRegistrySignal("SPELL_UPDATE_CHARGES");
 opvp.event.SPELL_UPDATE_USABLE                 = opvp.EventRegistrySignal("SPELL_UPDATE_USABLE");
+opvp.event.SPELL_UPDATE_USES                   = opvp.EventRegistrySignal("SPELL_UPDATE_USES");
+opvp.event.SPELLS_CHANGED                      = opvp.EventRegistrySignal("SPELLS_CHANGED");
 
 --~ Sound events
 opvp.event.SOUND_DEVICE_UPDATE                 = opvp.EventRegistrySignal("SOUND_DEVICE_UPDATE");
