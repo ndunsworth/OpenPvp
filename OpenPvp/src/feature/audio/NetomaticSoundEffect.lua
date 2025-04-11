@@ -28,9 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.NetomaticSoundEffect = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.NetomaticSoundEffect = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.NetomaticSoundEffect:init(option)
+function opvp.private.NetomaticSoundEffect:init(option)
     opvp.OptionFeature.init(self, option);
 
     local event_op = opvp.CombatLogLogicalOp(opvp.CombatLogLogicalOp.OR);
@@ -62,18 +62,18 @@ function opvp.NetomaticSoundEffect:init(option)
     );
 end
 
-function opvp.NetomaticSoundEffect:canActivate()
+function opvp.private.NetomaticSoundEffect:canActivate()
     return (
         opvp.player.inSanctuary() == false and
         opvp.match.inMatch() == false
     );
 end
 
-function opvp.NetomaticSoundEffect:isFeatureEnabled()
+function opvp.private.NetomaticSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.NetomaticSoundEffect:_onCastEvent(info)
+function opvp.private.NetomaticSoundEffect:_onCastEvent(info)
     if info.subevent == "SPELL_CAST_START" then
         local extraSpellId, extraSpellName, extraSchool, auraType = select(12, CombatLogGetCurrentEventInfo());
 
@@ -107,7 +107,7 @@ function opvp.NetomaticSoundEffect:_onCastEvent(info)
     end
 end
 
-function opvp.NetomaticSoundEffect:_onFeatureEnabled()
+function opvp.private.NetomaticSoundEffect:_onFeatureEnabled()
     local player = opvp.player.instance();
 
     player.inSanctuaryChanged:connect(self, self._onSanctuaryChanged);
@@ -118,19 +118,19 @@ function opvp.NetomaticSoundEffect:_onFeatureEnabled()
     opvp.OptionFeature._onFeatureEnabled(self)
 end
 
-function opvp.NetomaticSoundEffect:_onFeatureActivated()
+function opvp.private.NetomaticSoundEffect:_onFeatureActivated()
     self._event_filter:connect();
 
     opvp.OptionFeature._onFeatureActivated(self)
 end
 
-function opvp.NetomaticSoundEffect:_onFeatureDeactivated()
+function opvp.private.NetomaticSoundEffect:_onFeatureDeactivated()
     self._event_filter:disconnect();
 
     opvp.OptionFeature._onFeatureDeactivated(self)
 end
 
-function opvp.NetomaticSoundEffect:_onFeatureDisabled()
+function opvp.private.NetomaticSoundEffect:_onFeatureDisabled()
     local player = opvp.player.instance();
 
     player.inSanctuaryChanged:disconnect(self, self._onSanctuaryChanged);
@@ -141,21 +141,21 @@ function opvp.NetomaticSoundEffect:_onFeatureDisabled()
     opvp.OptionFeature._onFeatureDisabled(self)
 end
 
-function opvp.NetomaticSoundEffect:_onLoadingScreenEnd()
+function opvp.private.NetomaticSoundEffect:_onLoadingScreenEnd()
     if self:isFeatureEnabled() == true and self:canActivate() == true then
         self:_setActive(true);
     end
 end
 
-function opvp.NetomaticSoundEffect:_onMatchEntered()
+function opvp.private.NetomaticSoundEffect:_onMatchEntered()
     self:_setActive(false);
 end
 
-function opvp.NetomaticSoundEffect:_onMatchExit()
+function opvp.private.NetomaticSoundEffect:_onMatchExit()
     opvp.OnLoadingScreenEnd:connect(self, self._onLoadingScreenEnd)
 end
 
-function opvp.NetomaticSoundEffect:_onSanctuaryChanged(state)
+function opvp.private.NetomaticSoundEffect:_onSanctuaryChanged(state)
     if state == true then
         self:_setActive(false);
     elseif self:canActivate() == true then
@@ -205,7 +205,7 @@ local function opvp_netomatic_emote_sound_sample(button, state)
 end
 
 local function opvp_netomatic_emote_sound_effect_ctor()
-    opvp_netomatic_emote_sound_effect = opvp.NetomaticSoundEffect(
+    opvp_netomatic_emote_sound_effect = opvp.private.NetomaticSoundEffect(
         opvp.options.audio.soundeffect.pvp.netomaticEmotes
     );
 

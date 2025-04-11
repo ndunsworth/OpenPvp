@@ -52,17 +52,17 @@ local INSURANCE_FILEDATA_IDS = {
     6422005
 };
 
-opvp.MuteInsuranceSoundEffect = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.MuteInsuranceSoundEffect = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.MuteInsuranceSoundEffect:init(option)
+function opvp.private.MuteInsuranceSoundEffect:init(option)
     opvp.OptionFeature.init(self, option);
 end
 
-function opvp.MuteInsuranceSoundEffect:isFeatureEnabled()
+function opvp.private.MuteInsuranceSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.MuteInsuranceSoundEffect:_onFeatureActivated()
+function opvp.private.MuteInsuranceSoundEffect:_onFeatureActivated()
     for n=1, #INSURANCE_FILEDATA_IDS do
         MuteSoundFile(INSURANCE_FILEDATA_IDS[n]);
     end
@@ -70,7 +70,7 @@ function opvp.MuteInsuranceSoundEffect:_onFeatureActivated()
     opvp.OptionFeature._onFeatureActivated(self);
 end
 
-function opvp.MuteInsuranceSoundEffect:_onFeatureDeactivated()
+function opvp.private.MuteInsuranceSoundEffect:_onFeatureDeactivated()
     for n=1, #INSURANCE_FILEDATA_IDS do
         UnmuteSoundFile(INSURANCE_FILEDATA_IDS[n]);
     end
@@ -81,7 +81,7 @@ end
 local opvp_mute_insurance;
 
 local function opvp_mute_insurance_ctor()
-    opvp_mute_insurance = opvp.MuteInsuranceSoundEffect(
+    opvp_mute_insurance = opvp.private.MuteInsuranceSoundEffect(
         opvp.options.audio.general.muteInsuranceTierSfx
     );
 end

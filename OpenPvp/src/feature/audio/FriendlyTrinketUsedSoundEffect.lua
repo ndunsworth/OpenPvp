@@ -28,19 +28,19 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.FriendlyTrinketUsedSoundEffect = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.FriendlyTrinketUsedSoundEffect = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.FriendlyTrinketUsedSoundEffect:init()
+function opvp.private.FriendlyTrinketUsedSoundEffect:init()
     opvp.OptionFeature.init(self, opvp.options.audio.soundeffect.pvp.friendlyTrinket);
 
     self._monitor_connected = false;
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:isFeatureEnabled()
+function opvp.private.FriendlyTrinketUsedSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_onFeatureActivated()
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onFeatureActivated()
     if opvp.match.inMatch() == false then
         self:_setMonitorConnected(true);
     end
@@ -48,13 +48,13 @@ function opvp.FriendlyTrinketUsedSoundEffect:_onFeatureActivated()
     opvp.OptionFeature._onFeatureActivated(self)
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_onFeatureDeactivated()
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onFeatureDeactivated()
     self:_setMonitorConnected(false);
 
     opvp.OptionFeature._onFeatureDeactivated(self)
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_onFeatureDisabled()
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onFeatureDisabled()
     opvp.match.entered:disconnect(self, self._onMatchEntered);
     opvp.match.exit:disconnect(self, self._onMatchExit);
     opvp.match.playerTrinket:disconnect(self, self._onMatchTrinketUsed);
@@ -62,7 +62,7 @@ function opvp.FriendlyTrinketUsedSoundEffect:_onFeatureDisabled()
     opvp.OptionFeature._onFeatureDisabled(self)
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_onFeatureEnabled()
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onFeatureEnabled()
     opvp.match.entered:connect(self, self._onMatchEntered);
     opvp.match.exit:connect(self, self._onMatchExit);
     opvp.match.playerTrinket:connect(self, self._onMatchTrinketUsed);
@@ -70,15 +70,15 @@ function opvp.FriendlyTrinketUsedSoundEffect:_onFeatureEnabled()
     opvp.OptionFeature._onFeatureEnabled(self)
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_onMatchEntered()
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchEntered()
     self:_setMonitorConnected(false);
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_onMatchExit()
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchExit()
     self:_setMonitorConnected(true);
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId)
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId)
     if (
         member:isHostile() == false and
         member:isRaceKnown() == true and
@@ -88,7 +88,7 @@ function opvp.FriendlyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId
     end
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_onTrintetUsed(guid, name, spellId, hostile)
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onTrintetUsed(guid, name, spellId, hostile)
     if hostile == true or guid == opvp.player.guid() then
         return;
     end
@@ -111,7 +111,7 @@ function opvp.FriendlyTrinketUsedSoundEffect:_onTrintetUsed(guid, name, spellId,
     opvp.effect.friendlyTrinketEmote(unit:race(), unit:sex());
 end
 
-function opvp.FriendlyTrinketUsedSoundEffect:_setMonitorConnected(state)
+function opvp.private.FriendlyTrinketUsedSoundEffect:_setMonitorConnected(state)
     if state == self._monitor_connected then
         return;
     end
@@ -155,7 +155,7 @@ local function opvp_friendly_trinket_used_emote_sound_effect_sample(button, stat
 end
 
 local function opvp_friendly_trinket_used_emote_sound_effect_ctor()
-    opvp_friendly_trinket_used_emote_sound_effect = opvp.FriendlyTrinketUsedSoundEffect();
+    opvp_friendly_trinket_used_emote_sound_effect = opvp.private.FriendlyTrinketUsedSoundEffect();
 
     opvp.options.audio.soundeffect.pvp.friendlyTrinketSample.clicked:connect(
         opvp_friendly_trinket_used_emote_sound_effect_sample

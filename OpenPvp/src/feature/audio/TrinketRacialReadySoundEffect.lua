@@ -28,37 +28,37 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.TrinketRacialReadySoundEffect = opvp.CreateClass(opvp.SoundEffect);
+opvp.private.TrinketRacialReadySoundEffect = opvp.CreateClass(opvp.private.SoundEffect);
 
-function opvp.TrinketRacialReadySoundEffect:init(option)
-    opvp.SoundEffect.init(self, option);
+function opvp.private.TrinketRacialReadySoundEffect:init(option)
+    opvp.private.SoundEffect.init(self, option);
 end
 
-function opvp.TrinketRacialReadySoundEffect:isFeatureEnabled()
+function opvp.private.TrinketRacialReadySoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.TrinketRacialReadySoundEffect:_onFeatureActivated()
+function opvp.private.TrinketRacialReadySoundEffect:_onFeatureActivated()
     local player = opvp.player.instance();
 
     if player:hasPvpRacialTrinket() == true then
         player.pvpTrinketRacialUpdate:connect(self, self._onPvpTrinketUpdate);
     end
 
-    opvp.SoundEffect._onFeatureActivated(self);
+    opvp.private.SoundEffect._onFeatureActivated(self);
 end
 
-function opvp.TrinketRacialReadySoundEffect:_onFeatureDeactivated()
+function opvp.private.TrinketRacialReadySoundEffect:_onFeatureDeactivated()
     local player = opvp.player.instance();
 
     if player:hasPvpRacialTrinket() == true then
         player.pvpTrinketRacialUpdate:disconnect(self, self._onPvpTrinketUpdate);
     end
 
-    opvp.SoundEffect._onFeatureDeactivated(self)
+    opvp.private.SoundEffect._onFeatureDeactivated(self)
 end
 
-function opvp.TrinketRacialReadySoundEffect:_onPvpTrinketUpdate(state)
+function opvp.private.TrinketRacialReadySoundEffect:_onPvpTrinketUpdate(state)
     if state == true then
         opvp.effect.trinketRacialReady(
             opvp.player.race(),
@@ -89,7 +89,7 @@ local function opvp_trinket_racial_ready_sound_sample(button, state)
 end
 
 local function opvp_trinket_racial_ready_sound_effect_ctor()
-    opvp_trinket_racial_ready_sound_effect = opvp.TrinketRacialReadySoundEffect(
+    opvp_trinket_racial_ready_sound_effect = opvp.private.TrinketRacialReadySoundEffect(
         opvp.options.audio.soundeffect.pvp.trinketRacialReady
     );
 

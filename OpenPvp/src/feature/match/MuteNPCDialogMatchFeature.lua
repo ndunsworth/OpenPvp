@@ -132,9 +132,9 @@ local DIALOG_FILEDATA_IDS = {
     }
 };
 
-opvp.MuteNPCDialogMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.MuteNPCDialogMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.MuteNPCDialogMatchFeature:init(option)
+function opvp.private.MuteNPCDialogMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
     self._valid_test  = opvp.MatchTestType.NONE;
@@ -163,7 +163,7 @@ function opvp.MuteNPCDialogMatchFeature:init(option)
     );
 end
 
-function opvp.MuteNPCDialogMatchFeature:isValidMap(map)
+function opvp.private.MuteNPCDialogMatchFeature:isValidMap(map)
     return (
         map ~= nil and
         opvp.IsInstance(map, opvp.Map) == true and
@@ -171,7 +171,7 @@ function opvp.MuteNPCDialogMatchFeature:isValidMap(map)
     );
 end
 
-function opvp.MuteNPCDialogMatchFeature:isValidMatch(match)
+function opvp.private.MuteNPCDialogMatchFeature:isValidMatch(match)
     return (
         match ~= nil and
         match:isArena() == true and
@@ -180,11 +180,11 @@ function opvp.MuteNPCDialogMatchFeature:isValidMatch(match)
     );
 end
 
-function opvp.MuteNPCDialogMatchFeature:isFeatureEnabled()
+function opvp.private.MuteNPCDialogMatchFeature:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.MuteNPCDialogMatchFeature:_onFeatureActivated()
+function opvp.private.MuteNPCDialogMatchFeature:_onFeatureActivated()
     local map = opvp.Map:createFromCurrentInstance();
     local sound_ids = DIALOG_FILEDATA_IDS[map:instanceId()];
 
@@ -201,7 +201,7 @@ function opvp.MuteNPCDialogMatchFeature:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.MuteNPCDialogMatchFeature:_onFeatureDeactivated()
+function opvp.private.MuteNPCDialogMatchFeature:_onFeatureDeactivated()
     local sound_ids = DIALOG_FILEDATA_IDS[self._map];
 
     if sound_ids ~= nil then
@@ -220,7 +220,7 @@ end
 local opvp_mute_npc_dialog_match_feature;
 
 local function opvp_mute_npc_dialog_match_feature_ctor()
-    opvp_mute_npc_dialog_match_feature = opvp.MuteNPCDialogMatchFeature(
+    opvp_mute_npc_dialog_match_feature = opvp.private.MuteNPCDialogMatchFeature(
         opvp.options.match.general.muteNPCDialog
     );
 end

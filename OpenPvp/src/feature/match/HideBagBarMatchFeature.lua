@@ -28,15 +28,15 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.HideBagBarMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
+opvp.private.HideBagBarMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
 
-function opvp.HideBagBarMatchFeature:init(option)
+function opvp.private.HideBagBarMatchFeature:init(option)
     opvp.MatchTypeOptionFeature.init(self, option);
 
     self._restore = false;
 end
 
-function opvp.HideBagBarMatchFeature:isActiveMatchStatus(status)
+function opvp.private.HideBagBarMatchFeature:isActiveMatchStatus(status)
     return (
         status == opvp.MatchStatus.ROUND_ACTIVE or
         status == opvp.MatchStatus.ROUND_COMPLETE or
@@ -44,11 +44,11 @@ function opvp.HideBagBarMatchFeature:isActiveMatchStatus(status)
     );
 end
 
-function opvp.HideBagBarMatchFeature:onLogoutDeactivate()
+function opvp.private.HideBagBarMatchFeature:onLogoutDeactivate()
     return true;
 end
 
-function opvp.HideBagBarMatchFeature:_onFeatureActivated()
+function opvp.private.HideBagBarMatchFeature:_onFeatureActivated()
     if opvp.bagbar.isEnabled() == true then
         local bar = opvp.bagbar.bar();
 
@@ -62,7 +62,7 @@ function opvp.HideBagBarMatchFeature:_onFeatureActivated()
     opvp.MatchTypeOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.HideBagBarMatchFeature:_onFeatureDeactivated()
+function opvp.private.HideBagBarMatchFeature:_onFeatureDeactivated()
     if self._restore == true then
         local bar = opvp.bagbar.bar();
 
@@ -79,7 +79,7 @@ end
 local opvp_hide_bagbar_match_feature;
 
 local function opvp_hide_bagbar_match_feature_ctor()
-    opvp_hide_bagbar_match_feature = opvp.HideBagBarMatchFeature(
+    opvp_hide_bagbar_match_feature = opvp.private.HideBagBarMatchFeature(
         opvp.options.match.frames.hideBagBar
     );
 end

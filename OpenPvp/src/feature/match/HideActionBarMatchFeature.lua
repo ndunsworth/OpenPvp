@@ -28,16 +28,16 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.HideActionBarMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
+opvp.private.HideActionBarMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
 
-function opvp.HideActionBarMatchFeature:init(id, option)
+function opvp.private.HideActionBarMatchFeature:init(id, option)
     opvp.MatchTypeOptionFeature.init(self, option);
 
     self._restore = false;
     self._id      = id;
 end
 
-function opvp.HideActionBarMatchFeature:isActiveMatchStatus(status)
+function opvp.private.HideActionBarMatchFeature:isActiveMatchStatus(status)
     return (
         status == opvp.MatchStatus.ROUND_ACTIVE or
         status == opvp.MatchStatus.ROUND_COMPLETE or
@@ -45,11 +45,11 @@ function opvp.HideActionBarMatchFeature:isActiveMatchStatus(status)
     );
 end
 
-function opvp.HideActionBarMatchFeature:onLogoutDeactivate()
+function opvp.private.HideActionBarMatchFeature:onLogoutDeactivate()
     return true;
 end
 
-function opvp.HideActionBarMatchFeature:_onFeatureActivated()
+function opvp.private.HideActionBarMatchFeature:_onFeatureActivated()
     if opvp.actionbar.isEnabled(self._id) == true then
         local bar = opvp.actionbar.bar(self._id);
 
@@ -65,7 +65,7 @@ function opvp.HideActionBarMatchFeature:_onFeatureActivated()
     opvp.MatchTypeOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.HideActionBarMatchFeature:_onFeatureDeactivated()
+function opvp.private.HideActionBarMatchFeature:_onFeatureDeactivated()
     if self._restore == true then
         local bar = opvp.actionbar.bar(self._id);
 
@@ -91,42 +91,42 @@ local opvp_hide_actionbar7_match_feature;
 local opvp_hide_actionbar8_match_feature;
 
 local function opvp_hide_actionbar_match_feature_ctor()
-    opvp_hide_actionbar1_match_feature = opvp.HideActionBarMatchFeature(
+    opvp_hide_actionbar1_match_feature = opvp.private.HideActionBarMatchFeature(
         opvp.ActionBarId.BAR_1,
         opvp.options.match.actionbars.hideActionBar1
     );
 
-    opvp_hide_actionbar2_match_feature = opvp.HideActionBarMatchFeature(
+    opvp_hide_actionbar2_match_feature = opvp.private.HideActionBarMatchFeature(
         opvp.ActionBarId.BAR_2,
         opvp.options.match.actionbars.hideActionBar2
     );
 
-    opvp_hide_actionbar3_match_feature = opvp.HideActionBarMatchFeature(
+    opvp_hide_actionbar3_match_feature = opvp.private.HideActionBarMatchFeature(
         opvp.ActionBarId.BAR_3,
         opvp.options.match.actionbars.hideActionBar3
     );
 
-    opvp_hide_actionbar4_match_feature = opvp.HideActionBarMatchFeature(
+    opvp_hide_actionbar4_match_feature = opvp.private.HideActionBarMatchFeature(
         opvp.ActionBarId.BAR_4,
         opvp.options.match.actionbars.hideActionBar4
     );
 
-    opvp_hide_actionbar5_match_feature = opvp.HideActionBarMatchFeature(
+    opvp_hide_actionbar5_match_feature = opvp.private.HideActionBarMatchFeature(
         opvp.ActionBarId.BAR_5,
         opvp.options.match.actionbars.hideActionBar5
     );
 
-    opvp_hide_actionbar6_match_feature = opvp.HideActionBarMatchFeature(
+    opvp_hide_actionbar6_match_feature = opvp.private.HideActionBarMatchFeature(
         opvp.ActionBarId.BAR_6,
         opvp.options.match.actionbars.hideActionBar6
     );
 
-    opvp_hide_actionbar7_match_feature = opvp.HideActionBarMatchFeature(
+    opvp_hide_actionbar7_match_feature = opvp.private.HideActionBarMatchFeature(
         opvp.ActionBarId.BAR_7,
         opvp.options.match.actionbars.hideActionBar7
     );
 
-    opvp_hide_actionbar8_match_feature = opvp.HideActionBarMatchFeature(
+    opvp_hide_actionbar8_match_feature = opvp.private.HideActionBarMatchFeature(
         opvp.ActionBarId.BAR_8,
         opvp.options.match.actionbars.hideActionBar8
     );

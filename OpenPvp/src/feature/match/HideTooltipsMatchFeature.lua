@@ -28,9 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.HideTooltipsMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
+opvp.private.HideTooltipsMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
 
-function opvp.HideTooltipsMatchFeature:init(option)
+function opvp.private.HideTooltipsMatchFeature:init(option)
     opvp.MatchTypeOptionFeature.init(self, option);
 
     self._frame = CreateFrame("Frame", "OpenPvpTooltipWatcher", UIParent);
@@ -43,13 +43,13 @@ function opvp.HideTooltipsMatchFeature:init(option)
     self._match_deactivate = opvp.MatchStatus.ROUND_WARMUP;
 end
 
-function opvp.HideTooltipsMatchFeature:tryHide()
+function opvp.private.HideTooltipsMatchFeature:tryHide()
     if GameTooltip:IsVisible() == true then
         GameTooltip:Hide();
     end
 end
 
-function opvp.HideTooltipsMatchFeature:_onFeatureActivated()
+function opvp.private.HideTooltipsMatchFeature:_onFeatureActivated()
     if self._frame:GetParent() == GameTooltip then
         return false;
     end
@@ -61,7 +61,7 @@ function opvp.HideTooltipsMatchFeature:_onFeatureActivated()
     opvp.MatchTypeOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.HideTooltipsMatchFeature:_onFeatureDeactivated()
+function opvp.private.HideTooltipsMatchFeature:_onFeatureDeactivated()
     if self._frame:GetParent() == UIParent then
         return;
     end
@@ -76,7 +76,7 @@ end
 local opvp_hide_tooltips_match_feature;
 
 local function opvp_hide_tooltips_match_feature_ctor()
-    opvp_hide_tooltips_match_feature = opvp.HideTooltipsMatchFeature(
+    opvp_hide_tooltips_match_feature = opvp.private.HideTooltipsMatchFeature(
         opvp.options.match.frames.hideTooltips
     );
 end

@@ -28,19 +28,19 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.EnemyTrinketUsedSoundEffect = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.EnemyTrinketUsedSoundEffect = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.EnemyTrinketUsedSoundEffect:init()
+function opvp.private.EnemyTrinketUsedSoundEffect:init()
     opvp.OptionFeature.init(self, opvp.options.audio.soundeffect.pvp.enemyTrinket);
 
     self._monitor_connected = false;
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:isFeatureEnabled()
+function opvp.private.EnemyTrinketUsedSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_onFeatureActivated()
+function opvp.private.EnemyTrinketUsedSoundEffect:_onFeatureActivated()
     if opvp.match.inMatch() == false then
         self:_setMonitorConnected(true);
     end
@@ -48,13 +48,13 @@ function opvp.EnemyTrinketUsedSoundEffect:_onFeatureActivated()
     opvp.OptionFeature._onFeatureActivated(self)
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_onFeatureDeactivated()
+function opvp.private.EnemyTrinketUsedSoundEffect:_onFeatureDeactivated()
     self:_setMonitorConnected(false);
 
     opvp.OptionFeature._onFeatureDeactivated(self)
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_onFeatureDisabled()
+function opvp.private.EnemyTrinketUsedSoundEffect:_onFeatureDisabled()
     opvp.match.entered:disconnect(self, self._onMatchEntered);
     opvp.match.exit:disconnect(self, self._onMatchExit);
     opvp.match.playerTrinket:disconnect(self, self._onMatchTrinketUsed);
@@ -62,7 +62,7 @@ function opvp.EnemyTrinketUsedSoundEffect:_onFeatureDisabled()
     opvp.OptionFeature._onFeatureDisabled(self)
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_onFeatureEnabled()
+function opvp.private.EnemyTrinketUsedSoundEffect:_onFeatureEnabled()
     opvp.match.entered:connect(self, self._onMatchEntered);
     opvp.match.exit:connect(self, self._onMatchExit);
     opvp.match.playerTrinket:connect(self, self._onMatchTrinketUsed);
@@ -70,15 +70,15 @@ function opvp.EnemyTrinketUsedSoundEffect:_onFeatureEnabled()
     opvp.OptionFeature._onFeatureEnabled(self)
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_onMatchEntered()
+function opvp.private.EnemyTrinketUsedSoundEffect:_onMatchEntered()
     self:_setMonitorConnected(false);
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_onMatchExit()
+function opvp.private.EnemyTrinketUsedSoundEffect:_onMatchExit()
     self:_setMonitorConnected(true);
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId)
+function opvp.private.EnemyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId)
     if (
         member:isHostile() == true and
         member:isRaceKnown() == true and
@@ -88,7 +88,7 @@ function opvp.EnemyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId)
     end
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_onTrintetUsed(guid, name, spellId, hostile)
+function opvp.private.EnemyTrinketUsedSoundEffect:_onTrintetUsed(guid, name, spellId, hostile)
     if hostile == false then
         return;
     end
@@ -111,7 +111,7 @@ function opvp.EnemyTrinketUsedSoundEffect:_onTrintetUsed(guid, name, spellId, ho
     opvp.effect.enemyTrinketEmote(unit:race(), unit:sex());
 end
 
-function opvp.EnemyTrinketUsedSoundEffect:_setMonitorConnected(state)
+function opvp.private.EnemyTrinketUsedSoundEffect:_setMonitorConnected(state)
     if state == self._monitor_connected then
         return;
     end
@@ -161,7 +161,7 @@ local function opvp_enemy_trinket_used_emote_sound_effect_sample(button, state)
 end
 
 local function opvp_enemy_trinket_used_emote_sound_effect_ctor()
-    opvp_enemy_trinket_used_emote_sound_effect = opvp.EnemyTrinketUsedSoundEffect();
+    opvp_enemy_trinket_used_emote_sound_effect = opvp.private.EnemyTrinketUsedSoundEffect();
 
     opvp.options.audio.soundeffect.pvp.enemyTrinketSample.clicked:connect(
         opvp_enemy_trinket_used_emote_sound_effect_sample

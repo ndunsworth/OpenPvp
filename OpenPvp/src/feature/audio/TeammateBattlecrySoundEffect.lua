@@ -28,23 +28,23 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.TeammateBattlecrySoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.TeammateBattlecrySoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.TeammateBattlecrySoundEffect:init()
+function opvp.private.TeammateBattlecrySoundEffect:init()
     opvp.MatchOptionFeature.init(self, opvp.options.audio.soundeffect.match.teammateMatchBeginBattlecry);
 
     self._valid_test = opvp.MatchTestType.SIMULATION;
 end
 
-function opvp.TeammateBattlecrySoundEffect:isActiveMatchStatus(status)
+function opvp.private.TeammateBattlecrySoundEffect:isActiveMatchStatus(status)
     return status == opvp.MatchStatus.ROUND_ACTIVE;
 end
 
-function opvp.TeammateBattlecrySoundEffect:isFeatureEnabled()
+function opvp.private.TeammateBattlecrySoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.TeammateBattlecrySoundEffect:_onFeatureActivated()
+function opvp.private.TeammateBattlecrySoundEffect:_onFeatureActivated()
     local match = opvp.match.current();
 
     if match == nil or match:joinedInProgress() == true then
@@ -165,7 +165,7 @@ local function opvp_round_begin_sound_effect_sample(button, state)
 end
 
 local function opvp_round_begin_sound_effect_ctor()
-    opvp_round_begin_sound_effect = opvp.TeammateBattlecrySoundEffect();
+    opvp_round_begin_sound_effect = opvp.private.TeammateBattlecrySoundEffect();
 
     opvp.options.audio.soundeffect.match.teammateMatchBeginBattlecrySample.clicked:connect(
         opvp_round_begin_sound_effect_sample

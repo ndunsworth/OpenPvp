@@ -28,9 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.TeammateGreetingsSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.TeammateGreetingsSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.TeammateGreetingsSoundEffect:init()
+function opvp.private.TeammateGreetingsSoundEffect:init()
     opvp.MatchOptionFeature.init(self, opvp.options.audio.soundeffect.match.teammateGreetings);
 
     self._valid_test = opvp.MatchTestType.NONE;
@@ -39,7 +39,7 @@ function opvp.TeammateGreetingsSoundEffect:init()
     self._last_greet = 0;
 end
 
-function opvp.TeammateGreetingsSoundEffect:greetPlayer(guid, race, sex)
+function opvp.private.TeammateGreetingsSoundEffect:greetPlayer(guid, race, sex)
     if self:hasGreetedPlayer(guid) == true then
         return false;
     end
@@ -69,15 +69,15 @@ function opvp.TeammateGreetingsSoundEffect:greetPlayer(guid, race, sex)
     return true;
 end
 
-function opvp.TeammateGreetingsSoundEffect:hasGreetedPlayer(guid)
+function opvp.private.TeammateGreetingsSoundEffect:hasGreetedPlayer(guid)
     return self._players:contains(guid);
 end
 
-function opvp.TeammateGreetingsSoundEffect:isFeatureEnabled()
+function opvp.private.TeammateGreetingsSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.TeammateGreetingsSoundEffect:_greetMember(member)
+function opvp.private.TeammateGreetingsSoundEffect:_greetMember(member)
     if (
         member:isPlayer() == false and
         member:isGuidKnown() == true and
@@ -88,7 +88,7 @@ function opvp.TeammateGreetingsSoundEffect:_greetMember(member)
     end
 end
 
-function opvp.TeammateGreetingsSoundEffect:_onFeatureActivated()
+function opvp.private.TeammateGreetingsSoundEffect:_onFeatureActivated()
     opvp.match.playerInfoUpdated:connect(self, self._onPlayerInfoUpdated);
     opvp.match.playerRosterUpdated:connect(self, self._onPlayerRosterUpdated);
 
@@ -113,7 +113,7 @@ function opvp.TeammateGreetingsSoundEffect:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self)
 end
 
-function opvp.TeammateGreetingsSoundEffect:_onFeatureDeactivated()
+function opvp.private.TeammateGreetingsSoundEffect:_onFeatureDeactivated()
     self._players:clear();
     self._last_greet = 0;
 
@@ -123,7 +123,7 @@ function opvp.TeammateGreetingsSoundEffect:_onFeatureDeactivated()
     opvp.MatchOptionFeature._onFeatureDeactivated(self)
 end
 
-function opvp.TeammateGreetingsSoundEffect:_onPlayerInfoUpdated(team, member, mask)
+function opvp.private.TeammateGreetingsSoundEffect:_onPlayerInfoUpdated(team, member, mask)
     if (
         team:isHostile() == false and
         bit.band(mask, opvp.PartyMember.CHARACTER_RACE_SEX_MASK) ~= 0
@@ -132,7 +132,7 @@ function opvp.TeammateGreetingsSoundEffect:_onPlayerInfoUpdated(team, member, ma
     end
 end
 
-function opvp.TeammateGreetingsSoundEffect:_onPlayerRosterUpdated(team, newMembers, updatedMembers, removedMembers)
+function opvp.private.TeammateGreetingsSoundEffect:_onPlayerRosterUpdated(team, newMembers, updatedMembers, removedMembers)
     if team:isHostile() == true then
         return;
     end
@@ -168,7 +168,7 @@ local function opvp_teammate_greetings_sound_effect_sample(button, state)
 end
 
 local function opvp_teammate_greetings_sound_effect_ctor()
-    opvp_teammate_greetings_sound_effect = opvp.TeammateGreetingsSoundEffect();
+    opvp_teammate_greetings_sound_effect = opvp.private.TeammateGreetingsSoundEffect();
 
     opvp.options.audio.soundeffect.match.teammateGreetingsSample.clicked:connect(
         opvp_teammate_greetings_sound_effect_sample

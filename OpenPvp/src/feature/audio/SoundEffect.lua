@@ -28,8 +28,8 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.SoundEffect = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.SoundEffect = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.SoundEffect:init(option)
+function opvp.private.SoundEffect:init(option)
     opvp.OptionFeature.init(self, option);
 end

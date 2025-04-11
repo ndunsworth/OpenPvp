@@ -28,9 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.TeammateDeathSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.TeammateDeathSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.TeammateDeathSoundEffect:init()
+function opvp.private.TeammateDeathSoundEffect:init()
     opvp.MatchOptionFeature.init(self, opvp.options.audio.soundeffect.match.teammateDeath);
 
     self._valid_test = opvp.MatchTestType.SIMULATION;
@@ -58,7 +58,7 @@ function opvp.TeammateDeathSoundEffect:init()
     --~ );
 end
 
-function opvp.TeammateDeathSoundEffect:isActiveMatchStatus(status)
+function opvp.private.TeammateDeathSoundEffect:isActiveMatchStatus(status)
     return status == opvp.MatchStatus.ROUND_COMPLETE;
 
     --~ return (
@@ -68,11 +68,11 @@ function opvp.TeammateDeathSoundEffect:isActiveMatchStatus(status)
     --~ );
 end
 
-function opvp.TeammateDeathSoundEffect:isFeatureEnabled()
+function opvp.private.TeammateDeathSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.TeammateDeathSoundEffect:_onFeatureActivated()
+function opvp.private.TeammateDeathSoundEffect:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 
     --~ self._event_filter:disconnect();
@@ -113,13 +113,13 @@ function opvp.TeammateDeathSoundEffect:_onFeatureActivated()
     end
 end
 
-function opvp.TeammateDeathSoundEffect:_onFeatureDeactivated()
+function opvp.private.TeammateDeathSoundEffect:_onFeatureDeactivated()
     opvp.MatchOptionFeature._onFeatureDeactivated(self);
 
     --~ self._event_filter:disconnect();
 end
 
-function opvp.TeammateDeathSoundEffect:_onUnitDeath(unitId, guid)
+function opvp.private.TeammateDeathSoundEffect:_onUnitDeath(unitId, guid)
     if opvp.unit.isFeignDeath(unitId) == true then
         return;
     end
@@ -214,7 +214,7 @@ local function opvp_teammate_death_sound_effect_sample(button, state)
 end
 
 local function opvp_teammate_death_sound_effect_ctor()
-    opvp_teammate_death_sound_effect = opvp.TeammateDeathSoundEffect();
+    opvp_teammate_death_sound_effect = opvp.private.TeammateDeathSoundEffect();
 
     opvp.options.audio.soundeffect.match.teammateDeathSample.clicked:connect(
         opvp_teammate_death_sound_effect_sample

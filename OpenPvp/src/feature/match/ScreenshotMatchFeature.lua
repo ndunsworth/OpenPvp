@@ -28,9 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.ScreenshotMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.ScreenshotMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.ScreenshotMatchFeature:init(option)
+function opvp.private.ScreenshotMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
     self._valid_test     = opvp.MatchTestType.NONE;
@@ -45,11 +45,11 @@ function opvp.ScreenshotMatchFeature:init(option)
     );
 end
 
-function opvp.ScreenshotMatchFeature:isFeatureEnabled()
+function opvp.private.ScreenshotMatchFeature:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.ScreenshotMatchFeature:screenshot()
+function opvp.private.ScreenshotMatchFeature:screenshot()
     if (
         self._screenshot == true and
         opvp.match.current():surrendered() == false
@@ -74,13 +74,13 @@ function opvp.ScreenshotMatchFeature:screenshot()
     end
 end
 
-function opvp.ScreenshotMatchFeature:_onFeatureActivated()
+function opvp.private.ScreenshotMatchFeature:_onFeatureActivated()
     self._screenshot = true;
 
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.ScreenshotMatchFeature:_onFeatureDeactivated()
+function opvp.private.ScreenshotMatchFeature:_onFeatureDeactivated()
     self._screenshot = false;
 
     opvp.MatchOptionFeature._onFeatureDeactivated(self);
@@ -89,7 +89,7 @@ end
 local opvp_screenshot_match_feature;
 
 local function opvp_screenshot_match_feature_ctor()
-    opvp_screenshot_match_feature = opvp.ScreenshotMatchFeature(
+    opvp_screenshot_match_feature = opvp.private.ScreenshotMatchFeature(
         opvp.options.match.general.screenshot
     );
 end

@@ -80,17 +80,17 @@ local EARTHEN_IDLE_FILEDATA_IDS = {
     5919819,
 };
 
-opvp.MuteEarthenNpcIdle = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.MuteEarthenNpcIdle = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.MuteEarthenNpcIdle:init(option)
+function opvp.private.MuteEarthenNpcIdle:init(option)
     opvp.OptionFeature.init(self, option);
 end
 
-function opvp.MuteEarthenNpcIdle:isFeatureEnabled()
+function opvp.private.MuteEarthenNpcIdle:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.MuteEarthenNpcIdle:_onFeatureActivated()
+function opvp.private.MuteEarthenNpcIdle:_onFeatureActivated()
     for n=1, #EARTHEN_IDLE_FILEDATA_IDS do
         MuteSoundFile(EARTHEN_IDLE_FILEDATA_IDS[n]);
     end
@@ -98,7 +98,7 @@ function opvp.MuteEarthenNpcIdle:_onFeatureActivated()
     opvp.OptionFeature._onFeatureActivated(self);
 end
 
-function opvp.MuteEarthenNpcIdle:_onFeatureDeactivated()
+function opvp.private.MuteEarthenNpcIdle:_onFeatureDeactivated()
     for n=1, #EARTHEN_IDLE_FILEDATA_IDS do
         UnmuteSoundFile(EARTHEN_IDLE_FILEDATA_IDS[n]);
     end
@@ -109,7 +109,7 @@ end
 local opvp_mute_earthen_npc_idle;
 
 local function opvp_mute_earthen_npc_idle_ctor()
-    opvp_mute_earthen_npc_idle = opvp.MuteEarthenNpcIdle(
+    opvp_mute_earthen_npc_idle = opvp.private.MuteEarthenNpcIdle(
         opvp.options.audio.general.muteEarthenNpcIdle
     );
 end

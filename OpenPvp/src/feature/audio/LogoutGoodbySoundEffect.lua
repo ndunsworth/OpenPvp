@@ -28,47 +28,47 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.LogoutGoodbySoundEffect = opvp.CreateClass(opvp.SoundEffect);
+opvp.private.LogoutGoodbySoundEffect = opvp.CreateClass(opvp.private.SoundEffect);
 
-function opvp.LogoutGoodbySoundEffect:init()
-    opvp.SoundEffect.init(self, opvp.options.audio.soundeffect.player.logout);
+function opvp.private.LogoutGoodbySoundEffect:init()
+    opvp.private.SoundEffect.init(self, opvp.options.audio.soundeffect.player.logout);
 
     self._timer = opvp.Timer(17);
 
     self._timer.timeout:connect(self, self.greet);
 end
 
-function opvp.LogoutGoodbySoundEffect:greet()
+function opvp.private.LogoutGoodbySoundEffect:greet()
     opvp.effect.logoutGoodbye(
         opvp.player.race(),
         opvp.player.sex()
     )
 end
 
-function opvp.LogoutGoodbySoundEffect:isFeatureEnabled()
+function opvp.private.LogoutGoodbySoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.LogoutGoodbySoundEffect:_onFeatureActivated()
+function opvp.private.LogoutGoodbySoundEffect:_onFeatureActivated()
     opvp.event.PLAYER_CAMPING:connect(self, self._onLogoutBegin);
     opvp.event.LOGOUT_CANCEL:connect(self, self._onLogoutCancel);
 
-    opvp.SoundEffect._onFeatureActivated(self)
+    opvp.private.SoundEffect._onFeatureActivated(self)
 end
 
-function opvp.LogoutGoodbySoundEffect:_onFeatureDeactivated()
+function opvp.private.LogoutGoodbySoundEffect:_onFeatureDeactivated()
     opvp.event.PLAYER_CAMPING:disconnect(self, self._onLogoutBegin);
     opvp.event.LOGOUT_CANCEL:disconnect(self, self._onLogoutCancel);
 
-    opvp.SoundEffect._onFeatureDeactivated(self)
+    opvp.private.SoundEffect._onFeatureDeactivated(self)
 end
 
 
-function opvp.LogoutGoodbySoundEffect:_onLogoutBegin()
+function opvp.private.LogoutGoodbySoundEffect:_onLogoutBegin()
     self._timer:start();
 end
 
-function opvp.LogoutGoodbySoundEffect:_onLogoutCancel()
+function opvp.private.LogoutGoodbySoundEffect:_onLogoutCancel()
     self._timer:stop();
 end
 
@@ -92,7 +92,7 @@ local function opvp_logout_goodbye_sound_sample(button, state)
 end
 
 local function opvp_logout_goodbye_sound_effect_ctor()
-    opvp_logout_goodbye_sound_effect = opvp.LogoutGoodbySoundEffect();
+    opvp_logout_goodbye_sound_effect = opvp.private.LogoutGoodbySoundEffect();
 
     opvp.options.audio.soundeffect.player.logoutSample.clicked:connect(
         opvp_logout_goodbye_sound_sample

@@ -102,9 +102,9 @@ local opvp_killing_blow_target_mean_emotes = opvp.List:createFromArray(
     }
 );
 
-opvp.EmoteKillingBlowSoundEffect = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.EmoteKillingBlowSoundEffect = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.EmoteKillingBlowSoundEffect:init(option)
+function opvp.private.EmoteKillingBlowSoundEffect:init(option)
     opvp.OptionFeature.init(self, option);
 
     self._emotes = {
@@ -152,7 +152,7 @@ function opvp.EmoteKillingBlowSoundEffect:init(option)
     );
 end
 
-function opvp.EmoteKillingBlowSoundEffect:randomEmote(isTargeting, level)
+function opvp.private.EmoteKillingBlowSoundEffect:randomEmote(isTargeting, level)
     local emotes;
 
     if isTargeting == true then
@@ -174,27 +174,27 @@ function opvp.EmoteKillingBlowSoundEffect:randomEmote(isTargeting, level)
     return emote;
 end
 
-function opvp.EmoteKillingBlowSoundEffect:canActivate()
+function opvp.private.EmoteKillingBlowSoundEffect:canActivate()
     return opvp.player.inSanctuary() == false;
 end
 
-function opvp.EmoteKillingBlowSoundEffect:isFeatureEnabled()
+function opvp.private.EmoteKillingBlowSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.EmoteKillingBlowSoundEffect:_onFeatureActivated()
+function opvp.private.EmoteKillingBlowSoundEffect:_onFeatureActivated()
     self._event_filter:connect();
 
     opvp.OptionFeature._onFeatureActivated(self)
 end
 
-function opvp.EmoteKillingBlowSoundEffect:_onFeatureDeactivated()
+function opvp.private.EmoteKillingBlowSoundEffect:_onFeatureDeactivated()
     self._event_filter:disconnect();
 
     opvp.OptionFeature._onFeatureDeactivated(self)
 end
 
-function opvp.EmoteKillingBlowSoundEffect:_onFeatureDisabled()
+function opvp.private.EmoteKillingBlowSoundEffect:_onFeatureDisabled()
     local player = opvp.player.instance();
 
     player.inSanctuaryChanged:disconnect(self, self._onSanctuaryChanged);
@@ -202,7 +202,7 @@ function opvp.EmoteKillingBlowSoundEffect:_onFeatureDisabled()
     opvp.OptionFeature._onFeatureDisabled(self)
 end
 
-function opvp.EmoteKillingBlowSoundEffect:_onFeatureEnabled()
+function opvp.private.EmoteKillingBlowSoundEffect:_onFeatureEnabled()
     local player = opvp.player.instance();
 
     player.inSanctuaryChanged:connect(self, self._onSanctuaryChanged);
@@ -210,7 +210,7 @@ function opvp.EmoteKillingBlowSoundEffect:_onFeatureEnabled()
     opvp.OptionFeature._onFeatureEnabled(self)
 end
 
-function opvp.EmoteKillingBlowSoundEffect:_onKillingBlow(info)
+function opvp.private.EmoteKillingBlowSoundEffect:_onKillingBlow(info)
     local targeting = opvp.unit.guid("target") == info.destGUID;
 
     DoEmote(
@@ -222,7 +222,7 @@ function opvp.EmoteKillingBlowSoundEffect:_onKillingBlow(info)
     );
 end
 
-function opvp.EmoteKillingBlowSoundEffect:_onSanctuaryChanged(state)
+function opvp.private.EmoteKillingBlowSoundEffect:_onSanctuaryChanged(state)
     if state == true then
         self:_setActive(false);
     elseif self:canActivate() == true then
@@ -252,7 +252,7 @@ local function opvp_killing_blow_emote_sound_effect_ctor()
     opvp_killing_blow_nice_mean_emotes:shuffle();
     opvp_killing_blow_target_nice_mean_emotes:shuffle();
 
-    opvp_killing_blow_emote_sound_effect = opvp.EmoteKillingBlowSoundEffect(
+    opvp_killing_blow_emote_sound_effect = opvp.private.EmoteKillingBlowSoundEffect(
         opvp.options.audio.soundeffect.general.killingBlowEmotes
     );
 end

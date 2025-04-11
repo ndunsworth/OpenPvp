@@ -53,17 +53,17 @@ local FIGHT_SOUNDS_FILEDATA_IDS = {
     1302932
 };
 
-opvp.MutePvpAreaNpcFightSounds = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.MutePvpAreaNpcFightSounds = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.MutePvpAreaNpcFightSounds:init(option)
+function opvp.private.MutePvpAreaNpcFightSounds:init(option)
     opvp.OptionFeature.init(self, option);
 end
 
-function opvp.MutePvpAreaNpcFightSounds:isFeatureEnabled()
+function opvp.private.MutePvpAreaNpcFightSounds:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.MutePvpAreaNpcFightSounds:_onFeatureActivated()
+function opvp.private.MutePvpAreaNpcFightSounds:_onFeatureActivated()
     for n=1, #FIGHT_SOUNDS_FILEDATA_IDS do
         MuteSoundFile(FIGHT_SOUNDS_FILEDATA_IDS[n]);
     end
@@ -71,7 +71,7 @@ function opvp.MutePvpAreaNpcFightSounds:_onFeatureActivated()
     opvp.OptionFeature._onFeatureActivated(self);
 end
 
-function opvp.MutePvpAreaNpcFightSounds:_onFeatureDeactivated()
+function opvp.private.MutePvpAreaNpcFightSounds:_onFeatureDeactivated()
     for n=1, #FIGHT_SOUNDS_FILEDATA_IDS do
         UnmuteSoundFile(FIGHT_SOUNDS_FILEDATA_IDS[n]);
     end
@@ -82,7 +82,7 @@ end
 local opvp_mute_pvp_area_npc_fight_sounds;
 
 local function opvp_mute_pvp_area_npc_fight_sounds_ctor()
-    opvp_mute_pvp_area_npc_fight_sounds = opvp.MutePvpAreaNpcFightSounds(
+    opvp_mute_pvp_area_npc_fight_sounds = opvp.private.MutePvpAreaNpcFightSounds(
         opvp.options.audio.general.mutePvpAreaNpcFights
     );
 end

@@ -28,15 +28,15 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.HideMicroMenuMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
+opvp.private.HideMicroMenuMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
 
-function opvp.HideMicroMenuMatchFeature:init(option)
+function opvp.private.HideMicroMenuMatchFeature:init(option)
     opvp.MatchTypeOptionFeature.init(self, option);
 
     self._restore = false;
 end
 
-function opvp.HideMicroMenuMatchFeature:isActiveMatchStatus(status)
+function opvp.private.HideMicroMenuMatchFeature:isActiveMatchStatus(status)
     return (
         status == opvp.MatchStatus.ROUND_ACTIVE or
         status == opvp.MatchStatus.ROUND_COMPLETE or
@@ -44,11 +44,11 @@ function opvp.HideMicroMenuMatchFeature:isActiveMatchStatus(status)
     );
 end
 
-function opvp.HideMicroMenuMatchFeature:onLogoutDeactivate()
+function opvp.private.HideMicroMenuMatchFeature:onLogoutDeactivate()
     return true;
 end
 
-function opvp.HideMicroMenuMatchFeature:_onFeatureActivated()
+function opvp.private.HideMicroMenuMatchFeature:_onFeatureActivated()
     if opvp.micromenu.isEnabled() == true then
         local bar = opvp.micromenu.bar();
 
@@ -62,7 +62,7 @@ function opvp.HideMicroMenuMatchFeature:_onFeatureActivated()
     opvp.MatchTypeOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.HideMicroMenuMatchFeature:_onFeatureDeactivated()
+function opvp.private.HideMicroMenuMatchFeature:_onFeatureDeactivated()
     if self._restore == true then
         local bar = opvp.micromenu.bar();
 
@@ -79,7 +79,7 @@ end
 local opvp_hide_micromenu_match_feature;
 
 local function opvp_hide_micromenu_match_feature_ctor()
-    opvp_hide_micromenu_match_feature = opvp.HideMicroMenuMatchFeature(
+    opvp_hide_micromenu_match_feature = opvp.private.HideMicroMenuMatchFeature(
         opvp.options.match.frames.hideMicroMenu
     );
 end

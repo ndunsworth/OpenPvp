@@ -28,13 +28,13 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.HideMinimapMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
+opvp.private.HideMinimapMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
 
-function opvp.HideMinimapMatchFeature:init(option)
+function opvp.private.HideMinimapMatchFeature:init(option)
     opvp.MatchTypeOptionFeature.init(self, option);
 end
 
-function opvp.HideMinimapMatchFeature:isActiveMatchStatus(status)
+function opvp.private.HideMinimapMatchFeature:isActiveMatchStatus(status)
     return (
         status == opvp.MatchStatus.ROUND_ACTIVE or
         status == opvp.MatchStatus.ROUND_COMPLETE or
@@ -42,7 +42,7 @@ function opvp.HideMinimapMatchFeature:isActiveMatchStatus(status)
     );
 end
 
-function opvp.HideMinimapMatchFeature:_onFeatureActivated()
+function opvp.private.HideMinimapMatchFeature:_onFeatureActivated()
     if Minimap:IsShown() == true then
         ToggleMinimap();
 
@@ -52,7 +52,7 @@ function opvp.HideMinimapMatchFeature:_onFeatureActivated()
     opvp.MatchTypeOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.HideMinimapMatchFeature:_onFeatureDeactivated()
+function opvp.private.HideMinimapMatchFeature:_onFeatureDeactivated()
     if self._restore == true and Minimap:IsShown() == false then
         ToggleMinimap();
     end
@@ -65,7 +65,7 @@ end
 local opvp_hide_minimap_match_feature;
 
 local function opvp_hide_minimap_match_feature_ctor()
-    opvp_hide_minimap_match_feature = opvp.HideMinimapMatchFeature(
+    opvp_hide_minimap_match_feature = opvp.private.HideMinimapMatchFeature(
         opvp.options.match.frames.hideMinimap
     );
 end

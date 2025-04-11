@@ -28,30 +28,30 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.DampeningHighSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.DampeningHighSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.DampeningHighSoundEffect:init(option)
+function opvp.private.DampeningHighSoundEffect:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
     self._dampening_warn = false;
 end
 
-function opvp.DampeningHighSoundEffect:isActiveMatchStatus(status)
+function opvp.private.DampeningHighSoundEffect:isActiveMatchStatus(status)
     return status == opvp.MatchStatus.ROUND_ACTIVE;
 end
 
-function opvp.DampeningHighSoundEffect:isFeatureEnabled()
+function opvp.private.DampeningHighSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.DampeningHighSoundEffect:isValidMatch(match)
+function opvp.private.DampeningHighSoundEffect:isValidMatch(match)
     return (
         match ~= nil and
         match:hasDampening() == true
     );
 end
 
-function opvp.DampeningHighSoundEffect:_onFeatureActivated()
+function opvp.private.DampeningHighSoundEffect:_onFeatureActivated()
     opvp.match.dampeningUpdate:connect(
         self,
         self._onDampeningUpdate
@@ -62,7 +62,7 @@ function opvp.DampeningHighSoundEffect:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self)
 end
 
-function opvp.DampeningHighSoundEffect:_onFeatureDeactivated()
+function opvp.private.DampeningHighSoundEffect:_onFeatureDeactivated()
     opvp.match.dampeningUpdate:disconnect(
         self,
         self._onDampeningUpdate
@@ -71,7 +71,7 @@ function opvp.DampeningHighSoundEffect:_onFeatureDeactivated()
     opvp.MatchOptionFeature._onFeatureDeactivated(self)
 end
 
-function opvp.DampeningHighSoundEffect:_onDampeningUpdate(value)
+function opvp.private.DampeningHighSoundEffect:_onDampeningUpdate(value)
     if value == 0 then
         self._dampening_warn = true;
     elseif (
@@ -103,7 +103,7 @@ end
 local opvp_damp_high_sound_effect;
 
 local function opvp_damp_high_sound_effect_ctor()
-    opvp_damp_high_sound_effect = opvp.DampeningHighSoundEffect(
+    opvp_damp_high_sound_effect = opvp.private.DampeningHighSoundEffect(
         opvp.options.audio.soundeffect.match.dampeningHigh
     );
 

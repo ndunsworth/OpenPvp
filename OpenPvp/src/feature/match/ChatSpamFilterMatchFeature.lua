@@ -29,9 +29,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.ChatSpamFilterMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.ChatSpamFilterMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.ChatSpamFilterMatchFeature:init(option)
+function opvp.private.ChatSpamFilterMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
     self._valid_test = opvp.MatchTestType.NONE;
@@ -68,13 +68,13 @@ function opvp.ChatSpamFilterMatchFeature:init(option)
     );
 end
 
-function opvp.ChatSpamFilterMatchFeature:_onFeatureActivated()
+function opvp.private.ChatSpamFilterMatchFeature:_onFeatureActivated()
     self._spam_filter:connect();
 
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.ChatSpamFilterMatchFeature:_onFeatureDeactivated()
+function opvp.private.ChatSpamFilterMatchFeature:_onFeatureDeactivated()
     self._spam_filter:disconnect();
 
     opvp.MatchOptionFeature._onFeatureDeactivated(self);
@@ -83,7 +83,7 @@ end
 local opvp_filter_chat_spam_match_feature;
 
 local function opvp_filter_chat_spam_match_feature_ctor()
-    opvp_filter_chat_spam_match_feature = opvp.ChatSpamFilterMatchFeature(
+    opvp_filter_chat_spam_match_feature = opvp.private.ChatSpamFilterMatchFeature(
         opvp.options.match.chat.filterAddonSpam
     );
 end

@@ -28,35 +28,35 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.PlayerSpecChangeSoundEffect = opvp.CreateClass(opvp.SoundEffect);
+opvp.private.PlayerSpecChangeSoundEffect = opvp.CreateClass(opvp.private.SoundEffect);
 
-function opvp.PlayerSpecChangeSoundEffect:init(option)
-    opvp.SoundEffect.init(self, option);
+function opvp.private.PlayerSpecChangeSoundEffect:init(option)
+    opvp.private.SoundEffect.init(self, option);
 end
 
-function opvp.PlayerSpecChangeSoundEffect:isFeatureEnabled()
+function opvp.private.PlayerSpecChangeSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.PlayerSpecChangeSoundEffect:_onFeatureActivated()
+function opvp.private.PlayerSpecChangeSoundEffect:_onFeatureActivated()
     opvp.Player:instance().specChanged:connect(
         self,
         self._onSpecChanged
     );
 
-    opvp.SoundEffect._onFeatureActivated(self)
+    opvp.private.SoundEffect._onFeatureActivated(self)
 end
 
-function opvp.PlayerSpecChangeSoundEffect:_onFeatureDeactivated()
+function opvp.private.PlayerSpecChangeSoundEffect:_onFeatureDeactivated()
     opvp.Player:instance().specChanged:disconnect(
         self,
         self._onSpecChanged
     );
 
-    opvp.SoundEffect._onFeatureDeactivated(self)
+    opvp.private.SoundEffect._onFeatureDeactivated(self)
 end
 
-function opvp.PlayerSpecChangeSoundEffect:_onSpecChanged(newSpec, oldSpec)
+function opvp.private.PlayerSpecChangeSoundEffect:_onSpecChanged(newSpec, oldSpec)
     if newSpec:isValid() == true and oldSpec:isValid() ~= false then
         opvp.effect.playerSpecChange(newSpec);
     end
@@ -97,7 +97,7 @@ local function opvp_player_spec_change_sound_effect_sample(button, state)
 end
 
 local function opvp_player_spec_change_sound_effect_ctor()
-    opvp_player_spec_change_sound_effect = opvp.PlayerSpecChangeSoundEffect(
+    opvp_player_spec_change_sound_effect = opvp.private.PlayerSpecChangeSoundEffect(
         opvp.options.audio.soundeffect.player.specChange
     );
 

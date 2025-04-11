@@ -42,9 +42,9 @@ local FILTER_CHANNELS = {
     "CHAT_MSG_YELL"
 };
 
-opvp.ChatFilterMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.ChatFilterMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.ChatFilterMatchFeature:init(option)
+function opvp.private.ChatFilterMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
     self._friends     = opvp.List();
@@ -56,7 +56,7 @@ function opvp.ChatFilterMatchFeature:init(option)
     end
 end
 
-function opvp.ChatFilterMatchFeature:isFriend(guid)
+function opvp.private.ChatFilterMatchFeature:isFriend(guid)
     if (
         guid == opvp.player.guid() or
         self._friends:contains(guid)
@@ -82,11 +82,11 @@ function opvp.ChatFilterMatchFeature:isFriend(guid)
     return result;
 end
 
-function opvp.ChatFilterMatchFeature:isFeatureEnabled()
+function opvp.private.ChatFilterMatchFeature:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.ChatFilterMatchFeature:isValidMatch(match)
+function opvp.private.ChatFilterMatchFeature:isValidMatch(match)
     return (
         match ~= nil and
         match:isTest() == false and
@@ -97,7 +97,7 @@ function opvp.ChatFilterMatchFeature:isValidMatch(match)
     );
 end
 
-function opvp.ChatFilterMatchFeature:_onMessageEvent(
+function opvp.private.ChatFilterMatchFeature:_onMessageEvent(
     chatFrame,
     event,
     arg1,
@@ -118,7 +118,7 @@ function opvp.ChatFilterMatchFeature:_onMessageEvent(
     return self:isFriend(arg12) == false;
 end
 
-function opvp.ChatFilterMatchFeature:_onFeatureActivated()
+function opvp.private.ChatFilterMatchFeature:_onFeatureActivated()
     for n=1, #FILTER_CHANNELS do
         ChatFrame_AddMessageEventFilter(FILTER_CHANNELS[n], self._cb);
     end
@@ -126,7 +126,7 @@ function opvp.ChatFilterMatchFeature:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.ChatFilterMatchFeature:_onFeatureDeactivated()
+function opvp.private.ChatFilterMatchFeature:_onFeatureDeactivated()
     for n=1, #FILTER_CHANNELS do
         ChatFrame_RemoveMessageEventFilter(FILTER_CHANNELS[n], self._cb);
     end
@@ -140,7 +140,7 @@ end
 local opvp_chat_filter_match_feature;
 
 local function opvp_chat_filter_match_feature_ctor()
-    opvp_chat_filter_match_feature = opvp.ChatFilterMatchFeature(
+    opvp_chat_filter_match_feature = opvp.private.ChatFilterMatchFeature(
         opvp.options.match.chat.mute
     );
 end

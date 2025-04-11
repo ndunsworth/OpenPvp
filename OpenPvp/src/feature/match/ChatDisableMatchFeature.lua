@@ -44,9 +44,9 @@ local FILTER_CHANNELS = {
     "CHAT_MSG_YELL"
 };
 
-opvp.ChatDisableMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.ChatDisableMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.ChatDisableMatchFeature:init(option)
+function opvp.private.ChatDisableMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
     self._valid_test = opvp.MatchTestType.NONE;
@@ -58,7 +58,7 @@ function opvp.ChatDisableMatchFeature:init(option)
     end;
 end
 
-function opvp.ChatDisableMatchFeature:isValidMatch(match)
+function opvp.private.ChatDisableMatchFeature:isValidMatch(match)
     return (
         match ~= nil and
         match:isTest() == false and
@@ -69,11 +69,11 @@ function opvp.ChatDisableMatchFeature:isValidMatch(match)
     );
 end
 
-function opvp.ChatDisableMatchFeature:onLogoutDeactivate()
+function opvp.private.ChatDisableMatchFeature:onLogoutDeactivate()
     return true;
 end
 
-function opvp.ChatDisableMatchFeature:_onFeatureActivated()
+function opvp.private.ChatDisableMatchFeature:_onFeatureActivated()
     if opvp.chat.isEnabled() == true then
         opvp.chat.setEnabled(false)
 
@@ -83,7 +83,7 @@ function opvp.ChatDisableMatchFeature:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.ChatDisableMatchFeature:_onFeatureDeactivated()
+function opvp.private.ChatDisableMatchFeature:_onFeatureDeactivated()
     if opvp.private.state.ui.restore.chat:value() == true then
         opvp.chat.setEnabled(true);
 
@@ -96,7 +96,7 @@ end
 local opvp_chat_disable_match_feature;
 
 local function opvp_chat_disable_match_feature_ctor()
-    opvp_chat_disable_match_feature = opvp.ChatDisableMatchFeature(
+    opvp_chat_disable_match_feature = opvp.private.ChatDisableMatchFeature(
         opvp.options.match.chat.disable
     );
 end

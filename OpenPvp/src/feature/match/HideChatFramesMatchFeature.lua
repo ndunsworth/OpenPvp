@@ -28,17 +28,17 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.HideChatFramesMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
+opvp.private.HideChatFramesMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
 
-function opvp.HideChatFramesMatchFeature:init(option)
+function opvp.private.HideChatFramesMatchFeature:init(option)
     opvp.MatchTypeOptionFeature.init(self, option);
 end
 
-function opvp.HideChatFramesMatchFeature:isActiveMatchStatus(status)
+function opvp.private.HideChatFramesMatchFeature:isActiveMatchStatus(status)
     return status == opvp.MatchStatus.ROUND_ACTIVE;
 end
 
-function opvp.HideChatFramesMatchFeature:setAlpha(alpha)
+function opvp.private.HideChatFramesMatchFeature:setAlpha(alpha)
     GeneralDockManager:SetAlpha(alpha);
 
     local frame;
@@ -55,13 +55,13 @@ function opvp.HideChatFramesMatchFeature:setAlpha(alpha)
     end
 end
 
-function opvp.HideChatFramesMatchFeature:_onFeatureActivated()
+function opvp.private.HideChatFramesMatchFeature:_onFeatureActivated()
     self:setAlpha(0);
 
     opvp.MatchTypeOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.HideChatFramesMatchFeature:_onFeatureDeactivated()
+function opvp.private.HideChatFramesMatchFeature:_onFeatureDeactivated()
     self:setAlpha(1);
 
     opvp.MatchTypeOptionFeature._onFeatureDeactivated(self);
@@ -70,7 +70,7 @@ end
 local opvp_hide_chat_frames_match_feature;
 
 local function opvp_hide_chat_frames_match_feature_ctor()
-    opvp_hide_chat_frames_match_feature = opvp.HideChatFramesMatchFeature(
+    opvp_hide_chat_frames_match_feature = opvp.private.HideChatFramesMatchFeature(
         opvp.options.match.frames.hideChat
     );
 end

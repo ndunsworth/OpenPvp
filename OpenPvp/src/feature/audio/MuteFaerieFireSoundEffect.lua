@@ -28,23 +28,23 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.MuteFaerieFireSoundEffect = opvp.CreateClass(opvp.OptionFeature);
+opvp.private.MuteFaerieFireSoundEffect = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.MuteFaerieFireSoundEffect:init(option)
+function opvp.private.MuteFaerieFireSoundEffect:init(option)
     opvp.OptionFeature.init(self, option);
 end
 
-function opvp.MuteFaerieFireSoundEffect:isFeatureEnabled()
+function opvp.private.MuteFaerieFireSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.MuteFaerieFireSoundEffect:_onFeatureActivated()
+function opvp.private.MuteFaerieFireSoundEffect:_onFeatureActivated()
     MuteSoundFile(569254);
 
     opvp.OptionFeature._onFeatureActivated(self);
 end
 
-function opvp.MuteFaerieFireSoundEffect:_onFeatureDeactivated()
+function opvp.private.MuteFaerieFireSoundEffect:_onFeatureDeactivated()
     UnmuteSoundFile(569254);
 
     opvp.OptionFeature._onFeatureDeactivated(self);
@@ -53,7 +53,7 @@ end
 local opvp_mute_faeriefire;
 
 local function opvp_mute_faeriefire_ctor()
-    opvp_mute_faeriefire = opvp.MuteFaerieFireSoundEffect(
+    opvp_mute_faeriefire = opvp.private.MuteFaerieFireSoundEffect(
         opvp.options.audio.general.muteFaerieFireSfx
     );
 end

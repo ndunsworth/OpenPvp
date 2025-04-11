@@ -28,38 +28,38 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.TeammateCongratsSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.TeammateCongratsSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.TeammateCongratsSoundEffect:init()
+function opvp.private.TeammateCongratsSoundEffect:init()
     opvp.MatchOptionFeature.init(self, opvp.options.audio.soundeffect.match.teammateCelebration);
 
     self._valid_test = opvp.MatchTestType.SIMULATION;
 end
 
-function opvp.TeammateCongratsSoundEffect:isActiveMatchStatus(status)
+function opvp.private.TeammateCongratsSoundEffect:isActiveMatchStatus(status)
     return (
         status == opvp.MatchStatus.ROUND_COMPLETE or
         status == opvp.MatchStatus.COMPLETE
     );
 end
 
-function opvp.TeammateCongratsSoundEffect:isFeatureEnabled()
+function opvp.private.TeammateCongratsSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.TeammateCongratsSoundEffect:_onFeatureActivated()
+function opvp.private.TeammateCongratsSoundEffect:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 
     opvp.match.outcomeReady:connect(self, self._onOutcomeReady);
 end
 
-function opvp.TeammateCongratsSoundEffect:_onFeatureDeactivated()
+function opvp.private.TeammateCongratsSoundEffect:_onFeatureDeactivated()
     opvp.MatchOptionFeature._onFeatureDeactivated(self);
 
     opvp.match.outcomeReady:disconnect(self, self._onOutcomeReady);
 end
 
-function opvp.TeammateCongratsSoundEffect:_onOutcomeReady(match, outcomeType)
+function opvp.private.TeammateCongratsSoundEffect:_onOutcomeReady(match, outcomeType)
     if (
         match:isWinner() == false or
         (
@@ -184,7 +184,7 @@ local function opvp_congrats_round_won_sound_effect_sample(button, state)
 end
 
 local function opvp_congrats_round_won_sound_effect_ctor()
-    opvp_congrats_round_won_sound_effect = opvp.TeammateCongratsSoundEffect();
+    opvp_congrats_round_won_sound_effect = opvp.private.TeammateCongratsSoundEffect();
 
     opvp.options.audio.soundeffect.match.teammateCelebrationSample.clicked:connect(
         opvp_congrats_round_won_sound_effect_sample

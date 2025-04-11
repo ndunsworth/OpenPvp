@@ -28,35 +28,35 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.PingEmoteSoundEffect = opvp.CreateClass(opvp.SoundEffect);
+opvp.private.PingEmoteSoundEffect = opvp.CreateClass(opvp.private.SoundEffect);
 
-function opvp.PingEmoteSoundEffect:init(option)
-    opvp.SoundEffect.init(self, option);
+function opvp.private.PingEmoteSoundEffect:init(option)
+    opvp.private.SoundEffect.init(self, option);
 end
 
-function opvp.PingEmoteSoundEffect:isFeatureEnabled()
+function opvp.private.PingEmoteSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.PingEmoteSoundEffect:_onFeatureActivated()
+function opvp.private.PingEmoteSoundEffect:_onFeatureActivated()
     opvp.event.CHAT_MSG_PING:connect(
         self,
         self._onPing
     );
 
-    opvp.SoundEffect._onFeatureActivated(self)
+    opvp.private.SoundEffect._onFeatureActivated(self)
 end
 
-function opvp.PingEmoteSoundEffect:_onFeatureDeactivated()
+function opvp.private.PingEmoteSoundEffect:_onFeatureDeactivated()
     opvp.event.CHAT_MSG_PING:disconnect(
         self,
         self._onPing
     );
 
-    opvp.SoundEffect._onFeatureDeactivated(self)
+    opvp.private.SoundEffect._onFeatureDeactivated(self)
 end
 
-function opvp.PingEmoteSoundEffect:_onPing(
+function opvp.private.PingEmoteSoundEffect:_onPing(
     text,
     playerName,
     languageName,
@@ -177,7 +177,7 @@ local function opvp_ping_emote_sound_effect_warning_sample(button, state)
 end
 
 local function opvp_ping_emote_sound_effect_ctor()
-    opvp_ping_emote_sound_effect = opvp.PingEmoteSoundEffect(
+    opvp_ping_emote_sound_effect = opvp.private.PingEmoteSoundEffect(
         opvp.options.audio.soundeffect.general.pingEmote
     );
 

@@ -28,33 +28,33 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.TrinketReadySoundEffect = opvp.CreateClass(opvp.SoundEffect);
+opvp.private.TrinketReadySoundEffect = opvp.CreateClass(opvp.private.SoundEffect);
 
-function opvp.TrinketReadySoundEffect:init(option)
-    opvp.SoundEffect.init(self, option);
+function opvp.private.TrinketReadySoundEffect:init(option)
+    opvp.private.SoundEffect.init(self, option);
 end
 
-function opvp.TrinketReadySoundEffect:isFeatureEnabled()
+function opvp.private.TrinketReadySoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.TrinketReadySoundEffect:_onFeatureActivated()
+function opvp.private.TrinketReadySoundEffect:_onFeatureActivated()
     local player = opvp.player.instance();
 
     player.pvpTrinketUpdate:connect(self, self._onPvpTrinketUpdate);
 
-    opvp.SoundEffect._onFeatureActivated(self);
+    opvp.private.SoundEffect._onFeatureActivated(self);
 end
 
-function opvp.TrinketReadySoundEffect:_onFeatureDeactivated()
+function opvp.private.TrinketReadySoundEffect:_onFeatureDeactivated()
     local player = opvp.player.instance();
 
     player.pvpTrinketUpdate:disconnect(self, self._onPvpTrinketUpdate);
 
-    opvp.SoundEffect._onFeatureDeactivated(self)
+    opvp.private.SoundEffect._onFeatureDeactivated(self)
 end
 
-function opvp.TrinketReadySoundEffect:_onPvpTrinketUpdate(state)
+function opvp.private.TrinketReadySoundEffect:_onPvpTrinketUpdate(state)
     if state == true then
         opvp.effect.trinketReady(
             opvp.player.faction(),
@@ -91,7 +91,7 @@ local function opvp_trinket_ready_sound_sample(button, state)
 end
 
 local function opvp_trinket_ready_sound_effect_ctor()
-    opvp_trinket_ready_sound_effect = opvp.TrinketReadySoundEffect(
+    opvp_trinket_ready_sound_effect = opvp.private.TrinketReadySoundEffect(
         opvp.options.audio.soundeffect.pvp.trinketReady
     );
 

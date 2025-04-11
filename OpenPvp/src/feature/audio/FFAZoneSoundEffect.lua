@@ -28,35 +28,35 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.FFAZoneSoundEffect = opvp.CreateClass(opvp.SoundEffect);
+opvp.private.FFAZoneSoundEffect = opvp.CreateClass(opvp.private.SoundEffect);
 
-function opvp.FFAZoneSoundEffect:init(option)
-    opvp.SoundEffect.init(self, option);
+function opvp.private.FFAZoneSoundEffect:init(option)
+    opvp.private.SoundEffect.init(self, option);
 end
 
-function opvp.FFAZoneSoundEffect:isFeatureEnabled()
+function opvp.private.FFAZoneSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.FFAZoneSoundEffect:_onFeatureActivated()
+function opvp.private.FFAZoneSoundEffect:_onFeatureActivated()
     opvp.Player:instance().inFFAChanged:connect(
         self,
         self._onFFAChanged
     );
 
-    opvp.SoundEffect._onFeatureActivated(self)
+    opvp.private.SoundEffect._onFeatureActivated(self)
 end
 
-function opvp.FFAZoneSoundEffect:_onFeatureDeactivated()
+function opvp.private.FFAZoneSoundEffect:_onFeatureDeactivated()
     opvp.Player:instance().inFFAChanged:disconnect(
         self,
         self._onFFAChanged
     );
 
-    opvp.SoundEffect._onFeatureDeactivated(self)
+    opvp.private.SoundEffect._onFeatureDeactivated(self)
 end
 
-function opvp.FFAZoneSoundEffect:_onFFAChanged(state)
+function opvp.private.FFAZoneSoundEffect:_onFFAChanged(state)
     opvp.effect.ffaZone(state);
 end
 
@@ -88,7 +88,7 @@ local function opvp_ffazone_sound_effect_sample(button, state)
 end
 
 local function opvp_ffazone_sound_effect_ctor()
-    opvp_ffazone_sound_effect = opvp.FFAZoneSoundEffect(
+    opvp_ffazone_sound_effect = opvp.private.FFAZoneSoundEffect(
         opvp.options.audio.soundeffect.pvp.ffaZone
     );
 

@@ -30,13 +30,13 @@ local opvp = OpenPvp;
 
 local opvp_login_greetings_sound_effect;
 
-opvp.LoginGreetingsSoundEffect = opvp.CreateClass(opvp.SoundEffect);
+opvp.private.LoginGreetingsSoundEffect = opvp.CreateClass(opvp.private.SoundEffect);
 
-function opvp.LoginGreetingsSoundEffect:init()
-    opvp.SoundEffect.init(self, opvp.options.audio.soundeffect.player.login);
+function opvp.private.LoginGreetingsSoundEffect:init()
+    opvp.private.SoundEffect.init(self, opvp.options.audio.soundeffect.player.login);
 end
 
-function opvp.LoginGreetingsSoundEffect:greet()
+function opvp.private.LoginGreetingsSoundEffect:greet()
     opvp.Timer:singleShot(
         3,
         function()
@@ -48,20 +48,20 @@ function opvp.LoginGreetingsSoundEffect:greet()
     );
 end
 
-function opvp.LoginGreetingsSoundEffect:isFeatureEnabled()
+function opvp.private.LoginGreetingsSoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.LoginGreetingsSoundEffect:_onFeatureActivated()
+function opvp.private.LoginGreetingsSoundEffect:_onFeatureActivated()
     if opvp.system.isLogin() == true then
         opvp.OnLoadingScreenEnd:connect(self, self.greet);
     end
 
-    opvp.SoundEffect._onFeatureActivated(self)
+    opvp.private.SoundEffect._onFeatureActivated(self)
 end
 
-function opvp.LoginGreetingsSoundEffect:_onFeatureDeactivated()
-    opvp.SoundEffect._onFeatureDeactivated(self)
+function opvp.private.LoginGreetingsSoundEffect:_onFeatureDeactivated()
+    opvp.private.SoundEffect._onFeatureDeactivated(self)
 end
 
 function opvp.effect.loginGreetings(race, sex)
@@ -84,7 +84,7 @@ local function opvp_login_greetings_sound_sample(button, state)
 end
 
 local function opvp_login_greetings_sound_effect_ctor()
-    opvp_login_greetings_sound_effect = opvp.LoginGreetingsSoundEffect();
+    opvp_login_greetings_sound_effect = opvp.private.LoginGreetingsSoundEffect();
 
     opvp.options.audio.soundeffect.player.loginSample.clicked:connect(
         opvp_login_greetings_sound_sample

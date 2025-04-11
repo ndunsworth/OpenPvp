@@ -28,10 +28,10 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.QueueReadySoundEffect = opvp.CreateClass(opvp.SoundEffect);
+opvp.private.QueueReadySoundEffect = opvp.CreateClass(opvp.private.SoundEffect);
 
-function opvp.QueueReadySoundEffect:init(option)
-    opvp.SoundEffect.init(self, option);
+function opvp.private.QueueReadySoundEffect:init(option)
+    opvp.private.SoundEffect.init(self, option);
 
     self._timer = opvp.Timer(2);
 
@@ -40,30 +40,30 @@ function opvp.QueueReadySoundEffect:init(option)
     self._timer.timeout:connect(self, self.play);
 end
 
-function opvp.QueueReadySoundEffect:isFeatureEnabled()
+function opvp.private.QueueReadySoundEffect:isFeatureEnabled()
     return self:option():value();
 end
 
-function opvp.QueueReadySoundEffect:play()
+function opvp.private.QueueReadySoundEffect:play()
     opvp.effect.queueReady(
         opvp.player.race(),
         opvp.player.sex()
     );
 end
 
-function opvp.QueueReadySoundEffect:_onFeatureActivated()
+function opvp.private.QueueReadySoundEffect:_onFeatureActivated()
     opvp.queue.statusChanged:connect(self, self._onQueueStatusChanged);
 
-    opvp.SoundEffect._onFeatureActivated(self);
+    opvp.private.SoundEffect._onFeatureActivated(self);
 end
 
-function opvp.QueueReadySoundEffect:_onFeatureDeactivated()
+function opvp.private.QueueReadySoundEffect:_onFeatureDeactivated()
     opvp.queue.statusChanged:disconnect(self, self._onQueueStatusChanged);
 
-    opvp.SoundEffect._onFeatureDeactivated(self);
+    opvp.private.SoundEffect._onFeatureDeactivated(self);
 end
 
-function opvp.QueueReadySoundEffect:_onQueueStatusChanged(queue, newStatus, oldStatus)
+function opvp.private.QueueReadySoundEffect:_onQueueStatusChanged(queue, newStatus, oldStatus)
     if newStatus == opvp.QueueStatus.READY then
         self._timer:start();
     end
@@ -103,7 +103,7 @@ local function opvp_queue_ready_sound_effect_sample(button, state)
 end
 
 local function opvp_queue_ready_sound_effect_ctor()
-    opvp_queue_ready_sound_effect = opvp.QueueReadySoundEffect(
+    opvp_queue_ready_sound_effect = opvp.private.QueueReadySoundEffect(
         opvp.options.audio.soundeffect.player.queueReady
     );
 

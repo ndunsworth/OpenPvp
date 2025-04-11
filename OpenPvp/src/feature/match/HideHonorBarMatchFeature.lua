@@ -38,13 +38,13 @@ local function opvp_hook_CanShowBar(self, barIndex)
     end
 end
 
-opvp.HideHonorBarMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
+opvp.private.HideHonorBarMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
 
-function opvp.HideHonorBarMatchFeature:init(option)
+function opvp.private.HideHonorBarMatchFeature:init(option)
     opvp.MatchTypeOptionFeature.init(self, option);
 end
 
-function opvp.HideHonorBarMatchFeature:isActiveMatchStatus(status)
+function opvp.private.HideHonorBarMatchFeature:isActiveMatchStatus(status)
     return (
         status == opvp.MatchStatus.ROUND_ACTIVE or
         status == opvp.MatchStatus.ROUND_COMPLETE or
@@ -52,7 +52,7 @@ function opvp.HideHonorBarMatchFeature:isActiveMatchStatus(status)
     );
 end
 
-function opvp.HideHonorBarMatchFeature:_onFeatureActivated()
+function opvp.private.HideHonorBarMatchFeature:_onFeatureActivated()
     StatusTrackingBarManager.CanShowBar = opvp_hook_CanShowBar;
 
     StatusTrackingBarManager:UpdateBarsShown();
@@ -60,7 +60,7 @@ function opvp.HideHonorBarMatchFeature:_onFeatureActivated()
     opvp.MatchTypeOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.HideHonorBarMatchFeature:_onFeatureDeactivated()
+function opvp.private.HideHonorBarMatchFeature:_onFeatureDeactivated()
     StatusTrackingBarManager.CanShowBar = opvp_func;
 
     StatusTrackingBarManager:UpdateBarsShown();
@@ -71,7 +71,7 @@ end
 local opvp_hide_honorbar_match_feature;
 
 local function opvp_hide_honorbar_match_feature_ctor()
-    opvp_hide_honorbar_match_feature = opvp.HideHonorBarMatchFeature(
+    opvp_hide_honorbar_match_feature = opvp.private.HideHonorBarMatchFeature(
         opvp.options.match.frames.hideHonorBar
     );
 end

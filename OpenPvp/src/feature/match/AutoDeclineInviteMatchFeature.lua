@@ -28,9 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.AutoDeclineInviteMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.AutoDeclineInviteMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.AutoDeclineInviteMatchFeature:init(option)
+function opvp.private.AutoDeclineInviteMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
     self._valid_test  = opvp.MatchTestType.NONE;
@@ -38,7 +38,7 @@ function opvp.AutoDeclineInviteMatchFeature:init(option)
     self._ignore      = opvp.List();
 end
 
-function opvp.AutoDeclineInviteMatchFeature:isFriend(guid)
+function opvp.private.AutoDeclineInviteMatchFeature:isFriend(guid)
     if self._friends:contains(guid) then
         return true;
     end
@@ -61,7 +61,7 @@ function opvp.AutoDeclineInviteMatchFeature:isFriend(guid)
     return result;
 end
 
-function opvp.AutoDeclineInviteMatchFeature:isValidMatch(match)
+function opvp.private.AutoDeclineInviteMatchFeature:isValidMatch(match)
     return (
         match ~= nil and
         match:isTest() == false and
@@ -72,7 +72,7 @@ function opvp.AutoDeclineInviteMatchFeature:isValidMatch(match)
     );
 end
 
-function opvp.AutoDeclineInviteMatchFeature:_onFeatureActivated()
+function opvp.private.AutoDeclineInviteMatchFeature:_onFeatureActivated()
     opvp.event.PARTY_INVITE_REQUEST:connect(
         self,
         self._onPartyInviteEvent
@@ -81,7 +81,7 @@ function opvp.AutoDeclineInviteMatchFeature:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.AutoDeclineInviteMatchFeature:_onFeatureDeactivated()
+function opvp.private.AutoDeclineInviteMatchFeature:_onFeatureDeactivated()
     opvp.event.PARTY_INVITE_REQUEST:disconnect(
         self,
         self._onPartyInviteEvent
@@ -93,7 +93,7 @@ function opvp.AutoDeclineInviteMatchFeature:_onFeatureDeactivated()
     opvp.MatchOptionFeature._onFeatureDeactivated(self);
 end
 
-function opvp.AutoDeclineInviteMatchFeature:_onPartyInviteEvent(
+function opvp.private.AutoDeclineInviteMatchFeature:_onPartyInviteEvent(
     name,
     isTank,
     isHealer,
@@ -142,7 +142,7 @@ end
 local opvp_auto_decline_invite_match_feature;
 
 local function opvp_auto_decline_invite_match_feature_ctor()
-    opvp_auto_decline_invite_match_feature = opvp.AutoDeclineInviteMatchFeature(
+    opvp_auto_decline_invite_match_feature = opvp.private.AutoDeclineInviteMatchFeature(
         opvp.options.match.general.blockPartyInvite
     );
 end

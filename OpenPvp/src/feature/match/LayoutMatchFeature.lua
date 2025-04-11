@@ -28,9 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.LayoutMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
+opvp.private.LayoutMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 
-function opvp.LayoutMatchFeature:init(option, pvpType)
+function opvp.private.LayoutMatchFeature:init(option, pvpType)
     opvp.MatchOptionFeature.init(self, option);
 
     self._match_mask = pvpType;
@@ -38,11 +38,11 @@ function opvp.LayoutMatchFeature:init(option, pvpType)
     self._layout     = nil;
 end
 
-function opvp.LayoutMatchFeature:isFeatureEnabled()
+function opvp.private.LayoutMatchFeature:isFeatureEnabled()
     return self:option():index() > 1;
 end
 
-function opvp.LayoutMatchFeature:name()
+function opvp.private.LayoutMatchFeature:name()
     if self._match_mask == opvp.PvpType.ARENA then
         return opvp.strs.LAYOUT_ARENA;
     else
@@ -50,7 +50,7 @@ function opvp.LayoutMatchFeature:name()
     end
 end
 
-function opvp.LayoutMatchFeature:_changeLayout(index)
+function opvp.private.LayoutMatchFeature:_changeLayout(index)
     local layout = opvp.layout.layout(index);
 
     if layout == nil then
@@ -64,7 +64,7 @@ function opvp.LayoutMatchFeature:_changeLayout(index)
     self._changing = false;
 end
 
-function opvp.LayoutMatchFeature:_onFeatureActivated()
+function opvp.private.LayoutMatchFeature:_onFeatureActivated()
     opvp.layout.changed:connect(self, self._onLayoutChanged);
 
     opvp.private.state.ui.restore.layout:setValue(
@@ -76,7 +76,7 @@ function opvp.LayoutMatchFeature:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.LayoutMatchFeature:_onFeatureDeactivated()
+function opvp.private.LayoutMatchFeature:_onFeatureDeactivated()
     opvp.layout.changed:disconnect(self, self._onLayoutChanged);
 
     local index = opvp.private.state.ui.restore.layout:value();
@@ -92,7 +92,7 @@ function opvp.LayoutMatchFeature:_onFeatureDeactivated()
     opvp.MatchOptionFeature._onFeatureDeactivated(self);
 end
 
-function opvp.LayoutMatchFeature:_onLayoutChanged(layout)
+function opvp.private.LayoutMatchFeature:_onLayoutChanged(layout)
     local index = layout:index();
 
     if (
@@ -105,7 +105,7 @@ function opvp.LayoutMatchFeature:_onLayoutChanged(layout)
     end
 end
 
-function opvp.LayoutMatchFeature:_onOptionChanged()
+function opvp.private.LayoutMatchFeature:_onOptionChanged()
     opvp.MatchOptionFeature._onOptionChanged(self);
 
     if opvp.match.inMatch() == false or self:isActive() == false then
@@ -124,12 +124,12 @@ local opvp_arena_layout_match_feature;
 local opvp_bg_layout_match_feature;
 
 local function opvplayout_match_feature_ctor()
-    opvp_arena_layout_match_feature = opvp.LayoutMatchFeature(
+    opvp_arena_layout_match_feature = opvp.private.LayoutMatchFeature(
         opvp.options.match.layout.layoutArena,
         opvp.PvpType.ARENA
     );
 
-    opvp_bg_layout_match_feature = opvp.LayoutMatchFeature(
+    opvp_bg_layout_match_feature = opvp.private.LayoutMatchFeature(
         opvp.options.match.layout.layoutBattleground,
         opvp.PvpType.BATTLEGROUND
     );
