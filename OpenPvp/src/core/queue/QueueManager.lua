@@ -315,11 +315,11 @@ function opvp.QueueManager:_onLoad()
 end
 
 function opvp.QueueManager:_onMatchEntered()
-    if self._active == nil and opvp.system.isLoading() == true then
+    if self._active == nil then
         self:_initializeQueues();
-    else
-        assert(self._active ~= nil);
     end
+
+    assert(self._active ~= nil);
 
     opvp.printDebug(
         "opvp.QueueManager:_onMatchEntered(\"%s\"), begin",
@@ -386,7 +386,7 @@ function opvp.QueueManager:_updateBattlefieldStatus(index)
     end
 
     opvp.printDebug(
-        "opvp.QueueManager:_updateBattlefieldStatus[%d], %s, %d, %d",
+        "opvp.QueueManager:_updateBattlefieldStatus(%d), %s, %d, %d",
         index,
         queue:name(),
         queue_status,
