@@ -69,6 +69,7 @@ function opvp.Party:init()
     self.initialized           = opvp.Signal("opvp.Party.initialized");
     self.leaderChanged         = opvp.Signal("opvp.Party.leaderChanged");
     self.lootMethodChanged     = opvp.Signal("opvp.Party.lootMethodChanged");
+    self.memberAuraUpdate      = opvp.Signal("opvp.Party.memberAuraUpdate");
     self.memberInfoUpdate      = opvp.Signal("opvp.Party.memberInfoUpdate");
     self.memberKickEnded       = opvp.Signal("opvp.Party.memberKickEnded");
     self.memberKickStarted     = opvp.Signal("opvp.Party.memberKickStarted");
@@ -447,6 +448,7 @@ function opvp.Party:_initialize(category, guid)
     end
 
     self._provider.leaderChanged:connect(self, self._onPartyLeaderChanged);
+    self._provider.memberAuraUpdate:connect(self, self._onMemberAuraUpdate);
     self._provider.memberInfoUpdate:connect(self, self._onMemberInfoUpdate);
     self._provider.rosterBeginUpdate:connect(self, self._onRosterBeginUpdate);
     self._provider.rosterEndUpdate:connect(self, self._onRosterEndUpdate);
@@ -517,6 +519,10 @@ end
 
 function opvp.Party:_onLootMethodChanged(state)
     self.lootMethodChanged:emit(state);
+end
+
+function opvp.Party:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
+    self.memberAuraUpdate:emit(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate);
 end
 
 function opvp.Party:_onMemberKickEnded()
@@ -630,6 +636,7 @@ function opvp.Party:_shutdown()
 
     if self._provider ~= nil then
         self._provider.leaderChanged:disconnect(self, self._onPartyLeaderChanged);
+        self._provider.memberAuraUpdate:disconnect(self, self._onMemberAuraUpdate);
         self._provider.memberInfoUpdate:disconnect(self, self._onMemberInfoUpdate);
         self._provider.rosterBeginUpdate:disconnect(self, self._onRosterBeginUpdate);
         self._provider.rosterEndUpdate:disconnect(self, self._onRosterEndUpdate);

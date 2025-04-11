@@ -202,6 +202,7 @@ opvp.event.UNIT_AREA_CHANGED                   = opvp.EventRegistrySignal("UNIT_
 opvp.event.UNIT_ATTACK                         = opvp.EventRegistrySignal("UNIT_ATTACK");
 opvp.event.UNIT_ATTACK_POWER                   = opvp.EventRegistrySignal("UNIT_ATTACK_POWER");
 opvp.event.UNIT_ATTACK_SPEED                   = opvp.EventRegistrySignal("UNIT_ATTACK_SPEED");
+opvp.event.UNIT_AURA                           = opvp.EventRegistrySignal("UNIT_AURA");
 opvp.event.UNIT_CHEAT_TOGGLE_EVENT             = opvp.EventRegistrySignal("UNIT_CHEAT_TOGGLE_EVENT");
 opvp.event.UNIT_CLASSIFICATION_CHANGED         = opvp.EventRegistrySignal("UNIT_CLASSIFICATION_CHANGED");
 opvp.event.UNIT_COMBAT                         = opvp.EventRegistrySignal("UNIT_COMBAT");

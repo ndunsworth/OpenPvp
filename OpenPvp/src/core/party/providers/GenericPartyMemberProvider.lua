@@ -135,6 +135,7 @@ function opvp.GenericPartyMemberProvider:_connectSignals()
         opvp.event.PARTY_MEMBER_ENABLE:connect(self, self._onMemberEnable);
         opvp.event.PARTY_MEMBER_DISABLE:connect(self, self._onMemberDisable);
         opvp.event.PLAYER_SPECIALIZATION_CHANGED:connect(self, self._onUnitSpecUpdate);
+        opvp.event.UNIT_AURA:connect(self, self._onUnitAura);
         opvp.event.UNIT_CONNECTION:connect(self, self._onUnitConnection);
         opvp.event.UNIT_FACTION:connect(self, self._onUnitFactionUpdate);
         opvp.event.UNIT_HEALTH:connect(self, self._onUnitHealth);
@@ -173,6 +174,7 @@ function opvp.GenericPartyMemberProvider:_disconnectSignals()
         opvp.event.PARTY_MEMBER_ENABLE:disconnect(self, self._onMemberEnable);
         opvp.event.PARTY_MEMBER_DISABLE:disconnect(self, self._onMemberDisable);
         opvp.event.PLAYER_SPECIALIZATION_CHANGED:disconnect(self, self._onUnitSpecUpdate);
+        opvp.event.UNIT_AURA:disconnect(self, self._onUnitAura);
         opvp.event.UNIT_CONNECTION:disconnect(self, self._onUnitConnection);
         opvp.event.UNIT_FACTION:disconnect(self, self._onUnitFactionUpdate);
         opvp.event.UNIT_HEALTH:disconnect(self, self._onUnitHealth);
@@ -500,6 +502,20 @@ function opvp.GenericPartyMemberProvider:_onMemberInspectInt(guid, valid)
     end
 end
 
+function opvp.GenericPartyMemberProvider:_onUnitAura(unitId, info)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or info == nil then
+        return;
+    end
+
+    local valid, new_auras, mod_auras, rem_auras, isfull = member:_updateAuras(info);
+
+    if valid == true then
+        self:_onMemberAuraUpdate(member, new_auras, mod_auras, rem_auras, isfull)
+    end
+end
+
 function opvp.GenericPartyMemberProvider:_onUnitConnection(unitId, isConnected)
     local member = self:findMemberByUnitId(unitId);
 
@@ -631,7 +647,6 @@ function opvp.GenericPartyMemberProvider:_scanMembers()
     local party_count     = self:_categorySize();
     local members         = opvp.List();
     local new_members     = opvp.List();
-    local removed_members = opvp.List();
     local update_members  = opvp.List();
     local token           = self:tokenGroup();
     local unitid;
@@ -699,7 +714,7 @@ function opvp.GenericPartyMemberProvider:_updateMember(unitId, member, created)
     local mask = 0;
 
     if unitId ~= member:id() then
-        member:_setId(unitid);
+        member:_setId(unitId);
 
         mask = opvp.PartyMember.ID_FLAG;
     end

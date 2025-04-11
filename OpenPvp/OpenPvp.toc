@@ -161,7 +161,9 @@ src/core/world/classes/shaman.lua
 src/core/world/classes/unknown.lua
 src/core/world/classes/namespace.lua
 
+src/core/world/Aura.lua
 src/core/world/Unit.lua
+src/core/world/UnitAuras.lua
 src/core/world/Ping.lua
 src/core/world/Player.lua
 src/core/world/NotifyInspectQueue.lua

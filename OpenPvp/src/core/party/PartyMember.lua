@@ -30,22 +30,25 @@ local opvp = OpenPvp;
 
 opvp.PartyMember = opvp.CreateClass();
 
-opvp.PartyMember.COMBAT_FLAG    = bit.lshift(1,  0);
-opvp.PartyMember.CONNECTED_FLAG = bit.lshift(1,  1);
-opvp.PartyMember.DEAD_FLAG      = bit.lshift(1,  2);
-opvp.PartyMember.ENABLED_FLAG   = bit.lshift(1,  3);
-opvp.PartyMember.HEALTH_FLAG    = bit.lshift(1,  4);
-opvp.PartyMember.FACTION_FLAG   = bit.lshift(1,  4);
-opvp.PartyMember.GUID_FLAG      = bit.lshift(1,  5);
-opvp.PartyMember.HOSTILE_FLAG   = bit.lshift(1,  6);
-opvp.PartyMember.ID_FLAG        = bit.lshift(1,  7);
-opvp.PartyMember.NAME_FLAG      = bit.lshift(1,  8);
-opvp.PartyMember.PLAYER_FLAG    = bit.lshift(1,  9);
-opvp.PartyMember.RACE_FLAG      = bit.lshift(1, 10);
-opvp.PartyMember.RANGE_FLAG     = bit.lshift(1, 11);
-opvp.PartyMember.SEX_FLAG       = bit.lshift(1, 12);
-opvp.PartyMember.SPEC_FLAG      = bit.lshift(1, 13);
-opvp.PartyMember.TEAM_FLAG      = bit.lshift(1, 14);
+opvp.PartyMember.AURAS_FLAG          = bit.lshift(1,  0);
+opvp.PartyMember.COMBAT_FLAG         = bit.lshift(1,  1);
+opvp.PartyMember.CONNECTED_FLAG      = bit.lshift(1,  2);
+opvp.PartyMember.DEAD_FLAG           = bit.lshift(1,  3);
+opvp.PartyMember.ENABLED_FLAG        = bit.lshift(1,  4);
+opvp.PartyMember.HEALTH_FLAG         = bit.lshift(1,  5);
+opvp.PartyMember.FACTION_FLAG        = bit.lshift(1,  6);
+opvp.PartyMember.GUID_FLAG           = bit.lshift(1,  7);
+opvp.PartyMember.HOSTILE_FLAG        = bit.lshift(1,  8);
+opvp.PartyMember.ID_FLAG             = bit.lshift(1,  9);
+opvp.PartyMember.NAME_FLAG           = bit.lshift(1, 10);
+opvp.PartyMember.PLAYER_FLAG         = bit.lshift(1, 11);
+opvp.PartyMember.RACE_FLAG           = bit.lshift(1, 12);
+opvp.PartyMember.RANGE_FLAG          = bit.lshift(1, 13);
+opvp.PartyMember.RATING_CURRENT_FLAG = bit.lshift(1, 14);
+opvp.PartyMember.RATING_GAIN_FLAG    = bit.lshift(1, 15);
+opvp.PartyMember.SEX_FLAG            = bit.lshift(1, 16);
+opvp.PartyMember.SPEC_FLAG           = bit.lshift(1, 17);
+opvp.PartyMember.TEAM_FLAG           = bit.lshift(1, 18);
 
 opvp.PartyMember.CHARACTER_FLAGS = bit.bor(
     opvp.PartyMember.FACTION_FLAG,
@@ -63,6 +66,7 @@ opvp.PartyMember.CHARACTER_RACE_SEX_MASK = bit.bor(
 );
 
 opvp.PartyMember.STATE_FLAGS = bit.bor(
+    opvp.PartyMember.AURAS_FLAG,
     opvp.PartyMember.COMBAT_FLAG,
     opvp.PartyMember.CONNECTED_FLAG,
     opvp.PartyMember.DEAD_FLAG,
@@ -70,6 +74,8 @@ opvp.PartyMember.STATE_FLAGS = bit.bor(
     opvp.PartyMember.HOSTILE_FLAG,
     opvp.PartyMember.RANGE_FLAG,
     opvp.PartyMember.PLAYER_FLAG,
+    opvp.PartyMember.RATING_CURRENT_FLAG,
+    opvp.PartyMember.RATING_GAIN_FLAG,
     opvp.PartyMember.TEAM_FLAG
 );
 
@@ -88,6 +94,7 @@ function opvp.PartyMember:init()
     self._spec    = opvp.ClassSpec.UNKNOWN;
     self._name    = "";
     self._mask    = 0;
+    self._auras   = opvp.UnitAuras();
 end
 
 function opvp.PartyMember:class()
@@ -281,6 +288,10 @@ function opvp.PartyMember:_reset(mask)
         end
     end
 
+    if bit.band(mask, opvp.PartyMember.AURAS_FLAG) ~= 0 then
+        self._auras:clear();
+    end
+
     self._mask = bit.band(self._mask, bit.bnot(mask));
 end
 
@@ -361,6 +372,8 @@ end
 function opvp.PartyMember:_setId(id)
     self._id = id;
 
+    self._auras:setId(id);
+
     self:_setFlags(
         opvp.PartyMember.ID_FLAG,
         self._id ~= ""
@@ -401,6 +414,10 @@ function opvp.PartyMember:_setSpec(spec)
         opvp.PartyMember.SPEC_FLAG,
         self._spec:isValid()
     );
+end
+
+function opvp.PartyMember:_updateAuras(info)
+    return self._auras:updateFromEvent(info);
 end
 
 function opvp.PartyMember:_updateCharacterInfo()

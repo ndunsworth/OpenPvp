@@ -45,6 +45,7 @@ function opvp.PartyMemberProvider:init()
     self.disconnecting     = opvp.Signal("opvp.PartyMemberProvider.disconnecting");
     self.disconnected      = opvp.Signal("opvp.PartyMemberProvider.disconnected");
     self.leaderChanged     = opvp.Signal("opvp.PartyMemberProvider.leaderChanged");
+    self.memberAuraUpdate  = opvp.Signal("opvp.PartyMemberProvider.memberAuraUpdate");
     self.memberInfoUpdate  = opvp.Signal("opvp.PartyMemberProvider.memberInfoUpdate");
     self.memberInspect     = opvp.Signal("opvp.PartyMemberProvider.memberInspect");
     self.rosterBeginUpdate = opvp.Signal("opvp.PartyMemberProvider.rosterBeginUpdate");
@@ -279,6 +280,10 @@ end
 
 function opvp.PartyMemberProvider:_onDisconnected()
     self.disconnected:emit();
+end
+
+function opvp.PartyMemberProvider:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
+    self.memberAuraUpdate:emit(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate);
 end
 
 function opvp.PartyMemberProvider:_onMemberInfoUpdate(member, mask)

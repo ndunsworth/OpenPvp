@@ -82,6 +82,7 @@ end
 function opvp.ArenaPartyMemberProvider:_connectSignals()
     opvp.event.ARENA_OPPONENT_UPDATE:connect(self, self._onOpponentUpdate);
     opvp.event.PLAYER_SPECIALIZATION_CHANGED:connect(self, self._onUnitSpecUpdate);
+    opvp.event.UNIT_AURA:connect(self, self._onUnitAura);
     opvp.event.UNIT_CONNECTION:connect(self, self._onUnitConnection);
     opvp.event.UNIT_FACTION:connect(self, self._onUnitFactionUpdate);
     opvp.event.UNIT_HEALTH:connect(self, self._onUnitHealth);
@@ -108,6 +109,7 @@ function opvp.ArenaPartyMemberProvider:_disconnectSignals()
     opvp.event.ARENA_PREP_OPPONENT_SPECIALIZATIONS:disconnect(self, self._onOpponentSpecUpdate);
     opvp.event.GROUP_ROSTER_UPDATE:disconnect(self, self._onGroupRosterUpdate);
     opvp.event.PLAYER_SPECIALIZATION_CHANGED:disconnect(self, self._onUnitSpecUpdate);
+    opvp.event.UNIT_AURA:disconnect(self, self._onUnitAura);
     opvp.event.UNIT_CONNECTION:disconnect(self, self._onUnitConnection);
     opvp.event.UNIT_FACTION:disconnect(self, self._onUnitFactionUpdate);
     opvp.event.UNIT_HEALTH:disconnect(self, self._onUnitHealth);
@@ -123,6 +125,10 @@ end
 
 function opvp.ArenaPartyMemberProvider:_memberInspect(member)
     local mask = self:_updateMemberSpec(member);
+
+    if self._is_shuffle == true then
+        mask = bit.bor(mask, self:_updateMemberScore(member));
+    end
 
     if mask ~= 0 and self:isUpdatingRoster() == false then
         self:_onMemberInfoUpdate(member, mask);
