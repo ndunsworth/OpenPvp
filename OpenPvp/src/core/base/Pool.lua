@@ -72,6 +72,46 @@ function opvp.Pool:release(item)
     self._items:append(item);
 end
 
+function opvp.Pool:setSize(size)
+    size = max(0, size);
+
+    if size == self._size then
+        return;
+    end
+
+    if size == 0 then
+        self._items:clear();
+
+        self._size = size;
+
+        return;
+    end
+
+    if size < self._items:size() then
+        local last_index = self._items:size();
+
+        if self._dtor ~= nil then
+            for n=size + 1, last_index do
+                self._dtor(self._items:popBack());
+            end
+        else
+            for n=size + 1, last_index do
+                self._items:popBack();
+            end
+        end
+    elseif size > self._size then
+        for n=1, size - self._size do
+            local item = self._ctor();
+
+            if item ~= nil then
+                self._items:append(item);
+            end
+        end
+    end
+
+    self._size = size;
+end
+
 function opvp.Pool:used()
     return self._size - self._items:size();
 end
