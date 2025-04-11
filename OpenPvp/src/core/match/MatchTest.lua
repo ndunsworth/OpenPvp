@@ -180,9 +180,7 @@ function opvp.MatchTest:stop()
         self:_onMatchRoundComplete();
     end
 
-    if self._match:isRoundComplete() == true then
-        self:_onMatchComplete();
-    end
+    self:_onMatchComplete();
 
     self:_onMatchExit();
 
@@ -204,6 +202,23 @@ function opvp.MatchTest:_onMatchComplete()
     end
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();
+
+    if (
+        self:isSimulation() == true and
+        self._match:isBattleground() == true
+    ) then
+        local sound;
+
+        if self._match:isWinner() == true then
+            sound = opvp.player.factionInfo():battlegroundWinSound();
+        else
+            sound = opvp.player.factionInfo():battlegroundLostSound();
+        end
+
+        if sound ~= nil then
+            PlaySound(sound, opvp.SoundChannel.SFX);
+        end
+    end
 end
 
 function opvp.MatchTest:_onMatchEntered()
@@ -363,14 +378,6 @@ function opvp.MatchTest:_onMatchRoundComplete()
         end
     end
 
-    --~ if self._match:isBattleground() == true then
-        --~ self._outcome_status = opvp.MatchWinner.WON;
-        --~ self._outcome_team   = self._match:playerTeam();
-    --~ else
-        --~ self._outcome_status = opvp.MatchWinner.LOST;
-        --~ self._outcome_team   = self._match:opponentTeam();
-    --~ end
-
     self._match:_onMatchStateChanged(
         opvp.MatchStatus.ROUND_COMPLETE,
         self._match:statusNext()
@@ -378,22 +385,8 @@ function opvp.MatchTest:_onMatchRoundComplete()
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();
 
-    if self:isSimulation() == true then
-        local sound;
-
-        if self._match:isShuffle() == true then
-            sound = 888;
-        elseif self._match:isBattleground() == true then
-            if self._match:isWinner() == true then
-                sound = opvp.player.factionInfo():battlegroundWinSound();
-            else
-                sound = opvp.player.factionInfo():battlegroundLostSound();
-            end
-        end
-
-        if sound ~= nil then
-            PlaySound(sound, opvp.SoundChannel.SFX);
-        end
+    if self:isSimulation() == true and self._match:isShuffle() == true then
+        PlaySound(888, opvp.SoundChannel.SFX);
     end
 end
 
