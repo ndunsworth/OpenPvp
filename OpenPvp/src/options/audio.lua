@@ -299,7 +299,7 @@ This emote is based on the pinging players race/sex.]],
         opvp.Option.BOOL,
         "DampeningHigh",
         "Dampening High",
-        "Emits a warning sound effect when dampening reaches 40%.",
+        "Emits a warning sound when dampening reaches 40%.",
         true
     );
 
@@ -331,7 +331,7 @@ This emote is based on the pinging players race/sex.]],
         opvp.Option.BOOL,
         "TeammateCelebrations",
         "Teammate Win Celebrations",
-        "In an Arena or Shuffle match your teammates will randomly cheer, congratulate you, or taunt the enemy after a win.",
+        "Your teammates will randomly cheer, congratulate you, or taunt the enemy after a win.",
         true
     );
 
