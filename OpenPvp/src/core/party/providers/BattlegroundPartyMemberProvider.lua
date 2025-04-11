@@ -96,6 +96,7 @@ function opvp.BattlegroundPartyMemberProvider:_onConnected()
     self._faction = (opvp.match.faction() + 1) % 2;
 
     RequestBattlefieldScoreData();
+
     --~ self._timer:start();
 end
 
