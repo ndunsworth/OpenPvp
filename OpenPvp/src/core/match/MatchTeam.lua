@@ -41,9 +41,10 @@ opvp.MatchTeam = opvp.CreateClass(opvp.Party);
 function opvp.MatchTeam:init(match)
     opvp.Party.init(self);
 
-    self._match     = match;
-    self._id        = 0;
-    self._dampening = false;
+    self._match           = match;
+    self._id              = 0;
+    self._dampening       = false;
+    self._dampening_found = false;
 end
 
 function opvp.MatchTeam:cr()
@@ -131,6 +132,8 @@ end
 function opvp.MatchTeam:_initialize(category, guid)
     opvp.Party._initialize(self, category, guid);
 
+    self._dampening_found = false;
+
     if self:isHostile() == true then
         self:_setActive(true);
 
@@ -201,13 +204,17 @@ function opvp.MatchTeam:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, au
 
     local aura;
 
-    for n=1, #aurasAdded do
-        aura = aurasAdded[n];
+    if self._dampening_found == false then
+        for n=1, #aurasAdded do
+            aura = aurasAdded[n];
 
-        if aura:spellId() == 110310 then
-            self._match:_setDampening(aura:applications() / 100.0);
+            if aura:spellId() == 110310 then
+                self._match:_setDampening(aura:applications() / 100.0);
 
-            return;
+                self._dampening_found = true;
+
+                return;
+            end
         end
     end
 
