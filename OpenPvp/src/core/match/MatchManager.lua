@@ -79,6 +79,14 @@ function opvp.MatchManager:beginTest(pvpType, map, pvpFlags, simulate)
     end
 end
 
+function opvp.MatchManager:dampening()
+    if self._match ~= nil then
+        return self._match:dampening();
+    else
+        return 0;
+    end
+end
+
 function opvp.MatchManager:endTest()
     if self:isTesting() == false then
         return;
@@ -88,6 +96,14 @@ function opvp.MatchManager:endTest()
 
     self._match         = nil;
     self._match_testing = false;
+end
+
+function opvp.MatchManager:hasDampening()
+    if self._match ~= nil then
+        return self._match:hasDampening();
+    else
+        return false;
+    end
 end
 
 function opvp.MatchManager:isSimulation()

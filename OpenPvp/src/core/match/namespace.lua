@@ -35,9 +35,11 @@ opvp.match = {};
 --~ State and status signals
 opvp.match.complete            = opvp.Signal("opvp.match.complete");
 opvp.match.countdown           = opvp.Signal("opvp.match.countdown");
+opvp.match.dampeningUpdate     = opvp.Signal("opvp.match.dampeningUpdate");
 opvp.match.entered             = opvp.Signal("opvp.match.entered");
 opvp.match.joined              = opvp.Signal("opvp.match.joined");
 opvp.match.exit                = opvp.Signal("opvp.match.exit");
+opvp.match.outcomeReady        = opvp.Signal("opvp.match.outcomeReady");
 opvp.match.playerInfoUpdated   = opvp.Signal("opvp.match.playerInfoUpdated");
 opvp.match.playerTrinket       = opvp.Signal("opvp.match.playerTrinket");
 opvp.match.playerRosterUpdated = opvp.Signal("opvp.match.playerRosterUpdated");
@@ -45,10 +47,13 @@ opvp.match.roundWarmup         = opvp.Signal("opvp.match.roundWarmup");
 opvp.match.roundActive         = opvp.Signal("opvp.match.roundActive");
 opvp.match.roundComplete       = opvp.Signal("opvp.match.roundComplete");
 opvp.match.statusChanged       = opvp.Signal("opvp.match.statusChanged");
-opvp.match.dampeningUpdate     = opvp.Signal("opvp.match.dampeningUpdate");
 
 function opvp.match.current()
     return opvp_match_mgr_singleton:match();
+end
+
+function opvp.match.dampening()
+    return opvp_match_mgr_singleton:dampening();
 end
 
 function opvp.match.faction()
@@ -59,6 +64,10 @@ function opvp.match.faction()
     else
         return opvp.ALLIANCE;
     end
+end
+
+function opvp.match.hasDampening()
+    return opvp_match_mgr_singleton:hasDampening();
 end
 
 function opvp.match.inMatch()
@@ -87,6 +96,10 @@ local opvp_wow_to_match_status_lookup = {
     [Enum.PvPMatchState.PostRound]  = opvp.MatchStatus.ROUND_COMPLETE;
     [Enum.PvPMatchState.Complete]   = opvp.MatchStatus.COMPLETE;
 };
+
+function opvp.match.utils.dampening()
+    return C_Commentator.GetDampeningPercent();
+end
 
 function opvp.match.utils.state()
     local match_state = C_PvP.GetActiveMatchState();

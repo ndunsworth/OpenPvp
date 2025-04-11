@@ -35,7 +35,11 @@ function opvp.ArenaSkirmishQueue:init()
         self,
         4,
         opvp.PvpType.ARENA,
-        bit.bor(opvp.PvpFlag.SKIRMISH, opvp.PvpFlag.RANDOM_MAP),
+        bit.bor(
+            opvp.PvpFlag.DAMPENING,
+            opvp.PvpFlag.RANDOM_MAP,
+            opvp.PvpFlag.SKIRMISH
+        ),
         SKIRMISH,
         C_PvP.GetSkirmishInfo(4).shortDescription
     );

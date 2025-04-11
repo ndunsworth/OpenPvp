@@ -33,13 +33,13 @@ opvp.GenericMatchDescription = opvp.CreateClass(opvp.MatchDescription);
 function opvp.GenericMatchDescription:init(pvpType, map, teamSize, mask)
     opvp.MatchDescription.init(self, map);
 
+    if mask == nil then
+        mask = 0;
+    end
+
     self._type = pvpType;
     self._mask = mask;
     self._team_size = teamSize;
-
-    if self._mask == nil then
-        self._mask = 0;
-    end
 end
 
 function opvp.GenericMatchDescription:mask()

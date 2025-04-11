@@ -745,7 +745,7 @@ opvp.RatingBracket.ARENA_2V2 = opvp.RatingBracket(
     2,
     CONQUEST_BRACKET_NAME_2V2,
     0,
-    0
+    opvp.PvpFlag.DAMPENING
 );
 
 opvp.RatingBracket.ARENA_3V3 = opvp.RatingBracket(
@@ -756,7 +756,7 @@ opvp.RatingBracket.ARENA_3V3 = opvp.RatingBracket(
     3,
     CONQUEST_BRACKET_NAME_3V3,
     0,
-    0
+    opvp.PvpFlag.DAMPENING
 );
 
 opvp.RatingBracket.BLITZ = opvp.RatingBracket(
@@ -789,7 +789,11 @@ opvp.RatingBracket.SHUFFLE = opvp.RatingBracket(
     3,
     CONQUEST_BRACKET_NAME_SOLO_SHUFFLE,
     C_PvP.GetRatedSoloShuffleMinItemLevel(),
-    bit.bor(opvp.PvpFlag.SHUFFLE, opvp.PvpFlag.ROUND)
+    bit.bor(
+        opvp.PvpFlag.DAMPENING,
+        opvp.PvpFlag.SHUFFLE,
+        opvp.PvpFlag.ROUND
+    )
 );
 
 opvp.RatingBracket.BRACKETS = {

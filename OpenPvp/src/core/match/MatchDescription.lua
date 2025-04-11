@@ -80,7 +80,7 @@ function opvp.MatchDescription:createMatch(queue)
 end
 
 function opvp.MatchDescription:hasDampening()
-    return false;
+    return bit.band(self:mask(), opvp.PvpFlag.DAMPENING) ~= 0;
 end
 
 function opvp.MatchDescription:isArena()

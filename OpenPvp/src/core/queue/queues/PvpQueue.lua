@@ -48,6 +48,10 @@ function opvp.PvpQueue:confirmExpiration()
     end
 end
 
+function opvp.PvpQueue:hasDampening()
+    return bit.band(self._mask, opvp.PvpFlag.DAMPENING) ~= 0;
+end
+
 function opvp.PvpQueue:hasEnlistmentBonus()
     return false;
 end
