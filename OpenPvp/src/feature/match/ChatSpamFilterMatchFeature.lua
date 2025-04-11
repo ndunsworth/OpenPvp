@@ -34,7 +34,7 @@ opvp.ChatSpamFilterMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.ChatSpamFilterMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
-    self._ignore_test = true;
+    self._valid_test = opvp.MatchTestType.NONE;
 
     local addon_spam_msgs = {};
 
@@ -45,6 +45,7 @@ function opvp.ChatSpamFilterMatchFeature:init(option)
         table.insert(addon_spam_msgs, locale.LOW_HEALTH_SPAM_1);
         table.insert(addon_spam_msgs, locale.ENEMY_SPEC_SPAM_1);
         table.insert(addon_spam_msgs, locale.RESURRECTING_SPAM_1);
+        table.insert(addon_spam_msgs, locale.TRINKET_USED_SPAM_1);
     end
 
     self._spam_filter = opvp.ChatTypesMessageFilter(

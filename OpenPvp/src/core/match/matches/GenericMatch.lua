@@ -86,7 +86,7 @@ function opvp.GenericMatch:roundElapsedTime()
     if self:isActive() == true then
         return GetTime() - self._round_start;
     else
-        return self._round_end;
+        return self._round_end - self._round_start;
     end
 end
 
@@ -123,10 +123,10 @@ function opvp.GenericMatch:teams()
 end
 
 function opvp.GenericMatch:_close()
+    self._friendly_team:shutdown();
+
     self._friendly_team:_setMatch(nil);
     self._enemy_team:_setMatch(nil);
-
-    self._friendly_team:shutdown();
 
     opvp.Match._close(self);
 end
@@ -236,10 +236,10 @@ function opvp.GenericMatch:_onMatchJoined()
 end
 
 function opvp.GenericMatch:_onMatchRoundActive()
+    self._round_start = GetTime();
+
     if self:joinedInProgress() == true then
-        self._round_start = self:timeElapsed();
-    else
-        self._round_start = GetTime();
+        self._round_start = self._round_start - self:timeElapsed();
     end
 
     self._round_end = 0;
@@ -250,28 +250,9 @@ end
 function opvp.GenericMatch:_onMatchRoundComplete()
     self._round_end = GetTime();
 
-    self:_updateOutcome();
-
     opvp.Match._onMatchRoundComplete(self);
 end
 
 function opvp.GenericMatch:_onMatchRoundWarmup()
     opvp.Match._onMatchRoundWarmup(self);
-end
-
-function opvp.GenericMatch:_updateOutcome()
-    local winning_status;
-    local winning_team;
-
-    if self:isTest() == true then
-        winning_status, winning_team = opvp.match.manager():tester():outcome();
-    else
-        if winning_status == opvp.MatchWinner.WON then
-            winning_team = self:playerTeam();
-        else
-            winning_team = self:opponentTeam();
-        end
-    end
-
-    self:_setOutcome(winning_status, winning_team);
 end

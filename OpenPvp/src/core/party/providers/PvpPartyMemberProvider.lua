@@ -49,52 +49,14 @@ function opvp.PvpPartyMemberProvider:_connectSignals()
     if self:hasPlayer() == true then
         opvp.GenericPartyMemberProvider._connectSignals(self);
     end
-
-    --~ opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(
-        --~ self,
-        --~ self._onUpdateScore
-    --~ );
 end
 
 function opvp.PvpPartyMemberProvider:_disconnectSignals()
     if self:hasPlayer() == true then
         opvp.GenericPartyMemberProvider._disconnectSignals(self);
     end
-
-    --~ opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(
-        --~ self,
-        --~ self._onUpdateScore
-    --~ );
-end
-
-function opvp.PvpPartyMemberProvider:_onUpdateScore()
-
 end
 
 function opvp.PvpPartyMemberProvider:_updateMemberScore(member)
-    local mask = 0;
-
-    if member:isGuidKnown() == false then
-        return mask;
-    end
-
-    local info = C_PvP.GetScoreInfoByPlayerGuid(member:guid());
-
-    if info == nil then
-        return mask;
-    end
-
-    if member:isNameKnown() == false then
-        member:_setName(info.name);
-
-        mask = bit.bor(mask, opvp.PartyMember.NAME_FLAG);
-    end
-
-    if member:isRaceKnown() == false then
-        member:_setRace(opvp.Race:fromRaceName(info.raceName));
-
-        mask = bit.bor(mask, opvp.PartyMember.RACE_FLAG);
-    end
-
-    return mask;
+    return member:_updateScore();
 end

@@ -33,7 +33,7 @@ opvp.TeammateBattlecrySoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.TeammateBattlecrySoundEffect:init()
     opvp.MatchOptionFeature.init(self, opvp.options.audio.soundeffect.match.teammateMatchBeginBattlecry);
 
-    --~ self._ignore_test = true;
+    self._valid_test = opvp.MatchTestType.SIMULATION;
 end
 
 function opvp.TeammateBattlecrySoundEffect:isActiveMatchStatus(status)
@@ -94,18 +94,16 @@ function opvp.TeammateBattlecrySoundEffect:_onFeatureActivated()
             if (
                 member ~= nil and
                 member:isPlayer() == false and
-                member:isFactionKnown() == true and
                 member:isSexKnown() == true and
                 member:isRaceKnown() == true
             ) then
-                local race    = member:race();
-                local sex     = member:sex();
-                local faction = member:faction();
+                local race = member:race();
+                local sex  = member:sex();
 
                 opvp.Timer:singleShot(
                     (time_sep * count) + (0.25 * math.random()),
                     function()
-                        opvp.effect.roundBegin(race, sex, faction);
+                        opvp.effect.roundBegin(race, sex);
                     end
                 );
 
@@ -117,8 +115,8 @@ function opvp.TeammateBattlecrySoundEffect:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
-function opvp.effect.roundBegin(race, sex, faction)
-    local sound = opvp.effect.roundBeginSound(race, faction);
+function opvp.effect.roundBegin(race, sex)
+    local sound = opvp.effect.roundBeginSound(race);
 
     sound:play(sex, opvp.SoundChannel.SFX, true);
 end
@@ -161,13 +159,8 @@ local function opvp_round_begin_sound_effect_sample(button, state)
     if state == false then
         local race    = opvp.Race.RACES[math.random(2, opvp.MAX_RACE + 1)];
         local sex     = math.random(1, 2);
-        local faction = math.random(1, 2);
 
-        if race:isFactionSupported(faction) == false then
-            faction = bit.bxor(faction, 3);
-        end
-
-        opvp.effect.roundBegin(race:id(), sex, faction);
+        opvp.effect.roundBegin(race:id(), sex);
     end
 end
 

@@ -33,7 +33,7 @@ opvp.TeammateCongratsSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.TeammateCongratsSoundEffect:init()
     opvp.MatchOptionFeature.init(self, opvp.options.audio.soundeffect.match.teammateCelebration);
 
-    --~ self._ignore_test = true;
+    self._valid_test = opvp.MatchTestType.SIMULATION;
 end
 
 function opvp.TeammateCongratsSoundEffect:isActiveMatchStatus(status)
@@ -48,19 +48,31 @@ function opvp.TeammateCongratsSoundEffect:isFeatureEnabled()
 end
 
 function opvp.TeammateCongratsSoundEffect:_onFeatureActivated()
-    local match = opvp.match.current();
+    opvp.MatchOptionFeature._onFeatureActivated(self);
 
-    if match == nil or match:isWinner() == false then
-        opvp.MatchOptionFeature._onFeatureActivated(self);
+    opvp.match.outcomeReady:connect(self, self._onOutcomeReady);
+end
 
+function opvp.TeammateCongratsSoundEffect:_onFeatureDeactivated()
+    opvp.MatchOptionFeature._onFeatureDeactivated(self);
+
+    opvp.match.outcomeReady:disconnect(self, self._onOutcomeReady);
+end
+
+function opvp.TeammateCongratsSoundEffect:_onOutcomeReady(match, outcomeType)
+    if (
+        match:isWinner() == false or
+        (
+            outcomeType == opvp.MatchOutcomeType.MATCH and
+            match:isRoundBased() == true
+        )
+    ) then
         return;
     end
 
     local team = match:playerTeam();
 
     if team == nil then
-        opvp.MatchOptionFeature._onFeatureActivated(self);
-
         return;
     end
 
@@ -106,16 +118,10 @@ function opvp.TeammateCongratsSoundEffect:_onFeatureActivated()
                     end
                 );
 
-                if count == 1 then
-                    break;
-                end
-
                 count = count + 1;
             end
         end
     end
-
-    opvp.MatchOptionFeature._onFeatureActivated(self);
 end
 
 function opvp.effect.teamateCongratulate(race, sex)

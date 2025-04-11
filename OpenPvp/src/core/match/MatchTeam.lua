@@ -43,18 +43,34 @@ function opvp.MatchTeam:init(match)
 
     self._match     = match;
     self._id        = 0;
-    self._mmr       = 0;
-    self._mmr_gain  = 0;
-    self._cr        = 0;
-    self._cr_gain   = 0;
+    self._dampening = false;
 end
 
 function opvp.MatchTeam:cr()
-    return self._cr;
-end
+    if self._match:isRated() == false then
+        return 0;
+    end
 
-function opvp.MatchTeam:crGain()
-    return self._cr_gain;
+    local value = 0;
+    local count = 0;
+
+    local members = self:members();
+    local member;
+
+    for n=1, #members do
+        member = members[n];
+
+        if member:isRatingKnown() == true then
+            value = value + member:cr();
+            count = count + 1;
+        end
+    end
+
+    if count > 0 then
+        return value / count;
+    else
+        return 0;
+    end
 end
 
 function opvp.MatchTeam:id()
@@ -86,11 +102,30 @@ function opvp.MatchTeam:isHostile()
 end
 
 function opvp.MatchTeam:mmr()
-    return self._mmr;
-end
+    if self._match:isRated() == false then
+        return 0;
+    end
 
-function opvp.MatchTeam:mmrGain()
-    return self._mmr_gain;
+    local value = 0;
+    local count = 0;
+
+    local members = self:members();
+    local member;
+
+    for n=1, #members do
+        member = members[n];
+
+        if member:isRatingKnown() == true then
+            value = value + member:mmr();
+            count = count + 1;
+        end
+    end
+
+    if count > 0 then
+        return value / count;
+    else
+        return 0;
+    end
 end
 
 function opvp.MatchTeam:_initialize(category, guid)
@@ -98,6 +133,10 @@ function opvp.MatchTeam:_initialize(category, guid)
 
     if self:isHostile() == true then
         self:_setActive(true);
+
+        self._dampening = false;
+    else
+        self._dampening = self._match:hasDampening();
     end
 end
 
@@ -144,6 +183,43 @@ function opvp.MatchTeam:_onDifficultyChanged(mask)
     --~ end
 
     opvp.Party._onDifficultyChanged(self, mask);
+end
+
+function opvp.MatchTeam:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
+    opvp.Party._onMemberAuraUpdate(
+        self,
+        member,
+        aurasAdded,
+        aurasUpdated,
+        aurasRemoved,
+        fullUpdate
+    );
+
+    if self._dampening == false then
+        return;
+    end
+
+    local aura;
+
+    for n=1, #aurasAdded do
+        aura = aurasAdded[n];
+
+        if aura:spellId() == 110310 then
+            self._match:_setDampening(aura:applications() / 100.0);
+
+            return;
+        end
+    end
+
+    for n=1, #aurasUpdated do
+        aura = aurasUpdated[n];
+
+        if aura:spellId() == 110310 then
+            self._match:_setDampening(aura:applications() / 100.0);
+
+            return;
+        end
+    end
 end
 
 function opvp.MatchTeam:_onMemberInfoUpdate(member, mask)
@@ -275,26 +351,10 @@ function opvp.MatchTeam:_onRosterEndUpdate(newMembers, updatedMembers, removedMe
     opvp.Party._onRosterEndUpdate(self, newMembers, updatedMembers, removedMembers);
 end
 
-function opvp.MatchTeam:_setCR(rating)
-    self._cr = rating;
-end
-
 function opvp.MatchTeam:_setId(id)
     self._id = id;
 end
 
-function opvp.MatchTeam:_setCRGain(value)
-    self._cr_gain = value;
-end
-
 function opvp.MatchTeam:_setMatch(match)
     self._match = match;
-end
-
-function opvp.MatchTeam:_setMMR(rating)
-    self._mmr = rating;
-end
-
-function opvp.MatchTeam:_setMMRGain(value)
-    self._mmr_gain = rating;
 end

@@ -33,7 +33,7 @@ opvp.ScreenshotMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.ScreenshotMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
-    self._ignore_test    = true;
+    self._valid_test     = opvp.MatchTestType.NONE;
     self._match_activate = opvp.MatchStatus.COMPLETE;
     self._screenshot     = false;
 

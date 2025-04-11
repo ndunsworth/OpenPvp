@@ -46,3 +46,11 @@ function opvp.BattlegroundMatch:init(queue, description)
     self._friendly_provider:_memberFactory():setCache(cache);
     self._enemy_provider:_memberFactory():setCache(cache);
 end
+
+function opvp.BattlegroundMatch:_onMatchComplete()
+    opvp.GenericMatch._onMatchComplete(self);
+
+    if self:isTest() == true then
+        self:_updateOutcome();
+    end
+end

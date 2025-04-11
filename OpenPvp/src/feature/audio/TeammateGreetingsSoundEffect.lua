@@ -33,7 +33,7 @@ opvp.TeammateGreetingsSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.TeammateGreetingsSoundEffect:init()
     opvp.MatchOptionFeature.init(self, opvp.options.audio.soundeffect.match.teammateGreetings);
 
-    self._ignore_test = true;
+    self._valid_test = opvp.MatchTestType.NONE;
     self._match_mask = opvp.PvpType.ARENA;
     self._players    = opvp.List();
     self._last_greet = 0;

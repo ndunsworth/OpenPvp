@@ -33,37 +33,39 @@ opvp.TeammateDeathSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.TeammateDeathSoundEffect:init()
     opvp.MatchOptionFeature.init(self, opvp.options.audio.soundeffect.match.teammateDeath);
 
-    self._ignore_test = true;
+    self._valid_test = opvp.MatchTestType.SIMULATION;
     self._match_mask  = opvp.PvpType.ARENA;
 
-    local op = opvp.CombatLogLogicalOp();
+    --~ local op = opvp.CombatLogLogicalOp();
 
-    op:addCondition(opvp.SubEventCombatLogCondition("UNIT_DIED"));
+    --~ op:addCondition(opvp.SubEventCombatLogCondition("UNIT_DIED"));
 
-    op:addCondition(
-        opvp.TargetFlagsCombatLogCondition(
-            opvp.CombatLogLogicalOp.DESTINATION,
-            opvp.CombatLogLogicalOp.BIT_AND,
-            opvp.CombatLogLogicalOp.CMP_EQUAL,
-            bit.bor(COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_AFFILIATION_MINE),
-            bit.bor(COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_REACTION_FRIENDLY)
-        )
-    );
+    --~ op:addCondition(
+        --~ opvp.TargetFlagsCombatLogCondition(
+            --~ opvp.CombatLogLogicalOp.DESTINATION,
+            --~ opvp.CombatLogLogicalOp.BIT_AND,
+            --~ opvp.CombatLogLogicalOp.CMP_EQUAL,
+            --~ bit.bor(COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_AFFILIATION_MINE),
+            --~ bit.bor(COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_REACTION_FRIENDLY)
+        --~ )
+    --~ );
 
-    self._event_filter = opvp.CallbackCombatLogFilter(
-        function(filter, info)
-            self:_onUnitDeath(info.destName, info.destGUID);
-        end,
-        op
-    );
+    --~ self._event_filter = opvp.CallbackCombatLogFilter(
+        --~ function(filter, info)
+            --~ self:_onUnitDeath(info.destName, info.destGUID);
+        --~ end,
+        --~ op
+    --~ );
 end
 
 function opvp.TeammateDeathSoundEffect:isActiveMatchStatus(status)
-    return (
-        status == opvp.MatchStatus.ROUND_ACTIVE or
-        status == opvp.MatchStatus.ROUND_COMPLETE or
-        status == opvp.MatchStatus.COMPLETE
-    );
+    return status == opvp.MatchStatus.ROUND_COMPLETE;
+
+    --~ return (
+        --~ status == opvp.MatchStatus.ROUND_ACTIVE or
+        --~ status == opvp.MatchStatus.ROUND_COMPLETE or
+        --~ status == opvp.MatchStatus.COMPLETE
+    --~ );
 end
 
 function opvp.TeammateDeathSoundEffect:isFeatureEnabled()
@@ -71,15 +73,50 @@ function opvp.TeammateDeathSoundEffect:isFeatureEnabled()
 end
 
 function opvp.TeammateDeathSoundEffect:_onFeatureActivated()
-    self._event_filter:connect();
+    opvp.MatchOptionFeature._onFeatureActivated(self);
 
-    opvp.MatchOptionFeature._onFeatureActivated(self)
+    --~ self._event_filter:disconnect();
+
+    local match = opvp.match.current();
+
+    if match ~= nil and match:isWinner() == false then
+        local team = match:playerTeam();
+
+        if team ~= nil then
+            local members = team:members();
+            local member;
+
+            for n=1, #members do
+                member = members[n];
+
+                if (
+                    member:isPlayer() == false and
+                    member:isDead() == true and
+                    opvp.unit.isFeignDeath(member:id()) == false and
+                    member:isRaceKnown() == true and
+                    member:isSexKnown() == true
+                ) then
+                    local race = member:race();
+                    local sex  = member:sex();
+
+                    opvp.Timer:singleShot(
+                        1.5 + (0.5 * math.random()),
+                        function()
+                            opvp.effect.teammateDeath(race, sex);
+                        end
+                    );
+
+                    break
+                end
+            end
+        end
+    end
 end
 
 function opvp.TeammateDeathSoundEffect:_onFeatureDeactivated()
-    self._event_filter:disconnect();
+    opvp.MatchOptionFeature._onFeatureDeactivated(self);
 
-    opvp.MatchOptionFeature._onFeatureDeactivated(self)
+    --~ self._event_filter:disconnect();
 end
 
 function opvp.TeammateDeathSoundEffect:_onUnitDeath(unitId, guid)

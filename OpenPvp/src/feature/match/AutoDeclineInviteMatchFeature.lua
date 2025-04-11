@@ -33,7 +33,7 @@ opvp.AutoDeclineInviteMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.AutoDeclineInviteMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
-    self._ignore_test = true;
+    self._valid_test  = opvp.MatchTestType.NONE;
     self._friends     = opvp.List();
     self._ignore      = opvp.List();
 end

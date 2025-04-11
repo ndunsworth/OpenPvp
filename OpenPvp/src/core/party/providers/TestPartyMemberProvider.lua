@@ -176,6 +176,7 @@ function opvp.TestPartyMemberProvider:_onConnected()
             {"Absurd",       opvp.ClassSpec.HOLY_PRIEST},
             {"Beep",         opvp.ClassSpec.MISTWEAVER_MONK},
             {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER},
+            {"Cheesebaker",  opvp.ClassSpec.DISCIPLINE_PRIEST},
             {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN},
             {"Ehben",        opvp.ClassSpec.ARCANE_MAGE},
             {"Jahmilycyrus", opvp.ClassSpec.FROST_MAGE},

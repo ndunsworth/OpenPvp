@@ -137,7 +137,7 @@ opvp.MuteNPCDialogMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.MuteNPCDialogMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
-    self._ignore_test = true;
+    self._valid_test  = opvp.MatchTestType.NONE;
     self._map         = opvp.InstanceId.UNKNOWN;
     self._map_ids     = opvp.List:createFromArray(
         {

@@ -38,6 +38,14 @@ function opvp.ArenaMatch:init(queue, description)
     self._enemy_provider:_setTeamSize(description:teamSize());
 end
 
+function opvp.ArenaMatch:_onMatchComplete()
+    opvp.GenericMatch._onMatchComplete(self);
+
+    if self:isTest() == true then
+        self:_updateOutcome();
+    end
+end
+
 function opvp.ArenaMatch:_onMatchRoundWarmup()
     --~ self._test_timer = opvp.Timer(5);
 
@@ -96,4 +104,45 @@ function opvp.ArenaMatch:_onMatchRoundWarmup()
     --~ end
 
     opvp.GenericMatch._onMatchRoundWarmup(self);
+end
+
+function opvp.ArenaMatch:_onScoreUpdate()
+    opvp.printDebug("opvp.ArenaMatch._onScoreUpdate");
+
+    if (
+        self:isOutcomeValid() == false and
+        (
+            self._status == opvp.MatchStatus.ROUND_COMPLETE or
+            self._status == opvp.MatchStatus.COMPLETE
+        )
+    ) then
+        self:_updateOutcome();
+    end
+end
+
+function opvp.ArenaMatch:_updateOutcome()
+    local winning_status;
+    local winning_team;
+
+    if self:isTest() == true then
+        winning_status, winning_team = opvp.match.manager():tester():outcome();
+    else
+        winning_status = opvp.match.utils.winner();
+
+        if winning_status == opvp.MatchWinner.WON then
+            winning_team = self:playerTeam();
+        else
+            winning_team = self:opponentTeam();
+        end
+    end
+
+    local outcome_type;
+
+    if self:isRoundBased() == true then
+        outcome_type = opvp.MatchOutcomeType.ROUND;
+    else
+        outcome_type = opvp.MatchOutcomeType.MATCH;
+    end
+
+    self:_setOutcome(winning_status, winning_team, outcome_type);
 end

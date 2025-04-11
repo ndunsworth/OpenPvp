@@ -33,7 +33,7 @@ opvp.MatchFeature = opvp.CreateClass(opvp.Feature);
 function opvp.MatchFeature:init()
     opvp.Feature.init(self);
 
-    self._ignore_test      = false;
+    self._valid_test       = bit.bor(opvp.MatchTestType.FEATURE, opvp.MatchTestType.SIMULATION);
     self._match_mask       = bit.bor(opvp.PvpType.ARENA, opvp.PvpType.BATTLEGROUND);
     self._match_activate   = opvp.MatchStatus.ENTERED;
     self._match_deactivate = opvp.MatchStatus.EXIT;
@@ -49,10 +49,6 @@ function opvp.MatchFeature:canActivate()
         self:isValidMatch(opvp.match.current()) == true and
         self:isActiveMatchStatus(opvp.match.current():status()) == true
     );
-end
-
-function opvp.MatchFeature:ignoreTestMatch()
-    return self._ignore_test;
 end
 
 function opvp.MatchFeature:isActiveMatchStatus(status)
@@ -75,7 +71,7 @@ function opvp.MatchFeature:isValidMatch(match)
         bit.band(self._match_mask, match:pvpType()) ~= 0 and
         (
             match:isTest() == false or
-            self._ignore_test == false
+            bit.band(match:testType(), self._valid_test) ~= 0
         )
     );
 end

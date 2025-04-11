@@ -49,7 +49,7 @@ opvp.ChatDisableMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 function opvp.ChatDisableMatchFeature:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
-    self._ignore_test = true;
+    self._valid_test = opvp.MatchTestType.NONE;
 
     if opvp.private.state.ui.restore.chat:value() == true then
         C_SocialRestrictions.SetChatDisabled(false);

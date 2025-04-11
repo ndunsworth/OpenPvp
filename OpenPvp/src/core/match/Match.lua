@@ -30,22 +30,28 @@ local opvp = OpenPvp;
 
 local opvp_match_status_signal_lookup;
 
+opvp.MatchOutcomeType = {
+    NONE  = 0,
+    MATCH = 1,
+    ROUND = 2
+};
+
 opvp.MatchStatus = {
-    INACTIVE       = 1;
-    ENTERED        = 2;
-    JOINED         = 3;
-    ROUND_WARMUP   = 4;
-    ROUND_ACTIVE   = 5;
-    ROUND_COMPLETE = 6;
-    COMPLETE       = 7;
-    EXIT           = 8;
+    INACTIVE       = 1,
+    ENTERED        = 2,
+    JOINED         = 3,
+    ROUND_WARMUP   = 4,
+    ROUND_ACTIVE   = 5,
+    ROUND_COMPLETE = 6,
+    COMPLETE       = 7,
+    EXIT           = 8
 };
 
 opvp.MatchWinner = {
-    NONE = 0;
-    DRAW = 1;
-    LOST = 2;
-    WON  = 3;
+    NONE = 0,
+    DRAW = 1,
+    LOST = 2,
+    WON  = 3
 };
 
 local opvp_match_status_next_of_lookup = {
@@ -150,13 +156,16 @@ function opvp.Match:init(queue, description)
     self._status          = opvp.MatchStatus.INACTIVE;
     self._enter_in_prog   = false;
     self._surrendered     = false;
-    self._winning_team    = nil;
-    self._outcome         = opvp.MatchWinner.NONE;
-    self._testing         = false;
+    self._testing         = opvp.MatchTestType.NONE;
     self._dampening       = 0;
     self._countdown       = false;
     self._countdown_time  = 0;
     self._countdown_timer = opvp.Timer(1);
+    self._round_results   = false;
+
+    self._outcome         = opvp.MatchWinner.NONE;
+    self._outcome_valid   = false;
+    self._outcome_team    = nil;
 
     self._countdown_timer.timeout:connect(self, self._countdownUpdate);
 end
@@ -167,6 +176,10 @@ function opvp.Match:bracket()
     else
         return nil;
     end
+end
+
+function opvp.Match:dampening()
+    return self._dampening;
 end
 
 function opvp.Match:description()
@@ -200,7 +213,7 @@ function opvp.Match:findTeamateByGuid(guid)
 end
 
 function opvp.Match:hasDampening()
-    return self:isArena();
+    return self._desc:hasDampening();
 end
 
 function opvp.Match:hasWinner()
@@ -272,6 +285,10 @@ function opvp.Match:isLastRound()
     return self:round() == self:rounds();
 end
 
+function opvp.Match:isOutcomeValid()
+    return self._outcome_valid;
+end
+
 function opvp.Match:isRoundComplete()
     return self._status == opvp.MatchStatus.ROUND_COMPLETE;
 end
@@ -301,7 +318,7 @@ function opvp.Match:isSkirmish()
 end
 
 function opvp.Match:isTest()
-    return self._testing;
+    return self._testing ~= opvp.MatchTestType.NONE;
 end
 
 function opvp.Match:isWarmup()
@@ -450,8 +467,8 @@ function opvp.Match:teammatesSize()
     return 0;
 end
 
-function opvp.Match:teams()
-    return {};
+function opvp.Match:testType()
+    return self._testing;
 end
 
 function opvp.Match:timeElapsed()
@@ -467,7 +484,7 @@ function opvp.Match:timeElapsed()
 end
 
 function opvp.Match:winner()
-    return self._winning_team;
+    return self._outcome_team;
 end
 
 function opvp.Match:_close()
@@ -480,13 +497,13 @@ function opvp.Match:_close()
         );
 
         opvp.event.START_TIMER:disconnect(self, self._onStartTimer);
-
-        opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onUpdateScore);
     end
+
+    opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
 
     self._countdown_timer:stop();
 
-    self._winning_team = nil;
+    self._outcome_team = nil;
 end
 
 function opvp.Match:_countdownCancel()
@@ -590,28 +607,7 @@ function opvp.Match:_onCountdownUpdate(timeRemaining, totalTime)
 end
 
 function opvp.Match:_onMatchComplete()
-    local msg;
-    local elapsed = self:timeElapsed();
-
-    if self._surrendered == true then
-        msg = opvp.strs.MATCH_SURRENDERED;
-    else
-        if self:isRoundBased() == true then
-            msg = opvp_match_compelete_str_lookup[1][self._outcome];
-        else
-            msg = opvp_match_compelete_str_lookup[2][self._outcome];
-        end
-    end
-
-    if msg ~= nil then
-        opvp.printMessageOrDebug(
-            opvp.options.announcements.match.complete:value(),
-            msg,
-            opvp.time.formatSeconds(self:timeElapsed()),
-            self:roundsWon(),
-            self:roundsLost()
-        );
-    end
+    self:_setStatus(opvp.MatchStatus.COMPLETE);
 
     local expire = self:instanceExpiration();
 
@@ -622,8 +618,6 @@ function opvp.Match:_onMatchComplete()
             opvp.time.formatSeconds(expire)
         );
     end
-
-    self:_setStatus(opvp.MatchStatus.COMPLETE);
 end
 
 function opvp.Match:_onMatchEntered()
@@ -643,10 +637,11 @@ function opvp.Match:_onMatchEntered()
         );
 
         opvp.event.START_TIMER:connect(self, self._onStartTimer);
-        opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onUpdateScore);
     end
 
-    self:_setOutcome(opvp.MatchWinner.NONE, nil);
+    opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onScoreUpdate);
+
+    self:_setOutcome(opvp.MatchWinner.NONE, nil, opvp.MatchOutcomeType.NONE);
 
     self:_setStatus(opvp.MatchStatus.ENTERED);
 end
@@ -707,25 +702,6 @@ end
 function opvp.Match:_onMatchRoundComplete()
     self._countdown_timer:stop();
 
-    if self:isRoundBased() == true then
-        local msg;
-
-        if self:isWinner() == true then
-            msg = opvp.strs.MATCH_ROUND_COMPLETE_WON;
-        elseif self:hasWinner() == true then
-            msg = opvp.strs.MATCH_ROUND_COMPLETE_LOST;
-        else
-            msg = opvp.strs.MATCH_ROUND_COMPLETE_DRAW;
-        end
-
-        opvp.printMessageOrDebug(
-            opvp.options.announcements.match.roundComplete:value(),
-            msg,
-            self:round(),
-            opvp.time.formatSeconds(self:roundElapsedTime())
-        );
-    end
-
     self:_setStatus(opvp.MatchStatus.ROUND_COMPLETE);
 end
 
@@ -735,9 +711,11 @@ function opvp.Match:_onMatchRoundWarmup()
         opvp.strs.MATCH_ROUND_WARMUP
     );
 
-    self._dampening = 0;
+    self._round_results = true;
 
-    self:_setOutcome(opvp.MatchWinner.NONE, nil);
+    self:_setOutcome(opvp.MatchWinner.NONE, nil, opvp.MatchOutcomeType.NONE);
+
+    self:_setDampening(0);
 
     self:_setStatus(opvp.MatchStatus.ROUND_WARMUP);
 end
@@ -786,9 +764,17 @@ function opvp.Match:_onMatchStateChanged(status, expected)
 
         return true;
     elseif (
-        status == opvp.MatchStatus.COMPLETE and
-        expected == opvp.MatchStatus.ROUND_COMPLETE and
         self._status == opvp.MatchStatus.ROUND_ACTIVE and
+        (
+            (
+                status == opvp.MatchStatus.COMPLETE and
+                expected == opvp.MatchStatus.ROUND_COMPLETE
+            ) or
+            (
+                status == opvp.MatchStatus.ROUND_COMPLETE and
+                expected == opvp.MatchStatus.COMPLETE
+            )
+        ) and
         self:isLastRound() == true
     ) then
         --~ Enum.PvPMatchState.PostRound and they way Blizz do status changes sigh.
@@ -859,6 +845,56 @@ function opvp.Match:_onMemberTrintetUsed(member, spellId)
     opvp.match.playerTrinket:emit(member, spellId);
 end
 
+function opvp.Match:_onOutcomeReady(outcomeType)
+    opvp.printDebug("opvp.Match._onOutcomeReady(%d)", outcomeType);
+
+    if outcomeType == opvp.MatchOutcomeType.ROUND then
+        local msg;
+
+        if self:isWinner() == true then
+            msg = opvp.strs.MATCH_ROUND_COMPLETE_WON;
+        elseif self:hasWinner() == true then
+            msg = opvp.strs.MATCH_ROUND_COMPLETE_LOST;
+        else
+            msg = opvp.strs.MATCH_ROUND_COMPLETE_DRAW;
+        end
+
+        opvp.printMessageOrDebug(
+            opvp.options.announcements.match.roundComplete:value(),
+            msg,
+            self:round(),
+            opvp.time.formatSeconds(self:roundElapsedTime())
+        );
+
+        opvp.match.outcomeReady:emit(self, outcomeType);
+    elseif outcomeType == opvp.MatchOutcomeType.MATCH then
+        local msg;
+        local elapsed = self:timeElapsed();
+
+        if self._surrendered == true then
+            msg = opvp.strs.MATCH_SURRENDERED;
+        else
+            if self:isRoundBased() == true then
+                msg = opvp_match_compelete_str_lookup[1][self._outcome];
+            else
+                msg = opvp_match_compelete_str_lookup[2][self._outcome];
+            end
+        end
+
+        if msg ~= nil then
+            opvp.printMessageOrDebug(
+                opvp.options.announcements.match.complete:value(),
+                msg,
+                opvp.time.formatSeconds(elapsed),
+                self:roundsWon(),
+                self:roundsLost()
+            );
+        end
+
+        opvp.match.outcomeReady:emit(self, outcomeType);
+    end
+end
+
 function opvp.Match:_onPartyAboutToJoin(category, guid)
     if self:isTest() == true then
         return;
@@ -869,6 +905,10 @@ function opvp.Match:_onPartyAboutToJoin(category, guid)
     if team ~= nil then
         opvp.party.manager():_setParty(team);
     end
+end
+
+function opvp.Match:_onScoreUpdate()
+    opvp.printDebug("opvp.Match._onScoreUpdate");
 end
 
 function opvp.Match:_onStartTimer(timerType, timeSeconds, totalTime)
@@ -897,13 +937,32 @@ function opvp.Match:_onTrintetUsed(guid, name, spellId, hostile)
     end
 end
 
-function opvp.Match:_onUpdateScore()
+function opvp.Match:_setDampening(value)
+    if value == self._dampening then
+        return
+    end
 
+    self._dampening = value
+
+    if value > 0 then
+        opvp.printMessageOrDebug(
+            opvp.options.announcements.match.dampening:value(),
+            opvp.strs.MATCH_DAMPENING,
+            100 * value
+        );
+    end
+
+    opvp.match.dampeningUpdate:emit(value);
 end
 
-function opvp.Match:_setOutcome(outcome, team)
-    self._winning_team = team;
-    self._outcome = outcome;
+function opvp.Match:_setOutcome(outcome, team, outcomeType)
+    self._outcome_team  = team;
+    self._outcome       = outcome;
+    self._outcome_valid = outcomeType ~= opvp.MatchOutcomeType.NONE;
+
+    if self._outcome_valid == true then
+        self:_onOutcomeReady(outcomeType);
+    end
 end
 
 local opvp_match_signals_lookup;
@@ -924,6 +983,16 @@ function opvp.Match:_setStatus(status)
     if signal ~= nil then
         signal:emit();
     end
+end
+
+function opvp.Match:_updateOutcome()
+    if self:isTest() == false then
+        return;
+    end
+
+    local winning_status, winning_team = opvp.match.manager():tester():outcome();
+
+    self:_setOutcome(winning_status, winning_team, opvp.MatchOutcomeType.MATCH);
 end
 
 local function opvp_match_status_signal_lookup_ctor()

@@ -49,7 +49,7 @@ function opvp.ChatFilterMatchFeature:init(option)
 
     self._friends     = opvp.List();
     self._ignore      = opvp.List();
-    self._ignore_test = true;
+    self._valid_test  = opvp.MatchTestType.NONE;
 
     self._cb = function(...)
         return self:_onMessageEvent(...);

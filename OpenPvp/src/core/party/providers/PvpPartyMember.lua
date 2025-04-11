@@ -33,11 +33,11 @@ opvp.PvpPartyMember = opvp.CreateClass(opvp.PartyMember);
 function opvp.PvpPartyMember:init()
     opvp.PartyMember.init(self);
 
-    self._team      = nil;
-    self._mmr       = 0;
-    self._mmr_gain  = 0;
     self._cr        = 0;
     self._cr_gain   = 0;
+    self._mmr       = 0;
+    self._mmr_gain  = 0;
+    self._team      = nil;
 end
 
 function opvp.PvpPartyMember:cr()
@@ -46,6 +46,14 @@ end
 
 function opvp.PvpPartyMember:crGain()
     return self._cr_gain;
+end
+
+function opvp.PvpPartyMember:isRatingKnown()
+    return bit.band(self._mask, opvp.PartyMember.RATING_CURRENT_FLAG) ~= 0;
+end
+
+function opvp.PvpPartyMember:isRatingGainedKnown()
+    return bit.band(self._mask, opvp.PartyMember.RATING_GAIN_FLAG) ~= 0;
 end
 
 function opvp.PvpPartyMember:mmr()
@@ -63,25 +71,59 @@ end
 function opvp.PvpPartyMember:_reset(mask)
     opvp.PartyMember._reset(self, mask);
 
+    if bit.band(mask, opvp.PartyMember.RATING_CURRENT_FLAG) then
+        self._cr  = 0;
+        self._mmr = 0;
+    end
+
+    if bit.band(mask, opvp.PartyMember.RATING_GAIN_FLAG) then
+        self._cr_gain  = 0;
+        self._mmr_gain = 0;
+    end
+
     if bit.band(mask, opvp.PartyMember.TEAM_FLAG) then
         self._team = nil;
     end
 end
 
-function opvp.PvpPartyMember:_setCR(rating)
-    self._cr = rating;
+function opvp.PvpPartyMember:_setRating(cr, mmr)
+    if cr > -1 then
+        self:_setFlags(
+            opvp.PartyMember.RATING_CURRENT_FLAG,
+            true
+        );
+
+        cr = 0;
+        mmr = 0;
+    else
+        self:_setFlags(
+            opvp.PartyMember.RATING_CURRENT_FLAG,
+            false
+        );
+    end
+
+    self._cr = cr;
+    self._mmr = mmr;
 end
 
-function opvp.PvpPartyMember:_setCRGain(value)
-    self._cr_gain = value;
-end
+function opvp.PvpPartyMember:_setRatingGain(cr, mmr)
+    if cr > -1 then
+        self:_setFlags(
+            opvp.PartyMember.RATING_GAIN_FLAG,
+            true
+        );
 
-function opvp.PvpPartyMember:_setMMR(rating)
-    self._mmr = rating;
-end
+        cr = 0;
+        mmr = 0;
+    else
+        self:_setFlags(
+            opvp.PartyMember.RATING_GAIN_FLAG,
+            false
+        );
+    end
 
-function opvp.PvpPartyMember:_setMMRGain(value)
-    self._mmr_gain = rating;
+    self._cr_gain = cr;
+    self._mmr_gain = mmr;
 end
 
 function opvp.PvpPartyMember:_setTeam(team)
@@ -93,4 +135,58 @@ function opvp.PvpPartyMember:_setTeam(team)
             team ~= nil
         );
     end
+end
+
+function opvp.PvpPartyMember:_updateScore()
+    local old_mask = self._mask;
+
+    if self:isGuidKnown() == false then
+        return 0;
+    end
+
+    local info = C_PvP.GetScoreInfoByPlayerGuid(self:guid());
+
+    if info == nil then
+        return 0;
+    end
+
+    if self:isNameKnown() == false then
+        self:_setName(info.name);
+    end
+
+    if self:isRaceKnown() == false then
+        self:_setRace(opvp.Race:fromRaceName(info.raceName));
+    end
+
+    if info.prematchMMR > 0 and self:isRatingKnown() == false then
+        self:_setRating(
+            info.rating,
+            info.prematchMMR
+        );
+    end
+
+    return bit.band(bit.bnot(old_mask), self._mask);
+end
+
+function opvp.PvpPartyMember:_updateRatingGained()
+    if self:isRatingGainedKnown() == true then
+        return true;
+    end
+
+    if self:isGuidKnown() == false then
+        return false;
+    end
+
+    local info = C_PvP.GetScoreInfoByPlayerGuid(self:guid());
+
+    if info == nil then
+        return false;
+    end
+
+    self:_setRatingGain(
+        info.ratingChange,
+        info.postmatchMMR - info.prematchMMR
+    );
+
+    return true;
 end
