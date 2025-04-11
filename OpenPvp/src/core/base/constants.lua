@@ -63,6 +63,62 @@ opvp.Sex = {
     NEUTRAL = Enum.UnitSex.Neutral
 };
 
+opvp.DispellType = {
+    NONE         = 0,
+    BLEED        = 1,
+    CURSE        = 2,
+    DISEASE      = 3,
+    ENRAGE       = 4,
+    MAGIC        = 5,
+    POISON       = 6
+};
+
+opvp.SpellFlag = {
+    BLEED     = bit.lshift(1,  0),
+    BOSS      = bit.lshift(1,  1),
+    CURSE     = bit.lshift(1,  2),
+    DISEASE   = bit.lshift(1,  3),
+    ENRAGE    = bit.lshift(1,  4),
+    HARMFUL   = bit.lshift(1,  5),
+    HELPFUL   = bit.lshift(1,  6),
+    MAGIC     = bit.lshift(1,  7),
+    POISON    = bit.lshift(1,  8),
+    RAID      = bit.lshift(1,  9),
+    STEALABLE = bit.lshift(1, 10)
+};
+
+opvp.PowerType = {
+    NONE                = -1,
+    ALTERNATE           = Enum.PowerType.Alternate,
+    ALTERNATE_ENCOUNTER = Enum.PowerType.AlternateEncounter,
+    ALTERNATE_MOUNT     = Enum.PowerType.AlternateMount,
+    ALTERNATE_QUEST     = Enum.PowerType.AlternateMount,
+    ARCANE_CHARGES      = Enum.PowerType.ArcaneCharges,
+    BALANCE             = Enum.PowerType.Balance,
+    BURNINGEMBERS       = Enum.PowerType.BurningEmbers,
+    CHI                 = Enum.PowerType.Chi,
+    COMBO_POINTS        = Enum.PowerType.ComboPoints,
+    DEMONIC_FURY        = Enum.PowerType.DemonicFury,
+    ENERGY              = Enum.PowerType.Energy,
+    FOCUS               = Enum.PowerType.Focus,
+    FURY                = Enum.PowerType.Fury,
+    HAPPINESS           = Enum.PowerType.Happiness,
+    HOLY_POWER          = Enum.PowerType.HolyPower,
+    INSANITY            = Enum.PowerType.Insanity,
+    LUNAR_POWER         = Enum.PowerType.LunarPower,
+    MAELSTROM           = Enum.PowerType.Maelstrom,
+    MANA                = Enum.PowerType.Mana,
+    PAIN                = Enum.PowerType.Pain,
+    RAGE                = Enum.PowerType.Rage,
+    RUNE_BLOOD          = Enum.PowerType.RuneBlood,
+    RUNE_FROST          = Enum.PowerType.RuneFrost,
+    RUNE_UNHOLY         = Enum.PowerType.RuneUnholy,
+    RUNES               = Enum.PowerType.Runes,
+    RUNIC_POWER         = Enum.PowerType.RunicPower,
+    SHADOW_ORBS         = Enum.PowerType.ShadowOrbs,
+    SOUL_SHARDS         = Enum.PowerType.SoulShards
+};
+
 opvp.PvpType = {
     NONE         = 0,
     ARENA        = 1,
@@ -73,21 +129,22 @@ opvp.PvpFlag = {
     BLITZ      = bit.lshift(1,  0),
     BRAWL      = bit.lshift(1,  1),
     CTF        = bit.lshift(1,  2),
-    EPIC       = bit.lshift(1,  3),
-    ESCORT     = bit.lshift(1,  4),
-    EVENT      = bit.lshift(1,  5),
-    NODE       = bit.lshift(1,  6),
-    RANDOM     = bit.lshift(1,  7),
-    RANDOM_MAP = bit.lshift(1,  8),
-    RATED      = bit.lshift(1,  9),
-    RBG        = bit.lshift(1, 10),
-    RESOURCE   = bit.lshift(1, 11),
-    ROUND      = bit.lshift(1, 12),
-    SCENARIO   = bit.lshift(1, 13),
-    SHUFFLE    = bit.lshift(1, 14),
-    SKIRMISH   = bit.lshift(1, 15),
-    VEHICLE    = bit.lshift(1, 16),
-    ZONE       = bit.lshift(1, 17)
+    DAMPENING  = bit.lshift(1,  3),
+    EPIC       = bit.lshift(1,  4),
+    ESCORT     = bit.lshift(1,  5),
+    EVENT      = bit.lshift(1,  6),
+    NODE       = bit.lshift(1,  7),
+    RANDOM     = bit.lshift(1,  8),
+    RANDOM_MAP = bit.lshift(1,  9),
+    RATED      = bit.lshift(1, 10),
+    RBG        = bit.lshift(1, 11),
+    RESOURCE   = bit.lshift(1, 12),
+    ROUND      = bit.lshift(1, 13),
+    SCENARIO   = bit.lshift(1, 14),
+    SHUFFLE    = bit.lshift(1, 15),
+    SKIRMISH   = bit.lshift(1, 16),
+    VEHICLE    = bit.lshift(1, 17),
+    ZONE       = bit.lshift(1, 18)
 };
 
 opvp.PvpStatId = {
