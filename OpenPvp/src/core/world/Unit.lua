@@ -28,6 +28,37 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+local opvp_unit_power_type_name_lookup = {
+    ALTERNATE          = opvp.PowerType.ALTERNATE,
+    ALTERNATEENCOUNTER = opvp.PowerType.ALTERNATE_ENCOUNTER,
+    ALTERNATEMOUNT     = opvp.PowerType.ALTERNATE_MOUNT,
+    ALTERNATEQUEST     = opvp.PowerType.ALTERNATE_QUEST,
+    ARCANECHARGES      = opvp.PowerType.ARCANE_CHARGES,
+    BALANCE            = opvp.PowerType.BALANCE,
+    BURNINGEMBERS      = opvp.PowerType.BURNINGEMBERS,
+    CHI                = opvp.PowerType.CHI,
+    COMBOPOINTS        = opvp.PowerType.COMBO_POINTS,
+    DEMONICFURY        = opvp.PowerType.DEMONIC_FURY,
+    ENERGY             = opvp.PowerType.ENERGY,
+    FOCUS              = opvp.PowerType.FOCUS,
+    FURY               = opvp.PowerType.FURY,
+    HAPPINESS          = opvp.PowerType.HAPPINESS,
+    HOLYPOWER          = opvp.PowerType.HOLY_POWER,
+    INSANITY           = opvp.PowerType.INSANITY,
+    LUNARPOWER         = opvp.PowerType.LUNAR_POWER,
+    MAELSTROM          = opvp.PowerType.MAELSTROM,
+    MANA               = opvp.PowerType.MANA,
+    PAIN               = opvp.PowerType.PAIN,
+    RAGE               = opvp.PowerType.RAGE,
+    RUNEBLOOD          = opvp.PowerType.RUNE_BLOOD,
+    RUNEFROST          = opvp.PowerType.RUNE_FROST,
+    RUNEUNHOLY         = opvp.PowerType.RUNE_UNHOLY,
+    RUNES              = opvp.PowerType.RUNES,
+    RUNICPOWER         = opvp.PowerType.RUNIC_POWER,
+    SHADOWORBS         = opvp.PowerType.SHADOW_ORBS,
+    SOULSHARDS         = opvp.PowerType.SOUL_SHARDS
+};
+
 opvp.Unit = opvp.CreateClass();
 
 function opvp.Unit:createFromUnitGuid(guid)
@@ -456,6 +487,28 @@ function opvp.unit.race(unitId)
     local race_name, race_file, race_id = UnitRace(unitId);
 
     return opvp.Race:fromRaceId(race_id);
+end
+
+function opvp.unit.power(unitId, powerType)
+    return UnitPower(unitId, powerType);
+end
+
+function opvp.unit.powerMax(unitId, powerType)
+    return UnitPowerMax(unitId, powerType);
+end
+
+function opvp.unit.powerType(unitId, index)
+    return UnitPowerType(unitId, index);
+end
+
+function opvp.unit.powerTypeFromToken(powerToken)
+    local result = opvp_unit_power_type_name_lookup[powerToken];
+
+    if result ~= nil then
+        return result;
+    else
+        return opvp.PowerType.NONE;
+    end
 end
 
 function opvp.unit.server(unitId)
