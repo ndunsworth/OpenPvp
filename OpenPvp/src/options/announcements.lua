@@ -72,6 +72,14 @@ local function opvp_options_announcements_init()
         opvp_chat_filter_tooltip
     );
 
+    opvp.options.announcements.match.dampening = opvp.options.announcements.match.category:createOption(
+        opvp.Option.BOOL,
+        "Dampening",
+        "Dampening",
+        "",
+        false
+    );
+
     opvp.options.announcements.match.enter = opvp.options.announcements.match.category:createOption(
         opvp.Option.BOOL,
         "Enter",
