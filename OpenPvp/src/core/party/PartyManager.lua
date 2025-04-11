@@ -207,14 +207,11 @@ function opvp.PartyManager:init(guid)
     self._countdown_name  = "";
     self._countdown_time  = 0;
     self._countdown_timer = opvp.Timer(1);
+    self._socket          = opvp.Socket("OpenPvp");
 
-    self._party[1]:_setSocket(opvp.Socket("OpenPvpHomeParty"));
-    self._party[2]:_setSocket(opvp.Socket("OpenPvpInstanceParty"));
+    self._socket:connect();
 
     self._countdown_timer.timeout:connect(self, self._onCountdownUpdate);
-
-    self._party[1]:_setSocket(self._socket);
-    self._party[2]:_setSocket(self._socket);
 
     opvp.event.GROUP_FORMED:connect(self, self._onGroupFormed);
     opvp.event.GROUP_JOINED:connect(self, self._onGroupJoined);
@@ -474,6 +471,8 @@ function opvp.PartyManager:_onGroupJoined(category, guid)
     ) then
         if self._party_cur ~= nil then
             self._party_cur:_setActive(false);
+
+            self._party_cur:_setSocket(nil);
         end
 
         self._party_cur = party;
@@ -484,6 +483,8 @@ function opvp.PartyManager:_onGroupJoined(category, guid)
         opvp.strs.PARTY_JOINED,
         self._party_cur:identifierName()
     );
+
+    party:_setSocket(self._socket);
 
     party:initialize(category, guid);
 
@@ -533,10 +534,16 @@ function opvp.PartyManager:_onGroupLeft(category, guid)
 
     party:shutdown();
 
+    party:_setSocket(nil);
+
+    self._socket:clear();
+
     if (
         self._party_cur ~= nil and
         self._party_cur:category() == opvp.PartyCategory.HOME
     ) then
+        self._party_cur:_setSocket(self._socket);
+
         self._party_cur:_setActive(true);
     end
 

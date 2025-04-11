@@ -62,7 +62,6 @@ function opvp.Party:init()
     self._raid_legacy_diff = 3;
     self._name             = "";
 
-    self.addonMessageRecieved  = opvp.Signal("opvp.Party.addonMessageRecieved");
     self.difficultyChanged     = opvp.Signal("opvp.Party.difficultyChanged");
     self.closed                = opvp.Signal("opvp.Party.closed");
     self.closing               = opvp.Signal("opvp.Party.closing");
@@ -443,10 +442,6 @@ function opvp.Party:_initialize(category, guid)
     self._raid_diff        = GetRaidDifficultyID();
     self._raid_legacy_diff = GetLegacyRaidDifficultyID();
 
-    if self._socket ~= nil then
-        self._socket:connect();
-    end
-
     if self._provider == nil then
         self:_setProvider(opvp.GenericPartyMemberProvider());
     end
@@ -478,6 +473,10 @@ function opvp.Party:_onActiveChanged(state)
     else
         self:_disconnectSignals();
     end
+end
+
+function opvp.Party:_onAddonMessageRecieved()
+    self._socket:clear();
 end
 
 function opvp.Party:_onDifficultyChanged(mask)
@@ -616,21 +615,17 @@ function opvp.Party:_setSocket(socket)
     end
 
     if self._socket ~= nil then
-        self._socket.readyRead:disconnect(self.addonMessageRecieved);
+        self._socket.readyRead:disconnect(self, self._onAddonMessageRecieved);
     end
 
     self._socket = socket;
 
     if self._socket ~= nil then
-        self._socket.readyRead:connect(self.addonMessageRecieved);
+        self._socket.readyRead:connect(self, self._onAddonMessageRecieved);
     end
 end
 
 function opvp.Party:_shutdown()
-    if self._socket ~= nil then
-        self._socket:disconnect();
-    end
-
     self:_disconnectSignals();
 
     if self._provider ~= nil then
