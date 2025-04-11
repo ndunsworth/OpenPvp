@@ -203,20 +203,19 @@ function opvp.MatchTest:_onMatchComplete()
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();
 
-    if (
-        self:isSimulation() == true and
-        self._match:isBattleground() == true
-    ) then
-        local sound;
+    if self:isSimulation() == true then
+        if self._match:isBattleground() == true then
+            local sound;
 
-        if self._match:isWinner() == true then
-            sound = opvp.player.factionInfo():battlegroundWinSound();
-        else
-            sound = opvp.player.factionInfo():battlegroundLostSound();
-        end
+            if self._match:isWinner() == true then
+                sound = opvp.player.factionInfo():battlegroundWinSound();
+            else
+                sound = opvp.player.factionInfo():battlegroundLostSound();
+            end
 
-        if sound ~= nil then
-            PlaySound(sound, opvp.SoundChannel.SFX);
+            if sound ~= nil then
+                PlaySound(sound, opvp.SoundChannel.SFX);
+            end
         end
     end
 end
@@ -291,7 +290,10 @@ function opvp.MatchTest:_onMatchRoundActive()
     self._warmup_timer:stop();
     --~ self._active_timer:start();
 
-    if self._match:hasDampening() == true then
+    if (
+        self:isSimulation() == true and
+        self._match:hasDampening() == true
+    ) then
         self._dampening_timer:start();
     end
 
@@ -345,6 +347,8 @@ function opvp.MatchTest:_onMatchRoundActiveTimer()
 end
 
 function opvp.MatchTest:_onMatchRoundComplete()
+    local is_sim = self:isSimulation();
+
     self._active_timer:stop();
     self._dampening_timer:stop();
 
@@ -362,18 +366,24 @@ function opvp.MatchTest:_onMatchRoundComplete()
         losing_team          = self._match:playerTeam();
     end
 
-    if self._match:isArena() == true and self._match:isActive() == true then
-        if losing_team ~= nil then
-            local member = losing_team:member(math.random(2, losing_team:size()));
+    if is_sim == true then
 
-            if member ~= nil then
-                member:_setEnabled(false);
-                member:_setDead(true);
+        if (
+            self._match:isArena() == true and
+            self._match:isActive() == true
+        ) then
+            if losing_team ~= nil and losing_team:isEmpty() == false then
+                local member = losing_team:member(math.random(1, losing_team:size()));
 
-                losing_team:_onMemberInfoUpdate(
-                    member,
-                    bit.bor(opvp.PartyMember.DEAD_FLAG, opvp.PartyMember.ENABLED_FLAG)
-                );
+                if member ~= nil then
+                    member:_setEnabled(false);
+                    member:_setDead(true);
+
+                    losing_team:_onMemberInfoUpdate(
+                        member,
+                        bit.bor(opvp.PartyMember.DEAD_FLAG, opvp.PartyMember.ENABLED_FLAG)
+                    );
+                end
             end
         end
     end
@@ -385,8 +395,10 @@ function opvp.MatchTest:_onMatchRoundComplete()
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();
 
-    if self:isSimulation() == true and self._match:isShuffle() == true then
-        PlaySound(888, opvp.SoundChannel.SFX);
+    if is_sim == true then
+        if self:isSimulation() == true and self._match:isShuffle() == true then
+            PlaySound(888, opvp.SoundChannel.SFX);
+        end
     end
 end
 
