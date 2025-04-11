@@ -115,11 +115,9 @@ function opvp.PartyMemberFactoryCache:setLimit(limit)
         local member;
 
         for n=limit + 1, last_index do
-            member = self._cache:item(n);
+            member = self._cache:popBack();
 
             self._destroyMember(member);
-
-            self._cache:removeIndex(n);
         end
     end
 
