@@ -136,20 +136,25 @@ function opvp.GenericMatch:_initializeTeams()
         return;
     end
 
-    assert(self._friendly_provider ~= nil);
-    assert(self._enemy_provider ~= nil);
-
-    self._init_teams = false;
+    assert(
+        self._friendly_provider ~= nil and
+        self._enemy_provider ~= nil
+    );
 
     if self:isTest() == true then
         self._friendly_provider = opvp.TestPartyMemberProvider(true);
         self._enemy_provider = opvp.TestPartyMemberProvider();
 
+        self._enemy_provider:_setHostile(true);
+
         self._friendly_provider:_setFactory(opvp.PvpPartyMemberFactory());
         self._enemy_provider:_setFactory(opvp.PvpPartyMemberFactory());
     end
 
-    self._enemy_provider:_setHostile(true);
+    assert(
+        self._friendly_provider:isFriendly() == true and
+        self._enemy_provider:isHostile() == true
+    );
 
     self._friendly_team:_setMatch(self);
     self._enemy_team:_setMatch(self);
@@ -166,6 +171,8 @@ function opvp.GenericMatch:_initializeTeams()
         self._enemy_team,
         self._enemy_team.shutdown
     );
+
+    self._init_teams = false;
 end
 
 function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
@@ -195,7 +202,7 @@ function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
     opvp.Match._onPartyAboutToJoin(self, category, guid);
 
     if self:isTest() == true then
-         self._friendly_team:initialize(category, guid);
+        self._friendly_team:initialize(category, guid);
 
         if opvp.match.isSimulation() == true then
              self._friendly_provider:addMembers(
