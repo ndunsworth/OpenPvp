@@ -79,6 +79,26 @@ function opvp.Faction:init(id, name)
    self._name = name;
 end
 
+function opvp.Faction:battlegroundLostSound()
+    if self._id == opvp.ALLIANCE then
+        return 8454;
+    elseif self._id == opvp.HORDE then
+        return 8455;
+    else
+        return 0;
+    end
+end
+
+function opvp.Faction:battlegroundWinSound()
+    if self._id == opvp.ALLIANCE then
+        return 8455;
+    elseif self._id == opvp.HORDE then
+        return 8454;
+    else
+        return 0;
+    end
+end
+
 function opvp.Faction:instance()
     return opvp.Player:instance():factionInfo();
 end
