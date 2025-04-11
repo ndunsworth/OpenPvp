@@ -64,11 +64,7 @@ function opvp.Queue:canQueue()
 end
 
 function opvp.Queue:confirmExpiration()
-    if self:isReady() == true then
-        return GetBattlefieldPortExpiration(self._queue_index);
-    else
-        return 0;
-    end
+    return 0;
 end
 
 function opvp.Queue:description()
@@ -137,6 +133,10 @@ end
 
 function opvp.Queue:readyCheckAccepted()
     return self._ready_check_accepted;
+end
+
+function opvp.Queue:readyCheckAttempts()
+    return self._ready_check_attempts;
 end
 
 function opvp.Queue:readyCheckDeclined()

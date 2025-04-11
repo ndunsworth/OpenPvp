@@ -40,6 +40,14 @@ function opvp.PvpQueue:bracket()
     return nil;
 end
 
+function opvp.PvpQueue:confirmExpiration()
+    if self:isReady() == true then
+        return GetBattlefieldPortExpiration(self._queue_index);
+    else
+        return 0;
+    end
+end
+
 function opvp.PvpQueue:hasEnlistmentBonus()
     return false;
 end
