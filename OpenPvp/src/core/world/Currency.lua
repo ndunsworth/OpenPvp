@@ -136,6 +136,7 @@ function opvp.CurrencyManager:init(id)
     self._alert_bloody = true;
     self._alert_conq   = true;
     self._alert_honor  = true;
+    self._login        = false;
 
     self.changed = opvp.Signal("CurrencyManager.changed");
 
@@ -147,7 +148,7 @@ function opvp.CurrencyManager:init(id)
     opvp.match.exit:connect(self, self._onMatchExit);
 
     opvp.OnLogin:register(self, self._onLogin);
-    opvp.OnLoginReload:register(self, self._onLoginReload);
+    opvp.OnReload:register(self, self._onReload);
 end
 
 function opvp.CurrencyManager:currency(id)
@@ -239,18 +240,25 @@ function opvp.CurrencyManager:_checkPvpCurrencies()
         );
     end
 
-    if self:_checkBloodyToken() == true then
-        table.insert(
-            currencies,
-            {opvp.Currency.BLOODY_TOKEN:name(), opvp.Currency.BLOODY_TOKEN:quantityMax()}
-        );
-    end
+    if self._login == false then
+        if self:_checkBloodyToken() == true then
+            table.insert(
+                currencies,
+                {opvp.Currency.BLOODY_TOKEN:name(), opvp.Currency.BLOODY_TOKEN:quantityMax()}
+            );
+        end
 
-    if self:_checkConquest() == true then
-        table.insert(
-            currencies,
-            {opvp.Currency.CONQUEST:name(), opvp.Currency.CONQUEST:quantityMax()}
-        );
+        if self:_checkConquest() == true then
+            table.insert(
+                currencies,
+                {opvp.Currency.CONQUEST:name(), opvp.Currency.CONQUEST:quantityMax()}
+            );
+        end
+    else
+        self:_checkBloodyToken();
+        self:_checkConquest();
+
+        self._login = false;
     end
 
     if #currencies == 1 then
@@ -285,6 +293,13 @@ function opvp.CurrencyManager:_checkPvpCurrencies()
 end
 
 function opvp.CurrencyManager:_onLogin()
+    opvp.options.announcements.player.pvpCurrencyCappedTest.clicked:connect(
+        self,
+        self._onTest
+    );
+
+    self._login = true;
+
     opvp.OnLoadingScreenEnd:connect(
         function()
             opvp.Timer:singleShot(
@@ -295,17 +310,6 @@ function opvp.CurrencyManager:_onLogin()
             )
         end
     );
-end
-
-function opvp.CurrencyManager:_onLoginReload()
-    opvp.options.announcements.player.pvpCurrencyCappedTest.clicked:connect(
-        self,
-        self._onTest
-    );
-
-    self:_checkBloodyToken();
-    self:_checkConquest();
-    self:_checkHonor();
 end
 
 function opvp.CurrencyManager:_onMatchExit()
@@ -325,6 +329,17 @@ function opvp.CurrencyManager:_onTest(button, state)
             )
         );
     end
+end
+
+function opvp.CurrencyManager:_onReload()
+    opvp.options.announcements.player.pvpCurrencyCappedTest.clicked:connect(
+        self,
+        self._onTest
+    );
+
+    self:_checkBloodyToken();
+    self:_checkConquest();
+    self:_checkHonor();
 end
 
 function opvp.CurrencyManager:_onUpdate(
