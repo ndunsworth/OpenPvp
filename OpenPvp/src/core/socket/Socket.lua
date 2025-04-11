@@ -28,11 +28,15 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+local LibDeflate = LibStub:GetLibrary("LibDeflate");
+
 local HEADER_SINGLE        = "\001";
 local HEADER_MULTIPART     = "\002";
 local HEADER_MULTIPART_END = "\003";
 
 local MSG_LENGTH_MAX       = 254;
+
+local opvp_connected_sockets = {};
 
 opvp.SocketError = {
     NONE                =  0,
@@ -78,15 +82,26 @@ local opvp_addon_send_msg_status_lookup = {
 
 opvp.Socket = opvp.CreateClass();
 
+function opvp.Socket:encodeFrom(data)
+    return LibDeflate:DecodeForWoWAddonChannel(data);
+end
+
+function opvp.Socket:encodeTo(data)
+    return LibDeflate:EncodeForWoWAddonChannel(data);
+end
+
 function opvp.Socket:init(prefix)
     self._prefix      = ""
     self._connected = false;
+    self._compress  = true;
     self._error     = opvp.SocketError.NONE;
     self._error_msg = "";
     self._buffer    = {};
     self._data      = opvp.List();
 
-    self.readyRead  = opvp.Signal("opvp.Socket.readyRead");
+    self.connected     = opvp.Signal("opvp.Socket.connected");
+    self.disconnected  = opvp.Signal("opvp.Socket.disconnected");
+    self.readyRead     = opvp.Signal("opvp.Socket.readyRead");
 
     if opvp.is_str(prefix) then
         self._prefix = prefix;
@@ -97,12 +112,20 @@ function opvp.Socket:canRead()
     return self._data:isEmpty() == false;
 end
 
+function opvp.Socket:clear()
+    self._data:clear();
+end
+
 function opvp.Socket:connect()
     if self._connected == true then
         return;
     end
 
     self:_clearError();
+
+    if opvp_connected_sockets[self._prefix] ~= nil then
+        self:_setError(opvp.SocketError.DUPLICATE_PREFIX, "duplicate socket");
+    end
 
     if C_ChatInfo.IsAddonMessagePrefixRegistered(self._prefix) == false then
         local status = C_ChatInfo.RegisterAddonMessagePrefix(self._prefix);
@@ -121,6 +144,12 @@ function opvp.Socket:connect()
     end
 
     self._connected = opvp.event.CHAT_MSG_ADDON:connect(self, self._onMessageEvent);
+
+    if self._connected == true then
+        opvp_connected_sockets[self._prefix] = self;
+
+        self.connected:emit();
+    end
 end
 
 function opvp.Socket:disconnect()
@@ -132,6 +161,10 @@ function opvp.Socket:disconnect()
 
     self._buffer    = {};
     self._connected = false;
+
+    opvp_connected_sockets[self._prefix] = nil;
+
+    self.disconnected:emit();
 end
 
 function opvp.Socket:error()
@@ -154,6 +187,10 @@ function opvp.Socket:read()
     return self._data:popFront();
 end
 
+function opvp.Socket:readAll()
+    return self._data:release();
+end
+
 function opvp.Socket:readsAvailable()
     return self._data:size();
 end
@@ -163,8 +200,18 @@ function opvp.Socket:write(data, channel, target, priority)
         return;
     end
 
+    if self._compress == true then
+        data = opvp.utils.compress(data);
+    end
+
+    data = opvp.Socket:encodeTo(data);
+
     local size     = #data;
     local pkg_name = self._prefix .. channel .. (target or "");
+
+    if priority == nil then
+        priority = opvp.SocketPriority.NORMAL;
+    end
 
     if size + 1 < MSG_LENGTH_MAX then
         ChatThrottleLib:SendAddonMessage(
@@ -242,6 +289,12 @@ function opvp.Socket:_onMessageEvent(
     end
 
     if header == HEADER_SINGLE then
+        msg = opvp.Socket:encodeFrom(msg);
+
+        if self._compress == true then
+            msg = opvp.utils.decompress(msg);
+        end
+
         self._data:append(msg);
 
         self.readyRead:emit();
@@ -261,11 +314,15 @@ function opvp.Socket:_onMessageEvent(
     elseif header == HEADER_MULTIPART then
         table.insert(buffer, msg);
     else
-        self._data:append(table.concat(self._buffer[key], ""));
+        local data = opvp.Socket:encodeFrom(table.concat(self._buffer[key], ""));
+
+        if self._compress == true then
+            data = opvp.utils.decompress(data);
+        end
+
+        self._data:append(data);
 
         self.readyRead:emit();
-
-        DevTools_Dump(Ambiguate(sender, "none"))
 
         self._buffer[key] = nil;
     end

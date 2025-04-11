@@ -28,6 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+local LibDeflate = LibStub:GetLibrary("LibDeflate");
+local LibSerialize = LibStub:GetLibrary("LibSerialize");
+
 opvp.utils = {};
 
 function opvp.utils.chatTypeColor(id)
@@ -102,6 +105,10 @@ function opvp.utils.colorStringRGBA(str, r, g, b)
     );
 end
 
+function opvp.utils.compress(str)
+    return LibDeflate:CompressDeflate(str);
+end
+
 function opvp.utils.copyTableShallow(tbl)
     if type(tbl) ~= "table" then
         return tbl;
@@ -157,6 +164,10 @@ function opvp.utils.compareTable(a, b, ignore_mt)
     return true;
 end
 
+function opvp.utils.decompress(str)
+    return LibDeflate:DecompressDeflate(str);
+end
+
 function opvp.utils.deepcopy(orig)
     local orig_type = type(orig)
     local copy
@@ -203,6 +214,14 @@ function opvp.utils.merge(t1, t2)
         end
     end
     return t1
+end
+
+function opvp.utils.serializeFrom(str)
+     return LibSerialize:Deserialize(str);
+end
+
+function opvp.utils.serializeTo(data)
+    return LibSerialize:Serialize(data);
 end
 
 function opvp.utils.textureAtlastMarkup(name, width, height, offsetX, offsetY, rVertexColor, gVertexColor, bVertexColor)
