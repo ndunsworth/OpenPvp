@@ -43,11 +43,10 @@ local function opvp_party_member_cmp_by_role(a, b, lookup)
 
     if a_role > b_role then
         return false;
+    elseif a_role < b_role then
+        return true;
     else
-        return (
-            a_role < b_role or
-            a:nameOrId():lower() < b:nameOrId():lower()
-        );
+        return a:nameOrId() < b:nameOrId();
     end
 end
 
@@ -215,7 +214,7 @@ function opvp.party.utils.sortMembersByRole(members, lookup)
 
     result:sort(
         function(a, b)
-            opvp_party_member_cmp_by_role(a, b, lookup)
+            return opvp_party_member_cmp_by_role(a, b, lookup)
         end
     );
 
