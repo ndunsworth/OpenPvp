@@ -85,6 +85,8 @@ end
 
 function opvp.PartyMemberFactoryCache:release(member)
     if self._limit == 0 then
+        self:_destroyMember(member);
+
         return;
     end
 
@@ -100,19 +102,21 @@ end
 function opvp.PartyMemberFactoryCache:setLimit(limit)
     limit = max(0, limit);
 
-    if limit == 0 then
-        self:clear();
-
-        self._limit = limit;
-
+    if limit == self._limit then
         return;
     end
 
-    if limit < self._cache:size() then
+    local member;
+
+    if limit == 0 then
+        for n=1, self._cache:size() do
+            member = self._cache:item(n);
+
+            self:_destroyMember(member);
+        end
+    elseif limit < self._cache:size() then
         local last_index = self._cache:size();
         local index = limit + 1;
-
-        local member;
 
         for n=limit + 1, last_index do
             member = self._cache:popBack();
@@ -141,7 +145,7 @@ function opvp.PartyMemberFactoryCache:_cleanMember(member)
 end
 
 function opvp.PartyMemberFactoryCache:_destroyMember(member)
-
+    member:_reset(opvp.PartyMember.DESTROY_FLAGS);
 end
 
 function opvp.PartyMemberFactoryCache:_resetMember(member)

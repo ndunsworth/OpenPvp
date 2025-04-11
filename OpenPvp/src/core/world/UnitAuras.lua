@@ -41,7 +41,15 @@ function opvp.UnitAuras:auras()
 end
 
 function opvp.UnitAuras:clear()
-    return self._auras:clear();
+    local aura;
+
+    for n=1, self._auras:size() do
+        aura = self._auras:item(n);
+
+        opvp.Aura:release(aura);
+    end
+
+    self._auras:clear();
 end
 
 function opvp.UnitAuras:findById(id)
@@ -93,8 +101,6 @@ function opvp.UnitAuras:setId(unitId)
 
     self._id = unitId;
 
-    self._auras:clear();
-
     self:update();
 end
 
@@ -106,6 +112,8 @@ function opvp.UnitAuras:update()
     if self:isNull() == true then
         return;
     end
+
+    self:clear();
 
     local callback = function(info)
         local aura = opvp.Aura:acquire();

@@ -79,6 +79,8 @@ opvp.PartyMember.STATE_FLAGS = bit.bor(
     opvp.PartyMember.TEAM_FLAG
 );
 
+opvp.PartyMember.DESTROY_FLAGS = opvp.PartyMember.AURAS_FLAG;
+
 opvp.PartyMember.ALL_FLAGS = bit.bor(
     opvp.PartyMember.CHARACTER_FLAGS,
     opvp.PartyMember.HEALTH_FLAG,

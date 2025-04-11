@@ -79,6 +79,8 @@ end
 function opvp.PartyMemberFactory:release(member)
     if self._cache ~= nil then
         self._cache:release(member);
+    else
+        member:_reset(opvp.PartyMember.DESTROY_FLAGS);
     end
 end
 

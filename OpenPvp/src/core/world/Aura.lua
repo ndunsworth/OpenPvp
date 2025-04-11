@@ -28,6 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+--~ Default for a 3v3
+local OPVP_AURA_POOL_DEFAULT_SIZE = 40 * 6;
+
 local opvp_aura_pool = nil;
 
 local opvp_aura_dispell_type_lookup = {
@@ -75,9 +78,28 @@ function opvp.Aura:acquire()
     return opvp_aura_pool:acquire();
 end
 
+function opvp.Aura:reduce()
+    local cur_size = opvp_aura_pool:size();
+
+    if cur_size == OPVP_AURA_POOL_DEFAULT_SIZE then
+        return;
+    end
+
+    local size = math.floor(cur_size / 2);
+
+    if opvp_aura_pool:available() >= size then
+        opvp.printDebug(
+            "opvp.Aura.acquire, shrinking pool %d->%d",
+            cur_size,
+            size
+        );
+
+        opvp_aura_pool:setSize(size);
+    end
+end
+
 function opvp.Aura:release(aura)
     opvp_aura_pool:release(aura);
-
 end
 
 function opvp.Aura:init()
@@ -163,17 +185,31 @@ end
 function opvp.Aura:set(info)
     if info == nil then
         self:clear();
-    else
-        self._id           = info.auraInstanceID;
 
-        self._applications = opvp.number_else(info.applications, 0);
-        self._charges      = opvp.number_else(info.charges, 0);
-        self._charges_max  = opvp.number_else(info.maxCharges, 0);
-        self._dispell_type = opvp_aura_dispell_type(info.dispelName);
-        self._duration     = opvp.number_else(info.duration, 0);
-        self._expiration   = opvp.number_else(info.expirationTime, 0);
-        self._name         = info.name;
-        self._spell_id     = opvp.number_else(info.spellId, 0);
+        return;
+    end
+
+    self._id           = info.auraInstanceID;
+
+    self._applications = opvp.number_else(info.applications, 0);
+    self._charges      = opvp.number_else(info.charges, 0);
+    self._charges_max  = opvp.number_else(info.maxCharges, 0);
+    self._dispell_type = opvp_aura_dispell_type(info.dispelName);
+    self._duration     = opvp.number_else(info.duration, 0);
+    self._expiration   = opvp.number_else(info.expirationTime, 0);
+    self._name         = info.name;
+    self._spell_id     = opvp.number_else(info.spellId, 0);
+
+    if self._spell_id == 110310 then
+        print(
+            self._id,
+            info.applications,
+            info.charges,
+            info.maxCharges,
+            info.duration,
+            info.expirationTime,
+            info.timeMod
+        );
     end
 end
 
@@ -189,10 +225,22 @@ function opvp.Aura:update(info)
     self._duration     = opvp.number_else(info.duration, 0);
     self._expiration   = opvp.number_else(info.expirationTime, 0);
     self._icon         = opvp.number_else(info.icon, 0);
+
+    if self._spell_id == 110310 then
+        print(
+            self._id,
+            info.applications,
+            info.charges,
+            info.maxCharges,
+            info.duration,
+            info.expirationTime,
+            info.timeMod
+        );
+    end
 end
 
 function opvp.Aura:spellId()
     return self._spell_id;
 end
 
-opvp_aura_pool = opvp.Pool(3 * 40, opvp.Aura);
+opvp_aura_pool = opvp.Pool(OPVP_AURA_POOL_DEFAULT_SIZE, opvp.Aura);

@@ -496,6 +496,8 @@ function opvp.Match:_close()
             self._onTrintetUsed
         );
 
+        opvp.Aura:reduce();
+
         opvp.event.START_TIMER:disconnect(self, self._onStartTimer);
     end
 
