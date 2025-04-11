@@ -346,6 +346,8 @@ function opvp.ShuffleMatch:_onOutcomeReady(outcomeType)
 end
 
 function opvp.ShuffleMatch:_onScoreUpdate()
+    opvp.printDebug("opvp.ShuffleMatch._onScoreUpdate");
+
     opvp.GenericMatch._onScoreUpdate(self);
 
     if self:isComplete() == true then
