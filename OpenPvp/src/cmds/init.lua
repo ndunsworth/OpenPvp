@@ -158,6 +158,17 @@ local function opvp_init_test_slash_cmds()
 
     test_cmd:setDefaultCommad("arena");
 
+    local arena_maps = {
+        opvp.Map.NAGRAND_ARENA,
+        opvp.Map.TIGERS_PEAK
+    };
+
+    local bg_maps = {
+        opvp.Map.ARATHI_BASIN,
+        opvp.Map.TWIN_PEAKS,
+        opvp.Map.WARSONG_GULCH
+    };
+
     test_cmd:addCommand(
         opvp.FuncAddonCommand(
             function(editbox, args)
@@ -173,7 +184,7 @@ local function opvp_init_test_slash_cmds()
                     end
                 end
 
-                local map = opvp.Map.NAGRAND_ARENA;
+                local map = bg_maps[math.random(1, #arena_maps)];
                 local simulate = string.lower(args) == "simulate";
 
                 mgr:beginTest(
@@ -203,7 +214,7 @@ local function opvp_init_test_slash_cmds()
                     end
                 end
 
-                local map = opvp.Map.WARSONG_GULCH;
+                local map = bg_maps[math.random(1, #bg_maps)];
                 local simulate = string.lower(args) == "simulate";
 
                 mgr:beginTest(
@@ -233,7 +244,7 @@ local function opvp_init_test_slash_cmds()
                     end
                 end
 
-                local map = opvp.Map.NAGRAND_ARENA;
+                local map = bg_maps[math.random(1, #arena_maps)];
                 local simulate = string.lower(args) == "simulate";
 
                 mgr:beginTest(
