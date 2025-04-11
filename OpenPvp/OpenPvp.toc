@@ -336,17 +336,20 @@ src/options/match.lua
 
 src/feature/audio/effect.lua
 src/feature/audio/SoundEffect.lua
+src/feature/audio/DampeningHighSoundEffect.lua
 src/feature/audio/EmoteKillingBlowSoundEffect.lua
 src/feature/audio/EnemyTrinketUsedSoundEffect.lua
 src/feature/audio/FriendlyTrinketUsedSoundEffect.lua
 src/feature/audio/LoginGreetingsSoundEffect.lua
 src/feature/audio/LogoutGoodbySoundEffect.lua
 src/feature/audio/MuteEarthenNpcIdle.lua
+src/feature/audio/MuteFaerieFireSoundEffect.lua
 src/feature/audio/MuteInsuranceSoundEffect.lua
 src/feature/audio/NetomaticSoundEffect.lua
 src/feature/audio/PingEmoteSoundEffect.lua
 src/feature/audio/PlayerSpecChangeSoundEffect.lua
 src/feature/audio/FFAZoneSoundEffect.lua
+src/feature/audio/QueueReadyFailSoundEffect.lua
 src/feature/audio/QueueReadySoundEffect.lua
 src/feature/audio/TeammateBattlecrySoundEffect.lua
 src/feature/audio/TeammateCongratsSoundEffect.lua

@@ -52,6 +52,13 @@ Does not alter the volume of any sound channels.]],
         true
     );
 
+    opvp.options.audio.general.muteFaerieFireSfx = opvp.options.audio.general.category:createOption(
+        opvp.Option.BOOL,
+        "MuteFaerieFireSfx",
+        "Mute Moonkin Aura SFX (Faerie Fire)",
+        false
+    );
+
     opvp.options.audio.general.muteInsuranceTierSfx = opvp.options.audio.general.category:createOption(
         opvp.Option.BOOL,
         "MuteInsuranceTierSfx",
@@ -242,6 +249,22 @@ This emote is based on the pinging players race/sex.]],
 
     opvp.options.audio.soundeffect.player.queueReadySample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
 
+    opvp.options.audio.soundeffect.player.queueReadyFail = opvp.options.audio.soundeffect.player.category:createOption(
+        opvp.Option.BOOL,
+        "QueueReadyFail",
+        "Queue Ready Check Failed",
+        "Sigh when your pvp Queue ready check fails.",
+        true
+    );
+
+    opvp.options.audio.soundeffect.player.queueReadyFailSample = opvp.options.audio.soundeffect.player.category:createOption(
+        opvp.Option.BUTTON,
+        "QueueReadyFailSample",
+        opvp_sample_icon
+    );
+
+    opvp.options.audio.soundeffect.player.queueReadyFailSample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
+
     opvp.options.audio.soundeffect.player.specChange = opvp.options.audio.soundeffect.player.category:createOption(
         opvp.Option.BOOL,
         "SpecChange",
@@ -271,6 +294,22 @@ This emote is based on the pinging players race/sex.]],
     opvp.options.audio.soundeffect.match = {};
 
     opvp.options.audio.soundeffect.match.category = opvp.options.audio.soundeffect.category:createCategory("Match", "Match");
+
+    opvp.options.audio.soundeffect.match.dampeningHigh = opvp.options.audio.soundeffect.match.category:createOption(
+        opvp.Option.BOOL,
+        "DampeningHigh",
+        "Dampening High",
+        "Emits a warning sound effect when dampening reaches 40%.",
+        true
+    );
+
+    opvp.options.audio.soundeffect.match.dampeningHighSample = opvp.options.audio.soundeffect.match.category:createOption(
+        opvp.Option.BUTTON,
+        "DampeningHighSample",
+        opvp_sample_icon
+    );
+
+    opvp.options.audio.soundeffect.match.dampeningHighSample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
 
     opvp.options.audio.soundeffect.match.teammateMatchBeginBattlecry = opvp.options.audio.soundeffect.match.category:createOption(
         opvp.Option.BOOL,
