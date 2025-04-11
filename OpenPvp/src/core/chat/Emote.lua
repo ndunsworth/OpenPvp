@@ -49,13 +49,14 @@ opvp.EmoteId = {
     OOPS             = 17,
     OPEN_FIRE        = 18,
     RACIAL           = 19,
-    ROAR             = 20,
-    SIGH             = 21,
-    SORRY            = 22,
-    TAUNT            = 23,
-    THREATEN         = 24,
-    VICTORY          = 25,
-    WHOA             = 26
+    RASP             = 20,
+    ROAR             = 21,
+    SIGH             = 22,
+    SORRY            = 23,
+    TAUNT            = 24,
+    THREATEN         = 25,
+    VICTORY          = 26,
+    WHOA             = 27
 };
 
 opvp.Emote = opvp.CreateClass();

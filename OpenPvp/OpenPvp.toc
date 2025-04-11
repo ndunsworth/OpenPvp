@@ -89,6 +89,7 @@ src/core/chat/emotes/laugh.lua
 src/core/chat/emotes/oops.lua
 src/core/chat/emotes/openfire.lua
 src/core/chat/emotes/racial.lua
+src/core/chat/emotes/rasp.lua
 src/core/chat/emotes/roar.lua
 src/core/chat/emotes/sigh.lua
 src/core/chat/emotes/sorrry.lua
