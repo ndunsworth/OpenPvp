@@ -36,6 +36,7 @@ function opvp.PvpNotification:init(name)
     self._anim_start  = 0;
     self._anim_length = 0.25;
     self._anim_timer  = opvp.Timer(4);
+    self._sound       = true;
 
     self._anim_timer.timeout:connect(self, self.hide);
     self._anim_timer:setTriggerLimit(1);
@@ -81,7 +82,7 @@ function opvp.PvpNotification:_initWidget()
     self:setFaction(opvp.player.faction());
 end
 
-function opvp.PvpNotification:exec(header, footer)
+function opvp.PvpNotification:exec(header, footer, noSound)
     if header == nil then
         header = "";
     end
@@ -89,6 +90,8 @@ function opvp.PvpNotification:exec(header, footer)
     if footer == nil then
         footer = "";
     end
+
+    self._sound = noSound ~= true;
 
     self:setHeader(header);
     self:setFooter(footer);
@@ -169,7 +172,9 @@ end
 function opvp.PvpNotification:_endShow()
     self._anim_timer:start();
 
-    PlaySound(26905, opvp.SoundChannel.SFX, false);
+    if self._sound == true then
+        PlaySound(26905, opvp.SoundChannel.SFX, false);
+    end
 end
 
 function opvp.PvpNotification:_onUpdate()

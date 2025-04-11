@@ -32,8 +32,8 @@ local opvp_notify_frame;
 
 opvp.notify = {}
 
-function opvp.notify.pvp(header, msg)
-    opvp_notify_frame:exec(header, msg);
+function opvp.notify.pvp(header, msg, noSound)
+    opvp_notify_frame:exec(header, msg, noSound);
 end
 
 local function opvp_opvp_notify_frame_ctor()
