@@ -49,8 +49,15 @@ end
 
 function opvp.BattlegroundMatch:_onMatchComplete()
     opvp.GenericMatch._onMatchComplete(self);
+end
 
-    if self:isTest() == true then
+function opvp.BattlegroundMatch:_onScoreUpdate()
+    opvp.printDebug("opvp.BattlegroundMatch._onScoreUpdate");
+
+    if (
+        self:isOutcomeValid() == false and
+        self._status == opvp.MatchStatus.COMPLETE
+    ) then
         self:_updateOutcome();
     end
 end

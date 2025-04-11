@@ -40,10 +40,6 @@ end
 
 function opvp.ArenaMatch:_onMatchComplete()
     opvp.GenericMatch._onMatchComplete(self);
-
-    if self:isTest() == true then
-        self:_updateOutcome();
-    end
 end
 
 function opvp.ArenaMatch:_onMatchRoundWarmup()
