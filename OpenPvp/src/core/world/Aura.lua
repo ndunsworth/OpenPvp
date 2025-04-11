@@ -199,18 +199,6 @@ function opvp.Aura:set(info)
     self._expiration   = opvp.number_else(info.expirationTime, 0);
     self._name         = info.name;
     self._spell_id     = opvp.number_else(info.spellId, 0);
-
-    if self._spell_id == 110310 then
-        print(
-            self._id,
-            info.applications,
-            info.charges,
-            info.maxCharges,
-            info.duration,
-            info.expirationTime,
-            info.timeMod
-        );
-    end
 end
 
 function opvp.Aura:update(info)
@@ -225,18 +213,6 @@ function opvp.Aura:update(info)
     self._duration     = opvp.number_else(info.duration, 0);
     self._expiration   = opvp.number_else(info.expirationTime, 0);
     self._icon         = opvp.number_else(info.icon, 0);
-
-    if self._spell_id == 110310 then
-        print(
-            self._id,
-            info.applications,
-            info.charges,
-            info.maxCharges,
-            info.duration,
-            info.expirationTime,
-            info.timeMod
-        );
-    end
 end
 
 function opvp.Aura:spellId()
