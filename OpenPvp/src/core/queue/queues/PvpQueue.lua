@@ -106,20 +106,20 @@ function opvp.PvpQueue:isRandom()
     return bit.band(self._mask, opvp.PvpFlag.RANDOM) ~= 0;
 end
 
-function opvp.PvpQueue:isShuffle()
-    return bit.band(self._mask, opvp.PvpFlag.SHUFFLE) ~= 0;
+function opvp.PvpQueue:isRated()
+    return bit.band(self._mask, opvp.PvpFlag.RATED) ~= 0;
 end
 
 function opvp.PvpQueue:isRBG()
     return bit.band(self._mask, opvp.PvpFlag.RBG) ~= 0;
 end
 
-function opvp.PvpQueue:isRated()
-    return bit.band(self._mask, opvp.PvpFlag.RATED) ~= 0;
-end
-
 function opvp.PvpQueue:isRoundBased()
     return bit.band(self._mask, opvp.PvpFlag.ROUND) ~= 0;
+end
+
+function opvp.PvpQueue:isShuffle()
+    return bit.band(self._mask, opvp.PvpFlag.SHUFFLE) ~= 0;
 end
 
 function opvp.PvpQueue:isSkirmish()
