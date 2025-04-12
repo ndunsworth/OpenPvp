@@ -156,6 +156,11 @@ function opvp.GenericMatch:_initializeTeams()
         self._enemy_provider:isHostile() == true
     );
 
+    --~ No need to connect to the friendly provider as that means we would
+    --~ get called twice since each provider emits.
+
+    --~ Always ensure that enemy provider is the last to emit so that way
+    --~ we dont emit globally before all teams are updated.
     self._enemy_provider.scoreUpdate:connect(self, self._onScoreUpdate);
 
     self._friendly_team:_setMatch(self);
