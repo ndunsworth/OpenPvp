@@ -69,6 +69,7 @@ src/core/chat/MuteChatTypesMessageFilter.lua
 src/core/chat/OptionChatTypesMessageFilter.lua
 
 src/core/chat/emotes/unknown.lua
+src/core/chat/emotes/applaud.lua
 src/core/chat/emotes/attacktarget.lua
 src/core/chat/emotes/battleshout.lua
 src/core/chat/emotes/beg.lua
