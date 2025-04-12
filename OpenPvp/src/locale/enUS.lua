@@ -172,6 +172,10 @@ opvp.locale.enUS = {
     MATCH_TEST_END_HEADER             = "Match Test",
     MATCH_TEST_END_FOOTER             = "Simulation Complete",
 
+    NUMERIC_BILLION                   = "b",
+    NUMERIC_MILLION                   = "m",
+    NUMERIC_THOUSAND                  = "k",
+
     OPTION_CHANGE_IN_COMBAT_ERR       = "Option | Tried to change the value of \"%s\" while in combat lockdown",
 
     PARTY_INFO_HEADER                 = "%s Info:",
@@ -221,7 +225,7 @@ opvp.locale.enUS = {
     QUEUE_CANCELED_WITH_WAIT_TIME     = "Queue | Canceled - %s (%s in queue)",
     QUEUE_READY                       = "Queue | Ready - %s",
     QUEUE_READY_WITH_WAIT_TIME        = "Queue | Ready - %s (%s in queue)",
-    QUEUE_READY_WITH_WAIT_TIME_FAILED = "Queue | Ready - %s (%s in queue, %d failed attempts)",
+    QUEUE_READY_WITH_WAIT_TIME_FAILED = "Queue | Ready - %s (%s in queue, %d failed attempt(s))",
     QUEUE_READY_CHECK                 = "Queue | Ready Check - %s (%d/%d)",
     QUEUE_READY_CHECK_FAILED          = "Queue | Ready Check - %s (%d/%d) Failed",
     QUEUE_REJOINED                    = "Queue | Rejoined - %s",

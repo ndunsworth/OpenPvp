@@ -416,31 +416,28 @@ function opvp.Queue:_onReadyCheckUpdate()
 end
 
 function opvp.Queue:_onStatusActive()
-    self._status = opvp.QueueStatus.ACTIVE;
+
 end
 
 function opvp.Queue:_onStatusJoin()
-    self._ready_check_attempts = 0;
 
-    self._status = opvp.QueueStatus.QUEUED;
 end
 
 function opvp.Queue:_onStatusLeave()
     self._queue_time = 0;
-
-    self._status     = opvp.QueueStatus.NOT_QUEUED;
+    self._ready_check_attempts = 0;
 end
 
 function opvp.Queue:_onStatusReady()
-    self._status = opvp.QueueStatus.READY;
+
 end
 
 function opvp.Queue:_onStatusRoleCheck()
-    self._status = opvp.QueueStatus.ROLE_CHECK;
+
 end
 
 function opvp.Queue:_onStatusSuspended()
-    self._status = opvp.QueueStatus.SUSPENDED;
+
 end
 
 function opvp.Queue:_setQueueIndex(index)
@@ -457,4 +454,32 @@ function opvp.Queue:_setQueueIndex(index)
     elseif old_index ~= 0 and self._queue_index == 0 then
         opvp.queue.manager():_removeQueue(self);
     end
+end
+
+function opvp.Queue:_setStatus(status)
+    if status == self._status then
+        return;
+    end
+
+    local old_status = self._status;
+
+    self._status = status;
+
+    if status == opvp.QueueStatus.NOT_QUEUED then
+        self:_onStatusLeave();
+    elseif status == opvp.QueueStatus.ROLE_CHECK then
+        self:_onStatusRoleCheck();
+    elseif status == opvp.QueueStatus.QUEUED then
+        self:_onStatusRoleCheck();
+    elseif status == opvp.QueueStatus.ACTIVE then
+        self:_onStatusRoleCheck();
+    elseif status == opvp.QueueStatus.READY then
+        self:_onStatusRoleCheck();
+    elseif status == opvp.QueueStatus.SUSPENDED then
+        self:_onStatusRoleCheck();
+    else
+        return;
+    end
+
+    self.statusChanged:emit(status, old_status);
 end

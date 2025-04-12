@@ -303,7 +303,7 @@ function opvp.PvpQueue:_onStatusChanged(index, status)
     if status == opvp.QueueStatus.NOT_QUEUED then
         self:_setQueueIndex(0);
 
-        self:_onStatusLeave();
+        self:_setStatus(opvp.QueueStatus.NOT_QUEUED);
     else
         self:_setQueueIndex(index);
 
@@ -339,15 +339,19 @@ function opvp.PvpQueue:_onStatusChanged(index, status)
         end
 
         if status == opvp.QueueStatus.ROLE_CHECK then
-            self:_onStatusRoleCheck();
+            self:_setStatus(opvp.QueueStatus.ROLE_CHECK);
         elseif status == opvp.QueueStatus.QUEUED then
-            self:_onStatusJoin();
+            if self._status ~= opvp.QueueStatus.ACTIVE then
+                self:_setStatus(opvp.QueueStatus.QUEUED);
+            else
+                return;
+            end
         elseif status == opvp.QueueStatus.ACTIVE then
-            self:_onStatusActive();
+            self:_setStatus(opvp.QueueStatus.ACTIVE);
         elseif status == opvp.QueueStatus.READY then
-            self:_onStatusReady();
+            self:_setStatus(opvp.QueueStatus.READY);
         elseif status == opvp.QueueStatus.SUSPENDED then
-            self:_onStatusSuspended();
+            self:_setStatus(opvp.QueueStatus.SUSPENDED);
         else
             return;
         end
@@ -359,18 +363,4 @@ function opvp.PvpQueue:_onStatusChanged(index, status)
         elapsed,
         estimate
     );
-
-    self.statusChanged:emit(status, old_status);
-end
-
-function opvp.PvpQueue:_onStatusJoin()
-    --~ stupid when a bg is finished it goes from active to queued again
-    --~ that or i have a bug :x
-    if self._status ~= opvp.QueueStatus.ACTIVE then
-        self._status = opvp.QueueStatus.QUEUED;
-    end
-end
-
-function opvp.PvpQueue:_onStatusLeave()
-    opvp.Queue._onStatusLeave(self);
 end
