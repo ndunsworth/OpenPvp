@@ -92,9 +92,9 @@ function opvp.RatedQueue:_createMatchDescription(map)
         if self:isShuffle() == true then
             return opvp.ShuffleMatchDescription(map);
         elseif self == opvp.RatedQueue.ARENA_2v2 then
-            return opvp.ArenaMatchDescription(map, 2);
+            return opvp.ArenaMatchDescription(map, 2, self:mask());
         else
-            return opvp.ArenaMatchDescription(map, 3);
+            return opvp.ArenaMatchDescription(map, 3, self:mask());
         end
     elseif self:isBlitz() == true then
         return opvp.BlitzMatchDescription(map);
