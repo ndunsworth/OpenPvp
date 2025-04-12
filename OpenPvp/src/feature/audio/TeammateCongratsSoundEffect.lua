@@ -131,6 +131,23 @@ function opvp.effect.teamateCongratulate(race, sex)
 end
 
 local opvp_congrats_round_won_index = 0;
+
+local opvp_congrats_applaud_races = opvp.List:createFromArray(
+    {
+        opvp.DARK_IRON_DWARF,
+        opvp.EARTHEN,
+        opvp.HIGHMOUNTAIN_TAUREN,
+        opvp.KUL_TIRAN,
+        opvp.LIGHTFORGED_DRAENEI,
+        opvp.MAGHAR_ORC,
+        opvp.MECHAGNOME,
+        opvp.NIGHTBORNE,
+        opvp.VOID_ELF,
+        opvp.VULPERA,
+        opvp.ZANDALARI_TROLL
+    }
+);
+
 local opvp_congrats_taunt_races = opvp.List:createFromArray(
     {
         opvp.BLOOD_ELF,
@@ -160,11 +177,13 @@ function opvp.effect.teamateCongratulateSound(race)
             return opvp.Emote.CONGRATULATE:sound(race);
         end
     else
-        local rnd = math.random(0, 2);
+        local rnd = math.random(0, 3);
 
-        if rnd == 0 then
-            return opvp.Emote.VICTORY:sound(race);
+        if rnd == 0 and opvp_congrats_applaud_races:contains(race) then
+            return opvp.Emote.APPLAUD:sound(race);
         elseif rnd == 1 then
+            return opvp.Emote.VICTORY:sound(race);
+        elseif rnd == 2 then
             return opvp.Emote.CHEER:sound(race);
         else
             return opvp.Emote.LAUGH:sound(race);
