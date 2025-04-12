@@ -216,6 +216,44 @@ function opvp.utils.merge(t1, t2)
     return t1
 end
 
+function opvp.utils.numberToStringShort(n, precision)
+    if n == 0 then
+        return string.format("%d", 0);
+    end
+
+    if precision == nil then
+        precision = 2;
+    else
+        precision = max(0, precision);
+    end
+
+    local token;
+
+    if n > 999999999 then
+        n = n / 1000000000;
+
+        token = opvp.strs.NUMERIC_BILLION;
+    elseif n > 999999 then
+        n = n / 1000000;
+
+        token = opvp.strs.NUMERIC_MILLION;
+    elseif n > 999 then
+        n = n / 1000;
+
+        token = opvp.strs.NUMERIC_THOUSAND;
+    else
+        token = "";
+    end
+
+    if precision == 0 then
+        n = math.floor(n);
+    end
+
+    local fmt = "%0." .. tostring(precision) .. "f";
+
+    return string.format(fmt, n) .. token;
+end
+
 function opvp.utils.serializeFrom(str)
      return LibSerialize:Deserialize(str);
 end
