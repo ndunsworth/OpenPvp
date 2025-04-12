@@ -318,6 +318,10 @@ function opvp.Match:isShuffle()
     return self._desc:isShuffle();
 end
 
+function opvp.Match:isSimulation()
+    return self._testing == opvp.MatchTestType.SIMULATION;
+end
+
 function opvp.Match:isSkirmish()
     return self._desc:isSkirmish();
 end
