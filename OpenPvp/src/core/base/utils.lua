@@ -224,6 +224,18 @@ function opvp.utils.serializeTo(data)
     return LibSerialize:Serialize(data);
 end
 
+opvp.utils.table = {};
+
+function opvp.utils.table.contains(tbl, item)
+    for n=1, #tbl do
+        if tbl[n] == item then
+            return true;
+        end
+    end
+
+    return false;
+end
+
 function opvp.utils.textureAtlastMarkup(name, width, height, offsetX, offsetY, rVertexColor, gVertexColor, bVertexColor)
     return CreateAtlasMarkup(
         name,
