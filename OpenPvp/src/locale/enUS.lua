@@ -153,9 +153,9 @@ opvp.locale.enUS = {
     MATCH_PLAYER_LEAVE_WITH_SPEC      = "Match | %s Left - %s (|c%s%s %s|r)",
     MATCH_PLAYER_SPEC_CHANGED         = "Match | %s Spec - %s (|c%s%s %s|r)",
 
-    MATCH_SCORE_ARENA                 = "Match Score | %s (|c%s%s %s|r) - kb=%d, deaths=%d, dmg=%s, healing=%s",
-    MATCH_SCORE_ARENA_RATED           = "Match Score | %s (|c%s%s %s|r) - cr=%d/%d/%s, mmr=%d/%d/%s",
-    MATCH_SCORE_SHUFFLE               = "Match Score | %s (|c%s%s %s|r) - wins=%d, cr=%d/%d/%s, mmr=%d/%d/%s",
+    MATCH_SCORE_ARENA                 = "Match Score | %s %s (|c%s%s %s|r) - kb=%d, deaths=%d, dmg=%s, healing=%s",
+    MATCH_SCORE_ARENA_RATED           = "Match Score | %s %s (|c%s%s %s|r) - cr=%d/%d/%s, mmr=%d/%d/%s",
+    MATCH_SCORE_SHUFFLE               = "Match Score | %s %s (|c%s%s %s|r) - wins=%d, cr=%d/%d/%s, mmr=%d/%d/%s",
 
     MATCH_FEATURE_ACTIVATED           = "Match | Feature - %s (activated)",
     MATCH_FEATURE_DEACTIVATED         = "Match | Feature - %s (deactivated)",

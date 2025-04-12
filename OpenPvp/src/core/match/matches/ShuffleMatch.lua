@@ -291,6 +291,7 @@ function opvp.ShuffleMatch:_onOutcomeReady(outcomeType)
         opvp.printMessageOrDebug(
             do_msg,
             opvp.strs.MATCH_SCORE_SHUFFLE,
+            spec:role():icon(),
             member:nameOrId(),
             cls:color():GenerateHexColor(),
             spec:name(),

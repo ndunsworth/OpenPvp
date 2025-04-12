@@ -134,6 +134,7 @@ function opvp.ArenaMatch:_onOutcomeReady(outcomeType)
             opvp.printMessageOrDebug(
                 do_msg,
                 opvp.strs.MATCH_SCORE_ARENA,
+                spec:role():icon(),
                 member:nameOrId(),
                 cls:color():GenerateHexColor(),
                 spec:name(),
@@ -154,6 +155,7 @@ function opvp.ArenaMatch:_onOutcomeReady(outcomeType)
             opvp.printMessageOrDebug(
                 do_msg,
                 opvp.strs.MATCH_SCORE_ARENA_RATED,
+                spec:role():icon(),
                 member:nameOrId(),
                 cls:color():GenerateHexColor(),
                 spec:name(),
