@@ -51,6 +51,91 @@ function opvp.BattlegroundMatch:_onMatchComplete()
     opvp.GenericMatch._onMatchComplete(self);
 end
 
+function opvp.BattlegroundMatch:_onOutcomeReady(outcomeType)
+    opvp.GenericMatch._onOutcomeReady(self, outcomeType);
+
+    if outcomeType == opvp.MatchOutcomeType.ROUND then
+        return;
+    end
+
+    local members = opvp.List();
+
+    local teammates = opvp.List:createFromArray(self:teammates());
+    local opponents = opvp.List:createFromArray(self:opponents());
+
+    members:merge(opvp.party.utils.sortMembersByRole(teammates));
+    members:merge(opvp.party.utils.sortMembersByRole(opponents));
+
+    members = members:release();
+
+    local member;
+    local cls;
+    local spec;
+    local do_msg = opvp.options.announcements.match.scorePlayerRatings:value();
+
+    if self:isRated() == false then
+        for n=1, #members do
+            member = members[n];
+
+            cls = member:classInfo();
+            spec = member:specInfo();
+
+            opvp.printMessageOrDebug(
+                do_msg,
+                opvp.strs.MATCH_SCORE_ARENA,
+                spec:role():icon(),
+                member:nameOrId(),
+                cls:color():GenerateHexColor(),
+                spec:name(),
+                cls:name(),
+                member:kills(),
+                member:deaths(),
+                opvp.utils.numberToStringShort(member:damage(), 1),
+                opvp.utils.numberToStringShort(member:healing(), 1)
+            );
+        end
+    else
+        for n=1, #members do
+            member = members[n];
+
+            cls = member:classInfo();
+            spec = member:specInfo();
+
+            opvp.printMessageOrDebug(
+                do_msg,
+                opvp.strs.MATCH_SCORE_ARENA_RATED,
+                spec:role():icon(),
+                member:nameOrId(),
+                cls:color():GenerateHexColor(),
+                spec:name(),
+                cls:name(),
+                member:cr(),
+                member:cr() + member:crGain(),
+                opvp.utils.colorNumberPosNeg(
+                    member:crGain(),
+                    0.25,
+                    1,
+                    0.25,
+                    1,
+                    0.25,
+                    0.25
+                ),
+                member:mmr(),
+                member:mmr() + member:mmrGain(),
+                opvp.utils.colorNumberPosNeg(
+                    member:mmrGain(),
+                    0.25,
+                    1,
+                    0.25,
+                    1,
+                    0.25,
+                    0.25
+                )
+            );
+        end
+    end
+end
+
 function opvp.BattlegroundMatch:_onScoreUpdate()
     opvp.printDebug("opvp.BattlegroundMatch._onScoreUpdate");
 
