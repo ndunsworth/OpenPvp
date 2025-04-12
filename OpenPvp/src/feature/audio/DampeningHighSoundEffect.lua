@@ -33,7 +33,7 @@ opvp.private.DampeningHighSoundEffect = opvp.CreateClass(opvp.MatchOptionFeature
 function opvp.private.DampeningHighSoundEffect:init(option)
     opvp.MatchOptionFeature.init(self, option);
 
-    self._dampening_warn = false;
+    self._dampening_warn = 40;
 end
 
 function opvp.private.DampeningHighSoundEffect:isActiveMatchStatus(status)
@@ -57,7 +57,7 @@ function opvp.private.DampeningHighSoundEffect:_onFeatureActivated()
         self._onDampeningUpdate
     );
 
-    self._dampening_warn = true;
+    self._dampening_warn = 40;
 
     opvp.MatchOptionFeature._onFeatureActivated(self)
 end
@@ -72,12 +72,13 @@ function opvp.private.DampeningHighSoundEffect:_onFeatureDeactivated()
 end
 
 function opvp.private.DampeningHighSoundEffect:_onDampeningUpdate(value)
+    value = value * 100;
+
     if value == 0 then
-        self._dampening_warn = true;
-    elseif (
-        self._dampening_warn == true and
-        value >= 0.4
-    ) then
+        self._dampening_warn = 40;
+    elseif value >= self._dampening_warn then
+        self._dampening_warn = self._dampening_warn + 20;
+
         opvp.effect.dampeningHigh(opvp.player.faction());
     end
 end
