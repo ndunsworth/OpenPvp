@@ -131,7 +131,7 @@ function opvp.MatchTeam:mmr()
         end
     end
 
-    if count > 0 then
+    if value > 0 and count > 0 then
         return value / count;
     else
         return 0;
@@ -207,7 +207,7 @@ function opvp.MatchTeam:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, au
         fullUpdate
     );
 
-    if self._dampening == false then
+    if self._dampening == false or self._match:isActive() == false then
         return;
     end
 
@@ -232,6 +232,10 @@ function opvp.MatchTeam:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, au
 
         if aura:spellId() == 110310 then
             self._match:_setDampening(aura:applications() / 100.0);
+
+            if self._dampening_found == false then
+                self._dampening_found = true;
+            end
 
             return;
         end
