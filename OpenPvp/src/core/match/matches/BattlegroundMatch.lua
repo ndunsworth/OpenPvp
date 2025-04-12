@@ -54,7 +54,13 @@ end
 function opvp.BattlegroundMatch:_onOutcomeReady(outcomeType)
     opvp.GenericMatch._onOutcomeReady(self, outcomeType);
 
-    if outcomeType == opvp.MatchOutcomeType.ROUND then
+    if (
+        outcomeType == opvp.MatchOutcomeType.ROUND or
+        (
+            self:isTest() == true and
+            self:isSimulation() == false
+        )
+    ) then
         return;
     end
 
