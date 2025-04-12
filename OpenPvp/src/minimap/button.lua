@@ -77,9 +77,9 @@ local function opvp_role_markups(queue)
     return result;
 end
 
-opvp.OpenPvpMiniMapButton = opvp.CreateClass(opvp.MiniMapButton);
+opvp.private.OpenPvpMiniMapButton = opvp.CreateClass(opvp.MiniMapButton);
 
-function opvp.OpenPvpMiniMapButton:init()
+function opvp.private.OpenPvpMiniMapButton:init()
     opvp.MiniMapButton.init(self);
 
     self:setName("OpenPvp");
@@ -117,7 +117,7 @@ function opvp.OpenPvpMiniMapButton:init()
     self:setVisible(opvp.options.interface.minimap.enabled:value());
 end
 
-function opvp.OpenPvpMiniMapButton:addEventsTooltip(tooltip)
+function opvp.private.OpenPvpMiniMapButton:addEventsTooltip(tooltip)
     local timespec = C_DateAndTime.GetCurrentCalendarTime();
 
     local events_size = C_Calendar.GetNumDayEvents(0, timespec.monthDay);
@@ -155,7 +155,7 @@ function opvp.OpenPvpMiniMapButton:addEventsTooltip(tooltip)
     end
 end
 
-function opvp.OpenPvpMiniMapButton:addCurrencyTooltip(tooltip)
+function opvp.private.OpenPvpMiniMapButton:addCurrencyTooltip(tooltip)
     local season_active = opvp.season.isActive();
 
     --~ tooltip:AddLine(" ");
@@ -238,7 +238,7 @@ function opvp.OpenPvpMiniMapButton:addCurrencyTooltip(tooltip)
     );
 end
 
-function opvp.OpenPvpMiniMapButton:addHonorableKillsTooltip(tooltip)
+function opvp.private.OpenPvpMiniMapButton:addHonorableKillsTooltip(tooltip)
     --~ tooltip:AddLine(" ");
     tooltip:AddLine(opvp.strs.HONORABLE_KILLS);
 
@@ -261,7 +261,7 @@ function opvp.OpenPvpMiniMapButton:addHonorableKillsTooltip(tooltip)
     );
 end
 
-function opvp.OpenPvpMiniMapButton:addRatingTooltip(tooltip)
+function opvp.private.OpenPvpMiniMapButton:addRatingTooltip(tooltip)
     --~ local season_active = opvp.season.isActive();
 
     --~ if season_active == false then
@@ -301,7 +301,7 @@ function opvp.OpenPvpMiniMapButton:addRatingTooltip(tooltip)
     end
 end
 
-function opvp.OpenPvpMiniMapButton:addQueueInfoTooltip(tooltip)
+function opvp.private.OpenPvpMiniMapButton:addQueueInfoTooltip(tooltip)
     --~ tooltip:AddLine(" ");
     tooltip:AddLine(opvp.strs.QUEUES);
 
@@ -342,7 +342,7 @@ function opvp.OpenPvpMiniMapButton:addQueueInfoTooltip(tooltip)
     end
 end
 
-function opvp.OpenPvpMiniMapButton:addSeasonRewardTooltip(tooltip)
+function opvp.private.OpenPvpMiniMapButton:addSeasonRewardTooltip(tooltip)
     local season_active = opvp.season.isActive();
 
     if season_active == false then
@@ -392,7 +392,7 @@ function opvp.OpenPvpMiniMapButton:addSeasonRewardTooltip(tooltip)
     --~ GameTooltip_ShowProgressBar(tooltip, 0, req, prog, FormatPercentage(prog / req));
 end
 
-function opvp.OpenPvpMiniMapButton:addQueueBonusTooltip(tooltip)
+function opvp.private.OpenPvpMiniMapButton:addQueueBonusTooltip(tooltip)
 
     local queues = {
         opvp.Queue.RANDOM_BATTLEGROUND,
@@ -435,7 +435,7 @@ function opvp.OpenPvpMiniMapButton:addQueueBonusTooltip(tooltip)
     end
 end
 
-function opvp.OpenPvpMiniMapButton:_onEnter(frame)
+function opvp.private.OpenPvpMiniMapButton:_onEnter(frame)
     if frame == self._frame then
         GameTooltip:SetOwner(frame, "ANCHOR_LEFT");
     else
@@ -499,11 +499,11 @@ function opvp.OpenPvpMiniMapButton:_onEnter(frame)
     GameTooltip:Show();
 end
 
-function opvp.OpenPvpMiniMapButton:_onLeave(frame)
+function opvp.private.OpenPvpMiniMapButton:_onLeave(frame)
     GameTooltip:Hide();
 end
 
-function opvp.OpenPvpMiniMapButton:_onMouseClick(button)
+function opvp.private.OpenPvpMiniMapButton:_onMouseClick(button)
     if SettingsPanel:IsVisible() == true then
         if (
             opvp.options.match.category:isShown() == true or
@@ -524,7 +524,7 @@ end
 local opvp_minimap_singleton;
 
 local function opvp_minimap_singleton_ctor()
-    opvp_minimap_singleton = opvp.OpenPvpMiniMapButton();
+    opvp_minimap_singleton = opvp.private.OpenPvpMiniMapButton();
 end
 
 opvp.OnLoginReload:register(opvp_minimap_singleton_ctor);
