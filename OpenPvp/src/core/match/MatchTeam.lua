@@ -45,6 +45,7 @@ function opvp.MatchTeam:init(match)
     self._id              = 0;
     self._dampening       = false;
     self._dampening_found = false;
+    self._winner          = false;
 end
 
 function opvp.MatchTeam:cr()
@@ -100,6 +101,14 @@ function opvp.MatchTeam:isHostile()
     else
         return false;
     end
+end
+
+function opvp.MatchTeam:isLoser()
+    return not self._winner;
+end
+
+function opvp.MatchTeam:isWinner()
+    return self._winner;
 end
 
 function opvp.MatchTeam:mmr()
@@ -364,4 +373,8 @@ end
 
 function opvp.MatchTeam:_setMatch(match)
     self._match = match;
+end
+
+function opvp.MatchTeam:_setWinner(state)
+    self._winner = state;
 end

@@ -165,6 +165,7 @@ function opvp.Match:init(queue, description)
 
     self._outcome         = opvp.MatchWinner.NONE;
     self._outcome_valid   = false;
+    self._outcome_final   = false;
     self._outcome_team    = nil;
 
     self._countdown_timer.timeout:connect(self, self._countdownUpdate);
@@ -283,6 +284,10 @@ end
 
 function opvp.Match:isLastRound()
     return self:round() == self:rounds();
+end
+
+function opvp.Match:isOutcomeFinal()
+    return self._outcome_final;
 end
 
 function opvp.Match:isOutcomeValid()
@@ -473,14 +478,20 @@ end
 
 function opvp.Match:timeElapsed()
     if self._status ~= opvp.MatchStatus.INACTIVE then
-        local runtime = GetBattlefieldInstanceRunTime();
+        if self:isTest() == false then
+            local runtime = GetBattlefieldInstanceRunTime();
 
-        if runtime ~= nil then
-            return runtime / 1000;
+            if runtime ~= nil then
+                return runtime / 1000;
+            else
+                return 0;
+            end
+        else
+            return opvp.match.manager():tester():timeElapsed();
         end
+    else
+        return 0;
     end
-
-    return 0;
 end
 
 function opvp.Match:winner()
@@ -500,8 +511,6 @@ function opvp.Match:_close()
 
         opvp.event.START_TIMER:disconnect(self, self._onStartTimer);
     end
-
-    opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
 
     self._countdown_timer:stop();
 
@@ -640,8 +649,6 @@ function opvp.Match:_onMatchEntered()
 
         opvp.event.START_TIMER:connect(self, self._onStartTimer);
     end
-
-    opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onScoreUpdate);
 
     self:_setOutcome(opvp.MatchWinner.NONE, nil, opvp.MatchOutcomeType.NONE);
 
@@ -958,12 +965,24 @@ function opvp.Match:_setDampening(value)
 end
 
 function opvp.Match:_setOutcome(outcome, team, outcomeType)
-    self._outcome_team  = team;
+    if self._outcome_team ~= nil and self._outcome_team ~= team then
+        self._outcome_team:_setWinner(false);
+    end
+
     self._outcome       = outcome;
+    self._outcome_team  = team;
     self._outcome_valid = outcomeType ~= opvp.MatchOutcomeType.NONE;
 
+    if self._outcome_team ~= nil then
+        self._outcome_team:_setWinner(true);
+    end
+
     if self._outcome_valid == true then
+        self._outcome_final = outcomeType == opvp.MatchOutcomeType.MATCH;
+
         self:_onOutcomeReady(outcomeType);
+    else
+        self._outcome_final = false;
     end
 end
 

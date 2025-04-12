@@ -298,6 +298,7 @@ src/core/party/providers/PvpPartyMemberProvider.lua
 src/core/party/providers/ArenaPartyMemberProvider.lua
 src/core/party/providers/BattlegroundPartyMemberProvider.lua
 src/core/party/providers/TestPartyMemberProvider.lua
+src/core/party/providers/PvpTestPartyMemberProvider.lua
 
 src/core/match/Match.lua
 src/core/match/MatchDescription.lua
@@ -306,6 +307,7 @@ src/core/match/MatchManager.lua
 src/core/match/MatchOptionFeature.lua
 src/core/match/MatchRatingInfo.lua
 src/core/match/MatchRecord.lua
+src/core/match/MatchStat.lua
 src/core/match/MatchTeam.lua
 src/core/match/MatchTest.lua
 src/core/match/MatchTypeOptionFeature.lua

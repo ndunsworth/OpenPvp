@@ -33,6 +33,9 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.SILVERSHARD_MINES,
             map_id       = 423,
+            stats        = {
+                [opvp.PvpStatId.CARTS_CONTROLLED] = 428
+            },
             widgets      = {}
         }
     );

@@ -33,6 +33,10 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.THE_BATTLE_FOR_WINTERGRASP,
             map_id       = 275,
+            stats        = {
+                [opvp.PvpStatId.BUILDINGS_DESTROYED] = 216,
+                [opvp.PvpStatId.WALLS_DESTROYED]     = 215
+            },
             widgets      = {}
         }
     );

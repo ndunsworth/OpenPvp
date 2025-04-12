@@ -254,16 +254,43 @@ function opvp.ArenaPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMem
     opvp.PvpPartyMemberProvider._onRosterEndUpdate(self, newMembers, updatedMembers, removedMembers)
 end
 
+function opvp.ArenaPartyMemberProvider:_onScoreUpdate()
+    opvp.PvpPartyMemberProvider._onScoreUpdate(self);
+end
+
 function opvp.ArenaPartyMemberProvider:_setTeamSize(size)
     self._match_size = max(0, size);
 end
 
 function opvp.ArenaPartyMemberProvider:_updateMember(unitId, member, created)
-    return bit.bor(
-        opvp.PvpPartyMemberProvider._updateMember(self, unitId, member),
-        self:_updateMemberScore(member),
-        self:_updateMemberSpec(member)
-    );
+    local mask = opvp.PvpPartyMemberProvider._updateMember(self, unitId, member, created);
+
+    if self._is_shuffle == false then
+        return mask;
+    end
+
+    local name_known = member:isNameKnown();
+    local race_known = member:isRaceKnown();
+
+    if name_known == true and race_known == true then
+        return mask;
+    end
+
+    local info = C_PvP.GetScoreInfoByPlayerGuid(self:guid());
+
+    if info == nil then
+        return mask;
+    end
+
+    if name_known == false then
+        member:_setName(info.name);
+    end
+
+    if race_known == false then
+        member:_setRace(opvp.Race:fromRaceName(info.raceName));
+    end
+
+    return mask;
 end
 
 function opvp.ArenaPartyMemberProvider:_updateMemberSpec(member)

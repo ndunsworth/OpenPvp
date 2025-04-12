@@ -33,6 +33,13 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ALTERAC_VALLEY,
             map_id       = 91,
+            stats        = {
+                [opvp.PvpStatId.GRAVEYARDS_ASSAULTED] = 63,
+                [opvp.PvpStatId.GRAVEYARDS_DEFENDED]  = 65,
+                [opvp.PvpStatId.SECONDARY_OBJECTIVES] = 82,
+                [opvp.PvpStatId.TOWERS_DEFENDED]      = 64,
+                [opvp.PvpStatId.TOWERS_ASSAULTED]     = 61
+            },
             widgets      = {}
         }
     );

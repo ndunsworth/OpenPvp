@@ -33,6 +33,9 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.TIGERS_PEAK,
             map_id       = 0,
+            stats        = {
+                [opvp.PvpStatId.ROUNDS_WON] = 1010
+            },
             widgets      = {
                 {
                     widget_set  = 1,

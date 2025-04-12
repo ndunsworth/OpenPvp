@@ -46,9 +46,10 @@ opvp.PartyMember.RACE_FLAG           = bit.lshift(1, 12);
 opvp.PartyMember.RANGE_FLAG          = bit.lshift(1, 13);
 opvp.PartyMember.RATING_CURRENT_FLAG = bit.lshift(1, 14);
 opvp.PartyMember.RATING_GAIN_FLAG    = bit.lshift(1, 15);
-opvp.PartyMember.SEX_FLAG            = bit.lshift(1, 16);
-opvp.PartyMember.SPEC_FLAG           = bit.lshift(1, 17);
-opvp.PartyMember.TEAM_FLAG           = bit.lshift(1, 18);
+opvp.PartyMember.SCORE_FLAG          = bit.lshift(1, 16);
+opvp.PartyMember.SEX_FLAG            = bit.lshift(1, 17);
+opvp.PartyMember.SPEC_FLAG           = bit.lshift(1, 18);
+opvp.PartyMember.TEAM_FLAG           = bit.lshift(1, 19);
 
 opvp.PartyMember.CHARACTER_FLAGS = bit.bor(
     opvp.PartyMember.FACTION_FLAG,
@@ -76,6 +77,7 @@ opvp.PartyMember.STATE_FLAGS = bit.bor(
     opvp.PartyMember.PLAYER_FLAG,
     opvp.PartyMember.RATING_CURRENT_FLAG,
     opvp.PartyMember.RATING_GAIN_FLAG,
+    opvp.PartyMember.SCORE_FLAG,
     opvp.PartyMember.TEAM_FLAG
 );
 

@@ -33,6 +33,10 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.TEMPLE_OF_KOTMOGU,
             map_id       = 417,
+            stats        = {
+                [opvp.PvpStatId.ORB_POSSESSIONS] = 418,
+                [opvp.PvpStatId.VICTORY_POINTS]  = 419
+            },
             widgets      = {}
         }
     );

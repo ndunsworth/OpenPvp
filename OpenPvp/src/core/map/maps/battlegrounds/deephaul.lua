@@ -33,6 +33,10 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.DEEPHAUL_RAVINE,
             map_id       = 2345,
+            stats        = {
+                [opvp.PvpStatId.CARTS_CONTROLLED] = 1021,
+                [opvp.PvpStatId.FLAG_CAPTURES]    = 1020
+            },
             widgets      = {}
         }
     );

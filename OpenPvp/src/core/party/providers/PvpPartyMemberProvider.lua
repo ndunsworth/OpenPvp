@@ -35,6 +35,10 @@ function opvp.PvpPartyMemberProvider:init(factory)
         factory = opvp.PvpPartyMemberFactory();
     end
 
+    self._match = nil;
+
+    self.scoreUpdate = opvp.Signal("opvp.PvpPartyMemberProvider.scoreUpdate");
+
     opvp.GenericPartyMemberProvider.init(self);
 
     assert(
@@ -45,18 +49,68 @@ function opvp.PvpPartyMemberProvider:init(factory)
     self:_setFactory(factory);
 end
 
+function opvp.PvpPartyMemberProvider:isRated()
+    return (
+        self._match ~= nil and
+        self._match:isRated()
+    );
+end
+
 function opvp.PvpPartyMemberProvider:_connectSignals()
     if self:hasPlayer() == true then
         opvp.GenericPartyMemberProvider._connectSignals(self);
     end
+
+    opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onScoreUpdate);
 end
 
 function opvp.PvpPartyMemberProvider:_disconnectSignals()
     if self:hasPlayer() == true then
         opvp.GenericPartyMemberProvider._disconnectSignals(self);
     end
+
+    opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
 end
 
-function opvp.PvpPartyMemberProvider:_updateMemberScore(member)
-    return member:_updateScore();
+function opvp.PvpPartyMemberProvider:_onConnected()
+    self._match = opvp.match.current();
+
+    opvp.GenericPartyMemberProvider._onConnected(self);
+end
+
+function opvp.PvpPartyMemberProvider:_onDisconnected()
+    opvp.GenericPartyMemberProvider._onDisconnected(self);
+
+    self._match = nil;
+end
+
+function opvp.PvpPartyMemberProvider:_onScoreUpdate()
+    local rated = self:isRated();
+
+    local member;
+
+    for n=1, self:size() do
+        self:_updateMemberScore(self:member(n), rated);
+    end
+
+    self.scoreUpdate:emit();
+end
+
+function opvp.PvpPartyMemberProvider:_updateMember(unitId, member, created)
+    if created == true and self._match ~= nil then
+        member:_setStats(self._match:map():stats());
+    end
+
+    return bit.bor(
+        opvp.GenericPartyMemberProvider._updateMember(self, unitId, member, created),
+        self:_updateMemberSpec(member)
+    );
+end
+
+function opvp.PvpPartyMemberProvider:_updateMemberScore(member, rated)
+    return member:_updateScore(rated);
+end
+
+function opvp.PvpPartyMemberProvider:_updateMemberSpec(member)
+    return 0;
 end

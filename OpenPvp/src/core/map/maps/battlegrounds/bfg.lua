@@ -33,6 +33,10 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.THE_BATTLE_FOR_GILNEAS,
             map_id       = 275,
+            stats        = {
+                [opvp.PvpStatId.BASES_ASSAULTED] = 370,
+                [opvp.PvpStatId.BASES_DEFENDED]  = 371
+            },
             widgets      = {}
         }
     );

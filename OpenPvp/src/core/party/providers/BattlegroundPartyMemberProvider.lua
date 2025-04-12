@@ -71,11 +71,11 @@ function opvp.BattlegroundPartyMemberProvider:_categorySize()
 end
 
 function opvp.BattlegroundPartyMemberProvider:_connectSignals()
-    opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onGroupRosterUpdate);
+
 end
 
 function opvp.BattlegroundPartyMemberProvider:_disconnectSignals()
-    opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onGroupRosterUpdate);
+
 end
 
 function opvp.BattlegroundPartyMemberProvider:_findMemberByUnitId(unitId, create)
@@ -156,6 +156,12 @@ end
 
 function opvp.BattlegroundPartyMemberProvider:_onMemberInspect(member, mask)
 
+end
+
+function opvp.BattlegroundPartyMemberProvider:_onScoreUpdate()
+    self:_onGroupRosterUpdate();
+
+    opvp.PvpPartyMemberProvider._onScoreUpdate(self);
 end
 
 function opvp.BattlegroundPartyMemberProvider:_onUnitConnection(unitId, isConnected)

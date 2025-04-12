@@ -64,6 +64,12 @@ function opvp.Map:init(cfg)
             end
         end
     end
+
+    if cfg.stats ~= nil then
+        self._stats = cfg.stats;
+    else
+        self._stats = {};
+    end
 end
 
 function opvp.Map:createFromCurrentInstance()
@@ -108,6 +114,26 @@ function opvp.Map:hasMapId()
     return self._map_id ~= 0;
 end
 
+function opvp.Map:hasStatWithId(id)
+    for _id, statId in pairs(self._stats) do
+        if _id == id then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+function opvp.Map:hasStatWithStatId(id)
+    for _id, statId in pairs(self._stats) do
+        if statId == id then
+            return true;
+        end
+    end
+
+    return false;
+end
+
 function opvp.Map:hasWidgets()
     return self._widgets:isEmpty() == false;
 end
@@ -134,6 +160,19 @@ end
 
 function opvp.Map:name()
     return self._name;
+end
+
+function opvp.Map:stats()
+    local stats = {};
+
+    for id, statId in pairs(self._stats) do
+        table.insert(
+            stats,
+            opvp.MatchStat(id, statId)
+        );
+    end
+
+    return stats;
 end
 
 function opvp.Map:toStript()

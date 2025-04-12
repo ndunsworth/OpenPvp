@@ -314,6 +314,8 @@ function opvp.GenericPartyMemberProvider:_onConnected()
 
             self._members:append(self._player);
 
+            self:_updateMember(self._player:id(), self._player, true);
+
             self:_onRosterEndUpdate({self._player}, {}, {});
         end
 

@@ -142,8 +142,8 @@ function opvp.GenericMatch:_initializeTeams()
     );
 
     if self:isTest() == true then
-        self._friendly_provider = opvp.TestPartyMemberProvider(true);
-        self._enemy_provider = opvp.TestPartyMemberProvider();
+        self._friendly_provider = opvp.PvpTestPartyMemberProvider(true);
+        self._enemy_provider = opvp.PvpTestPartyMemberProvider();
 
         self._enemy_provider:_setHostile(true);
 
@@ -155,6 +155,8 @@ function opvp.GenericMatch:_initializeTeams()
         self._friendly_provider:isFriendly() == true and
         self._enemy_provider:isHostile() == true
     );
+
+    self._enemy_provider.scoreUpdate:connect(self, self._onScoreUpdate);
 
     self._friendly_team:_setMatch(self);
     self._enemy_team:_setMatch(self);
@@ -173,47 +175,6 @@ function opvp.GenericMatch:_initializeTeams()
     );
 
     self._init_teams = false;
-end
-
-function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
-    if self:isTest() == false then
-        self._player_side = GetBattlefieldArenaFaction() + 1;
-    else
-        self._player_side = 1;
-    end
-
-    if self._player_side == 1 then
-        self._teams = {
-            self._friendly_team,
-            self._enemy_team
-        };
-    else
-        self._teams = {
-            self._enemy_team,
-            self._friendly_team
-        };
-    end
-
-    self._teams[1]:_setId(1);
-    self._teams[2]:_setId(2);
-
-    self:_initializeTeams();
-
-    opvp.Match._onPartyAboutToJoin(self, category, guid);
-
-    if self:isTest() == true then
-        self._friendly_team:initialize(category, guid);
-
-        if opvp.match.isSimulation() == true then
-             self._friendly_provider:addMembers(
-                self:matchTeamSize() - 1
-            );
-
-             self._enemy_provider:addMembers(
-                self:matchTeamSize()
-            );
-        end
-    end
 end
 
 function opvp.GenericMatch:_onMatchComplete()
@@ -262,4 +223,45 @@ end
 
 function opvp.GenericMatch:_onMatchRoundWarmup()
     opvp.Match._onMatchRoundWarmup(self);
+end
+
+function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
+    if self:isTest() == false then
+        self._player_side = GetBattlefieldArenaFaction() + 1;
+    else
+        self._player_side = 1;
+    end
+
+    if self._player_side == 1 then
+        self._teams = {
+            self._friendly_team,
+            self._enemy_team
+        };
+    else
+        self._teams = {
+            self._enemy_team,
+            self._friendly_team
+        };
+    end
+
+    self._teams[1]:_setId(1);
+    self._teams[2]:_setId(2);
+
+    self:_initializeTeams();
+
+    opvp.Match._onPartyAboutToJoin(self, category, guid);
+
+    if self:isTest() == true then
+        self._friendly_team:initialize(category, guid);
+
+        if opvp.match.isSimulation() == true then
+             self._friendly_provider:addMembers(
+                self:matchTeamSize() - 1
+            );
+
+             self._enemy_provider:addMembers(
+                self:matchTeamSize()
+            );
+        end
+    end
 end

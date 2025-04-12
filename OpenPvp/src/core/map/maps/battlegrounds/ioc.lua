@@ -33,6 +33,10 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ISLE_OF_CONQUEST,
             map_id       = 169,
+            stats        = {
+                [opvp.PvpStatId.BASES_ASSAULTED] = 245,
+                [opvp.PvpStatId.BASES_DEFENDED]  = 246
+            },
             widgets      = {}
         }
     );

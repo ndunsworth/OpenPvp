@@ -106,6 +106,12 @@ function opvp.TestPartyMemberProvider:addMembers(count)
 
     self:_onRosterBeginUpdate();
 
+    for n=1, members:size() do
+        member = members:item(n);
+
+        self:_updateMember(member:id(), member, true);
+    end
+
     self._members:merge(members);
 
     self:_onRosterEndUpdate(
@@ -219,6 +225,8 @@ function opvp.TestPartyMemberProvider:_onConnected()
             self:_onRosterBeginUpdate();
 
             self._members:append(self._player);
+
+            self:_updateMember(self._player:id(), self._player, true);
 
             self:_onRosterEndUpdate(
                 {self._player},

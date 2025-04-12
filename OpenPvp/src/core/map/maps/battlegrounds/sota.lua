@@ -33,6 +33,10 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.STRAND_OF_THE_ANCIENTS,
             map_id       = 128,
+            stats        = {
+                [opvp.PvpStatId.DEMOLISHERS_DESTROYED] = 232,
+                [opvp.PvpStatId.GATES_DESTROYED]       = 231
+            },
             widgets      = {}
         }
     );

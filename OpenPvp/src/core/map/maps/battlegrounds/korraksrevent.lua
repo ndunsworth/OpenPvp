@@ -33,6 +33,13 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.KORRAKS_REVENGE,
             map_id       = 1537,
+            stats        = {
+                [opvp.PvpStatId.GRAVEYARDS_ASSAULTED] = 1007,
+                [opvp.PvpStatId.GRAVEYARDS_DEFENDED]  = 1005,
+                [opvp.PvpStatId.SECONDARY_OBJECTIVES] = 1004,
+                [opvp.PvpStatId.TOWERS_ASSAULTED]     = 1003,
+                [opvp.PvpStatId.TOWERS_DEFENDED]      = 1006
+            },
             widgets      = {}
         }
     );

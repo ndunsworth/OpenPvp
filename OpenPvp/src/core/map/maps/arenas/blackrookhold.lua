@@ -33,6 +33,9 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.BLACK_ROOK_HOLD_ARENA,
             map_id       = 0,
+            stats        = {
+                [opvp.PvpStatId.ROUNDS_WON] = 1014
+            },
             widgets      = {
                 {
                     widget_set  = 1,

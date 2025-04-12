@@ -33,11 +33,17 @@ opvp.PvpPartyMember = opvp.CreateClass(opvp.PartyMember);
 function opvp.PvpPartyMember:init()
     opvp.PartyMember.init(self);
 
+    self._kills     = 0;
+    self._deaths    = 0;
+    self._damage    = 0;
+    self._healing   = 0;
+
     self._cr        = 0;
     self._cr_gain   = 0;
     self._mmr       = 0;
     self._mmr_gain  = 0;
     self._team      = nil;
+    self._stats     = opvp.List();
 end
 
 function opvp.PvpPartyMember:cr()
@@ -46,6 +52,64 @@ end
 
 function opvp.PvpPartyMember:crGain()
     return self._cr_gain;
+end
+
+function opvp.PvpPartyMember:damage()
+    return self._damage;
+end
+
+function opvp.PvpPartyMember:deaths()
+    return self._deaths;
+end
+
+function opvp.PvpPartyMember:findStatById(id)
+    local stat;
+
+    for n=1, self._stats:size() do
+        stat = self._stats:item(n);
+
+        if stat:id() == id then
+            return stat;
+        end
+    end
+
+    return nil;
+end
+
+function opvp.PvpPartyMember:findStatByStatId(id)
+    local stat;
+
+    for n=1, self._stats:size() do
+        stat = self._stats:item(n);
+
+        if stat:statId() == id then
+            return stat;
+        end
+    end
+
+    return nil;
+end
+
+function opvp.PvpPartyMember:hasStat(id)
+    local stat;
+
+    for n=1, self._stats:size() do
+        stat = self._stats:item(n);
+
+        if stat:id() == id then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+function opvp.PvpPartyMember:healing()
+    return self._healing;
+end
+
+function opvp.PvpPartyMember:kills()
+    return self._kills;
 end
 
 function opvp.PvpPartyMember:isRatingKnown()
@@ -81,49 +145,58 @@ function opvp.PvpPartyMember:_reset(mask)
         self._mmr_gain = 0;
     end
 
+    if bit.band(mask, opvp.PartyMember.SCORE_FLAG) then
+        self._kills     = 0;
+        self._deaths    = 0;
+        self._damage    = 0;
+        self._healing   = 0;
+
+        self._stats:clear();
+    end
+
     if bit.band(mask, opvp.PartyMember.TEAM_FLAG) then
         self._team = nil;
     end
 end
 
 function opvp.PvpPartyMember:_setRating(cr, mmr)
-    if cr > -1 then
-        self:_setFlags(
-            opvp.PartyMember.RATING_CURRENT_FLAG,
-            true
-        );
-
-        cr = 0;
-        mmr = 0;
-    else
-        self:_setFlags(
-            opvp.PartyMember.RATING_CURRENT_FLAG,
-            false
-        );
-    end
+    self:_setFlags(
+        opvp.PartyMember.RATING_CURRENT_FLAG,
+        cr > -1
+    );
 
     self._cr = cr;
     self._mmr = mmr;
 end
 
 function opvp.PvpPartyMember:_setRatingGain(cr, mmr)
-    if cr > -1 then
-        self:_setFlags(
-            opvp.PartyMember.RATING_GAIN_FLAG,
-            true
-        );
-
-        cr = 0;
-        mmr = 0;
-    else
-        self:_setFlags(
-            opvp.PartyMember.RATING_GAIN_FLAG,
-            false
-        );
-    end
+    self:_setFlags(
+        opvp.PartyMember.RATING_GAIN_FLAG,
+        cr > -1
+    );
 
     self._cr_gain = cr;
     self._mmr_gain = mmr;
+end
+
+function opvp.PvpPartyMember:_setStatById(id, value)
+    local stat = self:findStatById(id);
+
+    if stat ~= nil then
+        stat:setValue(value);
+    end
+end
+
+function opvp.PvpPartyMember:_setStatByStatId(id, value)
+    local stat = self:findStatByStatId(id);
+
+    if stat ~= nil then
+        stat:setValue(value);
+    end
+end
+
+function opvp.PvpPartyMember:_setStats(stats)
+    self._stats = opvp.List:createFromArray(stats);
 end
 
 function opvp.PvpPartyMember:_setTeam(team)
@@ -137,7 +210,7 @@ function opvp.PvpPartyMember:_setTeam(team)
     end
 end
 
-function opvp.PvpPartyMember:_updateScore()
+function opvp.PvpPartyMember:_updateScore(rated)
     local old_mask = self._mask;
 
     if self:isGuidKnown() == false then
@@ -150,43 +223,38 @@ function opvp.PvpPartyMember:_updateScore()
         return 0;
     end
 
-    if self:isNameKnown() == false then
-        self:_setName(info.name);
+    if rated == true then
+        info.mmrChange = info.postmatchMMR - info.prematchMMR;
+
+        if info.rating ~= self._cr or info.rematchMMR ~= self._mmr then
+            self:_setRating(
+                info.rating,
+                info.prematchMMR
+            );
+        end
+
+        if info.ratingChange ~= self._cr_gain or info.mmrChange ~= self._mmr_gain then
+            self:_setRatingGain(
+                info.ratingChange,
+                info.mmrChange
+            );
+        end
     end
 
-    if self:isRaceKnown() == false then
-        self:_setRace(opvp.Race:fromRaceName(info.raceName));
-    end
+    if opvp.is_table(info.stats) and self._stats:isEmpty() == false then
+        local stat;
+        local stat_info;
 
-    if info.prematchMMR > 0 and self:isRatingKnown() == false then
-        self:_setRating(
-            info.rating,
-            info.prematchMMR
-        );
+        for n=1, #info.stats do
+            stat_info = info.stats[n];
+
+            stat = self:findStatByStatId(stat_info.pvpStatID);
+
+            if stat ~= nil then
+                stat:setValue(stat_info.pvpStatValue);
+            end
+        end
     end
 
     return bit.band(bit.bnot(old_mask), self._mask);
-end
-
-function opvp.PvpPartyMember:_updateRatingGained()
-    if self:isRatingGainedKnown() == true then
-        return true;
-    end
-
-    if self:isGuidKnown() == false then
-        return false;
-    end
-
-    local info = C_PvP.GetScoreInfoByPlayerGuid(self:guid());
-
-    if info == nil then
-        return false;
-    end
-
-    self:_setRatingGain(
-        info.ratingChange,
-        info.postmatchMMR - info.prematchMMR
-    );
-
-    return true;
 end

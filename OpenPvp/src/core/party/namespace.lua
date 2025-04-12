@@ -50,6 +50,46 @@ local function opvp_party_member_cmp_by_role(a, b, lookup)
     end
 end
 
+local function opvp_party_member_cmp_by_stat_ascend(a, b, id)
+    local a_stat = a:findStatById(id);
+    local b_stat = b:findStatById(id);
+
+    if a_stat == nil or b_stat == nil then
+        return fals
+    end
+
+    local a_val = a_stat:value();
+    local b_val = b_stat:value();
+
+    if a_val > b_val then
+        return false;
+    elseif a_val < b_val then
+        return true;
+    else
+        return a:nameOrId() < b:nameOrId();
+    end
+end
+
+local function opvp_party_member_cmp_by_stat_descend(a, b, id)
+    local a_stat = a:findStatById(id);
+    local b_stat = b:findStatById(id);
+
+    if a_stat == nil or b_stat == nil then
+        return fals
+    end
+
+    local a_val = a_stat:value();
+    local b_val = b_stat:value();
+
+    if a_val < b_val then
+        return false;
+    elseif a_val > b_val then
+        return true;
+    else
+        return a:nameOrId() < b:nameOrId();
+    end
+end
+
 opvp.party = {};
 
 opvp.party.aboutToJoin = opvp.Signal("opvp.party.aboutToJoin");
@@ -217,6 +257,35 @@ function opvp.party.utils.sortMembersByRole(members, lookup)
             return opvp_party_member_cmp_by_role(a, b, lookup)
         end
     );
+
+    return result:release();
+end
+
+function opvp.party.utils.sortMembersByStat(members, id, order)
+    local result;
+
+    if opvp.IsInstance(members, opvp.List) == true then
+        result = opvp.List:createFromArray(members:items());
+    elseif opvp.is_table(members) == true then
+        result = opvp.List:createCopyFromArray(members);
+    else
+        --~ ERROR!
+        return {};
+    end
+
+    if order == opvp.SortOrder.ASCENDING then
+        result:sort(
+            function(a, b)
+                return opvp_party_member_cmp_by_stat_ascend(a, b, id)
+            end
+        );
+    else
+        result:sort(
+            function(a, b)
+                return opvp_party_member_cmp_by_stat_descend(a, b, id)
+            end
+        );
+    end
 
     return result:release();
 end

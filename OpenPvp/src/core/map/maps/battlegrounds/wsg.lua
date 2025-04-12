@@ -33,6 +33,10 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.WARSONG_GULCH,
             map_id       = 1339,
+            stats        = {
+                [opvp.PvpStatId.FLAG_CAPTURES] = 928,
+                [opvp.PvpStatId.FLAG_RETURNS]  = 929
+            },
             widgets      = {
                 {
                     widget_set  = 1,
@@ -54,6 +58,10 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.WARSONG_GULCH_CLASSIC,
             map_id       = 859,
+            stats        = {
+                [opvp.PvpStatId.FLAG_CAPTURES] = 42,
+                [opvp.PvpStatId.FLAG_RETURNS]  = 44
+            },
             widgets      = {}
         }
     );

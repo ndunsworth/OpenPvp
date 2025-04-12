@@ -55,14 +55,6 @@ opvp.WARLOCK       = 9;
 opvp.WARRIOR       = 1;
 opvp.MAX_CLASS     = 13;
 
-opvp.Sex = {
-    NONE    = Enum.UnitSex.None,
-    BOTH    = Enum.UnitSex.Both,
-    FEMALE  = Enum.UnitSex.Female,
-    MALE    = Enum.UnitSex.Male,
-    NEUTRAL = Enum.UnitSex.Neutral
-};
-
 opvp.DispellType = {
     NONE         = 0,
     BLEED        = 1,
@@ -73,18 +65,21 @@ opvp.DispellType = {
     POISON       = 6
 };
 
-opvp.SpellFlag = {
-    BLEED     = bit.lshift(1,  0),
-    BOSS      = bit.lshift(1,  1),
-    CURSE     = bit.lshift(1,  2),
-    DISEASE   = bit.lshift(1,  3),
-    ENRAGE    = bit.lshift(1,  4),
-    HARMFUL   = bit.lshift(1,  5),
-    HELPFUL   = bit.lshift(1,  6),
-    MAGIC     = bit.lshift(1,  7),
-    POISON    = bit.lshift(1,  8),
-    RAID      = bit.lshift(1,  9),
-    STEALABLE = bit.lshift(1, 10)
+opvp.LootMethod = {
+    FREE_FOR_ALL      = 1,
+    GROUP             = 2,
+    MASTER            = 3,
+    NEED_BEFORE_GREED = 4,
+    ROUNDROBIN        = 5
+};
+
+opvp.LootThreshold = {
+    POOR      = 0,
+    UNCOMMON  = 1,
+    RARE      = 2,
+    EPIC      = 3,
+    LEGENDARY = 4,
+    ARTIFACT  = 5
 };
 
 opvp.PowerType = {
@@ -148,22 +143,51 @@ opvp.PvpFlag = {
 };
 
 opvp.PvpStatId = {
-    ROUNDS_WON = 1015
+    NONE                  = 0,
+    AZERITE_COLLECTED     =  1,
+    BASES_ASSAULTED       =  2,
+    BASES_DEFENDED        =  3,
+    BUILDINGS_DESTROYED   =  4,
+    CARTS_CONTROLLED      =  5,
+    DEMOLISHERS_DESTROYED =  6,
+    FLAG_CAPTURES         =  7,
+    FLAG_RETURNS          =  8,
+    GATES_DESTROYED       =  9,
+    GRAVEYARDS_ASSAULTED  = 10,
+    GRAVEYARDS_DEFENDED   = 11,
+    ORB_POSSESSIONS       = 12,
+    ROUNDS_WON            = 13,
+    SECONDARY_OBJECTIVES  = 14,
+    TOWERS_ASSAULTED      = 15,
+    TOWERS_DEFENDED       = 16,
+    VICTORY_POINTS        = 17,
+    WALLS_DESTROYED       = 18
 };
 
-opvp.LootMethod = {
-    FREE_FOR_ALL      = 1,
-    GROUP             = 2,
-    MASTER            = 3,
-    NEED_BEFORE_GREED = 4,
-    ROUNDROBIN        = 5
+opvp.Sex = {
+    NONE    = Enum.UnitSex.None,
+    BOTH    = Enum.UnitSex.Both,
+    FEMALE  = Enum.UnitSex.Female,
+    MALE    = Enum.UnitSex.Male,
+    NEUTRAL = Enum.UnitSex.Neutral
 };
 
-opvp.LootThreshold = {
-    POOR      = 0,
-    UNCOMMON  = 1,
-    RARE      = 2,
-    EPIC      = 3,
-    LEGENDARY = 4,
-    ARTIFACT  = 5
+opvp.SortOrder = {
+    NONE       = 0,
+    ASCENDING  = 1,
+    DESCENDING = 2
+};
+
+opvp.SpellFlag = {
+    BLEED     = bit.lshift(1,  0),
+    BOSS      = bit.lshift(1,  1),
+    CURSE     = bit.lshift(1,  2),
+    DISEASE   = bit.lshift(1,  3),
+    ENRAGE    = bit.lshift(1,  4),
+    HARMFUL   = bit.lshift(1,  5),
+    HELPFUL   = bit.lshift(1,  6),
+    MAGIC     = bit.lshift(1,  7),
+    POISON    = bit.lshift(1,  8),
+    RAID      = bit.lshift(1,  9),
+    STEALABLE = bit.lshift(1, 10)
 };

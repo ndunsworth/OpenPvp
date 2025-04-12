@@ -75,7 +75,7 @@ function opvp.MatchTest:init()
     self._dampening_timer  = opvp.Timer(5);
 
     self._warmup_timer:setTriggerLimit(4);
-    self._dampening_timer:setTriggerLimit(4);
+    self._dampening_timer:setTriggerLimit(10);
 
     self._active_timer.timeout:connect(self, self._onMatchRoundActiveTimer);
     self._warmup_timer.timeout:connect(self, self._onMatchRoundWarmupTimer);
@@ -94,16 +94,17 @@ function opvp.MatchTest:initialize(pvpType, map, pvpFlags, simulate)
         return;
     end
 
+    pvpFlags = opvp.number_else(pvpFlags, 0)
+
     local queue;
 
     if pvpType == opvp.PvpType.ARENA then
-        if (
-            opvp.is_number(pvpFlags) == true and
-            bit.band(pvpFlags, opvp.PvpFlag.SHUFFLE) ~= 0
-        ) then
+        if bit.band(pvpFlags, opvp.PvpFlag.SHUFFLE) ~= 0 then
             queue = opvp.Queue.SHUFFLE
+        elseif bit.band(pvpFlags, opvp.PvpFlag.SKIRMISH) ~= 0 then
+            queue = opvp.Queue.ARENA_SKIRMISH;
         else
-            queue = opvp.Queue.ARENA_SKIRMISH
+            queue = opvp.Queue.ARENA_3V3;
         end
     else
         local info = opvp.queue.manager():_findBattlegroundInfo(map:name());
@@ -148,6 +149,10 @@ function opvp.MatchTest:outcome()
     return self._outcome_status, self._outcome_team;
 end
 
+function opvp.MatchTest:outcomeTeam()
+    return self._outcome_team;
+end
+
 function opvp.MatchTest:start()
     if (
         self._match ~= nil and
@@ -187,6 +192,18 @@ function opvp.MatchTest:stop()
     self._active           = false;
     self._outcome_status   = opvp.MatchWinner.WON;
     self._outcome_team     = nil;
+end
+
+function opvp.MatchTest:timeElapsed()
+    if self._time_started > 0 then
+        return GetTime() - self._time_started;
+    else
+        return 0;
+    end
+end
+
+function opvp.MatchTest:timeStarted()
+    return self._time_started;
 end
 
 function opvp.MatchTest:_onMatchComplete()
@@ -304,15 +321,15 @@ function opvp.MatchTest:_onMatchRoundActive()
 end
 
 function opvp.MatchTest:_onMatchRoundDampeningTimer()
-    local dampening = self._match:dampening();
+    local dampening = self._match:dampening() * 100;
 
     if dampening == 0 then
-        dampening = 0.1;
+        dampening = 10;
     else
-        dampening = dampening + 0.1;
+        dampening = dampening + 10;
     end
 
-    self._match:_setDampening(dampening);
+    self._match:_setDampening(dampening / 100);
 end
 
 function opvp.MatchTest:_onMatchRoundActiveTimer()
@@ -403,10 +420,14 @@ function opvp.MatchTest:_onMatchRoundComplete()
 end
 
 function opvp.MatchTest:_onMatchRoundWarmup()
+    self._time_started = GetTime();
+
     self._match:_onMatchStateChanged(
         opvp.MatchStatus.ROUND_WARMUP,
         self._match:statusNext()
     );
+
+    opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();
 
     if self:isSimulation() == true then
         self._countdown_active = true;

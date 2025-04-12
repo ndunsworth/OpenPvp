@@ -28,20 +28,28 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local function init_map()
-    opvp.Map.TWIN_PEAKS = opvp.Map(
-        {
-            instance_id  = opvp.InstanceId.TWIN_PEAKS,
-            map_id       = 206,
-            stats        = {
-                [opvp.PvpStatId.FLAG_CAPTURES] = 290,
-                [opvp.PvpStatId.FLAG_RETURNS]  = 291
-            },
-            widgets      = {}
-        }
-    );
+opvp.MatchStat = opvp.CreateClass();
 
-    table.insert(opvp.Map.MAPS, opvp.Map.TWIN_PEAKS);
+function opvp.MatchStat:init(id, statId)
+    self._id      = id;
+    self._stat_id = statId;
+    self._value   = 0;
 end
 
-opvp.OnAddonLoad:register(init_map);
+function opvp.MatchStat:id()
+    return self._id;
+end
+
+function opvp.MatchStat:setValue(value)
+    assert(opvp.is_number(value));
+
+    self._value = value;
+end
+
+function opvp.MatchStat:value()
+    return self._value;
+end
+
+function opvp.MatchStat:statId()
+    return self._stat_id;
+end

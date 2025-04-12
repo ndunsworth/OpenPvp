@@ -48,7 +48,8 @@ function opvp.ShuffleMatch:init(queue, description)
                     bit.bor(
                         opvp.PartyMember.PLAYER_FLAG,
                         opvp.PartyMember.RATING_CURRENT_FLAG,
-                        opvp.PartyMember.RATING_GAIN_FLAG
+                        opvp.PartyMember.RATING_GAIN_FLAG,
+                        opvp.PartyMember.SCORE_FLAG
                     )
                 )
             )
@@ -249,99 +250,75 @@ function opvp.ShuffleMatch:_onMatchRoundWarmup()
 end
 
 function opvp.ShuffleMatch:_onOutcomeReady(outcomeType)
-    if outcomeType == opvp.MatchOutcomeType.ROUND then
-        opvp.GenericMatch._onOutcomeReady(self, outcomeType);
+    opvp.GenericMatch._onOutcomeReady(self, outcomeType);
 
+    if outcomeType == opvp.MatchOutcomeType.ROUND then
         return;
     end
-
-    opvp.GenericMatch._onOutcomeReady(self, outcomeType);
 
     local members = opvp.List();
 
     members:merge(self:teammates());
     members:merge(self:opponents());
 
-    members = opvp.party.utils.sortMembersByRole(members);
+    members = opvp.party.utils.sortMembersByStat(
+        members,
+        opvp.PvpStatId.ROUNDS_WON,
+        opvp.SortOrder.DESCENDING
+    );
 
     local member;
     local score_info;
     local cls;
     local spec;
     local wins;
+    local stat;
     local do_msg = opvp.options.announcements.match.scorePlayerRatings:value();
 
-    if self:isTest() == true then
-        for n=1, #members do
-            member = members[n];
-            cls = member:classInfo();
-            spec = member:specInfo();
+    for n=1, #members do
+        member = members[n];
+        cls = member:classInfo();
+        spec = member:specInfo();
 
-            opvp.printMessageOrDebug(
-                do_msg,
-                opvp.strs.MATCH_SCORE_SHUFFLE,
-                member:nameOrId(),
-                cls:color():GenerateHexColor(),
-                spec:name(),
-                cls:name(),
+        stat = member:findStatById(opvp.PvpStatId.ROUNDS_WON);
+
+        if stat ~= nil then
+            wins = stat:value();
+        else
+            wins = 0;
+        end
+
+        opvp.printMessageOrDebug(
+            do_msg,
+            opvp.strs.MATCH_SCORE_SHUFFLE,
+            member:nameOrId(),
+            cls:color():GenerateHexColor(),
+            spec:name(),
+            cls:name(),
+            wins,
+            member:cr(),
+            member:cr() + member:crGain(),
+            opvp.utils.colorNumberPosNeg(
+                member:crGain(),
+                0.25,
                 1,
-                0,
-                0,
-                "0",
-                0,
-                0,
-                "0"
-            );
-        end
-    else
-        for n=1, #members do
-            member = members[n];
-
-            score_info = C_PvP.GetScoreInfoByPlayerGuid(member:guid());
-
-            if score_info ~= nil then
-                cls = member:classInfo();
-                spec = member:specInfo();
-
-                if score_info.stats ~= nil and #score_info.stats > 0 then
-                    wins = score_info.stats[1].pvpStatValue;
-                else
-                    wins = 0;
-                end
-
-                opvp.printMessageOrDebug(
-                    do_msg,
-                    opvp.strs.MATCH_SCORE_SHUFFLE,
-                    member:nameOrId(),
-                    cls:color():GenerateHexColor(),
-                    spec:name(),
-                    cls:name(),
-                    wins,
-                    score_info.rating,
-                    score_info.rating + score_info.ratingChange,
-                    opvp.utils.colorNumberPosNeg(
-                        score_info.ratingChange,
-                        0.25,
-                        1,
-                        0.25,
-                        1,
-                        0.25,
-                        0.25
-                    ),
-                    score_info.prematchMMR,
-                    score_info.postmatchMMR,
-                    opvp.utils.colorNumberPosNeg(
-                        score_info.postmatchMMR - score_info.prematchMMR,
-                        0.25,
-                        1,
-                        0.25,
-                        1,
-                        0.25,
-                        0.25
-                    )
-                );
-            end
-        end
+                0.25,
+                1,
+                0.25,
+                0.25
+            ),
+            member:mmr(),
+            member:mmr() + member:mmrGain(),
+            opvp.utils.colorNumberPosNeg(
+                member:mmrGain(),
+                0.25,
+                1,
+                0.25,
+                1,
+                0.25,
+                0.25
+            )
+        );
     end
 end
 
@@ -350,7 +327,7 @@ function opvp.ShuffleMatch:_onScoreUpdate()
 
     opvp.GenericMatch._onScoreUpdate(self);
 
-    if self:isComplete() == true then
+    if self:isComplete() == true and self:isOutcomeFinal() == false then
         self:_updateMatchOutcome();
     end
 end

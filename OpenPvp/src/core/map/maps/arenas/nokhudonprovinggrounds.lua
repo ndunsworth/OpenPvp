@@ -33,6 +33,9 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.NOKHUDON_PROVING_GROUNDS,
             map_id       = 0,
+            stats        = {
+                [opvp.PvpStatId.ROUNDS_WON] = 1018
+            },
             widgets      = {
                 {
                     widget_set  = 1,

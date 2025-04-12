@@ -33,6 +33,9 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.EYE_OF_THE_STORM,
             map_id       = 122,
+            stats        = {
+                [opvp.PvpStatId.FLAG_CAPTURES] = 183
+            },
             widgets      = {}
         }
     );
@@ -41,6 +44,12 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.EYE_OF_THE_STORM_RATED,
             map_id       = 397,
+            stats        = {
+                battleground  = {
+                    [opvp.PvpStatId.BASES_ASSAULTED] = 391,
+                    [opvp.PvpStatId.FLAG_CAPTURES]   = 393
+                }
+            },
             widgets      = {}
         }
     );
