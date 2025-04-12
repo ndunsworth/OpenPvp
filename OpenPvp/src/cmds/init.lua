@@ -172,6 +172,8 @@ local function opvp_init_test_slash_cmds()
     test_cmd:addCommand(
         opvp.FuncAddonCommand(
             function(editbox, args)
+                args = opvp.AddonCommand:splitArgs(args, true);
+
                 local mgr = opvp.match.manager();
 
                 if mgr:isTesting() == true then
@@ -184,13 +186,18 @@ local function opvp_init_test_slash_cmds()
                     end
                 end
 
-                local map = bg_maps[math.random(1, #arena_maps)];
-                local simulate = string.lower(args) == "simulate";
+                local map = arena_maps[math.random(1, #arena_maps)];
+                local simulate = opvp.utils.table.contains(args, "simulate");
+                local mask = 0;
+
+                if opvp.utils.table.contains(args, "skirmish") == true then
+                    mask = opvp.PvpFlag.SKIRMISH;
+                end
 
                 mgr:beginTest(
                     opvp.PvpType.ARENA,
                     map,
-                    0,
+                    mask,
                     simulate
                 );
             end,
@@ -244,7 +251,7 @@ local function opvp_init_test_slash_cmds()
                     end
                 end
 
-                local map = bg_maps[math.random(1, #arena_maps)];
+                local map = arena_maps[math.random(1, #arena_maps)];
                 local simulate = string.lower(args) == "simulate";
 
                 mgr:beginTest(
