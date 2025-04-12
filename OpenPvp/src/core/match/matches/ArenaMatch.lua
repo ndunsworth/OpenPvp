@@ -141,8 +141,8 @@ function opvp.ArenaMatch:_onOutcomeReady(outcomeType)
                 cls:name(),
                 member:kills(),
                 member:deaths(),
-                BreakUpLargeNumbers(member:damage()),
-                BreakUpLargeNumbers(member:healing())
+                opvp.utils.numberToStringShort(member:damage(), 1),
+                opvp.utils.numberToStringShort(member:healing(), 1)
             );
         end
     else
