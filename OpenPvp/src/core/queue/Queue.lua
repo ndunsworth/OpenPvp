@@ -324,10 +324,18 @@ function opvp.Queue:_logStatus(newStatus, oldStatus, elapsed, estimate, override
         end
     elseif newStatus == opvp.QueueStatus.READY then
         if elapsed > 1 then
-            msg = opvp.strs.QUEUE_READY_WITH_WAIT_TIME:format(
-                self:name(),
-                opvp.time.formatSeconds(elapsed)
-            );
+            if self._ready_check_attempts > 0 then
+                msg = opvp.strs.QUEUE_READY_WITH_WAIT_TIME_FAILED:format(
+                    self:name(),
+                    opvp.time.formatSeconds(elapsed),
+                    self._ready_check_attempts
+                );
+            else
+                msg = opvp.strs.QUEUE_READY_WITH_WAIT_TIME:format(
+                    self:name(),
+                    opvp.time.formatSeconds(elapsed)
+                );
+            end
         else
             msg = opvp.strs.QUEUE_READY:format(self:name());
         end
@@ -357,7 +365,6 @@ end
 
 function opvp.Queue:_onReadyCheckBegin()
     self._ready_check = true;
-    self._ready_check_attempts = self._ready_check_attempts + 1;
 
     if self._ready_check_accepted > 0 then
         opvp.printMessageOrDebug(
@@ -378,6 +385,8 @@ function opvp.Queue:_onReadyCheckEnd()
     if self._ready_check_declined == 0 then
         msg = opvp.strs.QUEUE_READY_CHECK;
     else
+        self._ready_check_attempts = self._ready_check_attempts + 1;
+
         msg = opvp.strs.QUEUE_READY_CHECK_FAILED;
     end
 

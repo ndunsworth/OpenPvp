@@ -153,6 +153,8 @@ opvp.locale.enUS = {
     MATCH_PLAYER_LEAVE_WITH_SPEC      = "Match | %s Left - %s (|c%s%s %s|r)",
     MATCH_PLAYER_SPEC_CHANGED         = "Match | %s Spec - %s (|c%s%s %s|r)",
 
+    MATCH_SCORE_ARENA                 = "Match Score | %s (|c%s%s %s|r) - kb=%d, deaths=%d, dmg=%s, healing=%s",
+    MATCH_SCORE_ARENA_RATED           = "Match Score | %s (|c%s%s %s|r) - cr=%d/%d/%s, mmr=%d/%d/%s",
     MATCH_SCORE_SHUFFLE               = "Match Score | %s (|c%s%s %s|r) - wins=%d, cr=%d/%d/%s, mmr=%d/%d/%s",
 
     MATCH_FEATURE_ACTIVATED           = "Match | Feature - %s (activated)",
@@ -219,6 +221,7 @@ opvp.locale.enUS = {
     QUEUE_CANCELED_WITH_WAIT_TIME     = "Queue | Canceled - %s (%s in queue)",
     QUEUE_READY                       = "Queue | Ready - %s",
     QUEUE_READY_WITH_WAIT_TIME        = "Queue | Ready - %s (%s in queue)",
+    QUEUE_READY_WITH_WAIT_TIME_FAILED = "Queue | Ready - %s (%s in queue, %d failed attempts)",
     QUEUE_READY_CHECK                 = "Queue | Ready Check - %s (%d/%d)",
     QUEUE_READY_CHECK_FAILED          = "Queue | Ready Check - %s (%d/%d) Failed",
     QUEUE_REJOINED                    = "Queue | Rejoined - %s",
