@@ -289,6 +289,7 @@ src/core/queue/queues/RandomBattlegroundQueue.lua
 src/core/queue/queues/RatedQueue.lua
 
 src/core/party/Party.lua
+src/core/Party/PartyCombatLogFilter.lua
 src/core/party/PartyManager.lua
 src/core/party/PartyMember.lua
 src/core/party/PartyMemberFactory.lua

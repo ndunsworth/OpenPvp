@@ -33,10 +33,11 @@ opvp.GenericPartyMemberProvider = opvp.CreateClass(opvp.PartyMemberProvider);
 function opvp.GenericPartyMemberProvider:init()
     opvp.PartyMemberProvider.init(self);
 
-    self._members   = opvp.List();
-    self._cache     = opvp.List();
-    self._player    = nil;
-    self._leader    = nil;
+    self._combat_log_filter = opvp.PartyCombatLogFilter(self);
+    self._members           = opvp.List();
+    self._cache             = opvp.List();
+    self._player            = nil;
+    self._leader            = nil;
 end
 
 function opvp.GenericPartyMemberProvider:findMemberByGuid(guid)
@@ -298,7 +299,32 @@ function opvp.GenericPartyMemberProvider:_memberInspect(member)
     end
 end
 
+function opvp.GenericPartyMemberProvider:_onCombatLogEventFriendly(event)
+    --~ opvp.printDebug(
+        --~ "opvp.GenericPartyMemberProvider:_onCombatLogEventFriendly, %s",
+        --~ event.subevent
+    --~ );
+end
+
+function opvp.GenericPartyMemberProvider:_onCombatLogEventHostile(event)
+    --~ opvp.printDebug(
+        --~ "opvp.GenericPartyMemberProvider:_onCombatLogEventHostile, %s",
+        --~ event.subevent
+    --~ );
+end
+
+function opvp.GenericPartyMemberProvider:_onCombatLogEventOther(event)
+    --~ opvp.printDebug(
+        --~ "opvp.GenericPartyMemberProvider:_onCombatLogEventOther, %s",
+        --~ event.subevent
+    --~ );
+end
+
 function opvp.GenericPartyMemberProvider:_onConnected()
+    --~ if self:isTest() == false then
+        self._combat_log_filter:connect();
+    --~ end
+
     if self:hasPlayer() == true then
         if self._player == nil then
             self._player = self:_createMember("player", opvp.player.guid());
@@ -328,6 +354,12 @@ function opvp.GenericPartyMemberProvider:_onConnected()
     end
 
     opvp.PartyMemberProvider._onConnected(self);
+end
+
+function opvp.GenericPartyMemberProvider:_onDisconnected()
+    self._combat_log_filter:disconnect();
+
+    opvp.PartyMemberProvider._onDisconnected(self);
 end
 
 function opvp.GenericPartyMemberProvider:_onGroupLeaderChanged()

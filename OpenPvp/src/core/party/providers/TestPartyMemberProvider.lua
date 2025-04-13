@@ -175,7 +175,7 @@ function opvp.TestPartyMemberProvider:_memberInspect(member)
 end
 
 function opvp.TestPartyMemberProvider:_onConnected()
-    opvp.PartyMemberProvider._onConnected(self);
+    opvp.GenericPartyMemberProvider._onConnected(self);
 
     self._fake_chars = opvp.List:createFromArray(
         {

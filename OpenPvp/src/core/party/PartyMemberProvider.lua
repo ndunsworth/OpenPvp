@@ -39,7 +39,6 @@ function opvp.PartyMemberProvider:init()
     self._hostile       = false;
     self._factory       = opvp.PartyMemberFactory(opvp.PartyMemberFactoryCache(40));
     self._owns_factory  = true;
-    self._members       = opvp.List();
 
     self.connected         = opvp.Signal("opvp.PartyMemberProvider.connected");
     self.disconnecting     = opvp.Signal("opvp.PartyMemberProvider.disconnecting");
@@ -272,6 +271,28 @@ function opvp.PartyMemberProvider:_memberFactory()
 end
 
 function opvp.PartyMemberProvider:_memberInspect(member)
+end
+
+function opvp.PartyMemberProvider:_onCombatLogEvent(event)
+    if event:isSrcFriendly() == true then
+        self:_onCombatLogEventFriendly(event);
+    elseif event:isSrcHostile() == true then
+        self:_onCombatLogEventHostile(event);
+    else
+        self:_onCombatLogEventOther(event);
+    end
+end
+
+function opvp.PartyMemberProvider:_onCombatLogEventFriendly(event)
+
+end
+
+function opvp.PartyMemberProvider:_onCombatLogEventHostile(event)
+
+end
+
+function opvp.PartyMemberProvider:_onCombatLogEventOther(event)
+
 end
 
 function opvp.PartyMemberProvider:_onConnected()

@@ -72,6 +72,27 @@ function opvp.PvpPartyMemberProvider:_disconnectSignals()
     opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
 end
 
+function opvp.PvpPartyMemberProvider:_onCombatLogEventFriendly(event)
+    --~ opvp.printDebug(
+        --~ "opvp.PvpPartyMemberProvider:_onCombatLogEventFriendly, %s",
+        --~ event.subevent
+    --~ );
+end
+
+function opvp.PvpPartyMemberProvider:_onCombatLogEventHostile(event)
+    --~ opvp.printDebug(
+        --~ "opvp.PvpPartyMemberProvider:_onCombatLogEventHostile, %s",
+        --~ event.subevent
+    --~ );
+end
+
+function opvp.PvpPartyMemberProvider:_onCombatLogEventOther(event)
+    --~ opvp.printDebug(
+        --~ "opvp.PvpPartyMemberProvider:_onCombatLogEventOther, %s",
+        --~ event.subevent
+    --~ );
+end
+
 function opvp.PvpPartyMemberProvider:_onConnected()
     self._match = opvp.match.current();
 
