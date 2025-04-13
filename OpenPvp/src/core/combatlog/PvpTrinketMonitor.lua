@@ -75,7 +75,7 @@ function opvp.PvpTrinketMonitor:init()
         op
     );
 
-    local player = opvp.player.instance();
+    --~ local player = opvp.player.instance();
 
     --~ player.inSanctuaryChanged:connect(self, self._onSanctuaryChanged);
 
