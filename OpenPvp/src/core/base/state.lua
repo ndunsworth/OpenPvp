@@ -72,7 +72,12 @@ local function opvp_state_db_on_logout()
 end
 
 local function opvp_state_db_ctor()
-    opvp_state_db_singleton = opvp.RootOption("OpenPvp", "OpenPvp");
+    opvp_state_db_singleton = opvp.RootOption(
+        "OpenPvp",
+        "OpenPvp",
+        "",
+        opvp.VERSION
+    );
 
     opvp.event.PLAYER_LOGIN:connect(opvp_state_db_on_login);
 
