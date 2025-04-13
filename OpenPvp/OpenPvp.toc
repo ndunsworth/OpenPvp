@@ -233,6 +233,7 @@ src/core/option/OptionDatabase.lua
 src/core/combatlog/CombatLogLogicalOp.lua
 src/core/combatlog/CombatLogLogicalOpCondition.lua
 
+src/core/combatlog/namespace.lua
 src/core/combatlog/CompareCombatLogCondition.lua
 src/core/combatlog/SpellIdCombatLogCondition.lua
 src/core/combatlog/SubEventCombatLogCondition.lua

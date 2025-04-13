@@ -122,7 +122,7 @@ function opvp.private.EmoteKillingBlowSoundEffect:init(option)
 
     local op = opvp.CombatLogLogicalOp();
 
-    op:addCondition(opvp.SubEventCombatLogCondition("PARTY_KILL"));
+    op:addCondition(opvp.SubEventCombatLogCondition(opvp.combatlog.PARTY_KILL));
 
     op:addCondition(
         opvp.TargetFlagsCombatLogCondition(

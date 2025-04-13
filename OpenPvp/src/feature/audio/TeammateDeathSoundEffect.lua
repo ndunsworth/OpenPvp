@@ -38,7 +38,7 @@ function opvp.private.TeammateDeathSoundEffect:init()
 
     --~ local op = opvp.CombatLogLogicalOp();
 
-    --~ op:addCondition(opvp.SubEventCombatLogCondition("UNIT_DIED"));
+    --~ op:addCondition(opvp.SubEventCombatLogCondition(opvp.combatlog.UNIT_DIED));
 
     --~ op:addCondition(
         --~ opvp.TargetFlagsCombatLogCondition(

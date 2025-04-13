@@ -54,7 +54,9 @@ function opvp.PvpTrinketMonitor:init()
 
     local op = opvp.CombatLogLogicalOp();
 
-    op:addCondition(opvp.SubEventCombatLogCondition("SPELL_CAST_SUCCESS"));
+    op:addCondition(
+        opvp.SubEventCombatLogCondition(opvp.combatlog.SPELL_CAST_SUCCESS)
+    );
 
     op:addCondition(
         opvp.TargetFlagsCombatLogCondition(

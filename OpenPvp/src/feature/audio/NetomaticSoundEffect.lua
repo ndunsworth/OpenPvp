@@ -35,8 +35,8 @@ function opvp.private.NetomaticSoundEffect:init(option)
 
     local event_op = opvp.CombatLogLogicalOp(opvp.CombatLogLogicalOp.OR);
 
-    event_op:addCondition(opvp.SubEventCombatLogCondition("SPELL_CAST_START"));
-    event_op:addCondition(opvp.SubEventCombatLogCondition("SPELL_CAST_SUCCESS"));
+    event_op:addCondition(opvp.SubEventCombatLogCondition(opvp.combatlog.SPELL_CAST_START));
+    event_op:addCondition(opvp.SubEventCombatLogCondition(opvp.combatlog.SPELL_CAST_SUCCESS));
 
     local op = opvp.CombatLogLogicalOp();
 
