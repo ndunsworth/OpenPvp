@@ -294,9 +294,9 @@ function opvp.party.utils.token(category)
     local party_type = opvp.party.utils.type(category);
 
     if party_type == opvp.PartyType.RAID then
-        return "raid";
+        return RAID;
     elseif party_type == opvp.PartyType.PARTY then
-        return "party";
+        return PARTY;
     else
         return "";
     end
