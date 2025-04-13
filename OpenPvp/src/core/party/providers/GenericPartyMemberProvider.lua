@@ -321,9 +321,9 @@ function opvp.GenericPartyMemberProvider:_onCombatLogEventOther(event)
 end
 
 function opvp.GenericPartyMemberProvider:_onConnected()
-    --~ if self:isTest() == false then
+    if self:isTest() == false then
         self._combat_log_filter:connect();
-    --~ end
+    end
 
     if self:hasPlayer() == true then
         if self._player == nil then
