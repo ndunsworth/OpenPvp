@@ -202,7 +202,11 @@ function opvp.Queue:queueTime()
 end
 
 function opvp.Queue:queueTimeElapsed()
-    return 0;
+    if self._queue_time > 0 then
+        return GetTime() - self._queue_time;
+    else
+        return 0;
+    end
 end
 
 function opvp.Queue:queueTimeEstimated()

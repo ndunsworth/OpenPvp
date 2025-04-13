@@ -130,53 +130,6 @@ function opvp.PvpQueue:pvpType()
     return self._type;
 end
 
-function opvp.PvpQueue:queueTime()
-    return self._queue_time;
-end
-
-function opvp.PvpQueue:queueTimeElapsed()
-    if self._status == opvp.QueueStatus.QUEUED and self._queue_index ~= 0 then
-        local wait_time;
-
-        if self:isLFG() == true then
-            local hasData,
-            leaderNeeds,
-            tankNeeds,
-            healerNeeds,
-            dpsNeeds,
-            totalTanks,
-            totalHealers,
-            totalDPS,
-            instanceType,
-            instanceSubType,
-            instanceName,
-            averageWait,
-            tankWait,
-            healerWait,
-            dpsWait,
-            myWait,
-            queuedTime,
-            activeID = GetLFGQueueStats(LE_LFG_CATEGORY_BATTLEFIELD);
-
-            if queuedTime ~= nil then
-                wait_time = GetTime() - queuedTime;
-            end
-        else
-            wait_time = GetBattlefieldTimeWaited(self._queue_index) / 1000;
-        end
-
-        if opvp.is_number(wait_time) == true then
-            return wait_time;
-        else
-            return 0
-        end
-    elseif self._queue_time ~= 0 then
-        return GetTime() - self._queue_time;
-    end
-
-    return 0;
-end
-
 function opvp.PvpQueue:queueTimeEstimated()
     if self._status == opvp.QueueStatus.QUEUED and self._queue_index ~= 0 then
         if self:isLFG() == true then
@@ -289,14 +242,10 @@ function opvp.PvpQueue:_onStatusChanged(index, status)
     end
 
     local old_status = self._status;
-    local elapsed = 0;
+    local elapsed = self:queueTimeElapsed();
     local estimate = 0;
 
     if old_status ~= opvp.QueueStatus.NOT_QUEUED then
-        if self._queue_time > 0 then
-            elapsed = GetTime() - self._queue_time;
-        end
-
         estimate = self:queueTimeEstimated();
     end
 
@@ -341,11 +290,13 @@ function opvp.PvpQueue:_onStatusChanged(index, status)
         if status == opvp.QueueStatus.ROLE_CHECK then
             self:_setStatus(opvp.QueueStatus.ROLE_CHECK);
         elseif status == opvp.QueueStatus.QUEUED then
-            if self._status ~= opvp.QueueStatus.ACTIVE then
-                self:_setStatus(opvp.QueueStatus.QUEUED);
-            else
+            --~ stupid when a bg is finished it goes from active to
+            --~ queued again that or i have a bug :x
+            if self._status == opvp.QueueStatus.ACTIVE then
                 return;
             end
+
+            self:_setStatus(opvp.QueueStatus.QUEUED);
         elseif status == opvp.QueueStatus.ACTIVE then
             self:_setStatus(opvp.QueueStatus.ACTIVE);
         elseif status == opvp.QueueStatus.READY then
