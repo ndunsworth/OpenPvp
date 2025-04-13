@@ -32,6 +32,10 @@ opvp.NEUTRAL  = 0;
 opvp.ALLIANCE = 1;
 opvp.HORDE    = 2;
 
+local opvp_faction_pvp_warn;
+local opvp_faction_sound_bg_loss;
+local opvp_faction_sound_bg_win;
+
 opvp.Faction = opvp.CreateClass();
 
 function opvp.Faction:fromGUID(guid)
@@ -80,23 +84,15 @@ function opvp.Faction:init(id, name)
 end
 
 function opvp.Faction:battlegroundLostSound()
-    if self._id == opvp.ALLIANCE then
-        return 8454;
-    elseif self._id == opvp.HORDE then
-        return 8455;
-    else
-        return 0;
-    end
+    return opvp_faction_sound_bg_loss:sound(self._id);
 end
 
 function opvp.Faction:battlegroundWinSound()
-    if self._id == opvp.ALLIANCE then
-        return 8455;
-    elseif self._id == opvp.HORDE then
-        return 8454;
-    else
-        return 0;
-    end
+    return opvp_faction_sound_bg_win:sound(self._id);
+end
+
+function opvp.Faction:pvpWarningSound()
+    return opvp_faction_pvp_warn:sound(self._id);
 end
 
 function opvp.Faction:instance()
@@ -132,3 +128,22 @@ end
 function opvp.Faction:name()
     return self._name;
 end
+
+local function opvp_faction_sounds_init()
+    opvp_faction_pvp_warn = opvp.FactionSound(
+        opvp.SoundKitSound(8456),
+        opvp.SoundKitSound(8457)
+    );
+
+    opvp_faction_sound_bg_loss = opvp.FactionSound(
+        opvp.SoundKitSound(8454),
+        opvp.SoundKitSound(8455)
+    );
+
+    opvp_faction_sound_bg_win = opvp.FactionSound(
+        opvp.SoundKitSound(8455),
+        opvp.SoundKitSound(8454)
+    );
+end
+
+opvp.OnAddonLoad:register(opvp_faction_sounds_init);

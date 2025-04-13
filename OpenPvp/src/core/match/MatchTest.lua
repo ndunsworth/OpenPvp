@@ -230,9 +230,7 @@ function opvp.MatchTest:_onMatchComplete()
                 sound = opvp.player.factionInfo():battlegroundLostSound();
             end
 
-            if sound ~= nil then
-                PlaySound(sound, opvp.SoundChannel.SFX);
-            end
+            sound:play(opvp.SoundChannel.SFX);
         end
     end
 end
