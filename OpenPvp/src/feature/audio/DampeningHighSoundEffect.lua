@@ -84,15 +84,15 @@ function opvp.private.DampeningHighSoundEffect:_onDampeningUpdate(value)
 end
 
 function opvp.effect.dampeningHigh(faction)
-    local sound_id;
+    local sound = opvp.Faction:fromId(faction):pvpWarningSound();
 
     if faction == opvp.ALLIANCE then
-        sound_id = 8456;
+        sound = opvp.Faction.ALLIANCE:pvpWarningSound();
     else
-        sound_id = 8457;
+        sound = opvp.Faction.HORDE:pvpWarningSound();
     end
 
-    PlaySound(sound_id, opvp.SoundChannel.SFX);
+    sound:play(opvp.SoundChannel.SFX);
 end
 
 local function opvp_damp_high_sound_effect_sample(button, state)
