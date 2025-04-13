@@ -150,23 +150,23 @@ function opvp.Match:statusFromActiveMatchState()
     return opvp.match.utils.state();
 end
 
-function opvp.Match:init(queue, description)
-    self._queue           = queue;
-    self._desc            = description;
-    self._status          = opvp.MatchStatus.INACTIVE;
-    self._enter_in_prog   = false;
-    self._surrendered     = false;
-    self._testing         = opvp.MatchTestType.NONE;
-    self._dampening       = 0;
-    self._countdown       = false;
-    self._countdown_time  = 0;
-    self._countdown_timer = opvp.Timer(1);
-    self._round_results   = false;
+function opvp.Match:init(queue, description, testType)
+    self._queue             = queue;
+    self._desc              = description;
+    self._status            = opvp.MatchStatus.INACTIVE;
+    self._enter_in_prog     = false;
+    self._surrendered       = false;
+    self._testing           = testType;
+    self._dampening         = 0;
+    self._countdown         = false;
+    self._countdown_time    = 0;
+    self._countdown_timer   = opvp.Timer(1);
+    self._round_results     = false;
 
-    self._outcome         = opvp.MatchWinner.NONE;
-    self._outcome_valid   = false;
-    self._outcome_final   = false;
-    self._outcome_team    = nil;
+    self._outcome           = opvp.MatchWinner.NONE;
+    self._outcome_valid     = false;
+    self._outcome_final     = false;
+    self._outcome_team      = nil;
 
     self._countdown_timer.timeout:connect(self, self._countdownUpdate);
 end
@@ -518,7 +518,9 @@ function opvp.Match:_close()
 
     self._countdown_timer:stop();
 
-    self._outcome_team = nil;
+    self._queue           = nil;
+    self._desc            = nil;
+    self._outcome_team    = nil;
 end
 
 function opvp.Match:_countdownCancel()

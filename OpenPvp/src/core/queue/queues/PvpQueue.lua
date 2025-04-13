@@ -173,7 +173,7 @@ function opvp.PvpQueue:teamSizeMinimum()
     return self:teamSizeMaximum();
 end
 
-function opvp.PvpQueue:_createMatch(map, isTest)
+function opvp.PvpQueue:_createMatch(map, testType)
     if map == nil or map:isValid() == false then
         return nil;
     end
@@ -181,7 +181,7 @@ function opvp.PvpQueue:_createMatch(map, isTest)
     local desc = self:_createMatchDescription(map);
 
     if desc ~= nil then
-        return desc:createMatch(self);
+        return desc:createMatch(self, testType);
     else
         return nil;
     end

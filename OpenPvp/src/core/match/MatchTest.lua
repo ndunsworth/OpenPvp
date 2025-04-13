@@ -118,16 +118,16 @@ function opvp.MatchTest:initialize(pvpType, map, pvpFlags, simulate)
         queue:_setInfo(info);
     end
 
-    self._match = queue:_createMatch(map, true);
-
-    if self._match == nil then
-        return;
-    end
-
     if simulate == true then
         self._test_type = opvp.MatchTestType.SIMULATION;
     else
         self._test_type = opvp.MatchTestType.FEATURE;
+    end
+
+    self._match = queue:_createMatch(map, self._test_type);
+
+    if self._match == nil then
+        return;
     end
 
     self._active = true;
@@ -236,8 +236,6 @@ function opvp.MatchTest:_onMatchComplete()
 end
 
 function opvp.MatchTest:_onMatchEntered()
-    self._match._testing = self._test_type;
-
     if self:isSimulation() == true then
         opvp.notify.pvp(
             opvp.strs.MATCH_TEST_BEGIN_HEADER,

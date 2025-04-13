@@ -30,12 +30,14 @@ local opvp = OpenPvp;
 
 opvp.ArenaMatch = opvp.CreateClass(opvp.GenericMatch);
 
-function opvp.ArenaMatch:init(queue, description)
-    opvp.GenericMatch.init(self, queue, description);
+function opvp.ArenaMatch:init(queue, description, testType)
+    opvp.GenericMatch.init(self, queue, description, testType);
 
-    self._enemy_provider = opvp.ArenaPartyMemberProvider();
+    if testType == opvp.MatchTestType.NONE then
+        self._enemy_provider = opvp.ArenaPartyMemberProvider();
 
-    self._enemy_provider:_setTeamSize(description:teamSize());
+        self._enemy_provider:_setTeamSize(description:teamSize());
+    end
 end
 
 function opvp.ArenaMatch:_onMatchComplete()

@@ -53,6 +53,6 @@ function opvp.ArenaMatchDescription:init(map, teamSize, mask)
     );
 end
 
-function opvp.ArenaMatchDescription:createMatch(queue)
-    return opvp.ArenaMatch(queue, self);
+function opvp.ArenaMatchDescription:createMatch(queue, testType)
+    return opvp.ArenaMatch(queue, self, testType);
 end

@@ -43,8 +43,8 @@ function opvp.ShuffleMatchDescription:init(map)
     );
 end
 
-function opvp.ShuffleMatchDescription:createMatch(queue)
-    return opvp.ShuffleMatch(queue, self);
+function opvp.ShuffleMatchDescription:createMatch(queue, testType)
+    return opvp.ShuffleMatch(queue, self, testType);
 end
 
 function opvp.ShuffleMatchDescription:rounds()

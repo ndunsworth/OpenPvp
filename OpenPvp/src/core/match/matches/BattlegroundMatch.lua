@@ -30,21 +30,23 @@ local opvp = OpenPvp;
 
 opvp.BattlegroundMatch = opvp.CreateClass(opvp.GenericMatch);
 
-function opvp.BattlegroundMatch:init(queue, description)
-    opvp.GenericMatch.init(self, queue, description);
+function opvp.BattlegroundMatch:init(queue, description, testType)
+    opvp.GenericMatch.init(self, queue, description, testType);
 
-    if queue:isRated() == true then
-        self._enemy_provider = opvp.ArenaPartyMemberProvider();
+    if testType == opvp.MatchTestType.NONE then
+        if queue:isRated() == true then
+            self._enemy_provider = opvp.ArenaPartyMemberProvider();
 
-        self._enemy_provider:_setTeamSize(description:teamSize());
-    else
-        self._enemy_provider = opvp.BattlegroundPartyMemberProvider();
+            self._enemy_provider:_setTeamSize(description:teamSize());
+        else
+            self._enemy_provider = opvp.BattlegroundPartyMemberProvider();
+        end
+
+        local cache = opvp.PartyMemberFactoryCache(description:teamSize() * 2);
+
+        self._friendly_provider:_memberFactory():setCache(cache);
+        self._enemy_provider:_memberFactory():setCache(cache);
     end
-
-    local cache = opvp.PartyMemberFactoryCache(description:teamSize() * 2);
-
-    self._friendly_provider:_memberFactory():setCache(cache);
-    self._enemy_provider:_memberFactory():setCache(cache);
 end
 
 function opvp.BattlegroundMatch:_onMatchComplete()

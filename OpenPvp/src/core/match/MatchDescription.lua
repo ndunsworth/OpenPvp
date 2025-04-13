@@ -75,7 +75,7 @@ function opvp.MatchDescription:init(map)
     self._map = map;
 end
 
-function opvp.MatchDescription:createMatch(queue)
+function opvp.MatchDescription:createMatch(queue, testType)
     return nil;
 end
 

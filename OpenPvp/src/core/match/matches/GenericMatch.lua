@@ -30,8 +30,8 @@ local opvp = OpenPvp;
 
 opvp.GenericMatch = opvp.CreateClass(opvp.Match);
 
-function opvp.GenericMatch:init(queue, description)
-    opvp.Match.init(self, queue, description);
+function opvp.GenericMatch:init(queue, description, testType)
+    opvp.Match.init(self, queue, description, testType);
 
     self._friendly_team = opvp.MatchTeam(self);
     self._enemy_team    = opvp.MatchTeam(self);
@@ -40,14 +40,19 @@ function opvp.GenericMatch:init(queue, description)
         self._enemy_team
     };
 
-    self._friendly_provider = opvp.PvpPartyMemberProvider(opvp.PvpPartyMemberFactory());
-    self._enemy_provider    = nil;
+    if testType == opvp.MatchTestType.NONE then
+        self._friendly_provider = opvp.PvpPartyMemberProvider(opvp.PvpPartyMemberFactory());
+    else
+        self._friendly_provider = nil;
+    end
 
-    self._player_side = 0;
-    self._match_start = 0;
-    self._round_start = 0;
-    self._round_end   = 0;
-    self._init_teams  = true;
+    self._enemy_provider = nil;
+
+    self._player_side    = 0;
+    self._match_start    = 0;
+    self._round_start    = 0;
+    self._round_end      = 0;
+    self._init_teams     = true;
 end
 
 function opvp.GenericMatch:findOpponentByGuid(guid)
@@ -136,11 +141,6 @@ function opvp.GenericMatch:_initializeTeams()
         return;
     end
 
-    assert(
-        self._friendly_provider ~= nil and
-        self._enemy_provider ~= nil
-    );
-
     if self:isTest() == true then
         self._friendly_provider = opvp.PvpTestPartyMemberProvider(true);
         self._enemy_provider = opvp.PvpTestPartyMemberProvider();
@@ -149,6 +149,11 @@ function opvp.GenericMatch:_initializeTeams()
 
         self._friendly_provider:_setFactory(opvp.PvpPartyMemberFactory());
         self._enemy_provider:_setFactory(opvp.PvpPartyMemberFactory());
+    else
+        assert(
+            self._friendly_provider ~= nil and
+            self._enemy_provider ~= nil
+        );
     end
 
     assert(

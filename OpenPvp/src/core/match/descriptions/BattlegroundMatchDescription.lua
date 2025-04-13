@@ -100,6 +100,6 @@ function opvp.BattlegroundMatchDescription:init(map, mask)
     );
 end
 
-function opvp.BattlegroundMatchDescription:createMatch(queue)
-    return opvp.BattlegroundMatch(queue, self);
+function opvp.BattlegroundMatchDescription:createMatch(queue, testType)
+    return opvp.BattlegroundMatch(queue, self, testType);
 end

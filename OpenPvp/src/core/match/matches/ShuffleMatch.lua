@@ -30,34 +30,36 @@ local opvp = OpenPvp;
 
 opvp.ShuffleMatch = opvp.CreateClass(opvp.GenericMatch);
 
-function opvp.ShuffleMatch:init(queue, description)
-    opvp.GenericMatch.init(self, queue, description);
+function opvp.ShuffleMatch:init(queue, description, testType)
+    opvp.GenericMatch.init(self, queue, description, testType);
 
-    self._enemy_provider = opvp.ArenaPartyMemberProvider(nil, true);
+    if testType == opvp.MatchTestType.NONE then
+        self._enemy_provider = opvp.ArenaPartyMemberProvider(nil, true);
 
-    self._enemy_provider:_setTeamSize(description:teamSize());
+        self._enemy_provider:_setTeamSize(description:teamSize());
 
-    local cache = opvp.PartyMemberFactoryCache(6);
+        local cache = opvp.PartyMemberFactoryCache(6);
 
-    cache:setMemberClearFlags(
-        bit.bor(
-            opvp.PartyMember.ID_FLAG,
-            bit.band(
-                opvp.PartyMember.STATE_FLAGS,
-                bit.bnot(
-                    bit.bor(
-                        opvp.PartyMember.PLAYER_FLAG,
-                        opvp.PartyMember.RATING_CURRENT_FLAG,
-                        opvp.PartyMember.RATING_GAIN_FLAG,
-                        opvp.PartyMember.SCORE_FLAG
+        cache:setMemberClearFlags(
+            bit.bor(
+                opvp.PartyMember.ID_FLAG,
+                bit.band(
+                    opvp.PartyMember.STATE_FLAGS,
+                    bit.bnot(
+                        bit.bor(
+                            opvp.PartyMember.PLAYER_FLAG,
+                            opvp.PartyMember.RATING_CURRENT_FLAG,
+                            opvp.PartyMember.RATING_GAIN_FLAG,
+                            opvp.PartyMember.SCORE_FLAG
+                        )
                     )
                 )
             )
-        )
-    );
+        );
 
-    self._friendly_provider:_memberFactory():setCache(cache);
-    self._enemy_provider:_memberFactory():setCache(cache);
+        self._friendly_provider:_memberFactory():setCache(cache);
+        self._enemy_provider:_memberFactory():setCache(cache);
+    end
 
     local map = description:map();
 
