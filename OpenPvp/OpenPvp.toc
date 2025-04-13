@@ -52,6 +52,7 @@ src/locale/init.lua
 
 src/core/sound/Sound.lua
 src/core/sound/CharacterSound.lua
+src/core/sound/FactionSound.lua
 src/core/sound/FileDataSound.lua
 src/core/sound/SoundKitSound.lua
 src/core/sound/SyntheticSound.lua
