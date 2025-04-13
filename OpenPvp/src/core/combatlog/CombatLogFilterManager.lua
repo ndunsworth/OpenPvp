@@ -47,7 +47,7 @@ function opvp.CombatLogFilterManager:init()
     self._filters       = opvp.List();
     self._exec          = false;
     self._needs_cleanup = false;
-    self._event         = opvp.CombatLogFilterEvent();
+    self._event         = opvp.CombatLogEvent();
 end
 
 function opvp.CombatLogFilterManager:addFilter(filter)

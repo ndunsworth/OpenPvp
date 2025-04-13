@@ -240,8 +240,8 @@ src/core/combatlog/SubEventCombatLogCondition.lua
 src/core/combatlog/TargetCombatLogCondition.lua
 src/core/combatlog/TargetFlagsCombatLogCondition.lua
 src/core/combatlog/TargetGuidCombatLogCondition.lua
+src/core/combatlog/CombatLogEvent.lua
 src/core/combatlog/CombatLogFilter.lua
-src/core/combatlog/CombatLogFilterEvent.lua
 src/core/combatlog/CombatLogFilterManager.lua
 src/core/combatlog/CallbackCombatLogFilter.lua
 src/core/combatlog/PvpTrinketMonitor.lua
