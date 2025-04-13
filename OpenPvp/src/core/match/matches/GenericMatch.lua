@@ -233,8 +233,10 @@ end
 function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
     if self:isTest() == false then
         self._player_side = GetBattlefieldArenaFaction() + 1;
-    else
+    elseif opvp.player.isAlliance() == true then
         self._player_side = 1;
+    else
+        self._player_side = 2;
     end
 
     if self._player_side == 1 then
