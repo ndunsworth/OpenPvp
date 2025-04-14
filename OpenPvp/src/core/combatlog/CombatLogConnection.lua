@@ -28,53 +28,32 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.CombatLogFilter = opvp.CreateClass(opvp.CombatLogConnection);
+opvp.CombatLogConnection = opvp.CreateClass();
 
-function opvp.CombatLogFilter:init(op)
-    opvp.CombatLogConnection.init(self);
-
-    self._op = op;
+function opvp.CombatLogConnection:init()
+    self._connected = false;
 end
 
-function opvp.CombatLogFilter:eval(event)
-    if self._op ~= nil then
-        return self._op:eval(event);
-    else
-        return false;
+function opvp.CombatLogConnection:connect()
+    if self._connected == false then
+        self._connected = opvp.CombatLogConnectionManager:instance():_addConnection(self);
+    end
+
+    return self._connected;
+end
+
+function opvp.CombatLogConnection:disconnect()
+    if self._connected == true then
+        opvp.CombatLogConnectionManager:instance():_removeConnection(self);
+
+        self._connected = false;
     end
 end
 
-function opvp.CombatLogFilter:event(event)
-    if self:eval(event) == true then
-        self:triggered(event);
-    end
-end
-
-function opvp.CombatLogFilter:op()
-    return self._op;
-end
-
-function opvp.CombatLogFilter:setOp(op)
-    if op == self._op then
-        return;
-    end
-
-    if (
-        op ~= nil and
-        opvp.IsInstance(op, opvp.CombatLogLogicalOp) == false
-    ) then
-        return;
-    end
-
-    self._op = op;
-
-    self:_onOpChanged();
-end
-
-function opvp.CombatLogFilter:triggered(event)
+function opvp.CombatLogConnection:event(event)
 
 end
 
-function opvp.CombatLogFilter:_onOpChanged()
-
+function opvp.CombatLogConnection:isConnected()
+    return self._connected;
 end
