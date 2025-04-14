@@ -119,6 +119,10 @@ function opvp.Signal:connect(...)
 
     if self._cbs:index(connection, cmp_connection) == 0 then
         self._cbs:append(connection);
+
+        if self._cbs:size() == 1 then
+            self:_onConnected();
+        end
     end
 
     return true;
@@ -163,6 +167,10 @@ function opvp.Signal:disconnect(...)
         self._needs_cleanup = true;
     else
         self._cbs:removeIndex(index);
+
+        if self._cbs:isEmpty() == true then
+            self:_onDisconnected();
+        end
     end
 end
 
@@ -174,6 +182,10 @@ function opvp.Signal:disconnectAll(reciever)
             for n=1, self._cbs:size() do
                 self._cbs:replaceIndex(n, null_connection);
             end
+        end
+
+        if self._cbs:isEmpty() == true then
+            self:_onDisconnected();
         end
     else
         local cb;
@@ -190,12 +202,18 @@ function opvp.Signal:disconnectAll(reciever)
                     n = n + 1;
                 end
             end
+
+            if self._cbs:isEmpty() == true then
+                self:_onDisconnected();
+            end
         else
             for n=1, self._cbs:size() do
                 cb = self._cbs:item(n);
 
                 if cb[1] == reciever or cb[2] == reciever then
                     self._cbs:replaceIndex(n, null_connection);
+
+                    self._needs_cleanup = true;
                 end
             end
         end
@@ -288,4 +306,22 @@ function opvp.Signal:_cleanup()
     end
 
     self._needs_cleanup = false;
+
+    if self._cbs:isEmpty() == true then
+        self:_onDisconnected();
+    end
+end
+
+function opvp.Signal:_onConnected()
+    --~ opvp.printDebug(
+        --~ "opvp.Signal(\"%s\")._onConnected",
+        --~ self._name
+    --~ );
+end
+
+function opvp.Signal:_onDisconnected()
+    --~ opvp.printDebug(
+        --~ "opvp.Signal(\"%s\")._onDisconnected",
+        --~ self._name
+    --~ );
 end
