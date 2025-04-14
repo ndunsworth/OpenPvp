@@ -418,6 +418,10 @@ function opvp.unit.guid(unitId)
     end
 end
 
+function opvp.unit.hasGuild(unitId)
+    return opvp.guid.hasGuild(opvp.unit.guid(unitId));
+end
+
 function opvp.unit.health(unitId)
     return UnitHealth(unitId);
 end
@@ -440,6 +444,10 @@ end
 
 function opvp.unit.isInspectable(unitId)
     return CanInspect(unitId);
+end
+
+function opvp.unit.isSameGuild(unitId)
+    return UnitIsInMyGuild(unitId);
 end
 
 function opvp.unit.isSameUnit(unitId1, unitId2)
@@ -547,4 +555,14 @@ function opvp.unit.splitNameAndServer(characterName)
     else
         return characterName, nil
     end
+end
+
+opvp.guid = {};
+
+function opvp.guid.hasGuild(guid)
+    return IsPlayerInGuildFromGUID(guid);
+end
+
+function opvp.guid.isSameGuild(guid)
+    return IsGuildMember(guid);
 end
