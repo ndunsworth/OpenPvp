@@ -62,6 +62,16 @@ function opvp.PvpTestPartyMemberProvider:_onConnected()
     self._match = opvp.match.current();
     self._tester = opvp.match.manager():tester();
 
+    if self._match:isArena() == true then
+        self._healers_max = 1;
+    elseif self._match:isBlitz() == true then
+        self._healers_max = 2;
+    elseif self._match:isBattlegroundEpic() == true then
+        self._healers_max = 10;
+    else
+        self._healers_max = 3;
+    end
+
     opvp.TestPartyMemberProvider._onConnected(self);
 end
 

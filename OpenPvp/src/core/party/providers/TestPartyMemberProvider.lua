@@ -37,7 +37,9 @@ function opvp.TestPartyMemberProvider:init(hasPlayer)
 
     self._has_player = hasPlayer == true;
 
-    self._fake_chars = opvp.List();
+    self._fake_chars  = opvp.List();
+    self._healers     = 0;
+    self._healers_max = 1;
 end
 
 function opvp.TestPartyMemberProvider:addMember()
@@ -142,18 +144,49 @@ function opvp.TestPartyMemberProvider:_connectSignals()
 end
 
 function opvp.TestPartyMemberProvider:_createFakeChar(index)
+    if self._healers < self._healers_max then
+        return self:_createFakeCharHealer(index);
+    else
+        return self:_createFakeCharDps(index);
+    end
+end
+
+function opvp.TestPartyMemberProvider:_createFakeCharDps(index)
     local player_name = opvp.player.name();
 
-    while self._fake_chars:isEmpty() == false do
-        local name, spec = unpack(self._fake_chars:popFront());
+    local name, spec;
+
+    while self._fake_chars_dps:isEmpty() == false do
+        name, spec = unpack(self._fake_chars_dps:popFront());
 
         if name ~= player_name then
             return name, spec;
         end
     end
 
-    local cls = opvp.Class:fromClassId(math.random(1, opvp.MAX_CLASS));
-    local spec = cls:specs()[math.random(1, cls:specsSize())];
+    spec = opvp.ClassSpec.SPECS_DPS[math.random(1, #opvp.ClassSpec.SPECS_DPS)];
+
+    return "Player" .. index, spec;
+end
+
+function opvp.TestPartyMemberProvider:_createFakeCharHealer(index)
+    local player_name = opvp.player.name();
+
+    local name, spec;
+
+    while self._fake_chars_healer:isEmpty() == false do
+        name, spec = unpack(self._fake_chars_healer:popFront());
+
+        if name ~= player_name then
+            self._healers = self._healers + 1;
+
+            return name, spec;
+        end
+    end
+
+    spec = opvp.ClassSpec.SPECS_HEALER[math.random(1, #opvp.ClassSpec.SPECS_HEALER)];
+
+    self._healers = self._healers + 1;
 
     return "Player" .. index, spec;
 end
@@ -177,26 +210,31 @@ end
 function opvp.TestPartyMemberProvider:_onConnected()
     opvp.GenericPartyMemberProvider._onConnected(self);
 
-    self._fake_chars = opvp.List:createFromArray(
+    self._fake_chars_healer = opvp.List:createFromArray(
         {
             {"Absurd",       opvp.ClassSpec.HOLY_PRIEST},
             {"Beep",         opvp.ClassSpec.MISTWEAVER_MONK},
-            {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER},
             {"Cheesebaker",  opvp.ClassSpec.DISCIPLINE_PRIEST},
-            {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN},
-            {"Ehben",        opvp.ClassSpec.ARCANE_MAGE},
-            {"Jahmilycyrus", opvp.ClassSpec.FROST_MAGE},
             {"Likewoah",     opvp.ClassSpec.MISTWEAVER_MONK},
             {"Literal",      opvp.ClassSpec.RESTORATION_SHAMAN},
             {"Mythical",     opvp.ClassSpec.MISTWEAVER_MONK},
             {"Nrgy",         opvp.ClassSpec.DISCIPLINE_PRIEST},
+            {"Spaceship",    opvp.ClassSpec.RESTORATION_DRUID},
+            {"Thedew",       opvp.ClassSpec.RESTORATION_SHAMAN}
+        }
+    );
+
+    self._fake_chars_dps = opvp.List:createFromArray(
+        {
+            {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER},
+            {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN},
+            {"Ehben",        opvp.ClassSpec.ARCANE_MAGE},
+            {"Jahmilycyrus", opvp.ClassSpec.FROST_MAGE},
             {"Pezz",         opvp.ClassSpec.UNHOLY_DEATH_KNIGHT},
             {"Pikadude",     opvp.ClassSpec.SUBTLETY_ROGUE},
             {"Ratlord",      opvp.ClassSpec.DESTRUCTION_WARLOCK},
             {"Saulgudman",   opvp.ClassSpec.ELEMENTAL_SHAMAN},
-            {"Spaceship",    opvp.ClassSpec.RESTORATION_DRUID},
             {"Supabreeze",   opvp.ClassSpec.BALANCE_DRUID},
-            {"Thedew",       opvp.ClassSpec.RESTORATION_SHAMAN},
             {"Venrookie",    opvp.ClassSpec.FIRE_MAGE},
             {"Vikiminahj",   opvp.ClassSpec.ASSASSINATION_ROGUE},
             {"Wizman",       opvp.ClassSpec.SHADOW_PRIEST},
@@ -204,37 +242,30 @@ function opvp.TestPartyMemberProvider:_onConnected()
         }
     );
 
-    self._fake_chars:shuffle();
-    self._fake_chars:shuffle();
-    self._fake_chars:shuffle();
-
-    if self._has_player == true then
-        self._player = self:_createMember(
-            "player",
-            opvp.player.guid()
-        );
-
-        if self._player ~= nil then
-            self._player:_setFlags(opvp.PartyMember.PLAYER_FLAG, true);
-            self._player:_setFaction(opvp.player.factionInfo());
-            self._player:_setRace(opvp.player.raceInfo());
-            self._player:_setSex(opvp.player.sex());
-            self._player:_setSpec(opvp.player.specInfo());
-            self._player:_setName(opvp.player.name());
-
-            self:_onRosterBeginUpdate();
-
-            self._members:append(self._player);
-
-            self:_updateMember(self._player:id(), self._player, true);
-
-            self:_onRosterEndUpdate(
-                {self._player},
-                {},
-                {}
-            );
-        end
+    if (
+        self:hasPlayer() == true and
+        self._player ~= nil and
+        self._player:specInfo():isHealer() == true
+    ) then
+        self._healers = self._healers + 1;
     end
+
+    self._fake_chars_healer:shuffle();
+    self._fake_chars_healer:shuffle();
+    self._fake_chars_healer:shuffle();
+
+    self._fake_chars_dps:shuffle();
+    self._fake_chars_dps:shuffle();
+    self._fake_chars_dps:shuffle();
+end
+
+function opvp.TestPartyMemberProvider:_onDisconnected()
+    opvp.GenericPartyMemberProvider._onDisconnected(self);
+
+    self._fake_chars:clear();
+
+    self._healers     = 0;
+    self._healers_max = 1;
 end
 
 function opvp.TestPartyMemberProvider:_onGroupRosterUpdate()
