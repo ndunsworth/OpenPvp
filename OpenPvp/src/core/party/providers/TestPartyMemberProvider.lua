@@ -164,7 +164,7 @@ function opvp.TestPartyMemberProvider:_createFakeCharDps(index)
         end
     end
 
-    spec = opvp.ClassSpec.SPECS_DPS[math.random(1, #opvp.ClassSpec.DPS_SPECS)];
+    spec = opvp.ClassSpec.DPS_SPECS[math.random(1, #opvp.ClassSpec.DPS_SPECS)];
 
     return "Player" .. index, spec;
 end
@@ -184,7 +184,7 @@ function opvp.TestPartyMemberProvider:_createFakeCharHealer(index)
         end
     end
 
-    spec = opvp.ClassSpec.SPECS_HEALER[math.random(1, #opvp.ClassSpec.HEALER_SPECS)];
+    spec = opvp.ClassSpec.HEALER_SPECS[math.random(1, #opvp.ClassSpec.HEALER_SPECS)];
 
     self._healers = self._healers + 1;
 
