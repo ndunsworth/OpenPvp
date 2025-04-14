@@ -48,8 +48,8 @@ function opvp.private.AutoDeclineInviteMatchFeature:isFriend(guid)
     end
 
     local is_friend = (
-        C_FriendList.IsFriend(guid) == true or
-        C_BattleNet.GetAccountInfoByGUID(guid) ~= nil
+        opvp.friends.isFriend(guid) == true or
+        opvp.friends.isBattleNetFriend(guid) == true
     );
 
     if is_friend == true then
