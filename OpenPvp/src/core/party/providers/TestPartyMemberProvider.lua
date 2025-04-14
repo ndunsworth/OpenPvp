@@ -214,11 +214,14 @@ function opvp.TestPartyMemberProvider:_onConnected()
         {
             {"Absurd",       opvp.ClassSpec.HOLY_PRIEST},
             {"Beep",         opvp.ClassSpec.MISTWEAVER_MONK},
+            {"Bopz",         opvp.ClassSpec.RESTORATION_DRUID},
             {"Cheesebaker",  opvp.ClassSpec.DISCIPLINE_PRIEST},
             {"Likewoah",     opvp.ClassSpec.MISTWEAVER_MONK},
             {"Literal",      opvp.ClassSpec.RESTORATION_SHAMAN},
+            {"Lonstar",      opvp.ClassSpec.RESTORATION_SHAMAN},
             {"Mythical",     opvp.ClassSpec.MISTWEAVER_MONK},
             {"Nrgy",         opvp.ClassSpec.DISCIPLINE_PRIEST},
+            {"Salmon",       opvp.ClassSpec.RESTORATION_DRUID},
             {"Spaceship",    opvp.ClassSpec.RESTORATION_DRUID},
             {"Thedew",       opvp.ClassSpec.RESTORATION_SHAMAN}
         }
@@ -227,9 +230,12 @@ function opvp.TestPartyMemberProvider:_onConnected()
     self._fake_chars_dps = opvp.List:createFromArray(
         {
             {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER},
+            {"Chunchi",      opvp.ClassSpec.WINDWALKER_MONK},
             {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN},
             {"Ehben",        opvp.ClassSpec.ARCANE_MAGE},
+            {"Hansolo",    opvp.ClassSpec.FIRE_MAGE},
             {"Jahmilycyrus", opvp.ClassSpec.FROST_MAGE},
+            {"Mvp",          opvp.ClassSpec.HAVOC_DEMON_HUNTER},
             {"Pezz",         opvp.ClassSpec.UNHOLY_DEATH_KNIGHT},
             {"Pikadude",     opvp.ClassSpec.SUBTLETY_ROGUE},
             {"Ratlord",      opvp.ClassSpec.DESTRUCTION_WARLOCK},
