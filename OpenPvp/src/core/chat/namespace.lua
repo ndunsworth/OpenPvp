@@ -116,3 +116,29 @@ end
 function opvp.chat.setEnabled(state)
     C_SocialRestrictions.SetChatDisabled(not state)
 end
+
+opvp.friends = {};
+
+function opvp.friends.addIgnore(name)
+    return C_FriendList.AddIgnore(name);
+end
+
+function opvp.friends.isBattleNetFriend(guid)
+    return C_BattleNet.GetAccountInfoByGUID(guid) ~= nil;
+end
+
+function opvp.friends.isFriend(guid)
+    return C_FriendList.IsFriend(guid);
+end
+
+function opvp.friends.isIgnored(name)
+    return C_FriendList.IsIgnored(name);
+end
+
+function opvp.friends.isIgnoredGuid(guid)
+    return C_FriendList.IsIgnoredByGuid(name);
+end
+
+function opvp.friends.removeIgnore(name)
+    return C_FriendList.DelIgnore(name);
+end
