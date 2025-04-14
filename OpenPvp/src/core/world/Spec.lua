@@ -122,16 +122,16 @@ function opvp.ClassSpec:instance()
     return opvp.Player:instance():specInfo()
 end
 
-function opvp.ClassSpec:init(class, id, role, traits, sound, icon)
-    self._cls = class;
-    self._id = id;
-    self._role = role;
-    self._icon = icon;
-    self._sound = sound;
-    self._traits = traits;
+function opvp.ClassSpec:init(cfg)
+    self._cls    = cfg.class;
+    self._id     = cfg.id;
+    self._role   = cfg.role;
+    self._icon   = cfg.icon;
+    self._sound  = cfg.sound;
+    self._traits = cfg.traits;
 
-    if id ~= 0 then
-        self._name = select(2, GetSpecializationInfoByID(id));
+    if self._id ~= 0 then
+        self._name = select(2, GetSpecializationInfoByID(self._id));
     else
         self._name = opvp.strs.UNKNOWN;
     end
@@ -197,149 +197,7 @@ function opvp.ClassSpec:sound()
     return self._sound;
 end
 
-opvp.ClassSpec.UNKNOWN                = opvp.ClassSpec(opvp.UNKNOWN_CLASS, opvp.ClassSpecId.UNKNOWN, opvp.Role.NONE, 0, 0, "");
-
-opvp.ClassSpec.BLOOD_DEATH_KNIGHT     = opvp.ClassSpec(opvp.DEATH_KNIGHT, opvp.ClassSpecId.BLOOD_DEATH_KNIGHT, opvp.Role.TANK, opvp.ClassSpecTrait.MELEE_MAGIC, 12874, "Interface/Icons/spell_deathknight_bloodpresence");
-opvp.ClassSpec.FROST_DEATH_KNIGHT     = opvp.ClassSpec(opvp.DEATH_KNIGHT, opvp.ClassSpecId.FROST_DEATH_KNIGHT, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_MAGIC, 41021, "Interface/Icons/spell_deathknight_frostpresence");
-opvp.ClassSpec.UNHOLY_DEATH_KNIGHT    = opvp.ClassSpec(opvp.DEATH_KNIGHT, opvp.ClassSpecId.UNHOLY_DEATH_KNIGHT, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_MAGIC, 164991, "Interface/Icons/spell_deathknight_unholypresence");
-
-opvp.ClassSpec.HAVOC_DEMON_HUNTER     = opvp.ClassSpec(opvp.DEMON_HUNTER, opvp.ClassSpecId.HAVOC_DEMON_HUNTER, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_MAGIC, 170913, "Interface/Icons/ability_demonhunter_specdps");
-opvp.ClassSpec.VENGANCE_DEMON_HUNTER  = opvp.ClassSpec(opvp.DEMON_HUNTER, opvp.ClassSpecId.VENGANCE_DEMON_HUNTER, opvp.Role.TANK, opvp.ClassSpecTrait.MELEE_MAGIC, 62555, "Interface/Icons/ability_demonhunter_spectank");
-
-opvp.ClassSpec.BALANCE_DRUID          = opvp.ClassSpec(opvp.DRUID, opvp.ClassSpecId.BALANCE_DRUID, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 83382, "Interface/Icons/spell_nature_starfall");
-opvp.ClassSpec.FERAL_DRUID            = opvp.ClassSpec(opvp.DRUID, opvp.ClassSpecId.FERAL_DRUID, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_PHYSICAL, 143720, "Interface/Icons/ability_druid_catform");
-opvp.ClassSpec.GUARDIAN_DRUID         = opvp.ClassSpec(opvp.DRUID, opvp.ClassSpecId.GUARDIAN_DRUID, opvp.Role.TANK, opvp.ClassSpecTrait.MELEE_PHYSICAL, 12121, "Interface/Icons/ability_racial_bearform");
-opvp.ClassSpec.RESTORATION_DRUID      = opvp.ClassSpec(opvp.DRUID, opvp.ClassSpecId.RESTORATION_DRUID, opvp.Role.HEALER, opvp.ClassSpecTrait.RANGED_MAGIC, 5737, "Interface/Icons/spell_nature_healingtouch");
-
-opvp.ClassSpec.AUGMENTATION_EVOKER    = opvp.ClassSpec(opvp.EVOKER, opvp.ClassSpecId.AUGMENTATION_EVOKER, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 200748, "Interface/Icons/classicon_evoker_augmentation");
-opvp.ClassSpec.DEVESTATION_EVOKER     = opvp.ClassSpec(opvp.EVOKER, opvp.ClassSpecId.DEVESTATION_EVOKER, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 218711, "Interface/Icons/classicon_evoker_devastation");
-opvp.ClassSpec.PRESERVATION_EVOKER    = opvp.ClassSpec(opvp.EVOKER, opvp.ClassSpecId.PRESERVATION_EVOKER, opvp.Role.HEALER, opvp.ClassSpecTrait.RANGED_MAGIC, 201157, "Interface/Icons/classicon_evoker_preservation");
-
-opvp.ClassSpec.BEASTMASTER_HUNTER     = opvp.ClassSpec(opvp.HUNTER, opvp.ClassSpecId.BEASTMASTER_HUNTER, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_PHYSICAL, 84922, "Interface/Icons/ability_hunter_bestialdiscipline");
-opvp.ClassSpec.MASTER_MARKSMAN_HUNTER = opvp.ClassSpec(opvp.HUNTER, opvp.ClassSpecId.MASTER_MARKSMAN_HUNTER, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_PHYSICAL, 15245, "Interface/Icons/ability_hunter_focusedaim");
-opvp.ClassSpec.SURVIVAL_HUNTER        = opvp.ClassSpec(opvp.HUNTER, opvp.ClassSpecId.SURVIVAL_HUNTER, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_PHYSICAL, 72676, "Interface/Icons/ability_hunter_camouflage");
-
-opvp.ClassSpec.ARCANE_MAGE            = opvp.ClassSpec(opvp.MAGE, opvp.ClassSpecId.ARCANE_MAGE, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 85547, "Interface/Icons/spell_holy_magicalsentry");
-opvp.ClassSpec.FIRE_MAGE              = opvp.ClassSpec(opvp.MAGE, opvp.ClassSpecId.FIRE_MAGE, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 63318, "Interface/Icons/spell_fire_flamebolt");
-opvp.ClassSpec.FROST_MAGE             = opvp.ClassSpec(opvp.MAGE, opvp.ClassSpecId.FROST_MAGE, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 85506, "Interface/Icons/spell_frost_frostbolt02");
-
-opvp.ClassSpec.BREWMASTER_MONK        = opvp.ClassSpec(opvp.MONK, opvp.ClassSpecId.BREWMASTER_MONK, opvp.Role.TANK, opvp.ClassSpecTrait.MELEE_PHYSICAL, 260813, "Interface/Icons/spell_monk_brewmaster_spec");
-opvp.ClassSpec.MISTWEAVER_MONK        = opvp.ClassSpec(opvp.MONK, opvp.ClassSpecId.MISTWEAVER_MONK, opvp.Role.HEALER, opvp.ClassSpecTrait.MELEE_PHYSICAL, 34436, "Interface/Icons/spell_monk_mistweaver_spec");
-opvp.ClassSpec.WINDWALKER_MONK        = opvp.ClassSpec(opvp.MONK, opvp.ClassSpecId.WINDWALKER_MONK, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_PHYSICAL, 26875, "Interface/Icons/spell_monk_windwalker_spec");
-
-opvp.ClassSpec.HOLY_PALADIN           = opvp.ClassSpec(opvp.PALADIN, opvp.ClassSpecId.HOLY_PALADIN, opvp.Role.HEALER, opvp.ClassSpecTrait.MELEE_MAGIC, 96464, "Interface/Icons/paladin_holy");
-opvp.ClassSpec.PROTECTION_PALADIN     = opvp.ClassSpec(opvp.PALADIN, opvp.ClassSpecId.PROTECTION_PALADIN, opvp.Role.TANK, opvp.ClassSpecTrait.MELEE_MAGIC, 24163, "Interface/Icons/ability_paladin_shieldofthetemplar");
-opvp.ClassSpec.RETRIBUTION_PALADIN    = opvp.ClassSpec(opvp.PALADIN, opvp.ClassSpecId.RETRIBUTION_PALADIN, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_MAGIC, 120394, "Interface/Icons/paladin_retribution");
-
-opvp.ClassSpec.DISCIPLINE_PRIEST      = opvp.ClassSpec(opvp.PRIEST, opvp.ClassSpecId.DISCIPLINE_PRIEST, opvp.Role.HEALER, opvp.ClassSpecTrait.RANGED_MAGIC, 238138, "Interface/Icons/spell_holy_powerwordshield");
-opvp.ClassSpec.HOLY_PRIEST            = opvp.ClassSpec(opvp.PRIEST, opvp.ClassSpecId.HOLY_PRIEST, opvp.Role.HEALER, opvp.ClassSpecTrait.RANGED_MAGIC, 89332, "Interface/Icons/spell_holy_guardianspirit");
-opvp.ClassSpec.SHADOW_PRIEST          = opvp.ClassSpec(opvp.PRIEST, opvp.ClassSpecId.SHADOW_PRIEST, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 89829, "Interface/Icons/spell_shadow_shadowwordpain");
-
-opvp.ClassSpec.ASSASSINATION_ROGUE    = opvp.ClassSpec(opvp.ROGUE, opvp.ClassSpecId.ASSASSINATION_ROGUE, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_PHYSICAL, 55696, "Interface/Icons/ability_rogue_deadlybrew");
-opvp.ClassSpec.OUTLAW_ROGUE           = opvp.ClassSpec(opvp.ROGUE, opvp.ClassSpecId.OUTLAW_ROGUE, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_PHYSICAL, 79567, "Interface/Icons/inv_sword_30");
-opvp.ClassSpec.SUBTLETY_ROGUE         = opvp.ClassSpec(opvp.ROGUE, opvp.ClassSpecId.SUBTLETY_ROGUE, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_PHYSICAL, 13279, "Interface/Icons/ability_ambush");
-
-opvp.ClassSpec.ELEMENTAL_SHAMAN       = opvp.ClassSpec(opvp.SHAMAN, opvp.ClassSpecId.ELEMENTAL_SHAMAN, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 138561, "Interface/Icons/spell_nature_lightning");
-opvp.ClassSpec.ENHANCEMENT_SHAMAN     = opvp.ClassSpec(opvp.SHAMAN, opvp.ClassSpecId.ENHANCEMENT_SHAMAN, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_MAGIC, 240675, "Interface/Icons/spell_shaman_improvedstormstrike");
-opvp.ClassSpec.RESTORATION_SHAMAN     = opvp.ClassSpec(opvp.SHAMAN, opvp.ClassSpecId.RESTORATION_SHAMAN, opvp.Role.HEALER, opvp.ClassSpecTrait.MELEE_MAGIC, 213054, "Interface/Icons/spell_nature_healingwavegreater");
-
-opvp.ClassSpec.AFFLICTION_WARLOCK     = opvp.ClassSpec(opvp.WARLOCK, opvp.ClassSpecId.AFFLICTION_WARLOCK, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 114131, "Interface/Icons/spell_shadow_deathcoil");
-opvp.ClassSpec.DEMONOLOGY_WARLOCK     = opvp.ClassSpec(opvp.WARLOCK, opvp.ClassSpecId.DEMONOLOGY_WARLOCK, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 6097, "Interface/Icons/spell_shadow_metamorphosis");
-opvp.ClassSpec.DESTRUCTION_WARLOCK    = opvp.ClassSpec(opvp.WARLOCK, opvp.ClassSpecId.DESTRUCTION_WARLOCK, opvp.Role.DPS, opvp.ClassSpecTrait.RANGED_MAGIC, 260690, "Interface/Icons/spell_shadow_rainoffire");
-
-opvp.ClassSpec.ARMS_WARRIOR           = opvp.ClassSpec(opvp.WARRIOR, opvp.ClassSpecId.ARMS_WARRIOR, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_PHYSICAL, 12981, "Interface/Icons/ability_warrior_savageblow");
-opvp.ClassSpec.FURY_WARRIOR           = opvp.ClassSpec(opvp.WARRIOR, opvp.ClassSpecId.FURY_WARRIOR, opvp.Role.DPS, opvp.ClassSpecTrait.MELEE_PHYSICAL, 49435, "Interface/Icons/ability_warrior_innerrage");
-opvp.ClassSpec.PROTECTION_WARRIOR     = opvp.ClassSpec(opvp.WARRIOR, opvp.ClassSpecId.PROTECTION_WARRIOR, opvp.Role.TANK, opvp.ClassSpecTrait.MELEE_PHYSICAL, 59081, "Interface/Icons/ability_warrior_defensivestance");
-
-opvp.ClassSpec.SPECS = {
-    opvp.ClassSpec.UNKNOWN,
-    opvp.ClassSpec.BLOOD_DEATH_KNIGHT,
-    opvp.ClassSpec.FROST_DEATH_KNIGHT,
-    opvp.ClassSpec.UNHOLY_DEATH_KNIGHT,
-    opvp.ClassSpec.HAVOC_DEMON_HUNTER,
-    opvp.ClassSpec.VENGANCE_DEMON_HUNTER,
-    opvp.ClassSpec.BALANCE_DRUID,
-    opvp.ClassSpec.FERAL_DRUID,
-    opvp.ClassSpec.GUARDIAN_DRUID,
-    opvp.ClassSpec.RESTORATION_DRUID,
-    opvp.ClassSpec.AUGMENTATION_EVOKER,
-    opvp.ClassSpec.DEVESTATION_EVOKER,
-    opvp.ClassSpec.PRESERVATION_EVOKER,
-    opvp.ClassSpec.BEASTMASTER_HUNTER,
-    opvp.ClassSpec.MASTER_MARKSMAN_HUNTER,
-    opvp.ClassSpec.SURVIVAL_HUNTER,
-    opvp.ClassSpec.ARCANE_MAGE,
-    opvp.ClassSpec.FIRE_MAGE,
-    opvp.ClassSpec.FROST_MAGE,
-    opvp.ClassSpec.BREWMASTER_MONK,
-    opvp.ClassSpec.MISTWEAVER_MONK,
-    opvp.ClassSpec.WINDWALKER_MONK,
-    opvp.ClassSpec.HOLY_PALADIN,
-    opvp.ClassSpec.PROTECTION_PALADIN,
-    opvp.ClassSpec.RETRIBUTION_PALADIN,
-    opvp.ClassSpec.DISCIPLINE_PRIEST,
-    opvp.ClassSpec.HOLY_PRIEST,
-    opvp.ClassSpec.SHADOW_PRIEST,
-    opvp.ClassSpec.ASSASSINATION_ROGUE,
-    opvp.ClassSpec.OUTLAW_ROGUE,
-    opvp.ClassSpec.SUBTLETY_ROGUE,
-    opvp.ClassSpec.ELEMENTAL_SHAMAN,
-    opvp.ClassSpec.ENHANCEMENT_SHAMAN,
-    opvp.ClassSpec.RESTORATION_SHAMAN,
-    opvp.ClassSpec.AFFLICTION_WARLOCK,
-    opvp.ClassSpec.DEMONOLOGY_WARLOCK,
-    opvp.ClassSpec.DESTRUCTION_WARLOCK,
-    opvp.ClassSpec.ARMS_WARRIOR,
-    opvp.ClassSpec.FURY_WARRIOR,
-    opvp.ClassSpec.PROTECTION_WARRIOR
-};
-
-opvp.ClassSpec.SPECS_DPS = {
-    opvp.ClassSpec.BLOOD_DEATH_KNIGHT,
-    opvp.ClassSpec.FROST_DEATH_KNIGHT,
-    opvp.ClassSpec.UNHOLY_DEATH_KNIGHT,
-    opvp.ClassSpec.HAVOC_DEMON_HUNTER,
-    opvp.ClassSpec.VENGANCE_DEMON_HUNTER,
-    opvp.ClassSpec.BALANCE_DRUID,
-    opvp.ClassSpec.FERAL_DRUID,
-    opvp.ClassSpec.AUGMENTATION_EVOKER,
-    opvp.ClassSpec.DEVESTATION_EVOKER,
-    opvp.ClassSpec.BEASTMASTER_HUNTER,
-    opvp.ClassSpec.MASTER_MARKSMAN_HUNTER,
-    opvp.ClassSpec.SURVIVAL_HUNTER,
-    opvp.ClassSpec.ARCANE_MAGE,
-    opvp.ClassSpec.FIRE_MAGE,
-    opvp.ClassSpec.FROST_MAGE,
-    opvp.ClassSpec.WINDWALKER_MONK,
-    opvp.ClassSpec.RETRIBUTION_PALADIN,
-    opvp.ClassSpec.SHADOW_PRIEST,
-    opvp.ClassSpec.ASSASSINATION_ROGUE,
-    opvp.ClassSpec.OUTLAW_ROGUE,
-    opvp.ClassSpec.SUBTLETY_ROGUE,
-    opvp.ClassSpec.ELEMENTAL_SHAMAN,
-    opvp.ClassSpec.ENHANCEMENT_SHAMAN,
-    opvp.ClassSpec.AFFLICTION_WARLOCK,
-    opvp.ClassSpec.DEMONOLOGY_WARLOCK,
-    opvp.ClassSpec.DESTRUCTION_WARLOCK,
-    opvp.ClassSpec.ARMS_WARRIOR,
-    opvp.ClassSpec.FURY_WARRIOR
-};
-
-opvp.ClassSpec.SPECS_HEALER = {
-    opvp.ClassSpec.RESTORATION_DRUID,
-    opvp.ClassSpec.PRESERVATION_EVOKER,
-    opvp.ClassSpec.MISTWEAVER_MONK,
-    opvp.ClassSpec.HOLY_PALADIN,
-    opvp.ClassSpec.DISCIPLINE_PRIEST,
-    opvp.ClassSpec.HOLY_PRIEST,
-    opvp.ClassSpec.RESTORATION_SHAMAN
-};
-
-opvp.ClassSpec.SPECS_TANK = {
-    opvp.ClassSpec.BLOOD_DEATH_KNIGHT,
-    opvp.ClassSpec.VENGANCE_DEMON_HUNTER,
-    opvp.ClassSpec.GUARDIAN_DRUID,
-    opvp.ClassSpec.BREWMASTER_MONK,
-    opvp.ClassSpec.PROTECTION_PALADIN,
-    opvp.ClassSpec.PROTECTION_WARRIOR
-};
+opvp.ClassSpec.SPECS        = {};
+opvp.ClassSpec.DPS_SPECS    = {};
+opvp.ClassSpec.HEALER_SPECS = {};
+opvp.ClassSpec.TANK_SPECS   = {};
