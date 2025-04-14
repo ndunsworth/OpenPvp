@@ -240,9 +240,10 @@ src/core/combatlog/SubEventCombatLogCondition.lua
 src/core/combatlog/TargetCombatLogCondition.lua
 src/core/combatlog/TargetFlagsCombatLogCondition.lua
 src/core/combatlog/TargetGuidCombatLogCondition.lua
+src/core/combatlog/CombatLogConnection.lua
+src/core/combatlog/CombatLogConnectionManager.lua
 src/core/combatlog/CombatLogEvent.lua
 src/core/combatlog/CombatLogFilter.lua
-src/core/combatlog/CombatLogFilterManager.lua
 src/core/combatlog/CallbackCombatLogFilter.lua
 src/core/combatlog/PvpTrinketMonitor.lua
 
@@ -289,7 +290,6 @@ src/core/queue/queues/RandomBattlegroundQueue.lua
 src/core/queue/queues/RatedQueue.lua
 
 src/core/party/Party.lua
-src/core/Party/PartyCombatLogFilter.lua
 src/core/party/PartyManager.lua
 src/core/party/PartyMember.lua
 src/core/party/PartyMemberFactory.lua

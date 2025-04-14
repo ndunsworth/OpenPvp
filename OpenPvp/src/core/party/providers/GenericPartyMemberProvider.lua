@@ -33,7 +33,6 @@ opvp.GenericPartyMemberProvider = opvp.CreateClass(opvp.PartyMemberProvider);
 function opvp.GenericPartyMemberProvider:init()
     opvp.PartyMemberProvider.init(self);
 
-    self._combat_log_filter = opvp.PartyCombatLogFilter(self);
     self._members           = opvp.List();
     self._cache             = opvp.List();
     self._player            = nil;
@@ -322,7 +321,7 @@ end
 
 function opvp.GenericPartyMemberProvider:_onConnected()
     if self:isTest() == false then
-        self._combat_log_filter:connect();
+        opvp.combatlog.event:connect(self, self._onCombatLogEvent);
     end
 
     if self:hasPlayer() == true then
@@ -357,7 +356,9 @@ function opvp.GenericPartyMemberProvider:_onConnected()
 end
 
 function opvp.GenericPartyMemberProvider:_onDisconnected()
-    self._combat_log_filter:disconnect();
+    if self:isTest() == false then
+        opvp.combatlog.event:disconnect(self, self._onCombatLogEvent);
+    end
 
     opvp.PartyMemberProvider._onDisconnected(self);
 end
