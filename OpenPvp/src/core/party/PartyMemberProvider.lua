@@ -275,9 +275,17 @@ end
 
 function opvp.PartyMemberProvider:_onCombatLogEvent(event)
     if event:isSrcFriendly() == true then
-        self:_onCombatLogEventFriendly(event);
+        if self._hostile == false then
+            self:_onCombatLogEventFriendly(event);
+        else
+            self:_onCombatLogEventHostile(event);
+        end
     elseif event:isSrcHostile() == true then
-        self:_onCombatLogEventHostile(event);
+        if self._hostile == false then
+            self:_onCombatLogEventHostile(event);
+        else
+            self:_onCombatLogEventFriendly(event);
+        end
     else
         self:_onCombatLogEventOther(event);
     end
