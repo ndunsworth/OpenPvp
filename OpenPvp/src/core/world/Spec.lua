@@ -293,3 +293,53 @@ opvp.ClassSpec.SPECS = {
     opvp.ClassSpec.FURY_WARRIOR,
     opvp.ClassSpec.PROTECTION_WARRIOR
 };
+
+opvp.ClassSpec.SPECS_DPS = {
+    opvp.ClassSpec.BLOOD_DEATH_KNIGHT,
+    opvp.ClassSpec.FROST_DEATH_KNIGHT,
+    opvp.ClassSpec.UNHOLY_DEATH_KNIGHT,
+    opvp.ClassSpec.HAVOC_DEMON_HUNTER,
+    opvp.ClassSpec.VENGANCE_DEMON_HUNTER,
+    opvp.ClassSpec.BALANCE_DRUID,
+    opvp.ClassSpec.FERAL_DRUID,
+    opvp.ClassSpec.AUGMENTATION_EVOKER,
+    opvp.ClassSpec.DEVESTATION_EVOKER,
+    opvp.ClassSpec.BEASTMASTER_HUNTER,
+    opvp.ClassSpec.MASTER_MARKSMAN_HUNTER,
+    opvp.ClassSpec.SURVIVAL_HUNTER,
+    opvp.ClassSpec.ARCANE_MAGE,
+    opvp.ClassSpec.FIRE_MAGE,
+    opvp.ClassSpec.FROST_MAGE,
+    opvp.ClassSpec.WINDWALKER_MONK,
+    opvp.ClassSpec.RETRIBUTION_PALADIN,
+    opvp.ClassSpec.SHADOW_PRIEST,
+    opvp.ClassSpec.ASSASSINATION_ROGUE,
+    opvp.ClassSpec.OUTLAW_ROGUE,
+    opvp.ClassSpec.SUBTLETY_ROGUE,
+    opvp.ClassSpec.ELEMENTAL_SHAMAN,
+    opvp.ClassSpec.ENHANCEMENT_SHAMAN,
+    opvp.ClassSpec.AFFLICTION_WARLOCK,
+    opvp.ClassSpec.DEMONOLOGY_WARLOCK,
+    opvp.ClassSpec.DESTRUCTION_WARLOCK,
+    opvp.ClassSpec.ARMS_WARRIOR,
+    opvp.ClassSpec.FURY_WARRIOR
+};
+
+opvp.ClassSpec.SPECS_HEALER = {
+    opvp.ClassSpec.RESTORATION_DRUID,
+    opvp.ClassSpec.PRESERVATION_EVOKER,
+    opvp.ClassSpec.MISTWEAVER_MONK,
+    opvp.ClassSpec.HOLY_PALADIN,
+    opvp.ClassSpec.DISCIPLINE_PRIEST,
+    opvp.ClassSpec.HOLY_PRIEST,
+    opvp.ClassSpec.RESTORATION_SHAMAN
+};
+
+opvp.ClassSpec.SPECS_TANK = {
+    opvp.ClassSpec.BLOOD_DEATH_KNIGHT,
+    opvp.ClassSpec.VENGANCE_DEMON_HUNTER,
+    opvp.ClassSpec.GUARDIAN_DRUID,
+    opvp.ClassSpec.BREWMASTER_MONK,
+    opvp.ClassSpec.PROTECTION_PALADIN,
+    opvp.ClassSpec.PROTECTION_WARRIOR
+};
