@@ -30,7 +30,7 @@ local opvp = OpenPvp;
 
 local opvp_trinket_monitor_singleton;
 
-opvp.PvpTrinketMonitor = opvp.CreateClass(opvp.OptionFeature);
+opvp.PvpTrinketMonitor = opvp.CreateClass(opvp.CombatLogFilter);
 
 function opvp.PvpTrinketMonitor:instance()
     if opvp_trinket_monitor_singleton ~= nil then
@@ -43,6 +43,10 @@ function opvp.PvpTrinketMonitor:instance()
 end
 
 function opvp.PvpTrinketMonitor:init()
+    opvp.CombatLogFilter.init(self, nil);
+
+    self.trinketUsed = opvp.Signal("opvp.PvpTrinketMonitor.trinketUsed");
+
     self._spell_id_op = opvp.SpellIdCombatLogCondition(
         {
             336126, -- Gladiator's Medallion
@@ -70,43 +74,35 @@ function opvp.PvpTrinketMonitor:init()
 
     op:addCondition(self._spell_id_op);
 
-    self._event_filter = opvp.CallbackCombatLogFilter(
-        function(filter, info)
-            self:_onTrintetUsed(info);
-        end,
-        op
-    );
-
+    self:setOp(op);
     --~ local player = opvp.player.instance();
 
     --~ player.inSanctuaryChanged:connect(self, self._onSanctuaryChanged);
 
-    self.trinketUsed = opvp.Signal("opvp.PvpTrinketMonitor.trinketUsed");
-
     --~ if opvp.player.inSanctuary() == false then
-        self._event_filter:connect();
+        self:connect();
     --~ end
 end
 
-function opvp.PvpTrinketMonitor:_onSanctuaryChanged(state)
-    if state == true then
-        self._event_filter:disconnect();
-    elseif self:canActivate() == true then
-        self._event_filter:connect();
-    end
-end
-
-function opvp.PvpTrinketMonitor:_onTrintetUsed(info)
+function opvp.PvpTrinketMonitor:triggered(event)
     local spell_id = self._spell_id_op:lastSpellId();
 
-    if opvp.player.guid() == info.sourceGUID then
+    if opvp.player.guid() == event.sourceGUID then
         opvp.player.instance():_onPvpTrinketUsed(spell_id);
     end
 
     self.trinketUsed:emit(
-        info.sourceGUID,
-        info.sourceName,
+        event.sourceGUID,
+        event.sourceName,
         spell_id,
-        bit.band(info.sourceFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) ~= 0
+        bit.band(event.sourceFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) ~= 0
     );
+end
+
+function opvp.PvpTrinketMonitor:_onSanctuaryChanged(state)
+    if state == true then
+        self:disconnect();
+    elseif self:canActivate() == true then
+        self:connect();
+    end
 end
