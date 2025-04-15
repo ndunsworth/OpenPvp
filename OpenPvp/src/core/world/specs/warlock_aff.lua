@@ -41,3 +41,5 @@ opvp.ClassSpec.AFFLICTION_WARLOCK = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.AFFLICTION_WARLOCK);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.AFFLICTION_WARLOCK);
+
+spec_info = nil;

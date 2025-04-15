@@ -41,3 +41,5 @@ opvp.ClassSpec.PROTECTION_PALADIN = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.PROTECTION_PALADIN);
 table.insert(opvp.ClassSpec.TANK_SPECS, opvp.ClassSpec.PROTECTION_PALADIN);
+
+spec_info = nil;

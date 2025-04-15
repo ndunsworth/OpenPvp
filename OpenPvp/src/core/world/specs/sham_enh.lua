@@ -41,3 +41,5 @@ opvp.ClassSpec.ENHANCEMENT_SHAMAN = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.ENHANCEMENT_SHAMAN);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.ENHANCEMENT_SHAMAN);
+
+spec_info = nil;

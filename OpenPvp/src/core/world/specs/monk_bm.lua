@@ -41,3 +41,5 @@ opvp.ClassSpec.BREWMASTER_MONK = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.BREWMASTER_MONK);
 table.insert(opvp.ClassSpec.TANK_SPECS, opvp.ClassSpec.BREWMASTER_MONK);
+
+spec_info = nil;

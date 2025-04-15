@@ -41,3 +41,5 @@ opvp.ClassSpec.MISTWEAVER_MONK = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.MISTWEAVER_MONK);
 table.insert(opvp.ClassSpec.HEALER_SPECS, opvp.ClassSpec.MISTWEAVER_MONK);
+
+spec_info = nil;

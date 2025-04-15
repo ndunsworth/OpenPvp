@@ -41,3 +41,5 @@ opvp.ClassSpec.SUBTLETY_ROGUE = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.SUBTLETY_ROGUE);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.SUBTLETY_ROGUE);
+
+spec_info = nil;

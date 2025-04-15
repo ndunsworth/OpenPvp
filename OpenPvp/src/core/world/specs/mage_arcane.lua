@@ -41,3 +41,5 @@ opvp.ClassSpec.ARCANE_MAGE = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.ARCANE_MAGE);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.ARCANE_MAGE);
+
+spec_info = nil;

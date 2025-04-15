@@ -41,3 +41,5 @@ opvp.ClassSpec.ASSASSINATION_ROGUE = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.ASSASSINATION_ROGUE);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.ASSASSINATION_ROGUE);
+
+spec_info = nil;

@@ -41,3 +41,5 @@ opvp.ClassSpec.FROST_MAGE = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.FROST_MAGE);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.FROST_MAGE);
+
+spec_info = nil;

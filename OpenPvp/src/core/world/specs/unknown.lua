@@ -40,3 +40,5 @@ local spec_info = {
 opvp.ClassSpec.UNKNOWN = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.UNKNOWN);
+
+spec_info = nil;

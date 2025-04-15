@@ -41,3 +41,5 @@ opvp.ClassSpec.BLOOD_DEATH_KNIGHT = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.BLOOD_DEATH_KNIGHT);
 table.insert(opvp.ClassSpec.TANK_SPECS, opvp.ClassSpec.BLOOD_DEATH_KNIGHT);
+
+spec_info = nil;

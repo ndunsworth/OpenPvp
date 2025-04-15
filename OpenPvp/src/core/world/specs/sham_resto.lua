@@ -41,3 +41,5 @@ opvp.ClassSpec.RESTORATION_SHAMAN = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.RESTORATION_SHAMAN);
 table.insert(opvp.ClassSpec.HEALER_SPECS, opvp.ClassSpec.RESTORATION_SHAMAN);
+
+spec_info = nil;

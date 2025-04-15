@@ -41,3 +41,5 @@ opvp.ClassSpec.PROTECTION_WARRIOR = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.PROTECTION_WARRIOR);
 table.insert(opvp.ClassSpec.TANK_SPECS, opvp.ClassSpec.PROTECTION_WARRIOR);
+
+spec_info = nil;

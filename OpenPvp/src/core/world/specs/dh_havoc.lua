@@ -41,3 +41,5 @@ opvp.ClassSpec.HAVOC_DEMON_HUNTER = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.HAVOC_DEMON_HUNTER);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.HAVOC_DEMON_HUNTER);
+
+spec_info = nil;

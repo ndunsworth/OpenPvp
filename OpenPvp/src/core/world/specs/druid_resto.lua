@@ -41,3 +41,5 @@ opvp.ClassSpec.RESTORATION_DRUID = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.RESTORATION_DRUID);
 table.insert(opvp.ClassSpec.HEALER_SPECS, opvp.ClassSpec.RESTORATION_DRUID);
+
+spec_info = nil;

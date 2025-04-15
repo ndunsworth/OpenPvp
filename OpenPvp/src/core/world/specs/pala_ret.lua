@@ -41,3 +41,5 @@ opvp.ClassSpec.RETRIBUTION_PALADIN = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.RETRIBUTION_PALADIN);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.RETRIBUTION_PALADIN);
+
+spec_info = nil;

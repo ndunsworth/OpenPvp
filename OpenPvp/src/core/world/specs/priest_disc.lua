@@ -41,3 +41,5 @@ opvp.ClassSpec.DISCIPLINE_PRIEST = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.DISCIPLINE_PRIEST);
 table.insert(opvp.ClassSpec.HEALER_SPECS, opvp.ClassSpec.DISCIPLINE_PRIEST);
+
+spec_info = nil;

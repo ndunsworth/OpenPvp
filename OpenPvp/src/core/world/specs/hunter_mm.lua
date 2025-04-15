@@ -41,3 +41,5 @@ opvp.ClassSpec.MASTER_MARKSMAN_HUNTER = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.MASTER_MARKSMAN_HUNTER);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.MASTER_MARKSMAN_HUNTER);
+
+spec_info = nil;

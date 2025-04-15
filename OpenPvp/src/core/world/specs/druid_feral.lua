@@ -41,3 +41,5 @@ opvp.ClassSpec.FERAL_DRUID = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.FERAL_DRUID);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.FERAL_DRUID);
+
+spec_info = nil;

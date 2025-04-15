@@ -41,3 +41,5 @@ opvp.ClassSpec.PRESERVATION_EVOKER = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.PRESERVATION_EVOKER);
 table.insert(opvp.ClassSpec.HEALER_SPECS, opvp.ClassSpec.PRESERVATION_EVOKER);
+
+spec_info = nil;

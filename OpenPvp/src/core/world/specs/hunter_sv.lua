@@ -41,3 +41,5 @@ opvp.ClassSpec.SURVIVAL_HUNTER = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.SURVIVAL_HUNTER);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.SURVIVAL_HUNTER);
+
+spec_info = nil;

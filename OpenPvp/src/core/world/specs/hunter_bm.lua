@@ -41,3 +41,5 @@ opvp.ClassSpec.DEVESTATION_EVOKER = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.BEASTMASTER_HUNTER);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.BEASTMASTER_HUNTER);
+
+spec_info = nil;

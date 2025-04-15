@@ -41,3 +41,5 @@ opvp.ClassSpec.OUTLAW_ROGUE = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.OUTLAW_ROGUE);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.OUTLAW_ROGUE);
+
+spec_info = nil;

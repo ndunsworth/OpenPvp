@@ -41,3 +41,5 @@ opvp.ClassSpec.HOLY_PALADIN = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.HOLY_PALADIN);
 table.insert(opvp.ClassSpec.HEALER_SPECS, opvp.ClassSpec.HOLY_PALADIN);
+
+spec_info = nil;

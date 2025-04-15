@@ -41,3 +41,5 @@ opvp.ClassSpec.GUARDIAN_DRUID = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.GUARDIAN_DRUID);
 table.insert(opvp.ClassSpec.TANK_SPECS, opvp.ClassSpec.GUARDIAN_DRUID);
+
+spec_info = nil;

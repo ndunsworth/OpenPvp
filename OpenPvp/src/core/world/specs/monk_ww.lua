@@ -41,3 +41,5 @@ opvp.ClassSpec.WINDWALKER_MONK = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.WINDWALKER_MONK);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.WINDWALKER_MONK);
+
+spec_info = nil;

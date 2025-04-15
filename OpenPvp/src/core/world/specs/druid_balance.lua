@@ -41,3 +41,5 @@ opvp.ClassSpec.BALANCE_DRUID = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.BALANCE_DRUID);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.BALANCE_DRUID);
+
+spec_info = nil;

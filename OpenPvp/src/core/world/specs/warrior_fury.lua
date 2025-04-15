@@ -41,3 +41,5 @@ opvp.ClassSpec.FURY_WARRIOR = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.FURY_WARRIOR);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.FURY_WARRIOR);
+
+spec_info = nil;

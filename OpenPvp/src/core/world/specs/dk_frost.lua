@@ -41,3 +41,5 @@ opvp.ClassSpec.FROST_DEATH_KNIGHT = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.FROST_DEATH_KNIGHT);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.FROST_DEATH_KNIGHT);
+
+spec_info = nil;

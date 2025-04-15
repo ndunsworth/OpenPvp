@@ -41,3 +41,5 @@ opvp.ClassSpec.VENGANCE_DEMON_HUNTER = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.VENGANCE_DEMON_HUNTER);
 table.insert(opvp.ClassSpec.TANK_SPECS, opvp.ClassSpec.VENGANCE_DEMON_HUNTER);
+
+spec_info = nil;

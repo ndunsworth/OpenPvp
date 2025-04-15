@@ -41,3 +41,5 @@ opvp.ClassSpec.SHADOW_PRIEST = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.SHADOW_PRIEST);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.SHADOW_PRIEST);
+
+spec_info = nil;
