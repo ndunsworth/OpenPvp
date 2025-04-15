@@ -72,5 +72,47 @@ opvp.Class.MAGE = opvp.Class(
         opvp.ClassSpec.ARCANE_MAGE,
         opvp.ClassSpec.FIRE_MAGE,
         opvp.ClassSpec.FROST_MAGE
+    },
+    {
+        harmful = {
+            base = {
+                {120,    opvp.SpellTrait.SNARE},                      -- Cone of Cold
+                {2139,   opvp.SpellTrait.INTERRUPT},                  -- Counterspell
+                {319836, 0},                                          -- Fire Blast
+                {319836, opvp.SpellTrait.ROOT_CROWD_CONTROL},         -- Freeze (Water Elemental)
+                {122,    opvp.SpellTrait.ROOT_CROWD_CONTROL},         -- Frost Nova
+                {116,    opvp.SpellTrait.SNARE},                      -- Frostbolt
+                {61305,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Black Cat)
+                {277792, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Bumblebee)
+                {277787, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Direhorn)
+                {161354, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Monkey)
+                {161372, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Peacock)
+                {161355, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Penguin)
+                {28272,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Pig)
+                {161353, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Polar Bear Cub)
+                {126819, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Porcupine)
+                {61721,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Rabbit)
+                {118,    opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Sheep)
+                {61780,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Turkey)
+                {28271,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Polymorph (Turtle)
+            },
+            talent = {
+                {82691,  opvp.SpellTrait.DISORIENT_CROWD_CONTROL},    -- Dragon's Breath
+                {82691,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL}, -- Ring of Frost
+            }
+        },
+        helpful = {
+            base = {
+                {1459,   opvp.SpellTrait.RAID},                      -- Arcane Intellect
+                {1953,   0},                                         -- Blink
+                {66,     0},                                         -- Invisibility
+                {130,    0},                                         -- Slow Fall
+                {80353,  opvp.SpellTrait.RAID},                      -- Time Warp
+            },
+            talent = {
+                {212801, 0},                                         -- Displacement
+                {212653, 0},                                         -- Shimmer
+            }
+        }
     }
 );
