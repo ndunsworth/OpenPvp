@@ -89,7 +89,7 @@ function opvp.Aura:reduce()
 
     if opvp_aura_pool:available() >= size then
         opvp.printDebug(
-            "opvp.Aura.acquire, shrinking pool %d->%d",
+            "opvp.Aura.reduce, shrinking pool %d->%d",
             cur_size,
             size
         );
@@ -188,6 +188,8 @@ function opvp.Aura:set(info)
 
         return;
     end
+
+    DevTools_Dump(info)
 
     self._id           = info.auraInstanceID;
 
