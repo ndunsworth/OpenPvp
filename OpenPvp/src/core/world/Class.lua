@@ -28,74 +28,6 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local function opvp_class_spells_init_category(cls, spells, cfg, parentMask)
-    local base_mask, mask, spell_id, spell;
-
-    if cfg.base ~= nil then
-        for n=1, #cfg.base do
-            spell_id, mask = unpack(cfg.base[n]);
-
-            spell = opvp.SpellExt(
-                cls,
-                spell_id,
-                bit.bor(parentMask, mask)
-            );
-
-            spells:append(spell);
-        end
-    end
-
-    if cfg.talent ~= nil then
-        parentMask = bit.bor(parentMask, opvp.SpellTrait.TALENT);
-
-        for n=1, #cfg.talent do
-            spell_id, mask = unpack(cfg.talent[n]);
-
-            spell = opvp.SpellExt(
-                cls,
-                spell_id,
-                bit.bor(parentMask, mask)
-            );
-
-            spells:append(spell);
-        end
-    end
-end
-
-local function opvp_class_spells_init(cls, cfg)
-    spells = opvp.List();
-
-    if cfg == nil then
-        return spells;
-    end
-
-    local mask;
-
-    if cfg.helpful ~= nil then
-        mask = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.HELPFUL);
-
-        opvp_class_spells_init_category(
-            cls,
-            spells,
-            cfg.helpful,
-            mask
-        );
-    end
-
-    if cfg.harmful ~= nil then
-        mask = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.HARMFUL);
-
-        opvp_class_spells_init_category(
-            cls,
-            spells,
-            cfg.harmful,
-            mask
-        );
-    end
-
-    return spells;
-end
-
 opvp.Class = opvp.CreateClass();
 
 function opvp.Class:fromClassId(id)
@@ -155,7 +87,7 @@ function opvp.Class:init(id, fileId, races, specs, spells)
     self._races_mask = 0;
     self._specs      = specs;
     self._role_mask  = 0;
-    self._spells     = opvp_class_spells_init(self, spells);
+    self._spells     = opvp.SpellList:createFromClassConfig(id, spells);
 
     for index, race in ipairs(races) do
         self._races_mask = bit.bor(
@@ -298,4 +230,8 @@ end
 
 function opvp.Class:specs()
     return {unpack(self._specs)};
+end
+
+function opvp.Class:spells()
+    return self._spells;
 end

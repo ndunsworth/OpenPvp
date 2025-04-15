@@ -129,6 +129,7 @@ function opvp.ClassSpec:init(cfg)
     self._icon   = cfg.icon;
     self._sound  = cfg.sound;
     self._traits = cfg.traits;
+    self._spells = opvp.SpellList();
 
     if self._id ~= 0 then
         self._name = select(2, GetSpecializationInfoByID(self._id));
@@ -195,6 +196,10 @@ end
 
 function opvp.ClassSpec:sound()
     return self._sound;
+end
+
+function opvp.ClassSpec:spells()
+    return self._spells;
 end
 
 opvp.ClassSpec.SPECS        = {};
