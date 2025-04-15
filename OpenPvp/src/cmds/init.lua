@@ -28,6 +28,43 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+opvp.private.DBGCombatLogConnection = opvp.CreateClass(opvp.CombatLogConnection);
+
+function opvp.private.DBGCombatLogConnection:event(event)
+    opvp.printDebug(
+[[
+COMBAT_LOG_EVENT_UNFILTERED {
+    timestamp = %d,
+    subevent = %s,
+    hideCaster = %s,
+    sourceGUID = %s,
+    sourceName = %s,
+    sourceFlags = %d,
+    sourceRaidFlags = %d,
+    destGUID = %s,
+    destName = %s,
+    destFlags = %d,
+    destRaidFlags = %d
+}
+]],
+        event.timestamp,
+        event.subevent,
+        tostring(event.hideCaster),
+        tostring(event.sourceGUID),
+        tostring(event.sourceName),
+        event.sourceFlags,
+        event.sourceRaidFlags,
+        tostring(event.destGUID),
+        tostring(event.destName),
+        event.destFlags
+    );
+
+    print(CombatLogGetCurrentEventInfo());
+end
+
+local opvp_dbg_auras_enabled = false;
+local opvp_dbg_combatlog;
+
 opvp.OpenPvpRootCmd = opvp.CreateClass(opvp.GroupAddonCommand);
 
 function opvp.OpenPvpRootCmd:init(name, description)
@@ -39,6 +76,52 @@ function opvp.OpenPvpRootCmd:show()
 end
 
 opvp.cmds = opvp.OpenPvpRootCmd("OpenPvp");
+
+local function opvp_init_dbg_slash_cmds()
+    local function opvp_dbg_auras(unitId, info)
+         print("opvp.event.UNIT_AURA", unitId);
+
+         DevTools_Dump(info)
+    end
+
+    opvp_dbg_combatlog = opvp.private.DBGCombatLogConnection();
+
+    local dbg_cmd = opvp.GroupAddonCommand("dbg", "Debug commands");
+
+    dbg_cmd:addCommand(
+        opvp.FuncAddonCommand(
+            function(editbox, args)
+                if opvp_dbg_auras_enabled == false then
+                    opvp.event.UNIT_AURA:connect(opvp_dbg_auras);
+
+                    opvp_dbg_auras_enabled = true;
+                else
+                    opvp.event.UNIT_AURA:disconnect(opvp_dbg_auras);
+
+                    opvp_dbg_auras_enabled = false;
+                end
+            end,
+            "auras",
+            "Prints UNIT_AURA event information"
+        )
+    );
+
+    dbg_cmd:addCommand(
+        opvp.FuncAddonCommand(
+            function(editbox, args)
+                if opvp_dbg_combatlog:isConnected() == false then
+                    opvp_dbg_combatlog:connect();
+                else
+                    opvp_dbg_combatlog:disconnect();
+                end
+            end,
+            "combatlog",
+            "Prints COMBAT_LOG_EVENT_UNFILTERED event information"
+        )
+    );
+
+    opvp.cmds:addCommand(dbg_cmd);
+end
 
 local function opvp_init_party_slash_cmds()
     local party_cmd = opvp.GroupAddonCommand("party", "Party commands");
@@ -295,6 +378,8 @@ test
 end
 
 local function opvp_init_slash_cmds()
+    opvp_init_dbg_slash_cmds();
+
     opvp.cmds:addCommand(
         opvp.FuncAddonCommand(
             opvp.player.logHonorStats,
