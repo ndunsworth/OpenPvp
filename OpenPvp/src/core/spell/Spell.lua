@@ -68,18 +68,19 @@ opvp.SpellTrait = {
     TAUNT         = bit.lshift(1,  7)
 };
 
+opvp.SpellTrait.RAID_BUFF                  = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.RAID);
 opvp.SpellTrait.MASK_LOW                   = 255;
 opvp.SpellTrait.BASE_TALENT                = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.TALENT);
 opvp.SpellTrait.HERO_TALENT                = bit.bor(opvp.SpellTrait.HERO, opvp.SpellTrait.TALENT);
 opvp.SpellTrait.SPEC_TALENT                = bit.bor(opvp.SpellTrait.SPEC, opvp.SpellTrait.TALENT);
-opvp.SpellTrait.DISARM_CROWD_CONTROL       = bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.DISARM);
-opvp.SpellTrait.DISORIENT_CROWD_CONTROL    = bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.DISORIENT);
-opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL = bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.INCAPACITATE);
-opvp.SpellTrait.KNOCKBACK_CROWD_CONTROL    = bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.KNOCKBACK);
-opvp.SpellTrait.ROOT_CROWD_CONTROL         = bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.ROOT);
-opvp.SpellTrait.SILENCE_CROWD_CONTROL      = bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.SILENCE);
-opvp.SpellTrait.STUN_CROWD_CONTROL         = bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.STUN);
-opvp.SpellTrait.TAUNT_CROWD_CONTROL        = bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.TAUNT);
+opvp.SpellTrait.DISARM_CROWD_CONTROL       = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.DISARM);
+opvp.SpellTrait.DISORIENT_CROWD_CONTROL    = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.DISORIENT);
+opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.INCAPACITATE);
+opvp.SpellTrait.KNOCKBACK_CROWD_CONTROL    = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.KNOCKBACK);
+opvp.SpellTrait.ROOT_CROWD_CONTROL         = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.ROOT);
+opvp.SpellTrait.SILENCE_CROWD_CONTROL      = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.SILENCE);
+opvp.SpellTrait.STUN_CROWD_CONTROL         = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.STUN);
+opvp.SpellTrait.TAUNT_CROWD_CONTROL        = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.TAUNT);
 
 opvp.Spell = opvp.CreateClass();
 
