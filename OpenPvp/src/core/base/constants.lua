@@ -55,6 +55,18 @@ opvp.WARLOCK       = 9;
 opvp.WARRIOR       = 1;
 opvp.MAX_CLASS     = 13;
 
+opvp.CrowdControlType = {
+    NONE         = 0,
+    DISARM       = bit.lshift(1, 0),
+    DISORIENT    = bit.lshift(1, 1),
+    INCAPACITATE = bit.lshift(1, 2),
+    KNOCKBACK    = bit.lshift(1, 4),
+    ROOT         = bit.lshift(1, 5),
+    SILENCE      = bit.lshift(1, 6),
+    STUN         = bit.lshift(1, 7),
+    TAUNT        = bit.lshift(1, 8)
+};
+
 opvp.DispellType = {
     NONE         = 0,
     BLEED        = 1,
