@@ -30,11 +30,23 @@ local opvp = OpenPvp;
 
 opvp.SpellExt = opvp.CreateClass(opvp.Spell);
 
-function opvp.SpellExt:init(class, id, mask)
+function opvp.SpellExt:init(class, id, mask, auraId)
     opvp.Spell.init(self, id);
 
     self._class = class;
     self._mask  = mask;
+
+    if opvp.is_number(auraId) == true then
+        self._aura_id = auraId;
+    elseif bit.band(self._mask, opvp.SpellTrait.AURA) ~= 0 then
+        self._aura_id = id;
+    else
+        self._aura_id = 0;
+    end
+end
+
+function opvp.SpellExt:aura()
+    return self._aura_id;
 end
 
 function opvp.SpellExt:class()
