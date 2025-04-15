@@ -114,6 +114,9 @@ function opvp.Aura:init()
     self._icon         = 0;
     self._name         = "";
     self._spell_id     = 0;
+    self._source       = "";
+
+    self._mask         = 0;
 end
 
 function opvp.Aura:applications()
@@ -132,6 +135,9 @@ function opvp.Aura:clear()
     self._icon         = 0;
     self._name         = "";
     self._spell_id     = 0;
+    self._source       = "";
+
+    self._mask         = 0;
 end
 
 function opvp.Aura:charges()
@@ -189,8 +195,6 @@ function opvp.Aura:set(info)
         return;
     end
 
-    DevTools_Dump(info)
-
     self._id           = info.auraInstanceID;
 
     self._applications = opvp.number_else(info.applications, 0);
@@ -199,8 +203,17 @@ function opvp.Aura:set(info)
     self._dispell_type = opvp_aura_dispell_type(info.dispelName);
     self._duration     = opvp.number_else(info.duration, 0);
     self._expiration   = opvp.number_else(info.expirationTime, 0);
-    self._name         = info.name;
+    self._name         = opvp.str_else(info.name, "");
     self._spell_id     = opvp.number_else(info.spellId, 0);
+    self._source       = opvp.str_else(info.source, "");
+
+    self._mask         = 0;
+
+    if opvp.bool_else(info.isHarmful, false) == true then
+        self._mask = bit.bor(self._mask, opvp.SpellTrait.HARMFUL);
+    elseif opvp.bool_else(info.isHarmful, false) == true then
+        self._mask = bit.bor(self._mask, opvp.SpellTrait.HELPFUL);
+    end
 end
 
 function opvp.Aura:update(info)
@@ -219,6 +232,10 @@ end
 
 function opvp.Aura:spellId()
     return self._spell_id;
+end
+
+function opvp.Aura:source()
+    return self._source;
 end
 
 opvp_aura_pool = opvp.Pool(OPVP_AURA_POOL_DEFAULT_SIZE, opvp.Aura);
