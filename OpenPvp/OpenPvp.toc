@@ -105,6 +105,12 @@ src/core/cmd/GroupAddonCommand.lua
 src/core/cmd/FuncAddonCommand.lua
 src/core/cmd/ShowOptionAddonCommand.lua
 
+src/core/spell/Spell.lua
+src/core/spell/SpellExt.lua
+src/core/spell/SpellList.lua
+src/core/spell/Aura.lua
+src/core/spell/UnitAuras.lua
+
 src/core/world/expansion.lua
 src/core/world/season.lua
 src/core/world/Currency.lua
@@ -205,9 +211,7 @@ src/core/world/classes/shaman.lua
 src/core/world/classes/unknown.lua
 src/core/world/classes/namespace.lua
 
-src/core/world/Aura.lua
 src/core/world/Unit.lua
-src/core/world/UnitAuras.lua
 src/core/world/Ping.lua
 src/core/world/Player.lua
 src/core/world/NotifyInspectQueue.lua
