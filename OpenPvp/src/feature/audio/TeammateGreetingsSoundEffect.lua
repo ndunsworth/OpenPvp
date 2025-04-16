@@ -89,8 +89,8 @@ function opvp.private.TeammateGreetingsSoundEffect:_greetMember(member)
 end
 
 function opvp.private.TeammateGreetingsSoundEffect:_onFeatureActivated()
-    opvp.match.playerInfoUpdated:connect(self, self._onPlayerInfoUpdated);
-    opvp.match.playerRosterUpdated:connect(self, self._onPlayerRosterUpdated);
+    opvp.match.playerInfoUpdate:connect(self, self._onPlayerInfoUpdated);
+    opvp.match.rosterEndUpdate:connect(self, self._onPlayerRosterUpdated);
 
     local match = opvp.match.current();
 
@@ -117,15 +117,15 @@ function opvp.private.TeammateGreetingsSoundEffect:_onFeatureDeactivated()
     self._players:clear();
     self._last_greet = 0;
 
-    opvp.match.playerInfoUpdated:disconnect(self, self._onPlayerInfoUpdated);
-    opvp.match.playerRosterUpdated:disconnect(self, self._onPlayerRosterUpdated);
+    opvp.match.playerInfoUpdate:disconnect(self, self._onPlayerInfoUpdated);
+    opvp.match.rosterEndUpdate:disconnect(self, self._onPlayerRosterUpdated);
 
     opvp.MatchOptionFeature._onFeatureDeactivated(self)
 end
 
-function opvp.private.TeammateGreetingsSoundEffect:_onPlayerInfoUpdated(team, member, mask)
+function opvp.private.TeammateGreetingsSoundEffect:_onPlayerInfoUpdated(member, mask)
     if (
-        team:isHostile() == false and
+        member:isHostile() == false and
         bit.band(mask, opvp.PartyMember.CHARACTER_RACE_SEX_MASK) ~= 0
     ) then
         self:_greetMember(member);
