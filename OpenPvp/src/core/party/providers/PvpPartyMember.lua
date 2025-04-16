@@ -223,10 +223,10 @@ function opvp.PvpPartyMember:_updateScore(rated)
         return 0;
     end
 
-    self._kills     = opvp.number_else(info.killingBlows, 0);
-    self._deaths    = opvp.number_else(info.deaths, 0);
-    self._damage    = opvp.number_else(info.damageDone, 0);
-    self._healing   = opvp.number_else(info.healingDone, 0);
+    self._kills     = opvp.number_else(info.killingBlows);
+    self._deaths    = opvp.number_else(info.deaths);
+    self._damage    = opvp.number_else(info.damageDone);
+    self._healing   = opvp.number_else(info.healingDone);
 
     if rated == true then
         info.mmrChange = info.postmatchMMR - info.prematchMMR;
