@@ -99,7 +99,8 @@ function opvp.PartyMember:init()
     self._spec        = opvp.ClassSpec.UNKNOWN;
     self._name        = "";
     self._mask        = 0;
-    self._auras       = opvp.UnitAuras();
+    self._auras       = opvp.PartyMemberAuraList();
+    self._cc_tracker  = nil;
 end
 
 function opvp.PartyMember:affiliation()
@@ -124,6 +125,10 @@ end
 
 function opvp.PartyMember:guid()
     return self._guid;
+end
+
+function opvp.PartyMember:hasCrowdControlTracker()
+    return self._cc_tracker ~= nil;
 end
 
 function opvp.PartyMember:hasTeam()
@@ -258,6 +263,10 @@ function opvp.PartyMember:specInfo()
     return self._spec;
 end
 
+function opvp.PartyMember:_crowdControlTracker()
+    return self._cc_tracker;
+end
+
 function opvp.PartyMember:_reset(mask)
     if bit.band(mask, opvp.PartyMember.CHARACTER_FLAGS) == opvp.PartyMember.CHARACTER_FLAGS then
         self._guid    = "";
@@ -329,6 +338,10 @@ function opvp.PartyMember:_setConnected(state)
         opvp.PartyMember.CONNECTED_FLAG,
         state
     );
+end
+
+function opvp.PartyMember:_setCrowdControlTracker(tracker)
+    self._cc_tracker = tracker;
 end
 
 function opvp.PartyMember:_setDead(state)

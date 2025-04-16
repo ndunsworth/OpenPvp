@@ -162,6 +162,7 @@ function opvp.Match:init(queue, description, testType)
     self._countdown_time    = 0;
     self._countdown_timer   = opvp.Timer(1);
     self._round_results     = false;
+    self._cc_tracker        = nil;
 
     self._outcome           = opvp.MatchWinner.NONE;
     self._outcome_valid     = false;
@@ -725,6 +726,10 @@ end
 function opvp.Match:_onMatchRoundComplete()
     self._countdown_timer:stop();
 
+    if self._cc_tracker ~= nil then
+        self._cc_tracker:disconnect();
+    end
+
     self:_setStatus(opvp.MatchStatus.ROUND_COMPLETE);
 end
 
@@ -733,6 +738,14 @@ function opvp.Match:_onMatchRoundWarmup()
         opvp.options.announcements.match.roundWarmup:value(),
         opvp.strs.MATCH_ROUND_WARMUP
     );
+
+    if self._cc_tracker ~= nil then
+        if self:isArena() == true then
+            self._cc_tracker:connect(self, bit.bor(opvp.Affiliation.FRIENDLY, opvp.Affiliation.HOSTILE))
+        else
+            self._cc_tracker:connect(self, opvp.Affiliation.FRIENDLY)
+        end
+    end
 
     self._round_results = true;
 
