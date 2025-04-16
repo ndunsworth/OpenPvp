@@ -248,6 +248,18 @@ function opvp.List:removeItem(item, cmp)
     return false;
 end
 
+function opvp.List:removeItems(items, cmp)
+    if opvp.IsInstance(items, opvp.List) and items ~= self then
+        for n=1, items:size() do
+            self:removeItem(items:item(n), cmp);
+        end
+    elseif opvp.is_table(items) == true then
+        for n=1, #items do
+            self:removeItem(items[n], cmp);
+        end
+    end
+end
+
 function opvp.List:replaceIndex(index, item)
     if index > 0 and index <= #self._items then
         self._items[index] = item;
