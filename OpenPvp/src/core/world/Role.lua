@@ -28,7 +28,6 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-local opvp_role_icon_lookup;
 local opvp_role_name_lookup;
 
 opvp.RoleType = {
@@ -36,6 +35,13 @@ opvp.RoleType = {
     DPS    = 1,
     HEALER = 2,
     TANK   = 3
+};
+
+local opvp_role_icon_lookup = {
+    [opvp.RoleType.NONE]    = "",
+    [opvp.RoleType.DPS]     = opvp.utils.textureAtlastMarkup("UI-Frame-DpsIcon"),
+    [opvp.RoleType.HEALER]  = opvp.utils.textureAtlastMarkup("UI-Frame-HealerIcon"),
+    [opvp.RoleType.TANK]    = opvp.utils.textureAtlastMarkup("UI-Frame-TankIcon")
 };
 
 opvp.Role = opvp.CreateClass();
@@ -87,13 +93,6 @@ end
 function opvp.Role:name()
     return self._name;
 end
-
-opvp_role_icon_lookup = {
-    [opvp.RoleType.NONE]    = "",
-    [opvp.RoleType.DPS]     = opvp.utils.textureAtlastMarkup("UI-Frame-DpsIcon"),
-    [opvp.RoleType.HEALER]  = opvp.utils.textureAtlastMarkup("UI-Frame-HealerIcon"),
-    [opvp.RoleType.TANK]    = opvp.utils.textureAtlastMarkup("UI-Frame-TankIcon")
-};
 
 opvp.Role.NONE    = opvp.Role(opvp.RoleType.NONE, "");
 opvp.Role.DPS     = opvp.Role(opvp.RoleType.DPS, DAMAGER);
