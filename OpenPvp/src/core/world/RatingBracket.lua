@@ -164,7 +164,7 @@ function opvp.RatingBracket:logRanking()
         if info.season_best ~= 0 and info.season_best ~= info.rating then
             if info.ranking ~= 0 then
                 msg = string.format(
-                    "%s - rating=%d (%s), rank=%d, high=%d (%s)",
+                    opvp.strs.RATING_BRACKET_INFO_WITH_HIGH_RANK,
                     self._name,
                     info.rating,
                     info.ranking,
@@ -172,35 +172,37 @@ function opvp.RatingBracket:logRanking()
                     info.season_best,
                     PVPUtil.GetTierName(
                         self:tierInfoForRating(info.season_best).enum
-                    )
+                    ),
+                    100 * (info.season_wins / info.season_played)
                 );
             else
                 msg = string.format(
-                    "%s - rating=%d (%s), high=%d (%s)",
+                    opvp.strs.RATING_BRACKET_INFO_WITH_HIGH,
                     self._name,
                     info.rating,
                     self:tierName(),
                     info.season_best,
                     PVPUtil.GetTierName(
                         self:tierInfoForRating(info.season_best).enum
-                    )
+                    ),
+                    100 * (info.season_wins / info.season_played)
                 );
             end
         else
             if info.rating > 0 then
                 msg = string.format(
-                    "%s - rating=%d (%s)",
+                    opvp.strs.RATING_BRACKET_INFO,
                     self._name,
                     info.rating,
-                    self:tierName()
+                    self:tierName(),
+                    100 * (info.season_wins / info.season_played)
                 );
             else
                 msg = string.format(
-                    "%s - No Rating",
+                    opvp.strs.RATING_BRACKET_INFO_NONE,
                     self._name
                 );
             end
-
         end
     else
         msg = "Invalid Rating Bracket!";
