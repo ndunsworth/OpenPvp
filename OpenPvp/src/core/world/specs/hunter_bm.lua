@@ -37,7 +37,7 @@ local spec_info = {
     icon   = "Interface/Icons/ability_hunter_bestialdiscipline"
 };
 
-opvp.ClassSpec.DEVESTATION_EVOKER = opvp.ClassSpec(spec_info);
+opvp.ClassSpec.BEASTMASTER_HUNTER = opvp.ClassSpec(spec_info);
 
 table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.BEASTMASTER_HUNTER);
 table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.BEASTMASTER_HUNTER);
