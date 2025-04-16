@@ -55,6 +55,13 @@ opvp.WARLOCK       = 9;
 opvp.WARRIOR       = 1;
 opvp.MAX_CLASS     = 13;
 
+opvp.Affiliation = {
+    UNKNOWN  = 0,
+    NEUTRAL  = bit.lshift(1, 0),
+    FRIENDLY = bit.lshift(1, 1),
+    HOSTILE  = bit.lshift(1, 2)
+};
+
 opvp.CrowdControlType = {
     NONE         = 0,
     DISARM       = bit.lshift(1, 0),
