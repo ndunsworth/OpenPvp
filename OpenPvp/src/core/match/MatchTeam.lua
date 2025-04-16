@@ -243,63 +243,79 @@ function opvp.MatchTeam:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, au
 end
 
 function opvp.MatchTeam:_onMemberInfoUpdate(member, mask)
-    if member:isPlayer() == false then
-        if bit.band(mask, opvp.PartyMember.SPEC_FLAG) ~= 0 then
+    opvp.Party._onMemberInfoUpdate(self, member, mask);
+
+    opvp.match.playerInfoUpdate:emit(member, mask);
+
+    if member:isPlayer() == true then
+        return;
+    end
+
+    if bit.band(mask, opvp.PartyMember.DEAD_FLAG) ~= 0 then
+        if member:isDead() == true then
             local do_msg;
 
             if self:isFriendly() == true then
-                do_msg = opvp.options.announcements.friendlyParty.memberSpecUpdate:value();
+                do_msg = opvp.options.announcements.friendlyParty.memberDeath:value();
             else
-                do_msg = opvp.options.announcements.hostileParty.memberSpecUpdate:value();
+                do_msg = opvp.options.announcements.hostileParty.memberDeath:value();
             end
 
-            opvp.printMessageOrDebug(
-                do_msg,
-                opvp.strs.MATCH_PLAYER_SPEC_CHANGED,
-                opvp_member_type_name(member),
-                member:nameOrId(),
-                member:classInfo():color():GenerateHexColor(),
-                member:specInfo():name(),
-                member:classInfo():name()
-            );
-        elseif bit.band(mask, opvp.PartyMember.DEAD_FLAG) ~= 0 then
-            if member:isDead() == true then
-                local do_msg;
-
-                if self:isFriendly() == true then
-                    do_msg = opvp.options.announcements.friendlyParty.memberDeath:value();
-                else
-                    do_msg = opvp.options.announcements.hostileParty.memberDeath:value();
-                end
-
-                if member:isSpecKnown() == true then
-                    opvp.printMessageOrDebug(
-                        do_msg,
-                        opvp.strs.MATCH_PLAYER_DIED_WITH_SPEC,
-                        opvp_member_type_name(member),
-                        member:nameOrId(),
-                        member:classInfo():color():GenerateHexColor(),
-                        member:specInfo():name(),
-                        member:classInfo():name()
-                    );
-                else
-                    opvp.printMessageOrDebug(
-                        do_msg,
-                        opvp.strs.MATCH_PLAYER_DIED,
-                        opvp_member_type_name(member),
-                        member:nameOrId()
-                    );
-                end
+            if member:isSpecKnown() == true then
+                opvp.printMessageOrDebug(
+                    do_msg,
+                    opvp.strs.MATCH_PLAYER_DIED_WITH_SPEC,
+                    opvp_member_type_name(member),
+                    member:nameOrId(),
+                    member:classInfo():color():GenerateHexColor(),
+                    member:specInfo():name(),
+                    member:classInfo():name()
+                );
+            else
+                opvp.printMessageOrDebug(
+                    do_msg,
+                    opvp.strs.MATCH_PLAYER_DIED,
+                    opvp_member_type_name(member),
+                    member:nameOrId()
+                );
             end
         end
     end
+end
 
-    opvp.Party._onMemberInfoUpdate(self, member, mask);
+function opvp.MatchTeam:_onMemberSpecUpdate(member, newSpec, oldSpec)
+    opvp.Party._onMemberSpecUpdate(self, member, newSpec, oldSpec);
 
-    opvp.match.playerInfoUpdated:emit(self, member, mask);
+    if member:isPlayer() == true or newSpec == oldSpec then
+        return;
+    end
+
+    local do_msg;
+
+    if self:isFriendly() == true then
+        do_msg = opvp.options.announcements.friendlyParty.memberSpecUpdate:value();
+    else
+        do_msg = opvp.options.announcements.hostileParty.memberSpecUpdate:value();
+    end
+
+    opvp.printMessageOrDebug(
+        do_msg,
+        opvp.strs.MATCH_PLAYER_SPEC_CHANGED,
+        opvp_member_type_name(member),
+        member:nameOrId(),
+        member:classInfo():color():GenerateHexColor(),
+        member:specInfo():name(),
+        member:classInfo():name()
+    );
+end
+
+function opvp.MatchTeam:_onRosterBeginUpdate()
+    opvp.Party._onRosterBeginUpdate(self);
 end
 
 function opvp.MatchTeam:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
+    opvp.Party._onRosterEndUpdate(self, newMembers, updatedMembers, removedMembers);
+
     local do_msg1, do_msg2;
 
     if self:isFriendly() == true then
@@ -365,10 +381,6 @@ function opvp.MatchTeam:_onRosterEndUpdate(newMembers, updatedMembers, removedMe
             end
         end
     end
-
-    opvp.match.playerRosterUpdated:emit(self, newMembers, updatedMembers, removedMembers);
-
-    opvp.Party._onRosterEndUpdate(self, newMembers, updatedMembers, removedMembers);
 end
 
 function opvp.MatchTeam:_setId(id)

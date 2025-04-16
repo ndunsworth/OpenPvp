@@ -36,7 +36,7 @@ function opvp.PartyMemberProvider:init()
     self._type          = opvp.PartyType.PARTY;
     self._connected     = false;
     self._roster_update = false;
-    self._hostile       = false;
+    self._affiliation   = opvp.Affiliation.FRIENDLY;
     self._factory       = opvp.PartyMemberFactory(opvp.PartyMemberFactoryCache(40));
     self._owns_factory  = true;
 
@@ -47,9 +47,14 @@ function opvp.PartyMemberProvider:init()
     self.memberAuraUpdate  = opvp.Signal("opvp.PartyMemberProvider.memberAuraUpdate");
     self.memberInfoUpdate  = opvp.Signal("opvp.PartyMemberProvider.memberInfoUpdate");
     self.memberInspect     = opvp.Signal("opvp.PartyMemberProvider.memberInspect");
+    self.memberSpecUpdate  = opvp.Signal("opvp.PartyMemberProvider.memberSpecUpdate");
     self.rosterBeginUpdate = opvp.Signal("opvp.PartyMemberProvider.rosterBeginUpdate");
     self.rosterEndUpdate   = opvp.Signal("opvp.PartyMemberProvider.rosterEndUpdate");
     self.typeChanged       = opvp.Signal("opvp.PartyMemberProvider.typeChanged");
+end
+
+function opvp.PartyMemberProvider:affiliation()
+    return self._affiliation;
 end
 
 function opvp.PartyMemberProvider:connect(category, guid)
@@ -114,28 +119,32 @@ function opvp.PartyMemberProvider:isEmpty()
     return true;
 end
 
-function opvp.PartyMemberProvider:isGuidInGroup(guid)
-    return opvp.party.utils.isGuidInGroup(guid, self._category);
+function opvp.PartyMemberProvider:isFriendly()
+    return self._affiliation == opvp.Affiliation.FRIENDLY;
 end
 
 function opvp.PartyMemberProvider:isFull()
     return opvp.party.utils.isFull(self._category);
 end
 
+function opvp.PartyMemberProvider:isGuidInGroup(guid)
+    return opvp.party.utils.isGuidInGroup(guid, self._category);
+end
+
 function opvp.PartyMemberProvider:isHome()
     return self._category == opvp.PartyCategory.HOME;
 end
 
-function opvp.PartyMemberProvider:isFriendly()
-    return self._hostile == false;
-end
-
 function opvp.PartyMemberProvider:isHostile()
-    return self._hostile == true;
+    return self._affiliation == opvp.Affiliation.HOSTILE;
 end
 
 function opvp.PartyMemberProvider:isInstance()
     return self._category == opvp.PartyCategory.INSTANCE;
+end
+
+function opvp.PartyMemberProvider:isNeutral()
+    return self._affiliation == opvp.Affiliation.NEUTRAL;
 end
 
 function opvp.PartyMemberProvider:isReloading()
@@ -256,7 +265,7 @@ function opvp.PartyMemberProvider:_createMember(unitId, guid)
     local member = self._factory:create(unitId, guid);
 
     if member ~= nil then
-        member:_setHostile(self._hostile);
+        member:_setAffiliation(self._affiliation);
     end
 
     return member;
@@ -275,13 +284,13 @@ end
 
 function opvp.PartyMemberProvider:_onCombatLogEvent(event)
     if event:isSrcFriendly() == true then
-        if self._hostile == false then
+        if self._affiliation == opvp.Affiliation.FRIENDLY then
             self:_onCombatLogEventFriendly(event);
         else
             self:_onCombatLogEventHostile(event);
         end
     elseif event:isSrcHostile() == true then
-        if self._hostile == false then
+        if self._affiliation == opvp.Affiliation.FRIENDLY then
             self:_onCombatLogEventHostile(event);
         else
             self:_onCombatLogEventFriendly(event);
@@ -327,6 +336,10 @@ function opvp.PartyMemberProvider:_onMemberInspect(member, mask)
     end
 end
 
+function opvp.PartyMemberProvider:_onMemberSpecUpdate(member, newSpec, oldSpec)
+    self.memberSpecUpdate:emit(member, newSpec, oldSpec);
+end
+
 function opvp.PartyMemberProvider:_onPartyLeaderChanged(newLeader, oldLeader)
     self.leaderChanged:emit(newLeader, oldLeader);
 end
@@ -342,9 +355,9 @@ function opvp.PartyMemberProvider:_onRosterBeginUpdate()
 end
 
 function opvp.PartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
-    self._roster_update = false;
-
     self.rosterEndUpdate:emit(newMembers, updatedMembers, removedMembers);
+
+    self._roster_update = false;
 
     for n=1, #removedMembers do
         self:_releaseMember(removedMembers[n]);
@@ -355,10 +368,18 @@ function opvp.PartyMemberProvider:_releaseMember(member)
     self._factory:release(member);
 end
 
+function opvp.PartyMemberProvider:_setAffiliation(id)
+    self._affiliation = id;
+end
+
 function opvp.PartyMemberProvider:_setFriendly(state)
     assert(opvp.is_bool(state));
 
-    self._hostile = not state;
+    if state == true then
+        self:_setAffiliation(opvp.Affiliation.FRIENDLY);
+    else
+        self:_setAffiliation(opvp.Affiliation.HOSTILE);
+    end
 end
 
 function opvp.PartyMemberProvider:_setFactory(factory)
@@ -388,5 +409,9 @@ end
 function opvp.PartyMemberProvider:_setHostile(state)
     assert(opvp.is_bool(state));
 
-    self._hostile = state;
+    if state == true then
+        self:_setAffiliation(opvp.Affiliation.HOSTILE);
+    else
+        self:_setAffiliation(opvp.Affiliation.FRIENDLY);
+    end
 end

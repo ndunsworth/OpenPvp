@@ -81,46 +81,56 @@ function opvp.PartyPriv:_onDifficultyChanged(mask)
 end
 
 function opvp.PartyPriv:_onMemberInfoUpdate(member, mask)
-    if member:isPlayer() == false then
-        if bit.band(mask, opvp.PartyMember.SPEC_FLAG) ~= 0 then
-            local do_msg = opvp.options.announcements.friendlyParty.memberSpecUpdate:value();
+    opvp.Party._onMemberInfoUpdate(self, member, mask);
 
-            opvp.printMessageOrDebug(
-                do_msg,
-                opvp.strs.PARTY_MBR_SPEC_CHANGED,
-                self:identifierName(),
-                member:nameOrId(),
-                member:classInfo():color():GenerateHexColor(),
-                member:specInfo():name(),
-                member:classInfo():name()
-            );
-        elseif bit.band(mask, opvp.PartyMember.DEAD_FLAG) ~= 0 then
-            if member:isDead() == true then
-                local do_msg = opvp.options.announcements.friendlyParty.memberDeath:value();
+    if member:isPlayer() == true then
+        return;
+    end
 
-                if member:isSpecKnown() == true then
-                    opvp.printMessageOrDebug(
-                        do_msg,
-                        opvp.strs.PARTY_MBR_DIED_WITH_SPEC,
-                        self:identifierName(),
-                        member:nameOrId(),
-                        member:classInfo():color():GenerateHexColor(),
-                        member:specInfo():name(),
-                        member:classInfo():name()
-                    );
-                else
-                    opvp.printMessageOrDebug(
-                        do_msg,
-                        opvp.strs.PARTY_MBR_DIED,
-                        self:identifierName(),
-                        member:nameOrId()
-                    );
-                end
+    if bit.band(mask, opvp.PartyMember.DEAD_FLAG) ~= 0 then
+        if member:isDead() == true then
+            local do_msg = opvp.options.announcements.friendlyParty.memberDeath:value();
+
+            if member:isSpecKnown() == true then
+                opvp.printMessageOrDebug(
+                    do_msg,
+                    opvp.strs.PARTY_MBR_DIED_WITH_SPEC,
+                    self:identifierName(),
+                    member:nameOrId(),
+                    member:classInfo():color():GenerateHexColor(),
+                    member:specInfo():name(),
+                    member:classInfo():name()
+                );
+            else
+                opvp.printMessageOrDebug(
+                    do_msg,
+                    opvp.strs.PARTY_MBR_DIED,
+                    self:identifierName(),
+                    member:nameOrId()
+                );
             end
         end
     end
+end
 
-    opvp.Party._onMemberInfoUpdate(self, member, mask);
+function opvp.PartyPriv:_onMemberSpecUpdate(member, newSpec, oldSpec)
+    opvp.Party._onMemberSpecUpdate(self, member, newSpec, oldSpec);
+
+    if member:isPlayer() == true or newSpec == oldSpec then
+        return;
+    end
+
+    local do_msg = opvp.options.announcements.friendlyParty.memberSpecUpdate:value();
+
+    opvp.printMessageOrDebug(
+        do_msg,
+        opvp.strs.PARTY_MBR_SPEC_CHANGED,
+        self:identifierName(),
+        member:nameOrId(),
+        member:classInfo():color():GenerateHexColor(),
+        member:specInfo():name(),
+        member:classInfo():name()
+    );
 end
 
 function opvp.PartyPriv:_onPartyTypeChanged(newPartyType, oldPartyType)

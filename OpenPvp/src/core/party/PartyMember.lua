@@ -30,6 +30,7 @@ local opvp = OpenPvp;
 
 opvp.PartyMember = opvp.CreateClass();
 
+opvp.PartyMember.AFFILIATION_FLAG    = bit.lshift(1,  8);
 opvp.PartyMember.AURAS_FLAG          = bit.lshift(1,  0);
 opvp.PartyMember.COMBAT_FLAG         = bit.lshift(1,  1);
 opvp.PartyMember.CONNECTED_FLAG      = bit.lshift(1,  2);
@@ -38,7 +39,6 @@ opvp.PartyMember.ENABLED_FLAG        = bit.lshift(1,  4);
 opvp.PartyMember.HEALTH_FLAG         = bit.lshift(1,  5);
 opvp.PartyMember.FACTION_FLAG        = bit.lshift(1,  6);
 opvp.PartyMember.GUID_FLAG           = bit.lshift(1,  7);
-opvp.PartyMember.HOSTILE_FLAG        = bit.lshift(1,  8);
 opvp.PartyMember.ID_FLAG             = bit.lshift(1,  9);
 opvp.PartyMember.NAME_FLAG           = bit.lshift(1, 10);
 opvp.PartyMember.PLAYER_FLAG         = bit.lshift(1, 11);
@@ -72,7 +72,7 @@ opvp.PartyMember.STATE_FLAGS = bit.bor(
     opvp.PartyMember.CONNECTED_FLAG,
     opvp.PartyMember.DEAD_FLAG,
     opvp.PartyMember.ENABLED_FLAG,
-    opvp.PartyMember.HOSTILE_FLAG,
+    opvp.PartyMember.AFFILIATION_FLAG,
     opvp.PartyMember.RANGE_FLAG,
     opvp.PartyMember.PLAYER_FLAG,
     opvp.PartyMember.RATING_CURRENT_FLAG,
@@ -90,15 +90,20 @@ opvp.PartyMember.ALL_FLAGS = bit.bor(
 );
 
 function opvp.PartyMember:init()
-    self._guid    = "";
-    self._id      = "";
-    self._faction = opvp.Faction.NEUTRAL;
-    self._race    = opvp.Race.UNKNOWN;
-    self._sex     = opvp.Sex.NONE;
-    self._spec    = opvp.ClassSpec.UNKNOWN;
-    self._name    = "";
-    self._mask    = 0;
-    self._auras   = opvp.UnitAuras();
+    self._guid        = "";
+    self._id          = "";
+    self._affiliation = opvp.Affiliation.UNKNOWN;
+    self._faction     = opvp.Faction.NEUTRAL;
+    self._race        = opvp.Race.UNKNOWN;
+    self._sex         = opvp.Sex.NONE;
+    self._spec        = opvp.ClassSpec.UNKNOWN;
+    self._name        = "";
+    self._mask        = 0;
+    self._auras       = opvp.UnitAuras();
+end
+
+function opvp.PartyMember:affiliation()
+    return self._affiliation;
 end
 
 function opvp.PartyMember:class()
@@ -150,11 +155,11 @@ function opvp.PartyMember:isEnabled()
 end
 
 function opvp.PartyMember:isFriendly()
-    return bit.band(self._mask, opvp.PartyMember.HOSTILE_FLAG) == 0;
+    return self._affiliation == opvp.Affiliation.FRIENDLY;
 end
 
 function opvp.PartyMember:isHostile()
-    return bit.band(self._mask, opvp.PartyMember.HOSTILE_FLAG) ~= 0;
+    return self._affiliation == opvp.Affiliation.HOSTILE;
 end
 
 function opvp.PartyMember:isInfoComplete()
@@ -292,11 +297,24 @@ function opvp.PartyMember:_reset(mask)
         end
     end
 
+    if bit.band(mask, opvp.PartyMember.AFFILIATION_FLAG) ~= 0 then
+        self:_setAffiliation(opvp.Affiliation.UNKNOWN)
+    end
+
     if bit.band(mask, opvp.PartyMember.AURAS_FLAG) ~= 0 then
         self._auras:clear();
     end
 
     self._mask = bit.band(self._mask, bit.bnot(mask));
+end
+
+function opvp.PartyMember:_setAffiliation(id)
+    self:_setFlags(
+        opvp.PartyMember.AFFILIATION_FLAG,
+        id ~= opvp.Affiliation.UNKNOWN
+    );
+
+    self._affiliation = id;
 end
 
 function opvp.PartyMember:_setAlive(state)
@@ -348,6 +366,16 @@ function opvp.PartyMember:_setFlags(flags, state)
     end
 end
 
+function opvp.PartyMember:_setFriendly(state)
+    assert(opvp.is_bool(state));
+
+    if state == true then
+        self:_setAffiliation(opvp.Affiliation.FRIENDLY);
+    else
+        self:_setAffiliation(opvp.Affiliation.HOSTILE);
+    end
+end
+
 function opvp.PartyMember:_setGUID(guid)
     if guid == nil then
         self._guid = "";
@@ -367,21 +395,26 @@ function opvp.PartyMember:_setGUID(guid)
 end
 
 function opvp.PartyMember:_setHostile(state)
-    self:_setFlags(
-        opvp.PartyMember.HOSTILE_FLAG,
-        state
-    );
+    if state == true then
+        self:_setAffiliation(opvp.Affiliation.HOSTILE);
+    else
+        self:_setAffiliation(opvp.Affiliation.FRIENDLY);
+    end
 end
 
 function opvp.PartyMember:_setId(id)
     self._id = id;
 
-    self._auras:setId(id);
+    local valid = self._id ~= "";
 
     self:_setFlags(
         opvp.PartyMember.ID_FLAG,
-        self._id ~= ""
+        valid
     );
+
+    if self:isGuidKnown() == false and valid == true then
+        self._auras:update(self._id);
+    end
 end
 
 function opvp.PartyMember:_setName(name)

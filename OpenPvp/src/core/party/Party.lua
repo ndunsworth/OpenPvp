@@ -74,6 +74,7 @@ function opvp.Party:init()
     self.memberKickEnded       = opvp.Signal("opvp.Party.memberKickEnded");
     self.memberKickStarted     = opvp.Signal("opvp.Party.memberKickStarted");
     self.memberRoleChanged     = opvp.Signal("opvp.Party.memberRoleChanged");
+    self.memberSpecUpdate      = opvp.Signal("opvp.Party.memberSpecUpdate");
     self.memberStatusChanged   = opvp.Signal("opvp.Party.memberStatusChanged");
     self.readyCheckBegin       = opvp.Signal("opvp.Party.readyCheckBegin");
     self.readyCheckConfirm     = opvp.Signal("opvp.Party.readyCheckConfirm");
@@ -450,6 +451,7 @@ function opvp.Party:_initialize(category, guid)
     self._provider.leaderChanged:connect(self, self._onPartyLeaderChanged);
     self._provider.memberAuraUpdate:connect(self, self._onMemberAuraUpdate);
     self._provider.memberInfoUpdate:connect(self, self._onMemberInfoUpdate);
+    self._provider.memberSpecUpdate:connect(self, self._onMemberSpecUpdate);
     self._provider.rosterBeginUpdate:connect(self, self._onRosterBeginUpdate);
     self._provider.rosterEndUpdate:connect(self, self._onRosterEndUpdate);
     self._provider.typeChanged:connect(self, self._onPartyTypeChanged);
@@ -537,6 +539,10 @@ function opvp.Party:_onMemberInfoUpdate(member, mask)
     self.memberInfoUpdate:emit(member, mask);
 end
 
+function opvp.Party:_onMemberSpecUpdate(member, newSpec, oldSpec)
+    self.memberSpecUpdate:emit(member, newSpec, oldSpec);
+end
+
 function opvp.Party:_onPartyLeaderChanged(newLeader, oldLeader)
     self.leaderChanged:emit(newLeader, oldLeader);
 end
@@ -558,11 +564,11 @@ function opvp.Party:_onReadyCheckFinished(preempted)
 end
 
 function opvp.Party:_onRosterBeginUpdate()
-    self.rosterBeginUpdate:emit();
+    self.rosterBeginUpdate:emit(self);
 end
 
 function opvp.Party:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
-    self.rosterEndUpdate:emit(newMembers, updatedMembers, removedMembers);
+    self.rosterEndUpdate:emit(self, newMembers, updatedMembers, removedMembers);
 end
 
 function opvp.Party:_onSuspendChanged(state)
@@ -638,6 +644,7 @@ function opvp.Party:_shutdown()
         self._provider.leaderChanged:disconnect(self, self._onPartyLeaderChanged);
         self._provider.memberAuraUpdate:disconnect(self, self._onMemberAuraUpdate);
         self._provider.memberInfoUpdate:disconnect(self, self._onMemberInfoUpdate);
+        self._provider.memberSpecUpdate:disconnect(self, self._onMemberSpecUpdate);
         self._provider.rosterBeginUpdate:disconnect(self, self._onRosterBeginUpdate);
         self._provider.rosterEndUpdate:disconnect(self, self._onRosterEndUpdate);
         self._provider.typeChanged:disconnect(self, self._onPartyTypeChanged);
