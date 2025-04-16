@@ -468,6 +468,14 @@ function opvp.Match:team(index)
     return self:teams()[index];
 end
 
+function opvp.Match:teams()
+    return {};
+end
+
+function opvp.Match:teamsSize()
+    return 0;
+end
+
 function opvp.Match:teammates()
     return {};
 end
