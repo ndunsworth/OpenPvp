@@ -127,11 +127,25 @@ function opvp.GenericMatch:teams()
     return {self._teams[1], self._teams[2]};
 end
 
+function opvp.GenericMatch:teamsSize()
+    return 2;
+end
+
 function opvp.GenericMatch:_close()
     self._friendly_team:shutdown();
 
     self._friendly_team:_setMatch(nil);
     self._enemy_team:_setMatch(nil);
+
+    self._friendly_team.initialized:disconnect(
+        self._enemy_team,
+        self._enemy_team.initialize
+    );
+
+    self._friendly_team.closed:disconnect(
+        self._enemy_team,
+        self._enemy_team.shutdown
+    );
 
     opvp.Match._close(self);
 end
