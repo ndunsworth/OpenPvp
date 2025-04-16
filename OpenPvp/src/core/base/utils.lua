@@ -358,7 +358,7 @@ end
 function opvp.bool_else(var, default)
     if opvp.is_bool(var) then
         return var;
-    elseif default ~= nil
+    elseif default ~= nil then
         return default;
     else
         return false;
@@ -368,7 +368,7 @@ end
 function opvp.number_else(var, default)
     if opvp.is_number(var) then
         return var;
-    elseif default ~= nil
+    elseif default ~= nil then
         return default;
     else
         return 0;
@@ -378,7 +378,7 @@ end
 function opvp.str_else(var, default)
     if opvp.is_str(var) then
         return var;
-    elseif default ~= nil
+    elseif default ~= nil then
         return default;
     else
         return "";
