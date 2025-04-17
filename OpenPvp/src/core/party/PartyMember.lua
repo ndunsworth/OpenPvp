@@ -167,12 +167,20 @@ function opvp.PartyMember:isDisoriented()
     return self._cc_state:isDisoriented();
 end
 
+function opvp.PartyMember:isDps()
+    return self._spec:isDps();
+end
+
 function opvp.PartyMember:isEnabled()
     return bit.band(self._mask, opvp.PartyMember.ENABLED_FLAG) ~= 0;
 end
 
 function opvp.PartyMember:isFriendly()
     return self._affiliation == opvp.Affiliation.FRIENDLY;
+end
+
+function opvp.PartyMember:isHealer()
+    return self._spec:isHealer();
 end
 
 function opvp.PartyMember:isHostile()
@@ -245,6 +253,10 @@ end
 
 function opvp.PartyMember:isStunned()
     return self._cc_state:isStunned();
+end
+
+function opvp.PartyMember:isTank()
+    return self._spec:isTank();
 end
 
 function opvp.PartyMember:isTaunted()
@@ -344,7 +356,7 @@ function opvp.PartyMember:_reset(mask)
 
     if bit.band(mask, opvp.PartyMember.AURAS_FLAG) ~= 0 then
         self._auras:clear();
-        self._cc_state:clear();
+        self._cc_state:_clear();
     end
 
     self._mask = bit.band(self._mask, bit.bnot(mask));
