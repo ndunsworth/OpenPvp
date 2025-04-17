@@ -192,6 +192,10 @@ function opvp.Spell:chargesMaximum()
     return self:chargesInfo().maxCharges;
 end
 
+function opvp.Spell:clone()
+    return opvp.Spell(self._id);
+end
+
 function opvp.Spell:description()
     return C_Spell.GetSpellDescription(self._id);
 end

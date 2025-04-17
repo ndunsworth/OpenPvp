@@ -48,6 +48,10 @@ function opvp.SpellExt:class()
     return self._class;
 end
 
+function opvp.SpellExt:clone()
+    return opvp.SpellExt(self._class, self._id, self._mask, self._duration);
+end
+
 function opvp.SpellExt:crowdControlCategory()
     if self:isCrowdControl() == true then
         return opvp.CrowdControlCategory:fromType(self:crowdControlType());
