@@ -33,22 +33,28 @@ local opvp_match_mgr_singleton;
 opvp.match = {};
 
 --~ State and status signals
-opvp.match.complete            = opvp.Signal("opvp.match.complete");
-opvp.match.countdown           = opvp.Signal("opvp.match.countdown");
-opvp.match.dampeningUpdate     = opvp.Signal("opvp.match.dampeningUpdate");
-opvp.match.entered             = opvp.Signal("opvp.match.entered");
-opvp.match.joined              = opvp.Signal("opvp.match.joined");
-opvp.match.exit                = opvp.Signal("opvp.match.exit");
-opvp.match.outcomeReady        = opvp.Signal("opvp.match.outcomeReady");
-opvp.match.playerInfoUpdate    = opvp.Signal("opvp.match.playerInfoUpdate");
-opvp.match.playerSpecUpdate    = opvp.Signal("opvp.Party.playerSpecUpdate");
-opvp.match.playerTrinket       = opvp.Signal("opvp.match.playerTrinket");
-opvp.match.rosterBeginUpdate   = opvp.Signal("opvp.match.rosterBeginUpdate");
-opvp.match.rosterEndUpdate     = opvp.Signal("opvp.match.rosterEndUpdate");
-opvp.match.roundWarmup         = opvp.Signal("opvp.match.roundWarmup");
-opvp.match.roundActive         = opvp.Signal("opvp.match.roundActive");
-opvp.match.roundComplete       = opvp.Signal("opvp.match.roundComplete");
-opvp.match.statusChanged       = opvp.Signal("opvp.match.statusChanged");
+opvp.match.complete                  = opvp.Signal("opvp.match.complete");
+opvp.match.countdown                 = opvp.Signal("opvp.match.countdown");
+opvp.match.dampeningUpdate           = opvp.Signal("opvp.match.dampeningUpdate");
+opvp.match.entered                   = opvp.Signal("opvp.match.entered");
+opvp.match.joined                    = opvp.Signal("opvp.match.joined");
+opvp.match.exit                      = opvp.Signal("opvp.match.exit");
+opvp.match.outcomeReady              = opvp.Signal("opvp.match.outcomeReady");
+opvp.match.playerDefensiveAdded      = opvp.Signal("opvp.match.playerDefensiveAdded");
+opvp.match.playerDefensiveRemoved    = opvp.Signal("opvp.match.playerDefensiveRemoved");
+opvp.match.playerOffensiveAdded      = opvp.Signal("opvp.match.playerOffensiveAdded");
+opvp.match.playerOffensiveRemoved    = opvp.Signal("opvp.match.playerOffensiveRemoved");
+opvp.match.playerCrowdControlAdded   = opvp.Signal("opvp.match.playerCrowdControlAdded");
+opvp.match.playerCrowdControlRemoved = opvp.Signal("opvp.match.playerCrowdControlRemoved");
+opvp.match.playerInfoUpdate          = opvp.Signal("opvp.match.playerInfoUpdate");
+opvp.match.playerSpecUpdate          = opvp.Signal("opvp.Party.playerSpecUpdate");
+opvp.match.playerTrinket             = opvp.Signal("opvp.match.playerTrinket");
+opvp.match.rosterBeginUpdate         = opvp.Signal("opvp.match.rosterBeginUpdate");
+opvp.match.rosterEndUpdate           = opvp.Signal("opvp.match.rosterEndUpdate");
+opvp.match.roundWarmup               = opvp.Signal("opvp.match.roundWarmup");
+opvp.match.roundActive               = opvp.Signal("opvp.match.roundActive");
+opvp.match.roundComplete             = opvp.Signal("opvp.match.roundComplete");
+opvp.match.statusChanged             = opvp.Signal("opvp.match.statusChanged");
 
 function opvp.match.current()
     return opvp_match_mgr_singleton:match();
