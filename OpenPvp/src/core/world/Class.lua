@@ -80,14 +80,23 @@ function opvp.Class:fromSpecId(id)
     return opvp.Class:fromClassId(GetClassIDFromSpecID(id));
 end
 
-function opvp.Class:init(id, fileId, races, specs, spells)
+function opvp.Class:init(id, fileId, races, specs, cfgSpells, cfgAuras)
     self._id         = id;
     self._file_id    = fileId;
     self._races      = races;
     self._races_mask = 0;
     self._specs      = specs;
     self._role_mask  = 0;
-    self._spells     = opvp.SpellList:createFromClassConfig(id, spells);
+    self._spells     = opvp.SpellMap();
+    self._auras      = opvp.SpellMap();
+
+    opvp.SpellMap:createFromClassConfig(
+        cls,
+        cfgSpells,
+        cfgAuras,
+        self._spells,
+        self._auras
+    );
 
     for index, race in ipairs(races) do
         self._races_mask = bit.bor(
@@ -102,6 +111,10 @@ function opvp.Class:init(id, fileId, races, specs, spells)
             bit.lshift(1, spec:role():id())
         );
     end
+end
+
+function opvp.Class:auras()
+    return self._auras;
 end
 
 function opvp.Class:color()
@@ -229,7 +242,7 @@ function opvp.Class:spec(specId)
 end
 
 function opvp.Class:specs()
-    return {unpack(self._specs)};
+    return opvp.utils.copyTableShallow(self._specs);
 end
 
 function opvp.Class:spells()

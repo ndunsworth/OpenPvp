@@ -34,7 +34,21 @@ local spec_info = {
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 85506,
-    icon   = "Interface/Icons/spell_frost_frostbolt02"
+    icon   = "Interface/Icons/spell_frost_frostbolt02",
+    spells = {
+        harmful = {
+            talent = {
+                {12472, opvp.SpellTrait.OFFENSIVE_AURA_HIGH, 30}, -- Icy Veins
+            }
+        }
+    },
+    auras = {
+        helpful = {
+            hero = {
+                {235313, opvp.SpellTrait.DEFENSIVE_AURA_LOW, 4},  -- Blazing Barrier
+            }
+        }
+    }
 };
 
 opvp.ClassSpec.FROST_MAGE = opvp.ClassSpec(spec_info);

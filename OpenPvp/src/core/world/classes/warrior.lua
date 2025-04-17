@@ -72,5 +72,12 @@ opvp.Class.WARRIOR = opvp.Class(
         opvp.ClassSpec.ARMS_WARRIOR,
         opvp.ClassSpec.FURY_WARRIOR,
         opvp.ClassSpec.PROTECTION_WARRIOR
+    },
+    {
+        harmful = {
+            talent = {
+                {5246, opvp.SpellTrait.DISORIENT_CROWD_CONTROL, 8}, -- Intimidating Shout
+            }
+        }
     }
 );

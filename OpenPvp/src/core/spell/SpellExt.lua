@@ -28,37 +28,44 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+local opvp_null_spell;
+
 opvp.SpellExt = opvp.CreateClass(opvp.Spell);
 
-function opvp.SpellExt:init(class, id, mask, auraId)
+function opvp.SpellExt:null()
+    return opvp_null_spell;
+end
+
+function opvp.SpellExt:init(class, id, mask, duration)
     opvp.Spell.init(self, id);
 
     self._class = class;
     self._mask  = mask;
-
-    if opvp.is_number(auraId) == true then
-        self._aura_id = auraId;
-    elseif bit.band(self._mask, opvp.SpellTrait.AURA) ~= 0 then
-        self._aura_id = id;
-    else
-        self._aura_id = 0;
-    end
-end
-
-function opvp.SpellExt:aura()
-    return self._aura_id;
+    self._duration = opvp.number_else(duration);
 end
 
 function opvp.SpellExt:class()
     return self._class;
 end
 
+function opvp.SpellExt:crowdControlCategory()
+    if self:isCrowdControl() == true then
+        return opvp.CrowdControlCategory:fromType(self:crowdControlType());
+    else
+        return opvp.CrowdControlCategory.NONE;
+    end
+end
+
 function opvp.SpellExt:crowdControlType()
     if self:isCrowdControl() == true then
         return bit.band(self._mask, opvp.SpellTrait.MASK_LOW);
     else
-        return opvp.CrowdControlType.NONE
+        return opvp.CrowdControlType.NONE;
     end
+end
+
+function opvp.SpellExt:duration()
+    return self._duration;
 end
 
 function opvp.SpellExt:id()
@@ -143,3 +150,5 @@ end
 function opvp.SpellExt:set(id)
 
 end
+
+opvp_null_spell = opvp.SpellExt(0, 0, opvp.SpellTrait.AURA);

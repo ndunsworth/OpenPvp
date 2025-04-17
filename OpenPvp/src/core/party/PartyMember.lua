@@ -99,12 +99,16 @@ function opvp.PartyMember:init()
     self._spec        = opvp.ClassSpec.UNKNOWN;
     self._name        = "";
     self._mask        = 0;
-    self._auras       = opvp.PartyMemberAuraList();
-    self._cc_tracker  = nil;
+    self._auras       = opvp.PartyMemberAuraMap();
+    self._cc_state    = opvp.CrowdControlState();
 end
 
 function opvp.PartyMember:affiliation()
     return self._affiliation;
+end
+
+function opvp.PartyMember:ccState()
+    return self._cc_state;
 end
 
 function opvp.PartyMember:class()
@@ -127,10 +131,6 @@ function opvp.PartyMember:guid()
     return self._guid;
 end
 
-function opvp.PartyMember:hasCrowdControlTracker()
-    return self._cc_tracker ~= nil;
-end
-
 function opvp.PartyMember:hasTeam()
     return self._team ~= nil;
 end
@@ -151,8 +151,20 @@ function opvp.PartyMember:isConnected()
     return bit.band(self._mask, opvp.PartyMember.CONNECTED_FLAG) ~= 0;
 end
 
+function opvp.PartyMember:isCrowdControled()
+    return self._cc_state:isCrowdControled()
+end
+
 function opvp.PartyMember:isDead()
     return bit.band(self._mask, opvp.PartyMember.DEAD_FLAG) ~= 0;
+end
+
+function opvp.PartyMember:isDisarmed()
+    return self._cc_state:isDisarmed();
+end
+
+function opvp.PartyMember:isDisoriented()
+    return self._cc_state:isDisoriented();
 end
 
 function opvp.PartyMember:isEnabled()
@@ -165,6 +177,14 @@ end
 
 function opvp.PartyMember:isHostile()
     return self._affiliation == opvp.Affiliation.HOSTILE;
+end
+
+function opvp.PartyMember:isIncapacitated()
+    return self._cc_state:isIncapacitated();
+end
+
+function opvp.PartyMember:isKnockedBack()
+    return self._cc_state:isKnockedBack();
 end
 
 function opvp.PartyMember:isInfoComplete()
@@ -207,12 +227,28 @@ function opvp.PartyMember:isRaceKnown()
     return bit.band(self._mask, opvp.PartyMember.RACE_FLAG) ~= 0;
 end
 
-function opvp.PartyMember:isSpecKnown()
-    return bit.band(self._mask, opvp.PartyMember.SPEC_FLAG) ~= 0;
+function opvp.PartyMember:isRooted()
+    return self._cc_state:isRooted();
+end
+
+function opvp.PartyMember:isSilenced()
+    return self._cc_state:isSilenced();
 end
 
 function opvp.PartyMember:isSexKnown()
     return bit.band(self._mask, opvp.PartyMember.SEX_FLAG) ~= 0;
+end
+
+function opvp.PartyMember:isSpecKnown()
+    return bit.band(self._mask, opvp.PartyMember.SPEC_FLAG) ~= 0;
+end
+
+function opvp.PartyMember:isStunned()
+    return self._cc_state:isStunned();
+end
+
+function opvp.PartyMember:isTaunted()
+    return self._cc_state:isTaunted();
 end
 
 function opvp.PartyMember:mask()
@@ -263,10 +299,6 @@ function opvp.PartyMember:specInfo()
     return self._spec;
 end
 
-function opvp.PartyMember:_crowdControlTracker()
-    return self._cc_tracker;
-end
-
 function opvp.PartyMember:_reset(mask)
     if bit.band(mask, opvp.PartyMember.CHARACTER_FLAGS) == opvp.PartyMember.CHARACTER_FLAGS then
         self._guid    = "";
@@ -312,6 +344,7 @@ function opvp.PartyMember:_reset(mask)
 
     if bit.band(mask, opvp.PartyMember.AURAS_FLAG) ~= 0 then
         self._auras:clear();
+        self._cc_state:clear();
     end
 
     self._mask = bit.band(self._mask, bit.bnot(mask));
@@ -338,10 +371,6 @@ function opvp.PartyMember:_setConnected(state)
         opvp.PartyMember.CONNECTED_FLAG,
         state
     );
-end
-
-function opvp.PartyMember:_setCrowdControlTracker(tracker)
-    self._cc_tracker = tracker;
 end
 
 function opvp.PartyMember:_setDead(state)
@@ -467,7 +496,7 @@ function opvp.PartyMember:_setSpec(spec)
 end
 
 function opvp.PartyMember:_updateAuras(info)
-    return self._auras:updateFromEvent(info);
+    return self._auras:updateFromEvent(self._id, info);
 end
 
 function opvp.PartyMember:_updateCharacterInfo()

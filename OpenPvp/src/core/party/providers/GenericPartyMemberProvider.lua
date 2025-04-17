@@ -144,8 +144,8 @@ function opvp.GenericPartyMemberProvider:_connectSignals()
     end
 
     if self:isHome() == true then
-        opvp.party.aboutToJoin:connect(self._onInstanceGroupJoined);
-        opvp.party.left:connect(self._onInstanceGroupLeft);
+        opvp.party.aboutToJoin:connect(self, self._onInstanceGroupJoined);
+        opvp.party.left:connect(self, self._onInstanceGroupLeft);
     end
 end
 
@@ -183,8 +183,8 @@ function opvp.GenericPartyMemberProvider:_disconnectSignals()
     end
 
     if self:isHome() == true then
-        opvp.party.aboutToJoin:disconnect(self._onInstanceGroupJoined);
-        opvp.party.left:disconnect(self._onInstanceGroupLeft);
+        opvp.party.aboutToJoin:disconnect(self, self._onInstanceGroupJoined);
+        opvp.party.left:disconnect(self, self._onInstanceGroupLeft);
     end
 end
 
@@ -493,9 +493,13 @@ function opvp.GenericPartyMemberProvider:_onMemberInspect(member, mask)
         GetInspectSpecialization(member:id())
     );
 
+    local old_spec;
+
     if spec:isValid() == true then
         if spec:id() ~= member:spec() then
             mask = bit.bor(mask, opvp.PartyMember.SPEC_FLAG);
+
+            old_spec = member:specInfo();
 
             member:_setSpec(spec);
         end
@@ -514,6 +518,10 @@ function opvp.GenericPartyMemberProvider:_onMemberInspect(member, mask)
     --~ );
 
     opvp.PartyMemberProvider._onMemberInspect(self, member, mask);
+
+    if old_spec ~= nil then
+        self:_onMemberSpecUpdate(member, spec, old_spec);
+    end
 end
 
 function opvp.GenericPartyMemberProvider:_onMemberInspectInt(guid, valid)
@@ -525,15 +533,39 @@ function opvp.GenericPartyMemberProvider:_onMemberInspectInt(guid, valid)
 
     if valid == true then
         self:_onMemberInspect(member, 0);
-    else
+    elseif (
+        self:isHome() == false or
+        opvp.unit.isSameFaction(member:id()) == true
+    ) then
         opvp.printDebug(
-            "opvp.GenericPartyMemberProvider:_onMemberInspectInt, failed [%s] %s=%d",
+            "opvp.GenericPartyMemberProvider:_onMemberInspectInt, failed [%s] %s=%s",
             tostring(opvp.unit.isInspectable(member:guid())),
             member:nameOrId(),
             guid
         );
 
         self:_memberInspect(member);
+    else
+        opvp.printDebug(
+            "opvp.GenericPartyMemberProvider:_onMemberInspectInt, failed because unit is opposite faction [%s] %s=%s",
+            tostring(opvp.unit.isInspectable(member:guid())),
+            member:nameOrId(),
+            guid
+        );
+
+        if member:isSpecKnown() == true then
+            return;
+        end
+
+        local spec = opvp.ClassSpec:fromTooltip(member:id());
+
+        if spec:isValid() == true then
+            member:_setSpec(spec);
+
+            self:_onMemberInfoUpdate(member, opvp.PartyMember.SPEC_FLAG);
+
+            self:_onMemberSpecUpdate(member, spec, opvp.ClassSpec.UNKNOWN);
+        end
     end
 end
 
@@ -544,11 +576,9 @@ function opvp.GenericPartyMemberProvider:_onUnitAura(unitId, info)
         return;
     end
 
-    local valid, new_auras, mod_auras, rem_auras, isfull = member:_updateAuras(info);
+    local new_auras, mod_auras, rem_auras, isfull = member:_updateAuras(info);
 
-    if valid == true then
-        self:_onMemberAuraUpdate(member, new_auras, mod_auras, rem_auras, isfull)
-    end
+    self:_onMemberAuraUpdate(member, new_auras, mod_auras, rem_auras, isfull);
 end
 
 function opvp.GenericPartyMemberProvider:_onUnitConnection(unitId, isConnected)

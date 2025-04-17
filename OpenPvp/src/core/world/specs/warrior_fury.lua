@@ -34,7 +34,14 @@ local spec_info = {
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 49435,
-    icon   = "Interface/Icons/ability_warrior_innerrage"
+    icon   = "Interface/Icons/ability_warrior_innerrage",
+    spells = {
+        harmful = {
+            talent = {
+                {1719, opvp.SpellTrait.OFFENSIVE_AURA_HIGH, 30}, -- Recklessness
+            }
+        }
+    }
 };
 
 opvp.ClassSpec.FURY_WARRIOR = opvp.ClassSpec(spec_info);

@@ -28,36 +28,29 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.MatchCrowdControlTracker = opvp.CreateClass(opvp.PvpPartyCrowdControlTracker);
+opvp.PartyMemberCrowdControlTracker = opvp.CreateClass();
 
-function opvp.MatchCrowdControlTracker:init()
-    opvp.PvpPartyCrowdControlTracker.init(self);
+function opvp.PartyMemberCrowdControlTracker:init()
+    self._spells     = opvp.SpellList();
+    self._member     = nil;
+    self._categories = opvp.List();
+
+    self.updated = opvp.Signal("opvp.CrowdControlTracker");
 end
 
-function opvp.MatchCrowdControlTracker:connect(match, affiliation)
-    if self:isConnected() == true then
+function opvp.PartyMemberCrowdControlTracker:_onAuraUpdate(aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
+
+end
+
+function opvp.PartyMemberCrowdControlTracker:_setMember(member)
+    if self._member == member then
         return;
     end
 
-    self._match       = match;
-    self._affiliation = affiliation;
+    self._spells = opvp.SpellList();
+    self._member = nil;
 
-    opvp.PvpPartyCrowdControlTracker.connect(self);
-end
-
-function opvp.MatchCrowdControlTracker:isPartySupported(party)
-    return bit.band(party:affiliation(), self._affiliation) ~= 0;
-end
-
-function opvp.MatchCrowdControlTracker:_onConnected()
-    local teams = self._match:teams();
-
-    for n=1, #teams do
-        self._addParty(teams[n]);
+    if self._member == nil then
+        return;
     end
-end
-
-function opvp.MatchCrowdControlTracker:_onDisconnected()
-    self._match       = nil;
-    self._affiliation = opvp.Affiliation.UNKNOWN;
 end

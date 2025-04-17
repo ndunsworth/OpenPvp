@@ -34,7 +34,14 @@ local spec_info = {
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 63318,
-    icon   = "Interface/Icons/spell_fire_flamebolt"
+    icon   = "Interface/Icons/spell_fire_flamebolt",
+    auras  = {
+        helpful = {
+            hero = {
+                {11426,  opvp.SpellTrait.DEFENSIVE_AURA_LOW, nil, 4}, -- Ice Barrier
+            }
+        }
+    }
 };
 
 opvp.ClassSpec.FIRE_MAGE = opvp.ClassSpec(spec_info);

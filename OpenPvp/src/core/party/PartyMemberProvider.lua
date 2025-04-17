@@ -369,6 +369,8 @@ function opvp.PartyMemberProvider:_releaseMember(member)
 end
 
 function opvp.PartyMemberProvider:_setAffiliation(id)
+    assert(opvp.is_number(id));
+
     self._affiliation = id;
 end
 

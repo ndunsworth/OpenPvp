@@ -61,6 +61,7 @@ function opvp.Party:init()
     self._raid_diff        = 14;
     self._raid_legacy_diff = 3;
     self._name             = "";
+    self._spec_counter     = opvp.ClassSpecCounter();
 
     self.difficultyChanged     = opvp.Signal("opvp.Party.difficultyChanged");
     self.closed                = opvp.Signal("opvp.Party.closed");
@@ -82,6 +83,14 @@ function opvp.Party:init()
     self.rosterBeginUpdate     = opvp.Signal("opvp.Party.rosterBeginUpdate");
     self.rosterEndUpdate       = opvp.Signal("opvp.Party.rosterEndUpdate");
     self.typeChanged           = opvp.Signal("opvp.Party.typeChanged");
+end
+
+function opvp.Party:affiliation()
+    if self._provider ~= nil then
+        return self._provider:affiliation();
+    else
+        return opvp.Affiliation.FRIENDLY;
+    end
 end
 
 function opvp.Party:category()
@@ -350,25 +359,25 @@ function opvp.Party:shutdown()
 end
 
 function opvp.Party:sendAddonMessage(msg, channel, target, priority)
-    if self:hasPlayer() == true and self._socket ~= nil then
+    if self._socket ~= nil then
         self._socket:write(msg, channel, target, priority);
     end
 end
 
 function opvp.Party:sendPartyMessage(msg)
-    if self:hasPlayer() == true then
+    if self:hasPlayer() == true and self:isActive() == true then
         SendChatMessage(msg, opvp.ChatType.PARTY);
     end
 end
 
 function opvp.Party:sendRaidMessage(msg)
-    if self:hasPlayer() == true then
+    if self:hasPlayer() == true and self:isActive() == true then
         SendChatMessage(msg, opvp.ChatType.RAID);
     end
 end
 
 function opvp.Party:sendRaidWarning(msg)
-    if self:hasPlayer() == true then
+    if self:hasPlayer() == true and self:isActive() == true then
         SendChatMessage(msg, opvp.ChatType.RAID_WARNING);
     end
 end
@@ -383,6 +392,10 @@ function opvp.Party:size()
     else
         return 0;
     end
+end
+
+function opvp.Party:specCounter()
+    return self._spec_counter;
 end
 
 function opvp.Party:tokenExprGroup()
@@ -460,6 +473,14 @@ function opvp.Party:_initialize(category, guid)
         self._owns_connection = true;
 
         self._provider:connect(self._category, self._guid);
+    else
+        local members = self._provider:members();
+
+        if #members > 0 then
+            self:_onRosterBeginUpdate()
+
+            self:_onRosterEndUpdate(members, {}, {});
+        end
     end
 
     if self:hasPlayer() == true then
@@ -568,6 +589,14 @@ function opvp.Party:_onRosterBeginUpdate()
 end
 
 function opvp.Party:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
+    for n=1, #newMembers do
+        self._spec_counter:ref(newMembers[n]:specInfo());
+    end
+
+    for n=1, #removedMembers do
+        self._spec_counter:deref(removedMembers[n]:specInfo());
+    end
+
     self.rosterEndUpdate:emit(self, newMembers, updatedMembers, removedMembers);
 end
 
@@ -655,6 +684,8 @@ function opvp.Party:_shutdown()
 
         self._owns_connection = false;
     end
+
+    self._spec_counter:clear();
 
     self._active = false;
 end

@@ -218,6 +218,10 @@ function opvp.PartyManager:init(guid)
     self._countdown_time  = 0;
     self._countdown_timer = opvp.Timer(1);
     self._socket          = opvp.Socket("OpenPvp");
+    --~ self._aura_tracker    = opvp.PartyAuraTracker();
+    self._aura_tracker    = opvp.MatchAuraTracker();
+
+    self._aura_tracker:initialize();
 
     self._socket:connect();
 
@@ -232,6 +236,10 @@ function opvp.PartyManager:init(guid)
     opvp.OnLoadingScreenEnd:connect(self, self._onLoginReload);
 
     opvp.OnLogout:connect(self, self._onLogout);
+end
+
+function opvp.PartyManager:auraTracker()
+    return self._aura_tracker;
 end
 
 function opvp.PartyManager:findMemberByGuid(guid, category)
@@ -483,9 +491,13 @@ function opvp.PartyManager:_onGroupJoined(category, guid)
             self._party_cur:_setActive(false);
 
             self._party_cur:_setSocket(nil);
+
+            self._aura_tracker:_removeParty(self._party_cur);
         end
 
         self._party_cur = party;
+
+        self._aura_tracker:_addParty(self._party_cur);
     end
 
     opvp.printMessageOrDebug(

@@ -270,10 +270,10 @@ local function opvp_init_test_slash_cmds()
                 end
 
                 local map = arena_maps[math.random(1, #arena_maps)];
-                local simulate = opvp.utils.table.contains(args, "simulate");
+                local simulate = opvp.utils.array.contains(args, "simulate");
                 local mask = 0;
 
-                if opvp.utils.table.contains(args, "skirmish") == true then
+                if opvp.utils.array.contains(args, "skirmish") == true then
                     mask = opvp.PvpFlag.SKIRMISH;
                 end
 

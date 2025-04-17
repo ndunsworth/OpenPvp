@@ -197,15 +197,15 @@ function opvp.Aura:set(info)
 
     self._id           = info.auraInstanceID;
 
-    self._applications = opvp.number_else(info.applications, 0);
-    self._charges      = opvp.number_else(info.charges, 0);
-    self._charges_max  = opvp.number_else(info.maxCharges, 0);
+    self._applications = opvp.number_else(info.applications);
+    self._charges      = opvp.number_else(info.charges);
+    self._charges_max  = opvp.number_else(info.maxCharges);
     self._dispell_type = opvp_aura_dispell_type(info.dispelName);
-    self._duration     = opvp.number_else(info.duration, 0);
-    self._expiration   = opvp.number_else(info.expirationTime, 0);
-    self._name         = opvp.str_else(info.name, "");
-    self._spell_id     = opvp.number_else(info.spellId, 0);
-    self._source       = opvp.str_else(info.source, "");
+    self._duration     = opvp.number_else(info.duration);
+    self._expiration   = opvp.number_else(info.expirationTime);
+    self._name         = opvp.str_else(info.name);
+    self._spell_id     = opvp.number_else(info.spellId);
+    self._source       = opvp.str_else(info.source);
 
     self._mask         = 0;
 
@@ -216,26 +216,26 @@ function opvp.Aura:set(info)
     end
 end
 
-function opvp.Aura:update(info)
-    assert(
-        info.auraInstanceID == self._id and
-        info.spellId == self._spell_id
-    );
-
-    self._applications = opvp.number_else(info.applications, 0);
-    self._charges      = opvp.number_else(info.charges, 0);
-    self._charges_max  = opvp.number_else(info.maxCharges, 0);
-    self._duration     = opvp.number_else(info.duration, 0);
-    self._expiration   = opvp.number_else(info.expirationTime, 0);
-    self._icon         = opvp.number_else(info.icon, 0);
-end
-
 function opvp.Aura:spellId()
     return self._spell_id;
 end
 
 function opvp.Aura:source()
     return self._source;
+end
+
+function opvp.Aura:update(info)
+    assert(
+        info.auraInstanceID == self._id and
+        info.spellId == self._spell_id
+    );
+
+    self._applications = opvp.number_else(info.applications);
+    self._charges      = opvp.number_else(info.charges);
+    self._charges_max  = opvp.number_else(info.maxCharges);
+    self._duration     = opvp.number_else(info.duration);
+    self._expiration   = opvp.number_else(info.expirationTime);
+    self._icon         = opvp.number_else(info.icon);
 end
 
 opvp_aura_pool = opvp.Pool(OPVP_AURA_POOL_DEFAULT_SIZE, opvp.Aura);

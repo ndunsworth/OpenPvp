@@ -28,6 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
+local opvp_spec_tooltip;
+local opvp_spec_tooltip_lookup;
+
 opvp.ClassSpecId = {
     UNKNOWN                =  0,
 
@@ -118,6 +121,53 @@ function opvp.ClassSpec:fromSpecId(id)
     return opvp.ClassSpec.UNKNOWN;
 end
 
+function opvp.ClassSpec:fromTooltip(unitId, tooltip)
+    if tooltip == nil then
+        if opvp_spec_tooltip == nil then
+            opvp_spec_tooltip = CreateFrame("GameTooltip", nil, nil, "GameTooltipTemplate")
+        end
+
+        tooltip = opvp_spec_tooltip;
+    end
+
+    tooltip:SetUnit(unitId);
+
+    if tooltip:IsTooltipType(Enum.TooltipDataType.Unit) == false then
+        return opvp.ClassSpec.UNKNOWN;
+    end
+
+    local data = tooltip:GetPrimaryTooltipData();
+
+    local spec;
+
+    if opvp_spec_tooltip_lookup == nil then
+        opvp_spec_tooltip_lookup = {};
+
+        local name;
+
+        for n=1, #opvp.ClassSpec.SPECS do
+            spec = opvp.ClassSpec.SPECS[n];
+            name = spec:name() .. " " .. spec:classInfo():name();
+
+            opvp_spec_tooltip_lookup[name] = spec;
+        end
+    end
+
+    for n=1, #data.lines do
+        text = data.lines[n].leftText;
+
+        if text ~= nil then
+            spec = opvp_spec_tooltip_lookup[text];
+
+            if spec ~= nil then
+                return spec;
+            end
+        end
+    end
+
+    return opvp.ClassSpec.UNKNOWN;
+end
+
 function opvp.ClassSpec:instance()
     return opvp.Player:instance():specInfo()
 end
@@ -129,13 +179,27 @@ function opvp.ClassSpec:init(cfg)
     self._icon   = cfg.icon;
     self._sound  = cfg.sound;
     self._traits = cfg.traits;
-    self._spells = opvp.SpellList();
+
+    self._spells     = opvp.SpellMap();
+    self._auras      = opvp.SpellMap();
+
+    opvp.SpellMap:createFromClassConfig(
+        cls,
+        cfg.spells,
+        cfg.auras,
+        self._spells,
+        self._auras
+    );
 
     if self._id ~= 0 then
         self._name = select(2, GetSpecializationInfoByID(self._id));
     else
         self._name = opvp.strs.UNKNOWN;
     end
+end
+
+function opvp.ClassSpec:auras()
+    return self._auras;
 end
 
 function opvp.ClassSpec:class()
