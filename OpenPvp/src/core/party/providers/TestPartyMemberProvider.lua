@@ -67,12 +67,17 @@ function opvp.TestPartyMemberProvider:addMembers(count)
     end
 
     for n=1, count do
-        name, spec = self:_createFakeChar(id);
+        name, spec, race, sex = self:_createFakeChar(id);
 
         cls = spec:classInfo();
 
-        race = cls:races()[math.random(1, cls:racesSize())];
-        sex = math.random(0, 1);
+        if race == opvp.Race.UNKNOWN then
+            race = cls:races()[math.random(1, cls:racesSize())];
+        end
+
+        if sex == opvp.Sex.NONE then
+            sex = math.random(0, 1);
+        end
 
         member = self:_createMember(
             token .. id,
@@ -154,33 +159,33 @@ end
 function opvp.TestPartyMemberProvider:_createFakeCharDps(index)
     local player_name = opvp.player.name();
 
-    local name, spec;
+    local name, spec, race, sex;
 
     while self._fake_chars_dps:isEmpty() == false do
-        name, spec = unpack(self._fake_chars_dps:popFront());
+        name, spec, race, sex = unpack(self._fake_chars_dps:popFront());
 
         if name ~= player_name then
-            return name, spec;
+            return name, spec, race, sex;
         end
     end
 
     spec = opvp.ClassSpec.DPS_SPECS[math.random(1, #opvp.ClassSpec.DPS_SPECS)];
 
-    return "Player" .. index, spec;
+    return "Player" .. index, spec, opvp.Race.UNKNOWN, opvp.Sex.NONE;
 end
 
 function opvp.TestPartyMemberProvider:_createFakeCharHealer(index)
     local player_name = opvp.player.name();
 
-    local name, spec;
+    local name, spec, race, sex;
 
     while self._fake_chars_healer:isEmpty() == false do
-        name, spec = unpack(self._fake_chars_healer:popFront());
+        name, spec, race, sex = unpack(self._fake_chars_healer:popFront());
 
         if name ~= player_name then
             self._healers = self._healers + 1;
 
-            return name, spec;
+            return name, spec, race, sex;
         end
     end
 
@@ -188,7 +193,7 @@ function opvp.TestPartyMemberProvider:_createFakeCharHealer(index)
 
     self._healers = self._healers + 1;
 
-    return "Player" .. index, spec;
+    return "Player" .. index, spec, opvp.Race.UNKNOWN, opvp.Sex.NONE;
 end
 
 function opvp.TestPartyMemberProvider:_disconnectSignals()
@@ -212,57 +217,106 @@ function opvp.TestPartyMemberProvider:_onConnected()
 
     self._fake_chars_healer = opvp.List:createFromArray(
         {
-            {"Absurd",       opvp.ClassSpec.HOLY_PRIEST},
-            {"Beep",         opvp.ClassSpec.MISTWEAVER_MONK},
-            {"Bopz",         opvp.ClassSpec.RESTORATION_DRUID},
-            {"Cheesebaker",  opvp.ClassSpec.DISCIPLINE_PRIEST},
-            {"Likewoah",     opvp.ClassSpec.MISTWEAVER_MONK},
-            {"Literal",      opvp.ClassSpec.RESTORATION_SHAMAN},
-            {"Lonstar",      opvp.ClassSpec.RESTORATION_SHAMAN},
-            {"Mythical",     opvp.ClassSpec.MISTWEAVER_MONK},
-            {"Nrgy",         opvp.ClassSpec.DISCIPLINE_PRIEST},
-            {"Salmon",       opvp.ClassSpec.RESTORATION_DRUID},
-            {"Spaceship",    opvp.ClassSpec.RESTORATION_DRUID},
-            {"Thedew",       opvp.ClassSpec.RESTORATION_SHAMAN}
+            {"Absurd",       opvp.ClassSpec.HOLY_PRIEST,        opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Beep",         opvp.ClassSpec.MISTWEAVER_MONK,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Bopz",         opvp.ClassSpec.RESTORATION_DRUID,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Cheesebaker",  opvp.ClassSpec.DISCIPLINE_PRIEST,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Likewoah",     opvp.ClassSpec.MISTWEAVER_MONK,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Literal",      opvp.ClassSpec.RESTORATION_SHAMAN, opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Lonstar",      opvp.ClassSpec.RESTORATION_SHAMAN, opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Mythical",     opvp.ClassSpec.MISTWEAVER_MONK,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Nrgy",         opvp.ClassSpec.DISCIPLINE_PRIEST,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Salmon",       opvp.ClassSpec.RESTORATION_DRUID,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Spaceship",    opvp.ClassSpec.RESTORATION_DRUID,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Thedew",       opvp.ClassSpec.RESTORATION_SHAMAN, opvp.Race.UNKNOWN, opvp.Sex.NONE}
         }
     );
 
     self._fake_chars_dps = opvp.List:createFromArray(
         {
-            {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER},
-            {"Chunchi",      opvp.ClassSpec.WINDWALKER_MONK},
-            {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN},
-            {"Ehben",        opvp.ClassSpec.ARCANE_MAGE},
-            {"Hansolo",      opvp.ClassSpec.FIRE_MAGE},
-            {"Jahmilycyrus", opvp.ClassSpec.FROST_MAGE},
-            {"Mvp",          opvp.ClassSpec.HAVOC_DEMON_HUNTER},
-            {"Pezz",         opvp.ClassSpec.UNHOLY_DEATH_KNIGHT},
-            {"Pikadude",     opvp.ClassSpec.SUBTLETY_ROGUE},
-            {"Ratlord",      opvp.ClassSpec.DESTRUCTION_WARLOCK},
-            {"Saulgudman",   opvp.ClassSpec.ELEMENTAL_SHAMAN},
-            {"Supabreeze",   opvp.ClassSpec.BALANCE_DRUID},
-            {"Venrookie",    opvp.ClassSpec.FIRE_MAGE},
-            {"Vikiminahj",   opvp.ClassSpec.ASSASSINATION_ROGUE},
-            {"Wizman",       opvp.ClassSpec.SHADOW_PRIEST},
-            {"Xenu",         opvp.ClassSpec.FROST_MAGE}
+            {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER, opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Chunchi",      opvp.ClassSpec.WINDWALKER_MONK,        opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN,     opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Ehben",        opvp.ClassSpec.ARCANE_MAGE,            opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Hansolo",      opvp.ClassSpec.FIRE_MAGE,              opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Jahmilycyrus", opvp.ClassSpec.FROST_MAGE,             opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Mvp",          opvp.ClassSpec.HAVOC_DEMON_HUNTER,     opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Pezz",         opvp.ClassSpec.UNHOLY_DEATH_KNIGHT,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Pikadude",     opvp.ClassSpec.SUBTLETY_ROGUE,         opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Ratlord",      opvp.ClassSpec.DESTRUCTION_WARLOCK,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Saulgudman",   opvp.ClassSpec.ELEMENTAL_SHAMAN,       opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Supabreeze",   opvp.ClassSpec.BALANCE_DRUID,          opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Venrookie",    opvp.ClassSpec.FIRE_MAGE,              opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Vikiminahj",   opvp.ClassSpec.ASSASSINATION_ROGUE,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Wizman",       opvp.ClassSpec.SHADOW_PRIEST,          opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Xenu",         opvp.ClassSpec.FROST_MAGE,             opvp.Race.UNKNOWN, opvp.Sex.NONE}
         }
     );
 
-    if (
-        self:hasPlayer() == true and
-        self._player ~= nil and
-        self._player:specInfo():isHealer() == true
-    ) then
+    self._fake_chars_healer:shuffle();
+    self._fake_chars_healer:shuffle();
+    self._fake_chars_healer:shuffle();
+
+    self._fake_chars_dps:shuffle();
+    self._fake_chars_dps:shuffle();
+    self._fake_chars_dps:shuffle();
+
+    if self:hasPlayer() == false then
+        return;
+    end
+
+    local spec = opvp.player.specInfo();
+
+    if spec:isHealer() == true then
         self._healers = self._healers + 1;
     end
 
-    self._fake_chars_healer:shuffle();
-    self._fake_chars_healer:shuffle();
-    self._fake_chars_healer:shuffle();
+    local party = opvp.party.active();
 
-    self._fake_chars_dps:shuffle();
-    self._fake_chars_dps:shuffle();
-    self._fake_chars_dps:shuffle();
+    if party == nil then
+        return;
+    end
+
+    local member;
+    local spec;
+
+    local members = party:members();
+    local index = 1;
+
+    for n=1, #members do
+        member = members[n];
+
+        if (
+            member:isSpecKnown() == true and
+            member:isNameKnown() == true
+        ) then
+            if member:isHealer() == true then
+                self._fake_chars_dps:insert(
+                    index,
+                    {
+                        member:name(),
+                        member:specInfo(),
+                        member:raceInfo(),
+                        member:sex()
+                    }
+                );
+
+                index = index + 1;
+            elseif member:isDps() == true then
+                self._fake_chars_dps:insert(
+                    index,
+                    {
+                        member:name(),
+                        member:specInfo(),
+                        member:raceInfo(),
+                        member:sex()
+                    }
+                );
+
+                index = index + 1;
+            end
+        end
+    end
 end
 
 function opvp.TestPartyMemberProvider:_onDisconnected()
