@@ -94,7 +94,7 @@ function opvp.MatchTest:initialize(pvpType, map, pvpFlags, simulate)
         return;
     end
 
-    pvpFlags = opvp.number_else(pvpFlags, 0)
+    pvpFlags = opvp.number_else(pvpFlags)
 
     local queue;
 
@@ -288,15 +288,6 @@ function opvp.MatchTest:_onMatchJoined()
     self._match:_onMatchJoined();
 
     self._party_index = self._party_index + 1;
-
-    self._match:_onPartyAboutToJoin(
-        opvp.PartyCategory.INSTANCE,
-        string.format(
-            "TestParty-%s-0-%08x",
-            GetRealmID(),
-            self._party_index
-        )
-    );
 end
 
 function opvp.MatchTest:_onMatchRoundActive()
@@ -421,6 +412,15 @@ function opvp.MatchTest:_onMatchRoundWarmup()
     self._match:_onMatchStateChanged(
         opvp.MatchStatus.ROUND_WARMUP,
         self._match:statusNext()
+    );
+
+    self._match:_onPartyAboutToJoin(
+        opvp.PartyCategory.INSTANCE,
+        string.format(
+            "TestParty-%s-0-%08x",
+            GetRealmID(),
+            self._party_index
+        )
     );
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();

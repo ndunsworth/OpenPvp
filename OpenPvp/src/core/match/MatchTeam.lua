@@ -139,16 +139,13 @@ function opvp.MatchTeam:mmr()
 end
 
 function opvp.MatchTeam:_initialize(category, guid)
-    opvp.Party._initialize(self, category, guid);
-
     self._dampening_found = false;
+    self._dampening_found = self._match:hasDampening();
+
+    opvp.Party._initialize(self, category, guid);
 
     if self:isHostile() == true then
         self:_setActive(true);
-
-        self._dampening = false;
-    else
-        self._dampening = self._match:hasDampening();
     end
 end
 
@@ -311,10 +308,14 @@ end
 
 function opvp.MatchTeam:_onRosterBeginUpdate()
     opvp.Party._onRosterBeginUpdate(self);
+
+    opvp.match.rosterBeginUpdate:emit(self);
 end
 
 function opvp.MatchTeam:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
     opvp.Party._onRosterEndUpdate(self, newMembers, updatedMembers, removedMembers);
+
+    opvp.match.rosterEndUpdate:emit(self, newMembers, updatedMembers, removedMembers);
 
     local do_msg1, do_msg2;
 
