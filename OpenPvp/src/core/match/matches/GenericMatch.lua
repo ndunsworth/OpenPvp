@@ -280,7 +280,7 @@ function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
     if self:isTest() == true then
         self._friendly_team:initialize(category, guid);
 
-        if opvp.match.isSimulation() == true then
+        if self:isSimulation() == true then
              self._friendly_provider:addMembers(
                 self:matchTeamSize() - 1
             );
