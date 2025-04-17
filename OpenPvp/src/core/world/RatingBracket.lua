@@ -260,14 +260,6 @@ function opvp.RatingBracket:rating()
 end
 
 function opvp.RatingBracket:ratingInfo()
-    local function zero_or_value(value)
-        if value ~= nil then
-            return value
-        else
-            return 0
-        end
-    end
-
     if self._enabled == false or self._type == opvp.PvpType.NONE then
         return {
             rating=0,
@@ -317,29 +309,29 @@ function opvp.RatingBracket:ratingInfo()
 
     if self._id == opvp.BracketId.SHUFFLE then
         return {
-            rating=zero_or_value(rating),
-            season_best=zero_or_value(season_best),
-            weekly_best=zero_or_value(weekly_best),
-            season_played=zero_or_value(rounds_season_played),
-            season_wins=zero_or_value(rounds_season_wins),
-            weekly_played=zero_or_value(rounds_weekly_played),
-            weekly_wins=zero_or_value(rounds_weekly_wins),
+            rating=opvp.number_else(rating),
+            season_best=opvp.number_else(season_best),
+            weekly_best=opvp.number_else(weekly_best),
+            season_played=opvp.number_else(rounds_season_played),
+            season_wins=opvp.number_else(rounds_season_wins),
+            weekly_played=opvp.number_else(rounds_weekly_played),
+            weekly_wins=opvp.number_else(rounds_weekly_wins),
             has_won=has_won,
             tier=tier,
-            ranking=zero_or_value(ranking)
+            ranking=opvp.number_else(ranking)
         };
     else
         return {
-            rating=zero_or_value(rating),
-            season_best=zero_or_value(season_best),
-            weekly_best=zero_or_value(weekly_best),
-            season_played=zero_or_value(season_played),
-            season_wins=zero_or_value(season_wins),
-            weekly_played=zero_or_value(weekly_played),
-            weekly_wins=zero_or_value(weekly_wins),
+            rating=opvp.number_else(rating),
+            season_best=opvp.number_else(season_best),
+            weekly_best=opvp.number_else(weekly_best),
+            season_played=opvp.number_else(season_played),
+            season_wins=opvp.number_else(season_wins),
+            weekly_played=opvp.number_else(weekly_played),
+            weekly_wins=opvp.number_else(weekly_wins),
             has_won=has_won,
             tier=tier,
-            ranking=zero_or_value(ranking)
+            ranking=opvp.number_else(ranking)
         };
     end
 end
