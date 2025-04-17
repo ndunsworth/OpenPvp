@@ -156,13 +156,13 @@ function opvp.Party:initialize(category, guid)
         return;
     end
 
-    self.initializing:emit(category, guid);
+    self.initializing:emit(category, guid, self);
 
     self:_initialize(category, guid);
 
     self._initialized = true;
 
-    self.initialized:emit(category, guid);
+    self.initialized:emit(category, guid, self);
 end
 
 function opvp.Party:isActive()
@@ -349,13 +349,13 @@ function opvp.Party:shutdown()
         return;
     end
 
-    self.closing:emit();
+    self.closing:emit(self);
 
     self:_shutdown();
 
     self._initialized = false;
 
-    self.closed:emit();
+    self.closed:emit(self);
 end
 
 function opvp.Party:sendAddonMessage(msg, channel, target, priority)
