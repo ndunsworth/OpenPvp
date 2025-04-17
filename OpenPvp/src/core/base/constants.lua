@@ -62,6 +62,14 @@ opvp.Affiliation = {
     HOSTILE  = bit.lshift(1, 2)
 };
 
+opvp.CrowdControlStatus = {
+    NONE    = 0,
+    FULL    = 1,
+    HALF    = 2,
+    QUARTER = 3,
+    IMMUNE  = 4
+};
+
 opvp.CrowdControlType = {
     NONE         = 0,
     DISARM       = bit.lshift(1, 0),
