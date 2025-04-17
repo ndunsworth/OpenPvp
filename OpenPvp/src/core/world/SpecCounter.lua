@@ -31,11 +31,13 @@ local opvp = OpenPvp;
 opvp.ClassSpecCounter = opvp.CreateClass();
 
 function opvp.ClassSpecCounter:init()
-    self._map = {};
+    self._map         = {};
+    self._class_count = 1; --~ Set to one so clear does init of map
+    self._spec_count  = 0;
 
-    self.added   = opvp.Signal("opvp.ClassSpecCounter.added");
-    self.incr    = opvp.Signal("opvp.ClassSpecCounter.incr");
-    self.removed = opvp.Signal("opvp.ClassSpecCounter.removed");
+    self.added        = opvp.Signal("opvp.ClassSpecCounter.added");
+    self.incr         = opvp.Signal("opvp.ClassSpecCounter.incr");
+    self.removed      = opvp.Signal("opvp.ClassSpecCounter.removed");
 
     self:clear();
 end
@@ -54,7 +56,37 @@ function opvp.ClassSpecCounter:classCount(class)
     end
 end
 
+function opvp.ClassSpecCounter:classesWithNoRefs()
+    local result = {};
+    local class;
+
+    for n=1, #opvp.Class.CLASSES do
+        if self._map[n][-1] == 0 then
+            table.insert(self._map, opvp.Class.CLASSES[n]);
+        end
+    end
+
+    return result;
+end
+
+function opvp.ClassSpecCounter:classesWithRefs()
+    local result = {};
+    local class;
+
+    for n=1, #opvp.Class.CLASSES do
+        if self._map[n][-1] > 0 then
+            table.insert(self._map, opvp.Class.CLASSES[n]);
+        end
+    end
+
+    return result;
+end
+
 function opvp.ClassSpecCounter:clear()
+    if self._class_count == 0 then
+        return;
+    end
+
     local class;
     local class_specs;
     local specs;
@@ -73,6 +105,9 @@ function opvp.ClassSpecCounter:clear()
 
         table.insert(self._map, specs);
     end
+
+    self._class_count = 0;
+    self._spec_count  = 0;
 end
 
 function opvp.ClassSpecCounter:deref(spec)
@@ -91,7 +126,7 @@ function opvp.ClassSpecCounter:deref(spec)
     local count_class = info[-1];
     local count_spec  = info[id];
 
-    if count > 0 then
+    if count_spec > 0 then
         count_class = count_class - 1;
         count_spec = count_spec - 1;
 
@@ -101,11 +136,21 @@ function opvp.ClassSpecCounter:deref(spec)
         self.incr:emit(spec, -1, count_class);
 
         if count_spec == 0 then
+            self._spec_count = self._spec_count - 1;
+
             self.removed:emit(spec, count_class);
+        end
+
+        if count_class == 0 then
+            self._class_count = self._class_count - 1;
         end
     end;
 
     return count_spec, count_class;
+end
+
+function opvp.ClassSpecCounter:isEmpty()
+    return self._class_count == 0;
 end
 
 function opvp.ClassSpecCounter:logClasses(onlyRefs)
@@ -150,7 +195,13 @@ function opvp.ClassSpecCounter:ref(spec)
     self.incr:emit(spec, 1);
 
     if count_spec == 1 then
+        self._spec_count = self._spec_count + 1;
+
         self.added:emit(spec, count_class);
+    end
+
+    if count_class == 1 then
+        self._class_count = self._class_count + 1;
     end
 
     return count_spec, count_class;
