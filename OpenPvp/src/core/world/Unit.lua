@@ -446,6 +446,13 @@ function opvp.unit.isInspectable(unitId)
     return CanInspect(unitId);
 end
 
+function opvp.unit.isSameFaction(unitId)
+    local a1, a2 = UnitFactionGroup(unitId)
+    local b1, b2 = UnitFactionGroup("player");
+
+    return a1 == b1;
+end
+
 function opvp.unit.isSameGuild(unitId)
     return UnitIsInMyGuild(unitId);
 end
