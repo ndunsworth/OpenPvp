@@ -30,6 +30,16 @@ local opvp = OpenPvp;
 
 local opvp_cc_type_lookup;
 
+local opvp_cc_status_next_lookup = {
+    opvp.CrowdControlStatus.HALF,
+    opvp.CrowdControlStatus.QUARTER,
+    opvp.CrowdControlStatus.IMMUNE,
+    opvp.CrowdControlStatus.TAUNT_3,
+    opvp.CrowdControlStatus.TAUNT_4,
+    opvp.CrowdControlStatus.IMMUNE,
+    opvp.CrowdControlStatus.FULL
+};
+
 opvp.CrowdControlCategory = opvp.CreateClass();
 
 function opvp.CrowdControlCategory:fromType(id)
@@ -43,7 +53,7 @@ function opvp.CrowdControlCategory:fromType(id)
 end
 
 function opvp.CrowdControlCategory:init(id)
-    self._id = id;
+    self._id    = id;
 end
 
 function opvp.CrowdControlCategory:id()
@@ -90,6 +100,14 @@ function opvp.CrowdControlCategory:isTaunt()
     return self._id == opvp.CrowdControlType.TAUNT;
 end
 
+function opvp.CrowdControlCategory:resetTime()
+    if self._id == opvp.CrowdControlType.KNOCKBACK then
+        return 10;
+    else
+        return 18;
+    end
+end
+
 function opvp.CrowdControlCategory:statusForTime(appliedTime, baseTime)
     if appliedTime <= 0 then
         return opvp.CrowdControlStatus.IMMUNE;
@@ -104,6 +122,33 @@ function opvp.CrowdControlCategory:statusForTime(appliedTime, baseTime)
     else
         return opvp.CrowdControlStatus.QUARTER;
     end
+end
+
+function opvp.CrowdControlCategory:statusNext(status)
+    if self._id == opvp.CrowdControlType.KNOCKBACK then
+        if status == opvp.CrowdControlStatus.FULL then
+            return opvp.CrowdControlStatus.IMMUNE;
+        else
+            return opvp.CrowdControlStatus.FULL;
+        end
+    elseif (
+        self._id == opvp.CrowdControlType.TAUNT and
+        status == opvp.CrowdControlStatus.FULL
+    ) then
+        return opvp.CrowdControlStatus.TAUNT_2;
+    else
+        local result = opvp_cc_status_next_lookup[status];
+
+        if result ~= nil then
+            return result;
+        else
+            return opvp.CrowdControlStatus.FULL;
+        end
+    end
+end
+
+function opvp.CrowdControlCategory:timeForStatus(baseTime, status)
+    return 0;
 end
 
 opvp.CrowdControlCategory.NONE          = opvp.CrowdControlCategory(opvp.CrowdControlType.NONE);

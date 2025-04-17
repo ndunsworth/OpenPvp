@@ -43,8 +43,7 @@ function opvp.PartyManager:init(guid)
     self._countdown_time  = 0;
     self._countdown_timer = opvp.Timer(1);
     self._socket          = opvp.Socket("OpenPvp");
-    --~ self._aura_tracker    = opvp.PartyAuraTracker();
-    self._aura_tracker    = opvp.MatchAuraTracker();
+    self._aura_tracker    = opvp.AdvPartyAuraTracker();
 
     self._aura_tracker:initialize();
 

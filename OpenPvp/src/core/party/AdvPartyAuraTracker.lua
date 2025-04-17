@@ -28,59 +28,13 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local opvp_match_spell_mask = bit.bor(
-    opvp.SpellTrait.CROWD_CONTROL,
-    opvp.SpellTrait.DEFENSIVE,
-    opvp.SpellTrait.OFFENSIVE
-);
+opvp.AdvPartyAuraTracker = opvp.CreateClass(opvp.PartyAuraTracker);
 
-opvp.MatchAuraTracker = opvp.CreateClass(opvp.PartyAuraTracker);
-
-function opvp.MatchAuraTracker:init()
+function opvp.AdvPartyAuraTracker:init()
     opvp.PartyAuraTracker.init(self);
-
-    self._match        = nil;
-    self._affiliation  = opvp.Affiliation.FRIENDLY;
-    self._spec_counter = opvp.ClassSpecCounter();
 end
 
-function opvp.MatchAuraTracker:initialize(match)
-    --~ assert(self._match == nil);
-
-    self._match = match;
-
-    opvp.PartyAuraTracker.initialize(self);
-end
-
-function opvp.MatchAuraTracker:isPartySupported(party)
-    return bit.band(self._affiliation, party:affiliation()) ~= 0;
-end
-
-function opvp.MatchAuraTracker:setAffiliation(mask)
-    self._affiliation = mask;
-end
-
-function opvp.MatchAuraTracker:_addSpells(spells)
-    for id, spell in opvp.iter(spells) do
-        if bit.band(spell:mask(), opvp_match_spell_mask) ~= 0 then
-            self:addSpell(spell);
-        end
-    end
-end
-
-function opvp.MatchAuraTracker:_derefSpec(spec)
-    local spec_count, class_count = self._spec_counter:deref(spec);
-
-    if class_count == 0 then
-        self:_removeSpells(spec:classInfo():auras());
-    end
-
-    if spec_count == 1 then
-        self:_removeSpells(spec:auras());
-    end
-end
-
-function opvp.MatchAuraTracker:_onAuraAdded(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraAdded(member, aura, spell)
     if spell:isCrowdControl() == true then
         self:_onAuraAddedCC(member, aura, spell);
     elseif spell:isOffensive() == true then
@@ -88,11 +42,13 @@ function opvp.MatchAuraTracker:_onAuraAdded(member, aura, spell)
     elseif spell:isDefensive() == true then
         self:_onAuraAddedDefensive(member, aura, spell);
     end
+
+    self.auraAdded:emit(member, aura, spell);
 end
 
-function opvp.MatchAuraTracker:_onAuraAddedBurst(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraAddedBurst(member, aura, spell)
     opvp.printDebug(
-        "opvp.MatchAuraTracker:_onAuraAddedBurst: %s = %d, %s, %s",
+        "opvp.AdvPartyAuraTracker:_onAuraAddedBurst: %s = %d, %s, %s",
         member:nameOrId(),
         aura:spellId(),
         aura:name(),
@@ -100,7 +56,7 @@ function opvp.MatchAuraTracker:_onAuraAddedBurst(member, aura, spell)
     );
 end
 
-function opvp.MatchAuraTracker:_onAuraAddedCC(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraAddedCC(member, aura, spell)
     local cc_state = member:ccState();
 
     local result, cc_status, cc_mask_new, cc_mask_old = cc_state:_onAuraAdded(aura, spell);
@@ -116,7 +72,7 @@ function opvp.MatchAuraTracker:_onAuraAddedCC(member, aura, spell)
         );
 
         opvp.printDebug(
-            "opvp.MatchAuraTracker:_onAuraAddedCC: %s = %d, %s, %s, %d",
+            "opvp.AdvPartyAuraTracker:_onAuraAddedCC: %s = %d, %s, %s, %d",
             member:nameOrId(),
             aura:spellId(),
             aura:name(),
@@ -126,9 +82,9 @@ function opvp.MatchAuraTracker:_onAuraAddedCC(member, aura, spell)
     end
 end
 
-function opvp.MatchAuraTracker:_onAuraAddedDefensive(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraAddedDefensive(member, aura, spell)
     opvp.printDebug(
-        "opvp.MatchAuraTracker:_onAuraAddedDefensive: %s = %d, %s, %s",
+        "opvp.AdvPartyAuraTracker:_onAuraAddedDefensive: %s = %d, %s, %s",
         member:nameOrId(),
         aura:spellId(),
         aura:name(),
@@ -136,7 +92,7 @@ function opvp.MatchAuraTracker:_onAuraAddedDefensive(member, aura, spell)
     );
 end
 
-function opvp.MatchAuraTracker:_onAuraRemoved(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraRemoved(member, aura, spell)
     if spell:isCrowdControl() == true then
         self:_onAuraRemovedCC(member, aura, spell);
     elseif spell:isOffensive() == true then
@@ -144,11 +100,13 @@ function opvp.MatchAuraTracker:_onAuraRemoved(member, aura, spell)
     elseif spell:isDefensive() == true then
         self:_onAuraRemovedDefensive(member, aura, spell);
     end
+
+    self.auraRemoved:emit(member, aura, spell);
 end
 
-function opvp.MatchAuraTracker:_onAuraRemovedBurst(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraRemovedBurst(member, aura, spell)
     opvp.printDebug(
-        "opvp.MatchAuraTracker:_onAuraRemovedBurst: %s = %d, %s, %s",
+        "opvp.AdvPartyAuraTracker:_onAuraRemovedBurst: %s = %d, %s, %s",
         member:nameOrId(),
         aura:spellId(),
         aura:name(),
@@ -156,7 +114,7 @@ function opvp.MatchAuraTracker:_onAuraRemovedBurst(member, aura, spell)
     );
 end
 
-function opvp.MatchAuraTracker:_onAuraRemovedCC(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraRemovedCC(member, aura, spell)
     local cc_state = member:ccState();
 
     local result, cc_status, cc_mask_new, cc_mask_old = cc_state:_onAuraRemoved(aura, spell);
@@ -172,7 +130,7 @@ function opvp.MatchAuraTracker:_onAuraRemovedCC(member, aura, spell)
         );
 
         opvp.printDebug(
-            "opvp.MatchAuraTracker:_onAuraRemovedCC: %s = %d, %s, %s, %d",
+            "opvp.AdvPartyAuraTracker:_onAuraRemovedCC: %s = %d, %s, %s, %d",
             member:nameOrId(),
             aura:spellId(),
             aura:name(),
@@ -182,9 +140,9 @@ function opvp.MatchAuraTracker:_onAuraRemovedCC(member, aura, spell)
     end
 end
 
-function opvp.MatchAuraTracker:_onAuraRemovedDefensive(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraRemovedDefensive(member, aura, spell)
     opvp.printDebug(
-        "opvp.MatchAuraTracker:_onAuraRemovedDefensive: %s = %d, %s, %s",
+        "opvp.AdvPartyAuraTracker:_onAuraRemovedDefensive: %s = %d, %s, %s",
         member:nameOrId(),
         aura:spellId(),
         aura:name(),
@@ -192,7 +150,7 @@ function opvp.MatchAuraTracker:_onAuraRemovedDefensive(member, aura, spell)
     );
 end
 
-function opvp.MatchAuraTracker:_onAuraUpdated(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraUpdated(member, aura, spell)
     if spell:isCrowdControl() == true then
         self:_onAuraUpdatedCC(member, aura, spell);
     elseif spell:isOffensive() == true then
@@ -200,11 +158,13 @@ function opvp.MatchAuraTracker:_onAuraUpdated(member, aura, spell)
     elseif spell:isDefensive() == true then
         self:_onAuraUpdatedDefensive(member, aura, spell);
     end
+
+    self.auraUpdated:emit(member, aura, spell);
 end
 
-function opvp.MatchAuraTracker:_onAuraUpdatedBurst(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraUpdatedBurst(member, aura, spell)
     opvp.printDebug(
-        "opvp.MatchAuraTracker:_onAuraUpdatedBurst: %s = %d, %s, %s",
+        "opvp.AdvPartyAuraTracker:_onAuraUpdatedBurst: %s = %d, %s, %s",
         member:nameOrId(),
         aura:spellId(),
         aura:name(),
@@ -212,7 +172,7 @@ function opvp.MatchAuraTracker:_onAuraUpdatedBurst(member, aura, spell)
     );
 end
 
-function opvp.MatchAuraTracker:_onAuraUpdatedCC(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraUpdatedCC(member, aura, spell)
     local cc_state = member:ccState();
 
     local result, cc_status, cc_mask_new, cc_mask_old = cc_state:_onAuraUpdated(aura, spell);
@@ -221,7 +181,7 @@ function opvp.MatchAuraTracker:_onAuraUpdatedCC(member, aura, spell)
         opvp.match.playerCrowdControlAdded:emit(member, aura, spell, cc_mask_new, cc_mask_old);
 
         opvp.printDebug(
-            "opvp.MatchAuraTracker:_onAuraUpdatedCC: %s = %d, %s, %s, %d",
+            "opvp.AdvPartyAuraTracker:_onAuraUpdatedCC: %s = %d, %s, %s, %d",
             member:nameOrId(),
             aura:spellId(),
             aura:name(),
@@ -231,103 +191,12 @@ function opvp.MatchAuraTracker:_onAuraUpdatedCC(member, aura, spell)
     end
 end
 
-function opvp.MatchAuraTracker:_onAuraUpdatedDefensive(member, aura, spell)
+function opvp.AdvPartyAuraTracker:_onAuraUpdatedDefensive(member, aura, spell)
     opvp.printDebug(
-        "opvp.MatchAuraTracker:_onAuraUpdatedDefensive: %s = %d, %s, %s",
+        "opvp.AdvPartyAuraTracker:_onAuraUpdatedDefensive: %s = %d, %s, %s",
         member:nameOrId(),
         aura:spellId(),
         aura:name(),
         opvp.time.formatSeconds(aura:duration())
     );
-end
-
-function opvp.MatchAuraTracker:_onInitialized()
-    opvp.PartyAuraTracker._onInitialized(self);
-
-    if self._match == nil then
-        return;
-    end
-
-    local teams = self._match:teams();
-
-    for n=1, #teams do
-        self:_addParty(teams[n]);
-    end
-end
-
-function opvp.MatchAuraTracker:_onMemberSpecUpdate(member, newSpec, oldSpec)
-    if newSpec == oldSpec then
-        return;
-    end
-
-    if oldSpec:isValid() == true then
-        self:_derefSpec(oldSpec);
-    end
-
-    if newSpec:isValid() == true then
-        self:_refSpec(newSpec);
-    end
-end
-
-function opvp.MatchAuraTracker:_onRosterEndUpdate(party, newMembers, updatedMembers, removedMembers)
-    local member;
-    local spells;
-
-    for n=1, #newMembers do
-        member = newMembers[n];
-
-        if member:isSpecKnown() == true then
-            self:_refSpec(member:specInfo());
-        end
-    end
-
-    for n=1, #removedMembers do
-        member = removedMembers[n];
-
-        if member:isSpecKnown() == true then
-            self:_derefSpec(member:specInfo());
-        end
-    end
-end
-
-function opvp.MatchAuraTracker:_onPartyAdded(party)
-    opvp.PartyAuraTracker._onPartyAdded(self, party);
-
-    party.memberSpecUpdate:connect(self, self._onMemberSpecUpdate);
-    party.rosterEndUpdate:connect(self, self._onRosterEndUpdate);
-end
-
-function opvp.MatchAuraTracker:_onPartyRemoved(party)
-    opvp.PartyAuraTracker._onPartyRemoved(self, party);
-
-    party.memberSpecUpdate:disconnect(self, self._onMemberSpecUpdate);
-    party.rosterEndUpdate:disconnect(self, self._onRosterEndUpdate);
-end
-
-function opvp.MatchAuraTracker:_onShutdown()
-    opvp.PartyAuraTracker._onShutdown(self);
-
-    self._match = nil;
-
-    self._spec_counter:clear();
-end
-
-function opvp.MatchAuraTracker:_refSpec(spec)
-    local spec_count, class_count = self._spec_counter:ref(spec);
-
-    if class_count == 1 then
-        self:_addSpells(spec:classInfo():auras());
-    end
-
-    if spec_count == 1 then
-        self:_addSpells(spec:auras());
-    end
-end
-
-function opvp.MatchAuraTracker:_removeSpells(spells)
-    for id, spell in opvp.iter(spells) do
-        if bit.band(spell:mask(), opvp_match_spell_mask) ~= 0 then
-            self:removeSpell(spell);
-        end
-    end
 end

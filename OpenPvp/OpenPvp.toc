@@ -112,6 +112,7 @@ src/core/spell/Spell.lua
 src/core/spell/SpellExt.lua
 src/core/spell/SpellList.lua
 src/core/spell/SpellMap.lua
+src/core/spell/SpellRefMap.lua
 src/core/spell/CrowdControlCategory.lua
 src/core/spell/CrowdControlState.lua
 
@@ -341,13 +342,14 @@ src/core/queue/queues/RatedQueue.lua
 
 src/core/party/Party.lua
 src/core/party/PartyAuraTracker.lua
-src/core/party/PartyCrowdControlTracker.lua
 src/core/party/PartyManager.lua
 src/core/party/PartyMember.lua
 src/core/party/PartyMemberAuraMap.lua
 src/core/party/PartyMemberFactory.lua
 src/core/party/PartyMemberCache.lua
 src/core/party/PartyMemberProvider.lua
+src/core/party/PartyPriv.lua
+src/core/party/AdvPartyAuraTracker.lua
 src/core/party/providers/GenericPartyMemberProvider.lua
 src/core/party/providers/PvpPartyMember.lua
 src/core/party/providers/PvpPartyMemberFactory.lua
@@ -358,8 +360,7 @@ src/core/party/providers/TestPartyMemberProvider.lua
 src/core/party/providers/PvpTestPartyMemberProvider.lua
 
 src/core/match/Match.lua
-src/core/match/MatchAuraTracker.lua
-src/core/match/MatchCrowdControlTracker.lua
+src/core/match/MatchConfigAuraTracker.lua
 src/core/match/MatchDescription.lua
 src/core/match/MatchFeature.lua
 src/core/match/MatchManager.lua

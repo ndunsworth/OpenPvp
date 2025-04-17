@@ -162,7 +162,7 @@ function opvp.Match:init(queue, description, testType)
     self._countdown_time    = 0;
     self._countdown_timer   = opvp.Timer(1);
     self._round_results     = false;
-    self._aura_tracker      = opvp.MatchAuraTracker();
+    self._aura_cfg          = opvp.MatchConfigAuraTracker(self);
 
     self._outcome           = opvp.MatchWinner.NONE;
     self._outcome_valid     = false;
@@ -665,6 +665,8 @@ function opvp.Match:_onMatchEntered()
         opvp.event.START_TIMER:connect(self, self._onStartTimer);
     end
 
+    self._aura_cfg:initialize();
+
     self:_setOutcome(opvp.MatchWinner.NONE, nil, opvp.MatchOutcomeType.NONE);
 
     self:_setStatus(opvp.MatchStatus.ENTERED);
@@ -672,6 +674,8 @@ end
 
 function opvp.Match:_onMatchExit()
     self:_setStatus(opvp.MatchStatus.EXIT);
+
+    self._aura_cfg:shutdown();
 end
 
 function opvp.Match:_onMatchJoined()
@@ -730,8 +734,6 @@ function opvp.Match:_onMatchRoundComplete()
         self._cc_tracker:disconnect();
     end
 
-    self._aura_tracker:shutdown();
-
     self:_setStatus(opvp.MatchStatus.ROUND_COMPLETE);
 end
 
@@ -748,8 +750,6 @@ function opvp.Match:_onMatchRoundWarmup()
             self._cc_tracker:connect(self, opvp.Affiliation.FRIENDLY)
         end
     end
-
-    self._aura_tracker:initialize(self);
 
     self._round_results = true;
 

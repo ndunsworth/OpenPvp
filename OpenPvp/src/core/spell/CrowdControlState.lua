@@ -28,24 +28,19 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local opvp_cc_status_next_lookup = {
-    opvp.CrowdControlStatus.HALF,
-    opvp.CrowdControlStatus.QUARTER,
-    opvp.CrowdControlStatus.IMMUNE,
-    opvp.CrowdControlStatus.FULL,
-};
-
 local opvp_cc_value_null;
 
 opvp.CrowdControlValue = opvp.CreateClass();
 
 function opvp.CrowdControlValue:init(category)
-    self._cat     = category;
-    self._count   = 0;
-    self._dr      = opvp.CrowdControlStatus.FULL;
-    self._dr_next = opvp.CrowdControlStatus.FULL;
-    self._spell   = opvp.SpellExt:null();
-    self._auras   = opvp.AuraMap();
+    self._cat        = category;
+    self._count      = 0;
+    self._dr         = opvp.CrowdControlStatus.FULL;
+    self._dr_next    = opvp.CrowdControlStatus.FULL;
+    self._duration   = 0;
+    self._expiration = 0;
+    self._spell      = opvp.SpellExt:null();
+    self._auras      = opvp.AuraMap();
 end
 
 function opvp.CrowdControlValue:category()
@@ -66,6 +61,22 @@ end
 
 function opvp.CrowdControlValue:drNext()
     return self._dr_next;
+end
+
+function opvp.CrowdControlValue:drResetTime()
+    if self._expiration > 0 then
+        return self._expiration + self._cat:resetTime();
+    else
+        return GetTime();
+    end
+end
+
+function opvp.CrowdControlValue:duration()
+    return self._duration;
+end
+
+function opvp.CrowdControlValue:expiration()
+    return self._expiration;
 end
 
 function opvp.CrowdControlValue:isFull()
@@ -97,46 +108,74 @@ function opvp.CrowdControlValue:isQuarterNext()
 end
 
 function opvp.CrowdControlValue:_clear()
-    self._count   = 0;
-    self._dr      = opvp.CrowdControlStatus.FULL;
-    self._dr_next = opvp.CrowdControlStatus.FULL;
-    self._spell   = opvp.SpellExt:null();
+    self._count      = 0;
+    self._dr         = opvp.CrowdControlStatus.FULL;
+    self._dr_next    = opvp.CrowdControlStatus.FULL;
+    self._duration   = 0;
+    self._expiration = 0;
+    self._spell      = opvp.SpellExt:null();
 
     self._auras:clear();
 end
 
 function opvp.CrowdControlValue:_onAuraAdded(aura, spell)
+    self._count = self._count + 1;
+
+    self._auras:add(aura);
+
+    local duration   = aura:duration();
+    local expiration = aura:expiration()
+
+    if expiration > self._expiration then
+        self._expiration = expiration;
+    end
+
+    if duration == self._duration then
+        return false, self._dr;
+    end
+
+    local is_first = self._count == 1;
+
+    self._dr         = self._cat:statusForTime(duration, spell:duration());
+    self._dr_next    = self._cat:statusNext(self._dr);
+    self._spell      = spell;
+    self._duration   = aura:duration();
+    self._expiration = aura:expiration();
+
+    return is_first, self._dr;
+end
+
+function opvp.CrowdControlValue:_onAuraUpdated(aura, spell)
     if self._auras:contains(aura) == false then
         self._count = self._count + 1;
 
         self._auras:add(aura);
     end
 
-    self._dr      = self._cat:statusForTime(aura:duration(), spell:duration());
-    self._dr_next = opvp_cc_status_next_lookup[self._dr];
-    self._spell   = spell;
+    local duration   = aura:duration();
+    local expiration = aura:expiration();
+    local dr = self._cat:statusForTime(duration, spell:duration());
 
-    return self._count == 1, self._dr;
-end
-
-function opvp.CrowdControlValue:_onAuraUpdated(aura, spell)
-    local tmp = self._auras:findById(aura:id());
-
-    if tmp ~= nil then
-        if tmp:duration() == aura:duration() then
-            return false, self._dir;
-        end
-    else
-        self._count = self._count + 1;
-
-        self._auras:add(aura);
+    if expiration > self._expiration then
+        self._expiration = expiration;
     end
 
-    self._dr      = self._cat:statusForTime(aura:duration(), spell:duration());
-    self._dr_next = opvp_cc_status_next_lookup[self._dr];
-    self._spell   = spell;
+    if (
+        duration == self._duration and
+        dr == self._dr
+    ) then
+        return false, self._dr;
+    end
 
-    return self._count == 1, self._dr;
+    local is_first = self._count == 1;
+
+    self._dr         = dr;
+    self._dr_next    = self._cat:statusNext(self._dr);
+    self._spell      = spell;
+    self._duration   = aura:duration();
+    self._expiration = aura:expiration();
+
+    return is_first, self._dr;
 end
 
 function opvp.CrowdControlValue:_onAuraRemoved(aura, spell)
@@ -146,16 +185,22 @@ function opvp.CrowdControlValue:_onAuraRemoved(aura, spell)
         self._auras:remove(aura);
     else
         self._dr      = self._cat:statusForTime(aura:duration(), spell:duration());
-        self._dr_next = opvp_cc_status_next_lookup[self._dr];
+        self._dr_next = self._cat:statusNext(self._dr);
     end
 
     if self._count ~= 0 then
         return false, self._dr;
     end
 
-    self._spell   = opvp.SpellExt:null();
-    self._dr      = self._dr_next;
-    self._dr_next = opvp_cc_status_next_lookup[self._dr];
+    self._spell      = opvp.SpellExt:null();
+    self._dr         = self._dr_next;
+    self._dr_next    = self._cat:statusNext(self._dr);
+    self._duration   = 0;
+    self._expiration = 0;
+
+    if self._count == 0 then
+        self._dr_reset = aura:expiration() + self._cat:resetTime();
+    end
 
     return true, self._dr;
 end
@@ -176,6 +221,14 @@ function opvp.CrowdControlState:init()
 
     self._mask  = 0;
     self._count = 0;
+end
+
+function opvp.CrowdControlState:duration(category)
+    return self:value(category):duration();
+end
+
+function opvp.CrowdControlState:expiration(category)
+    return self:value(category):expiration();
 end
 
 function opvp.CrowdControlState:isAny(mask)
@@ -242,7 +295,7 @@ function opvp.CrowdControlState:_onAuraAdded(aura, spell)
     local cat_type = spell:crowdControlType();
 
     if cat_type == opvp.CrowdControlType.NONE then
-        return false, opvp.CrowdControlStatus.NONE, self._mask, self._mask;
+        return false, opvp.CrowdControlStatus.FULL, self._mask, self._mask;
     end
 
     local value = self._values[cat_type];
@@ -266,7 +319,7 @@ function opvp.CrowdControlState:_onAuraUpdated(aura, spell)
     local cat_type = spell:crowdControlType();
 
     if cat_type == opvp.CrowdControlType.NONE then
-        return false, opvp.CrowdControlStatus.NONE, self._mask, self._mask;
+        return false, opvp.CrowdControlStatus.FULL, self._mask, self._mask;
     end
 
     local value = self._values[cat_type];
@@ -290,7 +343,7 @@ function opvp.CrowdControlState:_onAuraRemoved(aura, spell)
     local cat_type = spell:crowdControlType();
 
     if cat_type == opvp.CrowdControlType.NONE then
-        return false, opvp.CrowdControlStatus.NONE, self._mask, self._mask;
+        return false, opvp.CrowdControlStatus.FULL, self._mask, self._mask;
     end
 
     local value = self._values[cat_type];

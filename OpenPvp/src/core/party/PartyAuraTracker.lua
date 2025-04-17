@@ -33,11 +33,13 @@ opvp.PartyAuraTracker = opvp.CreateClass();
 function opvp.PartyAuraTracker:init()
     self._initialized = false;
     self._parties     = opvp.List();
-    self._auras       = opvp.SpellMap();
+    self._auras       = opvp.SpellRefMap();
 
     self.auraAdded    = opvp.Signal("opvp.PartyAuraTracker.auraAdded");
     self.auraRemoved  = opvp.Signal("opvp.PartyAuraTracker.auraRemoved");
     self.auraUpdated  = opvp.Signal("opvp.PartyAuraTracker.auraUpdated");
+    self.partyAdded   = opvp.Signal("opvp.PartyAuraTracker.partyAdded");
+    self.partyRemoved = opvp.Signal("opvp.PartyAuraTracker.partyRemoved");
 end
 
 function opvp.PartyAuraTracker:addSpell(spell)
@@ -76,6 +78,12 @@ end
 
 function opvp.PartyAuraTracker:removeSpell(spell)
     self._auras:remove(spell);
+
+    opvp.printDebug(
+        "opvp.PartyAuraTracker.removeSpell(id=%d, name=\"%s\")",
+        spell:id(),
+        spell:name()
+    );
 end
 
 function opvp.PartyAuraTracker:shutdown()
@@ -101,6 +109,8 @@ function opvp.PartyAuraTracker:_addParty(party)
     self._parties:append(party);
 
     self:_onPartyAdded(party);
+
+    self.partyAdded:emit(party);
 end
 
 function opvp.PartyAuraTracker:_initialize()
@@ -219,6 +229,8 @@ function opvp.PartyAuraTracker:_removeParty(party)
     end
 
     self:_onPartyRemoved(party);
+
+    self.partyRemoved:emit(party);
 end
 
 function opvp.PartyAuraTracker:_shutdown()

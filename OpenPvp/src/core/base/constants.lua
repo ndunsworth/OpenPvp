@@ -67,11 +67,13 @@ opvp.Affiliation = {
 };
 
 opvp.CrowdControlStatus = {
-    NONE    = 0,
     FULL    = 1,
     HALF    = 2,
     QUARTER = 3,
-    IMMUNE  = 4
+    TAUNT_2 = 4,
+    TAUNT_3 = 5,
+    TAUNT_4 = 6,
+    IMMUNE  = 7
 };
 
 opvp.CrowdControlType = {
