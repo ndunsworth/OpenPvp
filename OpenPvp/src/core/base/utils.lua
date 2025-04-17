@@ -31,6 +31,10 @@ local opvp = OpenPvp;
 local LibDeflate = LibStub:GetLibrary("LibDeflate");
 local LibSerialize = LibStub:GetLibrary("LibSerialize");
 
+function opvp.iter(obj)
+    return obj:__iter__();
+end
+
 opvp.utils = {};
 
 function opvp.utils.chatTypeColor(id)
@@ -205,6 +209,10 @@ function opvp.utils.deepcopy2(orig, copies)
     return copy
 end
 
+function opvp.utils.dump(data)
+    DevTools_Dump(data);
+end
+
 function opvp.utils.merge(t1, t2)
     for k, v in pairs(t2) do
         if (type(v) == "table") and (type(t1[k] or false) == "table") then
@@ -262,9 +270,9 @@ function opvp.utils.serializeTo(data)
     return LibSerialize:Serialize(data);
 end
 
-opvp.utils.table = {};
+opvp.utils.array = {};
 
-function opvp.utils.table.contains(tbl, item)
+function opvp.utils.array.contains(tbl, item)
     for n=1, #tbl do
         if tbl[n] == item then
             return true;
@@ -272,6 +280,22 @@ function opvp.utils.table.contains(tbl, item)
     end
 
     return false;
+end
+
+opvp.utils.table = {};
+
+function opvp.utils.table.isEmpty(tbl)
+    return next(tbl) == nil;
+end
+
+function opvp.utils.table.size(tbl)
+    local n = 0;
+
+    for k, v in pairs(tbl) do
+        n = n + 1;
+    end
+
+    return n;
 end
 
 function opvp.utils.textureAtlastMarkup(name, width, height, offsetX, offsetY, rVertexColor, gVertexColor, bVertexColor)
