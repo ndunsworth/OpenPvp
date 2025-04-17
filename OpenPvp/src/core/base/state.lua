@@ -28,10 +28,6 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.private = {
-    state = {}
-};
-
 opvp.DEBUG = false;
 
 local opvp_state_db_singleton;

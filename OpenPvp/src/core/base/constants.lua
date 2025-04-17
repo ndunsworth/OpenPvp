@@ -28,6 +28,10 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+opvp.private = {
+    state = {}
+};
+
 opvp.MAJOR_VERSION   = 1;
 opvp.MINOR_VERSION   = 0;
 opvp.RELEASE_VERSION = 7;
