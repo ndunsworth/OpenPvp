@@ -99,6 +99,10 @@ opvp.party.left        = opvp.Signal("opvp.party.left");
 
 opvp.party.countdown   = opvp.Signal("opvp.party.countdown");
 
+function opvp.party.active()
+    return opvp.party.party();
+end
+
 function opvp.party.auraTracker()
     return opvp_party_mgr_singleton:auraTracker();
 end
