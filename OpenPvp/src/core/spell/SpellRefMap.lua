@@ -108,19 +108,27 @@ function opvp.SpellRefMap:add(spell)
 
         if ref ~= nil then
             ref:ref(spell);
+
+            return false;
         else
             self._spells[spell:id()] = opvp.SpellRef(spell);
+
+            return true;
         end
     elseif opvp.IsInstance(spell, opvp.Spell) == true then
         ref = self._spells[spell:id()];
 
         if ref ~= nil then
             ref:ref(spell);
+
+            return false;
         else
             self._spells[spell:id()] = opvp.SpellRef(spell);
+
+            return true;
         end
     else
-        return;
+        return false;
     end
 end
 
@@ -218,11 +226,15 @@ function opvp.SpellRefMap:remove(spell)
     elseif opvp.IsInstance(spell, opvp.Spell) == true then
         ref = self._spells[spell:id()];
     else
-        return;
+        return false;
     end
 
     if ref ~= nil and ref:deref() == false then
         self._spells[ref:id()] = nil;
+
+        return true;
+    else
+        return false;
     end
 end
 
