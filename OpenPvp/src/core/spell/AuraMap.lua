@@ -32,6 +32,7 @@ opvp.AuraMap = opvp.CreateClass();
 
 function opvp.AuraMap:init()
     self._auras = {};
+    self._size = 0;
 end
 
 function opvp.AuraMap.__iter__(self)
@@ -39,8 +40,16 @@ function opvp.AuraMap.__iter__(self)
 end
 
 function opvp.AuraMap:add(aura)
-    if opvp.IsInstance(aura, opvp.Aura) == true then
+    if (
+        opvp.IsInstance(aura, opvp.Aura) == true and
+        self._auras[aura:id()] == nil
+    ) then
         self._auras[aura:id()] = aura;
+        self._size = self._size + 1;
+
+        return true;
+    else
+        return false;
     end
 end
 
@@ -60,6 +69,23 @@ function opvp.AuraMap:contains(aura)
     else
         return false;
     end
+
+end
+
+function opvp.AuraMap:containsSpell(spell)
+    if opvp.IsInstance(spell, opvp.Spell) == true then
+        spell = spell:id();
+    elseif opvp.is_number(aura) == false then
+        return false;
+    end
+
+    for id, aura in pairs(self._auras) do
+        if aura:spellId() == spell then
+            return aura;
+        end
+    end
+
+    return false;
 end
 
 function opvp.AuraMap:findById(id)
@@ -112,14 +138,28 @@ end
 
 function opvp.AuraMap:remove(aura)
     if opvp.is_number(aura) == true then
-        self._auras[aura] = nil;
+        if self._auras[aura] ~= nil then
+            self._auras[aura] = nil;
+
+            self._count = self._size - 1;
+
+            return true;
+        end
     elseif opvp.IsInstance(aura, opvp.Aura) == true then
-        self._auras[aura:id()] = nil;
+        if self._auras[aura:id()] ~= nil then
+            self._auras[aura:id()] = nil;
+
+            self._count = self._size - 1;
+
+            return true;
+        end
     end
+
+    return false;
 end
 
 function opvp.AuraMap:size()
-    return opvp.utils.table.size(self._auras);
+    return self._size;
 end
 
 function opvp.AuraMap:swap(other)
@@ -131,8 +171,13 @@ function opvp.AuraMap:swap(other)
         return;
     end
 
-    local tmp = self._auras;
+    local tmp    = self._auras;
 
-    self._auras = other._auras;
+    self._auras  = other._auras;
     other._auras = tmp;
+
+    tmp          = self._size;
+
+    self._size   = other._size;
+    other._size  = tmp;
 end
