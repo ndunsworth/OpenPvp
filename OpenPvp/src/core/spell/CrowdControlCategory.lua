@@ -52,8 +52,14 @@ function opvp.CrowdControlCategory:fromType(id)
     end
 end
 
-function opvp.CrowdControlCategory:init(id)
-    self._id    = id;
+function opvp.CrowdControlCategory:init(id, name, display)
+    self._id      = id;
+    self._name    = name;
+    self._display = display;
+end
+
+function opvp.CrowdControlCategory:displayName()
+    return self._display;
 end
 
 function opvp.CrowdControlCategory:id()
@@ -98,6 +104,10 @@ end
 
 function opvp.CrowdControlCategory:isTaunt()
     return self._id == opvp.CrowdControlType.TAUNT;
+end
+
+function opvp.CrowdControlCategory:name()
+    return self._name;
 end
 
 function opvp.CrowdControlCategory:resetTime()
@@ -151,15 +161,59 @@ function opvp.CrowdControlCategory:timeForStatus(baseTime, status)
     return 0;
 end
 
-opvp.CrowdControlCategory.NONE          = opvp.CrowdControlCategory(opvp.CrowdControlType.NONE);
-opvp.CrowdControlCategory.DISARM        = opvp.CrowdControlCategory(opvp.CrowdControlType.DISARM);
-opvp.CrowdControlCategory.DISORIENT     = opvp.CrowdControlCategory(opvp.CrowdControlType.DISORIENT);
-opvp.CrowdControlCategory.INCAPACITATE  = opvp.CrowdControlCategory(opvp.CrowdControlType.INCAPACITATE);
-opvp.CrowdControlCategory.KNOCKBACK     = opvp.CrowdControlCategory(opvp.CrowdControlType.KNOCKBACK);
-opvp.CrowdControlCategory.ROOT          = opvp.CrowdControlCategory(opvp.CrowdControlType.ROOT);
-opvp.CrowdControlCategory.SILENCE       = opvp.CrowdControlCategory(opvp.CrowdControlType.SILENCE);
-opvp.CrowdControlCategory.STUN          = opvp.CrowdControlCategory(opvp.CrowdControlType.STUN);
-opvp.CrowdControlCategory.TAUNT         = opvp.CrowdControlCategory(opvp.CrowdControlType.TAUNT);
+opvp.CrowdControlCategory.NONE = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.NONE,
+    "",
+    ""
+);
+
+opvp.CrowdControlCategory.DISARM = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.DISARM,
+    opvp.strs.CC_DISARM_NAME,
+    opvp.strs.CC_DISARM_DISPLAY_NAME
+);
+
+opvp.CrowdControlCategory.DISORIENT = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.DISORIENT,
+    opvp.strs.CC_DISORIENT_NAME,
+    opvp.strs.CC_DISORIENT_DISPLAY_NAME
+);
+
+opvp.CrowdControlCategory.INCAPACITATE = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.INCAPACITATE,
+    opvp.strs.CC_INCAPACITATE_NAME,
+    opvp.strs.CC_INCAPACITATE_DISPLAY_NAME
+);
+
+opvp.CrowdControlCategory.KNOCKBACK = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.KNOCKBACK,
+    opvp.strs.CC_KNOCKBACK_NAME,
+    opvp.strs.CC_KNOCKBACK_DISPLAY_NAME
+);
+
+opvp.CrowdControlCategory.KNOCKBACK = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.ROOT,
+    opvp.strs.CC_ROOT_NAME,
+    opvp.strs.CC_ROOT_DISPLAY_NAME
+);
+
+opvp.CrowdControlCategory.SILENCE = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.SILENCE,
+    opvp.strs.CC_SILENCE_NAME,
+    opvp.strs.CC_SILENCE_DISPLAY_NAME
+);
+
+opvp.CrowdControlCategory.STUN = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.STUN,
+    opvp.strs.CC_STUN_NAME,
+    opvp.strs.CC_STUN_DISPLAY_NAME
+);
+
+opvp.CrowdControlCategory.TAUNT = opvp.CrowdControlCategory(
+    opvp.CrowdControlType.TAUNT,
+    opvp.strs.CC_TAUNT_NAME,
+    opvp.strs.CC_TAUNT_DISPLAY_NAME
+);
 
 opvp_cc_type_lookup = {
     [opvp.CrowdControlType.NONE]         = opvp.CrowdControlCategory.NONE,

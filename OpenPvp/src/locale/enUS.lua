@@ -70,6 +70,23 @@ opvp.locale.enUS = {
 
     PVP_CURRENCIES_CAPPED              = "Pvp Currencies Capped",
 
+    CC_DISARM_NAME                     = LOC_TYPE_DISARM,
+    CC_DISARM_DISPLAY_NAME             = LOSS_OF_CONTROL_DISPLAY_DISARM,
+    CC_DISORIENT_NAME                  = "Disorient",
+    CC_DISORIENT_DISPLAY_NAME          = LOSS_OF_CONTROL_DISPLAY_DISORIENT,
+    CC_INCAPACITATE_NAME               = "Incapacitate",
+    CC_INCAPACITATE_DISPLAY_NAME       = LOSS_OF_CONTROL_DISPLAY_INCAPACITATE,
+    CC_KNOCKBACK_NAME                  = "Knockback",
+    CC_KNOCKBACK_DISPLAY_NAME          = "",
+    CC_ROOT_NAME                       = LOC_TYPE_ROOT,
+    CC_ROOT_DISPLAY_NAME               = LOSS_OF_CONTROL_DISPLAY_ROOT,
+    CC_SILENCE_NAME                    = LOC_TYPE_SILENCE,
+    CC_SILENCE_DISPLAY_NAME            = LOSS_OF_CONTROL_DISPLAY_SILENCE,
+    CC_STUN_NAME                       = STUN,
+    CC_STUN_DISPLAY_NAME               = STUNNED,
+    CC_TAUNT_NAME                      = "Taunt",
+    CC_TAUNT_DISPLAY_NAME              = LOSS_OF_CONTROL_DISPLAY_TAUNT,
+
     CMD_HELP                           = "Command | %s - %s",
     CMD_GROUP_HELP                     = "Commands | %s",
     CMD_GROUP_CMD_HELP                 = "    [%d] %s - %s",
