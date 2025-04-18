@@ -107,6 +107,10 @@ function opvp.PartyMember:affiliation()
     return self._affiliation;
 end
 
+function opvp.PartyMember:auras()
+    return self._auras;
+end
+
 function opvp.PartyMember:ccState()
     return self._cc_state;
 end
@@ -129,6 +133,14 @@ end
 
 function opvp.PartyMember:guid()
     return self._guid;
+end
+
+function opvp.PartyMember:hasAura(aura)
+    return self._auras:contains(aura);
+end
+
+function opvp.PartyMember:hasAuraForSpell(spell)
+    return self._auras:containsSpell(spell);
 end
 
 function opvp.PartyMember:hasTeam()
@@ -355,7 +367,7 @@ function opvp.PartyMember:_reset(mask)
     end
 
     if bit.band(mask, opvp.PartyMember.AURAS_FLAG) ~= 0 then
-        self._auras:clear();
+        self._auras:_clear();
         self._cc_state:_clear();
     end
 

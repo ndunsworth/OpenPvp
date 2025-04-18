@@ -39,11 +39,7 @@ function opvp.PartyMemberAuraMap:add(aura)
 end
 
 function opvp.PartyMemberAuraMap:clear()
-    for id, aura in pairs(self._auras) do
-        opvp.Aura:release(aura);
-    end
 
-    self._auras = {};
 end
 
 function opvp.PartyMemberAuraMap:remove(aura)
@@ -164,4 +160,12 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
     end
 
     return auras_new, auras_mod, auras_rem, info.isFullUpdate;
+end
+
+function opvp.PartyMemberAuraMap:_clear()
+    for id, aura in pairs(self._auras) do
+        opvp.Aura:release(aura);
+    end
+
+    self._auras = {};
 end
