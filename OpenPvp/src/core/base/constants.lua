@@ -81,11 +81,11 @@ opvp.CrowdControlType = {
     DISARM       = bit.lshift(1, 0),
     DISORIENT    = bit.lshift(1, 1),
     INCAPACITATE = bit.lshift(1, 2),
-    KNOCKBACK    = bit.lshift(1, 4),
-    ROOT         = bit.lshift(1, 5),
-    SILENCE      = bit.lshift(1, 6),
-    STUN         = bit.lshift(1, 7),
-    TAUNT        = bit.lshift(1, 8)
+    KNOCKBACK    = bit.lshift(1, 3),
+    ROOT         = bit.lshift(1, 4),
+    SILENCE      = bit.lshift(1, 5),
+    STUN         = bit.lshift(1, 6),
+    TAUNT        = bit.lshift(1, 7)
 };
 
 opvp.DispellType = {
