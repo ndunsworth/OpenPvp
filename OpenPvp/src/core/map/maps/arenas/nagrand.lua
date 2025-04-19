@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.NAGRAND_ARENA,
             map_id       = 0,
+            music        = {data=53684, sound_type=opvp.SoundType.FileData},
+            music_intro  = 10732,
             stats        = {
                 [opvp.PvpStatId.ROUNDS_WON] = 1008
             },

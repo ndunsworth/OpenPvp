@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.TIGERS_PEAK,
             map_id       = 0,
+            music        = 28757,
+            music_intro  = 128953,
             stats        = {
                 [opvp.PvpStatId.ROUNDS_WON] = 1010
             },

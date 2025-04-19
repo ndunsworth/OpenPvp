@@ -33,6 +33,7 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ALTERAC_VALLEY,
             map_id       = 91,
+            music        = 8014,
             stats        = {
                 [opvp.PvpStatId.GRAVEYARDS_ASSAULTED] = 63,
                 [opvp.PvpStatId.GRAVEYARDS_DEFENDED]  = 65,

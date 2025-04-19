@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ENIGMA_CRUCIBLE,
             map_id       = 0,
+            music        = 194038,
+            music_intro  = 195997,
             stats        = {
                 [opvp.PvpStatId.ROUNDS_WON] = 1017
             },

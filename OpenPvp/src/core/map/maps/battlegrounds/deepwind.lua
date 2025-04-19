@@ -33,6 +33,7 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.DEEPWIND_GORGE,
             map_id       = 1576,
+            music        = 37659,
             stats        = {
                 [opvp.PvpStatId.BASES_ASSAULTED] = 1001,
                 [opvp.PvpStatId.BASES_DEFENDED]  = 1002

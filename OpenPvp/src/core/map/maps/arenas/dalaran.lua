@@ -33,6 +33,7 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.DALARAN_SEWERS,
             map_id       = 0,
+            music        = 57220,
             widgets      = {
                 {
                     widget_set  = 1,

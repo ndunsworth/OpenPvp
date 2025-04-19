@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.WARSONG_GULCH,
             map_id       = 1339,
+            music        = 8233,
+            music_intro  = 129817,
             stats        = {
                 [opvp.PvpStatId.FLAG_CAPTURES] = 928,
                 [opvp.PvpStatId.FLAG_RETURNS]  = 929
@@ -50,7 +52,7 @@ local function init_map()
                     widget_type = Enum.UIWidgetVisualizationType.DoubleStateIconRow,
                     name        = "FlagStatus"
                 }
-            }
+            },
         }
     );
 
@@ -58,6 +60,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.WARSONG_GULCH_CLASSIC,
             map_id       = 859,
+            music        = 8233,
+            music_intro  = 129817,
             stats        = {
                 [opvp.PvpStatId.FLAG_CAPTURES] = 42,
                 [opvp.PvpStatId.FLAG_RETURNS]  = 44

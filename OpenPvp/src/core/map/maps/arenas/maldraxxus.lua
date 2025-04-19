@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.MALDRAXXUS_ARENA,
             map_id       = 0,
+            music        = 192891,
+            music_intro  = 192892,
             stats        = {
                 [opvp.PvpStatId.ROUNDS_WON] = 1015
             },

@@ -33,6 +33,7 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.NOKHUDON_PROVING_GROUNDS,
             map_id       = 0,
+            music        = 218099,
             stats        = {
                 [opvp.PvpStatId.ROUNDS_WON] = 1018
             },

@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.MUGAMBALA_ARENA,
             map_id       = 0,
+            music        = 117041,
+            music_intro  = 117042,
             stats        = {
                 [opvp.PvpStatId.ROUNDS_WON] = 1013
             },

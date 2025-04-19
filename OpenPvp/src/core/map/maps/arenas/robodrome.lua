@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.THE_ROBODROME,
             map_id       = 0,
+            music        = 138657,
+            music_intro  = 138658,
             widgets      = {
                 {
                     widget_set  = 1,

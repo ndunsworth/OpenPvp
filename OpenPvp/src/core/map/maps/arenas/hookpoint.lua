@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.HOOK_POINT,
             map_id       = 0,
+            music        = 114680,
+            music_intro  = 117039,
             widgets      = {
                 {
                     widget_set  = 1,

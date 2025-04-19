@@ -33,6 +33,7 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.CAGE_OF_CARNAGE,
             map_id       = 0,
+            music        = 268703,
             stats        = {
                 [opvp.PvpStatId.ROUNDS_WON] = 1022
             },

@@ -33,6 +33,20 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ASHRAN,
             map_id       = 1478,
+            music        = {
+                               data = {
+                                   alliance = {data=48537, sound_type=opvp.SoundType.SoundKit},
+                                   horde    = {data=48538, sound_type=opvp.SoundType.SoundKit}
+                               },
+                               sound_type = opvp.SoundType.Faction
+                           },
+            music_intro  = {
+                               data = {
+                                   alliance = {data=48487, sound_type=opvp.SoundType.SoundKit},
+                                   horde    = {data=48488, sound_type=opvp.SoundType.SoundKit}
+                               },
+                               sound_type = opvp.SoundType.Faction
+                           },
             widgets      = {}
         }
     );
