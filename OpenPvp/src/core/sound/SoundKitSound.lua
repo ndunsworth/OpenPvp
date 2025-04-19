@@ -47,7 +47,11 @@ end
 function opvp.SoundKitSound:init(id)
     opvp.Sound.init(self);
 
-    self._id = id;
+    if opvp.is_number(id) == true then
+        self._id = id;
+    else
+        self._id = 0;
+    end
 end
 
 function opvp.SoundKitSound:id()
@@ -67,7 +71,7 @@ function opvp.SoundKitSound:play(channel, noDupes)
         channel = opvp.SoundChannel.SFX;
     end
 
-    PlaySound(self._id, channel, noDupes);
+    return PlaySound(self._id, channel, noDupes);
 end
 
 function opvp.SoundKitSound:type()

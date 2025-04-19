@@ -47,6 +47,12 @@ end
 function opvp.FileDataSound:init(id)
     opvp.Sound.init(self);
 
+    assert(opvp.is_number(id) or opvp.is_str(id));
+
+    if id == "" then
+        id = 0;
+    end
+
     self._id = id;
 end
 
@@ -60,14 +66,14 @@ end
 
 function opvp.FileDataSound:play(channel, noDupes)
     if self._id == 0 then
-        return;
+        return false, nil;
     end
 
     if channel == nil then
         channel = opvp.SoundChannel.SFX;
     end
 
-    PlaySoundFile(self._id, channel);
+    return PlaySoundFile(self._id, channel);
 end
 
 function opvp.FileDataSound:type()

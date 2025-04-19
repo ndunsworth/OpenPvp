@@ -66,18 +66,18 @@ end
 
 function opvp.CharacterSound:play(sex, channel, noDupes)
     if sex == opvp.Sex.FEMALE then
-        self:playFemale(channel, noDupes);
+        return self:playFemale(channel, noDupes);
     else
-        self:playMale(channel, noDupes);
+        return self:playMale(channel, noDupes);
     end
 end
 
 function opvp.CharacterSound:playFemale(channel, noDupes)
-    self._female:play(channel, noDupes);
+    return self._female:play(channel, noDupes);
 end
 
 function opvp.CharacterSound:playMale(channel, noDupes)
-    self._male:play(channel, noDupes);
+    return self._male:play(channel, noDupes);
 end
 
 function opvp.CharacterSound:sound(sex)

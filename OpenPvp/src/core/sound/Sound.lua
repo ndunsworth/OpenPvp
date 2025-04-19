@@ -31,12 +31,21 @@ local opvp = OpenPvp;
 local opvp_null_sound;
 
 opvp.SoundType = {
-    FileData  = 1,
-    SoundKit  = 2,
-    Synthetic = 3
+    Faction   = 1,
+    FileData  = 2,
+    SoundKit  = 3,
+    Synthetic = 4
 };
 
 opvp.Sound = opvp.CreateClass();
+
+function opvp.Sound:createFromCfgData(data)
+    if opvp.is_number(data) == true then
+        return opvp.Sound:createFromData(data, opvp.SoundType.SoundKit);
+    else
+        return opvp.Sound:createFromData(data.data, data.sound_type);
+    end
+end
 
 function opvp.Sound:createFromData(data, dataType)
     if dataType == nil or dataType == opvp.SoundType.SoundKit then
@@ -45,6 +54,8 @@ function opvp.Sound:createFromData(data, dataType)
         return opvp.FileDataSound:createFromData(data);
     elseif dataType == opvp.SoundType.Synthetic then
         return opvp.SyntheticSound:createFromData(data);
+    elseif dataType == opvp.SoundType.Faction then
+        return opvp.FactionSound:createFromData(data);
     else
         return opvp_null_sound;
     end
@@ -62,11 +73,11 @@ function opvp.Sound:isNull()
 end
 
 function opvp.Sound:play(channel, noDupes)
-
+    return false, nil;
 end
 
 function opvp.Sound:type()
-    return self._type;
+    assert(false);
 end
 
 opvp_null_sound = opvp.Sound(0);

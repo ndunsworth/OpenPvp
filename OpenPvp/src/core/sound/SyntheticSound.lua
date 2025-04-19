@@ -66,9 +66,11 @@ function opvp.SyntheticSound:play(channel, noDupes)
     local sound = self._sounds[self._index + 1];
 
     if sound ~= nil then
-        sound:play(channel, noDupes);
-
         self._index = (self._index + 1) % #self._sounds;
+
+        return sound:play(channel, noDupes);
+    else
+        return false, nil;
     end
 end
 

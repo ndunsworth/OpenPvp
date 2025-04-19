@@ -30,6 +30,33 @@ local opvp = OpenPvp;
 
 opvp.FactionSound = opvp.CreateClass();
 
+function opvp.FactionSound:createFromData(data)
+    local alliance, horde, neutral;
+
+    if data.alliance ~= nil then
+        alliance = opvp.Sound:createFromData(
+            data.alliance.data,
+            data.alliance.sound_type
+        );
+    end
+
+    if data.horde ~= nil then
+        horde = opvp.Sound:createFromData(
+            data.horde.data,
+            data.horde.sound_type
+        );
+    end
+
+    if data.neutral ~= nil then
+        horde = opvp.Sound:createFromData(
+            data.neutral.data,
+            data.neutral.sound_type
+        );
+    end
+
+    return opvp.FactionSound(alliance, horde, neutral);
+end
+
 function opvp.FactionSound:init(alliance, horde, neutral)
     if alliance == nil then
         alliance = opvp.Sound:null();
@@ -57,15 +84,15 @@ function opvp.FactionSound:init(alliance, horde, neutral)
 end
 
 function opvp.FactionSound:playAlliance(channel, noDupes)
-    self:play(opvp.ALLIANCE, channel, noDupes);
+    return self:play(opvp.ALLIANCE, channel, noDupes);
 end
 
 function opvp.FactionSound:playHorde(channel, noDupes)
-    self:play(opvp.HORDE, channel, noDupes);
+    return self:play(opvp.HORDE, channel, noDupes);
 end
 
 function opvp.FactionSound:playNeutral(channel, noDupes)
-    self:play(opvp.NEUTRAL, channel, noDupes);
+    return self:play(opvp.NEUTRAL, channel, noDupes);
 end
 
 function opvp.FactionSound:isNull(faction)
@@ -73,10 +100,14 @@ function opvp.FactionSound:isNull(faction)
 end
 
 function opvp.FactionSound:play(faction, channel, noDupes)
-    self:sound(faction):play(channel, noDupes);
+    return self:sound(faction):play(channel, noDupes);
 end
 
 function opvp.FactionSound:sound(faction)
+    if faction == nil then
+        faction = opvp.player.faction();
+    end
+
     local sound = self._sounds[faction + 1];
 
     if sound ~= nil then
@@ -84,4 +115,8 @@ function opvp.FactionSound:sound(faction)
     else
         return opvp.Sound:null();
     end
+end
+
+function opvp.FactionSound:type()
+    return opvp.SoundType.Faction;
 end
