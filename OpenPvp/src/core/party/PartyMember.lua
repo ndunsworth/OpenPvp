@@ -153,6 +153,10 @@ function opvp.PartyMember:guid()
     return self._guid;
 end
 
+function opvp.PartyMember:hasDr(category)
+    return self.self._cc_state:hasDr(category);
+end
+
 function opvp.PartyMember:hasAura(aura)
     return self._auras:contains(aura);
 end

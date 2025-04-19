@@ -65,6 +65,10 @@ function opvp.CrowdControlState:expiration(category)
     return self:category(category):expiration();
 end
 
+function opvp.CrowdControlState:hasDr(category)
+    return self:category(category):isFull() == false;
+end
+
 function opvp.CrowdControlState:isAny(mask)
     return bit.band(self._mask, mask) ~= 0;
 end
