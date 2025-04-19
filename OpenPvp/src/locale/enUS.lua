@@ -49,11 +49,14 @@ opvp.locale.enUS = {
     EVENTS                             = "Events",
     FRAME                              = "Frame",
     FRAMES                             = "Frames",
+    HIGH                               = "High",
     HONORABLE_KILLS                    = "Honorable Kills",
     LAYOUT                             = "Layout",
+    LOW                                = "Low",
     LAYOUT_ARENA                       = "Arena Layout",
     LAYOUT_BATTLEGROUND                = "Battleground Layout",
     LIFETIME                           = "Lifetime",
+    MEDIUM                             = "Medium",
     NO                                 = "No",
     OFFSEASON                          = "Offseason",
     PARTY                              = "Party",
@@ -69,6 +72,14 @@ opvp.locale.enUS = {
     YESTERDAY                          = "Yesterday",
 
     PVP_CURRENCIES_CAPPED              = "Pvp Currencies Capped",
+
+    CC_FULL                            = "Full",
+    CC_HALF                            = "Half",
+    CC_QUARTER                         = "Quarter",
+    CC_TAUNT_2                         = "2/5",
+    CC_TAUNT_3                         = "3/5",
+    CC_TAUNT_4                         = "4/5",
+    CC_IMMUNE                          = "Immune",
 
     CC_DISARM_NAME                     = LOC_TYPE_DISARM,
     CC_DISARM_DISPLAY_NAME             = LOSS_OF_CONTROL_DISPLAY_DISARM,
@@ -168,6 +179,8 @@ opvp.locale.enUS = {
     MATCH_PLAYER_JOINED_WITH_SPEC      = "Match | %s Joined - %s (|c%s%s %s|r)",
     MATCH_PLAYER_LEAVE                 = "Match | %s Left - %s",
     MATCH_PLAYER_LEAVE_WITH_SPEC       = "Match | %s Left - %s (|c%s%s %s|r)",
+    MATCH_PLAYER_LOS_CONTROL_WITH_SPEC = "Match | %1$s CC - %2$s (|c%3$s%4$s %5$s|r) - %6$s (%7$s)",
+    MATCH_PLAYER_LOS_CONTROL           = "Match | %1$s CC - %2$s - %6$s (%7$s)",
     MATCH_PLAYER_SPEC_CHANGED          = "Match | %s Spec - %s (|c%s%s %s|r)",
 
     MATCH_SCORE_ARENA                  = "Match Score | %s %s (|c%s%s %s|r) - kb=%d, deaths=%d, dmg=%s, healing=%s",
@@ -214,6 +227,10 @@ opvp.locale.enUS = {
     PARTY_MBR_JOINED_WITH_SPEC         = "%s | Member Joined - %s (|c%s%s %s|r)",
     PARTY_MBR_LEAVE                    = "%s | Member Left - %s",
     PARTY_MBR_LEAVE_WITH_SPEC          = "%s | Member Left - %s (|c%s%s %s|r)",
+    PARTY_MBR_LOS_CONTROL_WITH_SPEC    = "%s | Member CC (%s %s) - %s (|c%s%s %s|r)",
+    PARTY_MBR_LOS_CONTROL              = "%s | Member CC (%s %s) - %s",
+    PARTY_MBR_LOS_CONTROL_WITH_SPEC    = "%1$s | Member CC - %2$s (|c%3$s%4$s %5$s|r) - %6$s (%7$s)",
+    PARTY_MBR_LOS_CONTROL              = "%1$s | Member CC - %2$s - %6$s (%7$s)",
     PARTY_MBR_SPEC_CHANGED             = "%s | Member Spec - %s (|c%s%s %s|r)",
     PARTY_CHANGED_TO_PARTY             = "%s | Converted to Party",
     PARTY_CHANGED_TO_RAID              = "%s | Converted to Raid",
@@ -223,9 +240,9 @@ opvp.locale.enUS = {
 
     POI_NOT_CONTESTED                  = "Neutral",
     POI_ALLIANCE_CONTESTED             = "Alliance Contested",
-    POI_ALLIANCE_CONTROLLED            = "Alliance Controled",
+    POI_ALLIANCE_CONTROLLED            = "Alliance Controlled",
     POI_HORDE_CONTESTED                = "Horde Contested",
-    POI_HORDE_CONTROLLED               = "Horde Controled",
+    POI_HORDE_CONTROLLED               = "Horde Controlled",
 
     PROFILE_LOADED                     = "Profile | Changed to \"%s\"",
 
