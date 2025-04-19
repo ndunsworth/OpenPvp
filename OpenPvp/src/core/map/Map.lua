@@ -32,46 +32,6 @@ opvp.Map = opvp.CreateClass();
 
 opvp.Map.MAPS = {};
 
-function opvp.Map:init(cfg)
-    if cfg.instance_id ~= nil then
-        self._inst_id = cfg.instance_id;
-    else
-        self._inst_id = 0;
-    end
-
-    if cfg.map_id ~= nil then
-        self._map_id = cfg.map_id;
-    else
-        self._map_id = 0;
-    end
-
-    if self._inst_id ~= opvp.InstanceId.UNKNOWN then
-        self._name = GetRealZoneText(self._inst_id);
-    else
-        self._name = "";
-    end;
-
-    self._widgets = opvp.List();
-
-    if cfg.widgets ~= nil and #cfg.widgets > 0 then
-        local widget;
-
-        for n=1, #cfg.widgets do
-            widget = opvp.UiWidget:createFromCfg(cfg.widgets[n]);
-
-            if widget ~= nil then
-                self._widgets:append(widget);
-            end
-        end
-    end
-
-    if cfg.stats ~= nil then
-        self._stats = cfg.stats;
-    else
-        self._stats = {};
-    end
-end
-
 function opvp.Map:createFromCurrentInstance()
     if IsInInstance() == true then
         return opvp.Map:createFromInstanceId(select(8, GetInstanceInfo()));
@@ -110,8 +70,72 @@ function opvp.Map:createFromName(name)
     return opvp.Map.UNKNOWN;
 end
 
+function opvp.Map:init(cfg)
+    if cfg.instance_id ~= nil then
+        self._inst_id = cfg.instance_id;
+    else
+        self._inst_id = 0;
+    end
+
+    if cfg.map_id ~= nil then
+        self._map_id = cfg.map_id;
+    else
+        self._map_id = 0;
+    end
+
+    if self._inst_id ~= opvp.InstanceId.UNKNOWN then
+        self._name = GetRealZoneText(self._inst_id);
+    else
+        self._name = "";
+    end;
+
+    self._widgets = opvp.List();
+
+    if cfg.widgets ~= nil and #cfg.widgets > 0 then
+        local widget;
+
+        for n=1, #cfg.widgets do
+            widget = opvp.UiWidget:createFromCfg(cfg.widgets[n]);
+
+            if widget ~= nil then
+                self._widgets:append(widget);
+            end
+        end
+    end
+
+    if cfg.stats ~= nil then
+        self._stats = cfg.stats;
+    else
+        self._stats = {};
+    end
+
+    if cfg.music ~= nil then
+        self._music = opvp.Sound:createFromCfgData(cfg.music);
+    else
+        self._music = opvp.Sound:null();
+    end
+
+    if cfg.music_intro ~= nil then
+        self._music_intro = opvp.Sound:createFromCfgData(cfg.music_intro);
+    else
+        self._music_intro = opvp.Sound:null();
+    end
+end
+
 function opvp.Map:hasMapId()
     return self._map_id ~= 0;
+end
+
+function opvp.Map:hasMusic()
+    return self._music:isNull() == false;
+end
+
+function opvp.Map:hasMusic()
+    return self._music:isNull() == false;
+end
+
+function opvp.Map:hasMusicIntro()
+    return self._music:isNull() == false;
 end
 
 function opvp.Map:hasStatWithId(id)
@@ -156,6 +180,14 @@ end
 
 function opvp.Map:mapId()
     return self._map_id;
+end
+
+function opvp.Map:music()
+    return self._music;
+end
+
+function opvp.Map:musicIntro()
+    return self._music_intro;
 end
 
 function opvp.Map:name()
