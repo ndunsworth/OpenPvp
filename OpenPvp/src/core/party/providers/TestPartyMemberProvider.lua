@@ -235,6 +235,7 @@ function opvp.TestPartyMemberProvider:_onConnected()
     self._fake_chars_dps = opvp.List:createFromArray(
         {
             {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER, opvp.Race.UNKNOWN, opvp.Sex.NONE},
+            {"Brolly",       opvp.ClassSpec.WINDWALKER_MONK,        opvp.Race.UNKNOWN, opvp.Sex.NONE},
             {"Chunchi",      opvp.ClassSpec.WINDWALKER_MONK,        opvp.Race.UNKNOWN, opvp.Sex.NONE},
             {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN,     opvp.Race.UNKNOWN, opvp.Sex.NONE},
             {"Ehben",        opvp.ClassSpec.ARCANE_MAGE,            opvp.Race.UNKNOWN, opvp.Sex.NONE},
