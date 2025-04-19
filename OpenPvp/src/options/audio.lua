@@ -359,6 +359,54 @@ This emote is based on the pinging players race/sex.]],
 
     opvp.options.audio.soundeffect.match.teammateDeathSample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
 
+    opvp.options.audio.soundeffect.match.teammateAnnounceBursting = opvp.options.audio.soundeffect.match.category:createOption(
+        opvp.Option.BOOL,
+        "TeammateAnnounceBursting",
+        "Teammate Announce Bursting",
+        "",
+        true
+    );
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceBurstingSample = opvp.options.audio.soundeffect.match.category:createOption(
+        opvp.Option.BUTTON,
+        "TeammateAnnounceBurstingSample",
+        opvp_sample_icon
+    );
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceBurstingSample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceDefensive = opvp.options.audio.soundeffect.match.category:createOption(
+        opvp.Option.BOOL,
+        "TeammateAnnounceDefensive",
+        "Teammate Announce Defensive",
+        "",
+        true
+    );
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceDefensiveSample = opvp.options.audio.soundeffect.match.category:createOption(
+        opvp.Option.BUTTON,
+        "TeammateAnnounceDefensiveSample",
+        opvp_sample_icon
+    );
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceDefensiveSample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceEnemyBursting = opvp.options.audio.soundeffect.match.category:createOption(
+        opvp.Option.BOOL,
+        "TeammateAnnounceEnemyBursting",
+        "Teammate Announce Enemy Bursting",
+        "",
+        true
+    );
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceEnemyBurstingSample = opvp.options.audio.soundeffect.match.category:createOption(
+        opvp.Option.BUTTON,
+        "TeammateEnemyBurstingSample",
+        opvp_sample_icon
+    );
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceEnemyBurstingSample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
+
     opvp.options.audio.soundeffect.match.teammateGreetings = opvp.options.audio.soundeffect.match.category:createOption(
         opvp.Option.BOOL,
         "TeammateGreetings",

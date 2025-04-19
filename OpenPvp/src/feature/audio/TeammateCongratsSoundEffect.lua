@@ -78,48 +78,50 @@ function opvp.private.TeammateCongratsSoundEffect:_onOutcomeReady(match, outcome
 
     local party_size = team:size();
 
-    if party_size > 1 then
-        local ids = opvp.List();
+    if party_size <= 1 then
+        return;
+    end
 
-        for n=1, party_size do
-            ids:append(n);
-        end
+    local ids = opvp.List();
 
-        ids:shuffle();
+    for n=1, party_size do
+        ids:append(n);
+    end
 
-        local count = 0;
-        local member;
-        local id;
+    ids:shuffle();
 
-        if match:isArena() == true then
-            max_count = 2;
-        else
-            max_count = math.random(3, 4);
-        end
+    local count = 0;
+    local member;
+    local id;
 
-        while ids:isEmpty() == false and count < max_count do
-            id = ids:popFront();
+    if match:isArena() == true then
+        max_count = 2;
+    else
+        max_count = math.random(3, 4);
+    end
 
-            member = team:member(id);
+    while ids:isEmpty() == false and count < max_count do
+        id = ids:popFront();
 
-            if (
-                member ~= nil and
-                member:isPlayer() == false and
-                member:isRaceKnown() == true and
-                member:isSexKnown() == true
-            ) then
-                local race = member:race();
-                local sex  = member:sex();
+        member = team:member(id);
 
-                opvp.Timer:singleShot(
-                    (1.5 * count) + (0.25 * math.random()),
-                    function()
-                        opvp.effect.teamateCongratulate(race, sex);
-                    end
-                );
+        if (
+            member ~= nil and
+            member:isPlayer() == false and
+            member:isRaceKnown() == true and
+            member:isSexKnown() == true
+        ) then
+            local race = member:race();
+            local sex  = member:sex();
 
-                count = count + 1;
-            end
+            opvp.Timer:singleShot(
+                (1.5 * count) + (0.25 * math.random()),
+                function()
+                    opvp.effect.teamateCongratulate(race, sex);
+                end
+            );
+
+            count = count + 1;
         end
     end
 end

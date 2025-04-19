@@ -299,6 +299,14 @@ local function opvp_options_announcements_init()
         false
     );
 
+    opvp.options.announcements.friendlyParty.memberCrowdControlled = opvp.options.announcements.friendlyParty.category:createOption(
+        opvp.Option.BOOL,
+        "CrowdControlled",
+        "Member Crowd Controlled",
+        "",
+        false
+    );
+
     opvp.options.announcements.friendlyParty.memberJoinLeave = opvp.options.announcements.friendlyParty.category:createOption(
         opvp.Option.BOOL,
         "MemberJoinLeave",
@@ -347,6 +355,14 @@ local function opvp_options_announcements_init()
     opvp.options.announcements.hostileParty.category = opvp.options.announcements.category:createCategory(
         "HostileParty",
         "Party (Enemy)"
+    );
+
+    opvp.options.announcements.hostileParty.memberCrowdControlled = opvp.options.announcements.hostileParty.category:createOption(
+        opvp.Option.BOOL,
+        "CrowdControlled",
+        "Member Crowd Controlled",
+        "",
+        false
     );
 
     opvp.options.announcements.hostileParty.memberDeath = opvp.options.announcements.hostileParty.category:createOption(

@@ -29,16 +29,18 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function opvp_class_spellmap_init_spell_category2(cls, spells, auras, cfg, parentMask)
-    local spell, spell_id, mask, duration, ignore_aura;
+    local spell, spell_id, traits, props, duration, pvpMult, ignore_aura;
 
     for n=1, #cfg do
-        spell_id, mask, duration, ignore_aura = unpack(cfg[n]);
+        spell_id, traits, props, duration, pvpMult, ignore_aura = unpack(cfg[n]);
 
         spell = opvp.SpellExt(
             cls,
             spell_id,
-            bit.bor(parentMask, mask),
-            duration
+            bit.bor(parentMask, opvp.number_else(traits)),
+            props,
+            duration,
+            pvpMult
         );
 
         spells:add(spell);
@@ -54,7 +56,7 @@ local function opvp_class_spellmap_init_spell_category2(cls, spells, auras, cfg,
 end
 
 local function opvp_class_spellmap_init_spell_category(cls, spells, auras, cfg, parentMask)
-    local base_mask, mask, spell_id, spell, duration, ignore_aura;
+    local base_mask;
 
     if cfg.base ~= nil then
         opvp_class_spellmap_init_spell_category2(
@@ -67,38 +69,54 @@ local function opvp_class_spellmap_init_spell_category(cls, spells, auras, cfg, 
     end
 
     if cfg.talent ~= nil then
-        parentMask = bit.bor(parentMask, opvp.SpellTrait.TALENT);
+        base_mask = bit.bor(parentMask, opvp.SpellTrait.TALENT);
 
         opvp_class_spellmap_init_spell_category2(
             cls,
             spells,
             auras,
             cfg.talent,
-            parentMask
+            base_mask
+        );
+    end
+
+    if cfg.pvp ~= nil then
+        base_mask = bit.bor(parentMask, opvp.SpellTrait.PVP, opvp.SpellTrait.TALENT);
+
+        opvp_class_spellmap_init_spell_category2(
+            cls,
+            spells,
+            auras,
+            cfg.pvp,
+            base_mask
         );
     end
 
     if cfg.hero ~= nil then
-        parentMask = bit.bor(parentMask, opvp.SpellTrait.HERO, opvp.SpellTrait.TALENT);
+        base_mask = bit.bor(parentMask, opvp.SpellTrait.HERO, opvp.SpellTrait.TALENT);
 
         opvp_class_spellmap_init_spell_category2(
             cls,
             spells,
             auras,
             cfg.hero,
-            parentMask
+            base_mask
         );
     end
 end
 
 opvp.SpellMap = opvp.CreateClass();
 
-function opvp.SpellMap:createFromClassConfig(cls, cfgSpell, cfgAura, spells, auras)
+function opvp.SpellMap:createFromClassConfig(cls, cfgSpell, cfgAura, spells, auras, parentMask)
+    if parentMask == nil then
+        parentMask = 0;
+    end
+
     local mask;
 
     if cfgSpell ~= nil then
         if cfgSpell.helpful ~= nil then
-            mask = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.HELPFUL);
+            mask = bit.bor(parentMask, opvp.SpellTrait.HELPFUL);
 
             opvp_class_spellmap_init_spell_category(
                 cls,
@@ -110,7 +128,7 @@ function opvp.SpellMap:createFromClassConfig(cls, cfgSpell, cfgAura, spells, aur
         end
 
         if cfgSpell.harmful ~= nil then
-            mask = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.HARMFUL);
+            mask = bit.bor(parentMask, opvp.SpellTrait.HARMFUL);
 
             opvp_class_spellmap_init_spell_category(
                 cls,
@@ -124,7 +142,7 @@ function opvp.SpellMap:createFromClassConfig(cls, cfgSpell, cfgAura, spells, aur
 
     if cfgAura ~= nil then
         if cfgAura.helpful ~= nil then
-            mask = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.HELPFUL);
+            mask = bit.bor(parentMask, opvp.SpellTrait.BASE, opvp.SpellTrait.HELPFUL);
 
             opvp_class_spellmap_init_spell_category(
                 cls,

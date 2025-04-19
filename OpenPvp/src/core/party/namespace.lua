@@ -107,6 +107,14 @@ function opvp.party.auraTracker()
     return opvp_party_mgr_singleton:auraTracker();
 end
 
+function opvp.party.ccTracker()
+    return opvp_party_mgr_singleton:ccTracker();
+end
+
+function opvp.party.combatLevelTracker()
+    return opvp_party_mgr_singleton:combatLevelTracker();
+end
+
 function opvp.party.findMemberByGuid(guid, category)
     return opvp_party_mgr_singleton:findMemberByGuid(guid, category);
 end
@@ -137,6 +145,26 @@ end
 
 function opvp.party.isCountingDown()
     return opvp_party_mgr_singleton:isCountingDown();
+end
+
+function opvp.party.isParty()
+    local party = opvp.party.active();
+
+    if party ~= nil then
+        return party:isParty();
+    else
+        return false;
+    end
+end
+
+function opvp.party.isRaid()
+    local party = opvp.party.active();
+
+    if party ~= nil then
+        return party:isRaid();
+    else
+        return false;
+    end
 end
 
 function opvp.party.isReloading(category)

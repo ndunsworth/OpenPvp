@@ -43,7 +43,15 @@ function opvp.PartyManager:init(guid)
     self._countdown_time  = 0;
     self._countdown_timer = opvp.Timer(1);
     self._socket          = opvp.Socket("OpenPvp");
-    self._aura_tracker    = opvp.AdvPartyAuraTracker();
+    self._aura_tracker    = opvp.PartyAuraTracker();
+    self._cc_tracker      = opvp.CrowdControlTracker();
+    self._cbt_lvl_tracker = opvp.CombatLevelTracker();
+    self._cls_cfg         = opvp.ClassConfigAuraTracker();
+
+    self._cc_tracker:setAuraTracker(self._aura_tracker);
+    self._cbt_lvl_tracker:setAuraTracker(self._aura_tracker);
+
+    self._cls_cfg:initialize(self._aura_tracker);
 
     self._aura_tracker:initialize();
 
@@ -64,6 +72,14 @@ end
 
 function opvp.PartyManager:auraTracker()
     return self._aura_tracker;
+end
+
+function opvp.PartyManager:ccTracker()
+    return self._cc_tracker;
+end
+
+function opvp.PartyManager:combatLevelTracker()
+    return self._cbt_lvl_tracker;
 end
 
 function opvp.PartyManager:findMemberByGuid(guid, category)
@@ -247,6 +263,14 @@ function opvp.PartyManager:_onCountdownCanceled(initiatedBy, informChat, initiat
 end
 
 function opvp.PartyManager:_onGroupFormed(category, guid)
+    opvp.printDebug(
+        "opvp.PartyManager:_onGroupFormed(%d, %s), party_home=%s, party_inst=%s",
+        category,
+        guid,
+        tostring(self._party_home),
+        tostring(self._party_inst)
+    );
+
     local party = self:party(category);
 
     if party == nil then
@@ -263,6 +287,14 @@ function opvp.PartyManager:_onGroupFormed(category, guid)
 end
 
 function opvp.PartyManager:_onGroupJoined(category, guid)
+    opvp.printDebug(
+        "opvp.PartyManager:_onGroupJoined(%d, %s), party_home=%s, party_inst=%s",
+        category,
+        guid,
+        tostring(self._party_home),
+        tostring(self._party_inst)
+    );
+
     self._party_use = nil;
 
     opvp.party.aboutToJoin:emit(category, guid);
@@ -321,7 +353,7 @@ function opvp.PartyManager:_onGroupJoined(category, guid)
 
         self._party_cur = party;
 
-        self._aura_tracker:_addParty(self._party_cur);
+        self._aura_tracker:addParty(self._party_cur);
     end
 
     opvp.printMessageOrDebug(
@@ -340,6 +372,14 @@ function opvp.PartyManager:_onGroupJoined(category, guid)
 end
 
 function opvp.PartyManager:_onGroupLeft(category, guid)
+    opvp.printDebug(
+        "opvp.PartyManager:_onGroupLeft(%d, %s), party_home=%s, party_inst=%s",
+        category,
+        guid,
+        tostring(self._party_home),
+        tostring(self._party_inst)
+    );
+
     local party;
 
     if category == opvp.PartyCategory.HOME then
@@ -401,39 +441,43 @@ end
 
 function opvp.PartyManager:_onLoginReload()
     if opvp.party.utils.isInGroup(opvp.PartyCategory.HOME) == true then
-        self._is_reloading = opvp.PartyCategory.HOME;
+        if self._party_home == nil then
+            self._is_reloading = opvp.PartyCategory.HOME;
 
-        local guid = opvp.private.state.party.homeGuid:value();
+            local guid = opvp.private.state.party.homeGuid:value();
 
-        if guid == "" then
-            guid = "HomePartyUnknown";
+            if guid == "" then
+                guid = "HomePartyUnknown";
+            end
+
+            self:_onGroupJoined(
+                opvp.PartyCategory.HOME,
+                guid
+            );
+
+            self._is_reloading = 0;
         end
-
-        self:_onGroupJoined(
-            opvp.PartyCategory.HOME,
-            guid
-        );
-
-        self._is_reloading = 0;
     else
         opvp.private.state.party.homeGuid:setValue("");
     end
 
     if opvp.party.utils.isInGroup(opvp.PartyCategory.INSTANCE) == true then
-        self._is_reloading = opvp.PartyCategory.INSTANCE;
+        if self._party_inst == nil then
+            self._is_reloading = opvp.PartyCategory.INSTANCE;
 
-        local guid = opvp.private.state.party.instanceGuid:value();
+            local guid = opvp.private.state.party.instanceGuid:value();
 
-        if guid == "" then
-            guid = "InstancePartyUnknown";
+            if guid == "" then
+                guid = "InstancePartyUnknown";
+            end
+
+            self:_onGroupJoined(
+                opvp.PartyCategory.INSTANCE,
+                guid
+            );
+
+            self._is_reloading = 0;
         end
-
-        self:_onGroupJoined(
-            opvp.PartyCategory.INSTANCE,
-            guid
-        );
-
-        self._is_reloading = 0;
     else
         opvp.private.state.party.instanceGuid:setValue("");
     end

@@ -162,7 +162,7 @@ function opvp.Match:init(queue, description, testType)
     self._countdown_time    = 0;
     self._countdown_timer   = opvp.Timer(1);
     self._round_results     = false;
-    self._aura_cfg          = opvp.MatchConfigAuraTracker(self);
+    self._aura_cfg          = opvp.MatchAuraTrackerConfig(self);
 
     self._outcome           = opvp.MatchWinner.NONE;
     self._outcome_valid     = false;

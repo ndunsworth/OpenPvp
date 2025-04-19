@@ -38,7 +38,7 @@ local spec_info = {
     auras  = {
         helpful = {
             hero = {
-                {11426,  opvp.SpellTrait.DEFENSIVE_AURA_LOW, nil, 4}, -- Ice Barrier
+                {11426, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellTrait.DEFENSIVE_LOW, 4}, -- Ice Barrier
             }
         }
     }

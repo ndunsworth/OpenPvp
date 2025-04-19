@@ -36,12 +36,14 @@ function opvp.SpellExt:null()
     return opvp_null_spell;
 end
 
-function opvp.SpellExt:init(class, id, mask, duration)
+function opvp.SpellExt:init(class, id, traits, props, duration, pvpMult)
     opvp.Spell.init(self, id);
 
-    self._class = class;
-    self._mask  = mask;
+    self._class    = class;
+    self._traits   = opvp.number_else(traits);
+    self._props    = opvp.number_else(props);
     self._duration = opvp.number_else(duration);
+    self._pvp_mult = opvp.number_else(pvpMult, 1);
 end
 
 function opvp.SpellExt:class()
@@ -49,51 +51,55 @@ function opvp.SpellExt:class()
 end
 
 function opvp.SpellExt:clone()
-    return opvp.SpellExt(self._class, self._id, self._mask, self._duration);
+    return self;
 end
 
 function opvp.SpellExt:crowdControlCategory()
-    if self:isCrowdControl() == true then
-        return opvp.CrowdControlCategory:fromType(self:crowdControlType());
-    else
-        return opvp.CrowdControlCategory.NONE;
-    end
+    return opvp.CrowdControlCategory:fromType(self:crowdControlType());
 end
 
 function opvp.SpellExt:crowdControlType()
-    if self:isCrowdControl() == true then
-        return bit.band(self._mask, opvp.SpellTrait.MASK_LOW);
-    else
-        return opvp.CrowdControlType.NONE;
-    end
+    return bit.band(self._props, opvp.SpellProperty.CROWD_CONTROL_ALL);
+end
+
+function opvp.SpellExt:defensiveLevel()
+    return bit.band(self._props, opvp.SpellProperty.DEFENSIVE_ALL);
 end
 
 function opvp.SpellExt:duration()
     return self._duration;
 end
 
+function opvp.SpellExt:durationPvp()
+    return self._duration * self._pvp_mult;
+end
+
+function opvp.SpellExt:hasRange()
+    return bit.band(self._traits, opvp.SpellTrait.RANGE) ~= 0;
+end
+
 function opvp.SpellExt:id()
     return self._id;
 end
 
-function opvp.SpellExt:hasRange()
-    return bit.band(self._mask, opvp.SpellTrait.RANGE) ~= 0;
+function opvp.SpellExt:immunities()
+    return bit.band(self._props, opvp.SpellProperty.IMMUNITY_ALL);
 end
 
 function opvp.SpellExt:isAura()
-    return bit.band(self._mask, opvp.SpellTrait.AURA) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.AURA) ~= 0;
 end
 
 function opvp.SpellExt:isBase()
-    return bit.band(self._mask, opvp.SpellTrait.BASE) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.BASE) ~= 0;
 end
 
 function opvp.SpellExt:isCrowdControl()
-    return bit.band(self._mask, opvp.SpellTrait.CROWD_CONTROL) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.CROWD_CONTROL) == opvp.SpellTrait.CROWD_CONTROL;
 end
 
 function opvp.SpellExt:isDefensive()
-    return bit.band(self._mask, opvp.SpellTrait.DEFENSIVE) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.DEFENSIVE) == opvp.SpellTrait.DEFENSIVE;
 end
 
 function opvp.SpellExt:isExtended()
@@ -101,58 +107,63 @@ function opvp.SpellExt:isExtended()
 end
 
 function opvp.SpellExt:isHarmful()
-    return bit.band(self._mask, opvp.SpellTrait.HARMFUL) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.HARMFUL) ~= 0;
 end
 
 function opvp.SpellExt:isHelpful()
-    return bit.band(self._mask, opvp.SpellTrait.HELPFUL) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.HELPFUL) ~= 0;
 end
 
 function opvp.SpellExt:isHero()
-    return bit.band(self._mask, opvp.SpellTrait.HERO);
+    return bit.band(self._traits, opvp.SpellTrait.HERO);
 end
 
 function opvp.SpellExt:isInterupt()
-    return bit.band(
-        self._mask,
-        bit.bor(opvp.SpellTrait.CROWD_CONTROL, opvp.SpellTrait.INTERRUPT)
-    ) == opvp.SpellTrait.INTERRUPT
+    return bit.band(self._traits, opvp.SpellTrait.INTERRUPT) ~= 0;
 end
 
 function opvp.SpellExt:isOffensive()
-    return bit.band(self._mask, opvp.SpellTrait.OFFENSIVE) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.OFFENSIVE) == opvp.SpellTrait.OFFENSIVE;
 end
 
 function opvp.SpellExt:isPassive()
-    return bit.band(self._mask, opvp.SpellTrait.PASSIVE) ~= 0;
-end
-
-function opvp.SpellExt:isPersonal()
-    return bit.band(self._mask, opvp.SpellTrait.PERSONAL) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.PASSIVE) ~= 0;
 end
 
 function opvp.SpellExt:isPet()
-    return bit.band(self._mask, opvp.SpellTrait.PET) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.PET) ~= 0;
 end
 
 function opvp.SpellExt:isPowerRegen()
-    return bit.band(self._mask, opvp.SpellTrait.POWER_REGEN) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.POWER_REGEN) ~= 0;
+end
+
+function opvp.SpellExt:isPvpTalent()
+    return bit.band(self._traits, opvp.SpellTrait.PVP) ~= 0;
 end
 
 function opvp.SpellExt:isSpec()
-    return bit.band(self._mask, opvp.SpellTrait.SPEC) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.SPEC) ~= 0;
 end
 
 function opvp.SpellExt:isTalent()
-    return bit.band(self._mask, opvp.SpellTrait.TALENT) ~= 0;
+    return bit.band(self._traits, opvp.SpellTrait.TALENT) ~= 0;
 end
 
-function opvp.SpellExt:mask()
-    return self._mask;
+function opvp.SpellExt:offensiveLevel()
+    return bit.band(self._props, opvp.SpellProperty.OFFENSIVE_ALL);
+end
+
+function opvp.SpellExt:properties()
+    return self._props;
 end
 
 function opvp.SpellExt:set(id)
 
+end
+
+function opvp.SpellExt:traits()
+    return self._traits;
 end
 
 opvp_null_spell = opvp.SpellExt(0, 0, opvp.SpellTrait.AURA);

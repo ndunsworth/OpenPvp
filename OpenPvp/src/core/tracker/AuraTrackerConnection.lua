@@ -28,38 +28,56 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local spec_info = {
-    class  = opvp.MAGE,
-    id     = opvp.ClassSpecId.FROST_MAGE,
-    role   = opvp.Role.DPS,
-    traits = opvp.ClassSpecTrait.RANGED_MAGIC,
-    sound  = 85506,
-    icon   = "Interface/Icons/spell_frost_frostbolt02",
-    spells = {
-        harmful = {
-            pvp    = {
-                {389831, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.STUN, 4},    -- Snowdrift
-            },
-            talent = {
-                {12472,  opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 30},  -- Icy Veins
-            }
-        }
-    },
-    auras = {
-        helpful = {
-            pvp = {
-                {198144,  opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 17}, -- Ice Form
-            },
-            hero = {
-                {235313, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 4},    -- Blazing Barrier
-            }
-        }
-    }
-};
+opvp.AuraTrackerConnection = opvp.CreateClass();
 
-opvp.ClassSpec.FROST_MAGE = opvp.ClassSpec(spec_info);
+function opvp.AuraTrackerConnection:init()
+    self._tracker = nil;
+end
 
-table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.FROST_MAGE);
-table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.FROST_MAGE);
+function opvp.AuraTrackerConnection:isTrackerSupported(tracker)
+    return true;
+end
 
-spec_info = nil;
+function opvp.AuraTrackerConnection:setAuraTracker(tracker)
+    if tracker == self._tracker then
+        return;
+    end
+
+    if self._tracker ~= nil then
+        self._tracker.auraAdded:disconnect(self, self._onAuraAdded);
+        self._tracker.auraRemoved:disconnect(self, self._onAuraRemoved);
+        self._tracker.auraUpdated:disconnect(self, self._onAuraUpdated);
+
+        self:_clear();
+    end
+
+    self._tracker = tracker;
+
+    if self._tracker ~= nil then
+        self._tracker.auraAdded:connect(self, self._onAuraAdded);
+        self._tracker.auraRemoved:connect(self, self._onAuraRemoved);
+        self._tracker.auraUpdated:connect(self, self._onAuraUpdated);
+
+        self:_initialize();
+    end
+end
+
+function opvp.AuraTrackerConnection:_clear()
+
+end
+
+function opvp.AuraTrackerConnection:_initialize()
+
+end
+
+function opvp.AuraTrackerConnection:_onAuraAdded(member, aura, spell)
+
+end
+
+function opvp.AuraTrackerConnection:_onAuraRemoved(member, aura, spell)
+
+end
+
+function opvp.AuraTrackerConnection:_onAuraUpdated(member, aura, spell)
+
+end

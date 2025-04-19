@@ -78,64 +78,65 @@ opvp.Class.MAGE = opvp.Class(
             base = {
                 {120,    opvp.SpellTrait.SNARE, 5, false},                                             -- Cone of Cold
                 {2139,   opvp.SpellTrait.INTERRUPT},                                                   -- Counterspell
-                {108853, 0},                                                                           -- Fire Blast
-                {33395,  opvp.SpellTrait.ROOT_CROWD_CONTROL, 8},                                       -- Freeze (Water Elemental)
-                {122,    opvp.SpellTrait.ROOT_CROWD_CONTROL, 6},                                       -- Frost Nova
+                {108853},                                                                              -- Fire Blast
+                {33395,  opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.ROOT, 8},                   -- Freeze (Water Elemental)
+                {122,    opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.ROOT, 6},                   -- Frost Nova
                 {116,    opvp.SpellTrait.SNARE},                                                       -- Frostbolt
-                {61305,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Black Cat)
-                {277792, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Bumblebee)
-                {277787, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Direhorn)
-                {161354, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Monkey)
-                {161372, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Peacock)
-                {161355, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Penguin)
-                {28272,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Pig)
-                {161353, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Polar Bear Cub)
-                {126819, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Porcupine)
-                {61721,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Rabbit)
-                {118,    opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Sheep)
-                {61780,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Turkey)
-                {28271,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Polymorph (Turtle)
+                {61305,  opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Black Cat)
+                {277792, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Bumblebee)
+                {277787, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Direhorn)
+                {161354, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Monkey)
+                {161372, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Peacock)
+                {161355, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Penguin)
+                {28272,  opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Pig)
+                {161353, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Polar Bear Cub)
+                {126819, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Porcupine)
+                {61721,  opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Rabbit)
+                {118,    opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Sheep)
+                {61780,  opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Turkey)
+                {28271,  opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 60, 0.1},     -- Polymorph (Turtle)
             },
             talent = {
-                {157981, bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.KNOCKBACK_CROWD_CONTROL), 0},   -- Blast Wave
-                {31661,  opvp.SpellTrait.DISORIENT_CROWD_CONTROL, 3},                                  -- Dragon's Breath
-                {157997, opvp.SpellTrait.ROOT_CROWD_CONTROL, 3},                                       -- Ice Nova
-                {113724, opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6, false},                        -- Ring of Frost
-                {389794, opvp.SpellTrait.STUN_CROWD_CONTROL, 4, false},                                -- Snowdrift
+                {157981, opvp.SpellTrait.CROWD_CONTROL, 0, 0},                                         -- Blast Wave
+                {31661,  opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.DISORIENT, 3},              -- Dragon's Breath
+                {157997, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.ROOT, 3},                   -- Ice Nova
+                {113724, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 6, 1, false}, -- Ring of Frost
+                {389794, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.STUN, 4, 1, false},         -- Snowdrift
             }
         },
         helpful = {
             base = {
-                {1459,   opvp.SpellTrait.RAID_BUFF},                                                   -- Arcane Intellect
-                {1953,   0},                                                                           -- Blink
-                {11426,  opvp.SpellTrait.DEFENSIVE_AURA_LOW, 4},                                       -- Ice Barrier
-                {66,     0},                                                                           -- Invisibility
-                {130,    opvp.SpellTrait.HELPFUL_AURA},                                                -- Slow Fall
-                {80353,  bit.bor(opvp.SpellTrait.RAID_BUFF, opvp.SpellTrait.OFFENSIVE_AURA_HIGH), 40}, -- Time Warp
+                {1459,   opvp.SpellTrait.RAID_BUFF, 0, 3600},                                          -- Arcane Intellect
+                {1953},                                                                                -- Blink
+                {11426,  opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 4},         -- Ice Barrier
+                {66,     opvp.SpellTrait.AURA, 0, 20},                                                 -- Invisibility
+                {130,    opvp.SpellTrait.AURA, 0, 30},                                                 -- Slow Fall
+                {80353,  opvp.SpellTrait.RAID_BUFF, opvp.SpellProperty.OFFENSIVE_HIGH, 40},            -- Time Warp
             },
             talent = {
-                {342247, opvp.SpellTrait.DEFENSIVE_MEDIUM, 10},                                        -- Alter Time
-                {212801, 0},                                                                           -- Displacement
-                {110960, opvp.SpellTrait.HELPFUL_AURA, 20},                                            -- Greater Invisiblity (stealth)
-                {45438,  bit.bor(opvp.SpellTrait.DEFENSIVE_AURA_HIGH, opvp.SpellTrait.IMMUNITY)},      -- Ice Block
-                {212653, 0},                                                                           -- Shimmer
+                {342247, opvp.SpellTrait.AURA, opvp.SpellProperty.DEFENSIVE_MEDIUM, 10},               -- Alter Time
+                {212801},                                                                              -- Displacement
+                {110960, 0, 0, 20},                                                                    -- Greater Invisiblity (stealth)
+                {45438,  opvp.SpellTrait.DEFENSIVE_IMMUNITY, opvp.SpellProperty.DEFENSIVE_IMMUNE, 10}, -- Ice Block
+                {414658, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_HIGH, 10},       -- Ice Cold
+                {55342,  opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 40},        -- Mirror Image
+                {212653},                                                                              -- Shimmer
             }
         }
     },
     {
         harmful = {
             base = {
-                {212792, opvp.SpellTrait.SNARE, 5, false},                                             -- Cone of Cold
+                {212792, opvp.SpellTrait.SNARE, 0, 5, 1, false},                                       -- Cone of Cold
             },
             talent = {
-                {82691,  opvp.SpellTrait.INCAPACITATE_CROWD_CONTROL, 6},                               -- Ring of Frost
-                {389831, opvp.SpellTrait.STUN_CROWD_CONTROL, 4},                                       -- Snowdrift
+                {82691,  opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.INCAPACITATE, 6},           -- Ring of Frost
             }
         },
         helpful = {
             talent = {
-                {113862, opvp.SpellTrait.DEFENSIVE_HIGH, nil, 20},                                     -- Greater Invisiblity (wall)
-                {342242, opvp.SpellTrait.OFFENSIVE_AURA_HIGH, 6},                                      -- Time Warp (Time Anomaly)
+                {113862, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_HIGH, 20},       -- Greater Invisiblity (dmg reduc)
+                {342242, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 6},        -- Time Warp (Time Anomaly)
             }
         }
     }

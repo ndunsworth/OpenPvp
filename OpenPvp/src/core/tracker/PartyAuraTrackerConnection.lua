@@ -28,29 +28,71 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.PartyMemberCrowdControlTracker = opvp.CreateClass();
+opvp.PartyAuraTrackerConnection = opvp.CreateClass(opvp.AuraTrackerConnection);
 
-function opvp.PartyMemberCrowdControlTracker:init()
-    self._spells     = opvp.SpellList();
-    self._member     = nil;
-    self._categories = opvp.List();
-
-    self.updated = opvp.Signal("opvp.CrowdControlTracker");
+function opvp.PartyAuraTrackerConnection:init()
+    opvp.AuraTrackerConnection.init(self);
 end
 
-function opvp.PartyMemberCrowdControlTracker:_onAuraUpdate(aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
+function opvp.PartyAuraTrackerConnection:isTrackerSupported(tracker)
+    return opvp.IsInstance(tracker, opvp.PartyAuraTracker);
+end
+
+function opvp.PartyAuraTrackerConnection:_clear()
+    local parties = self._tracker:parties();
+    local members;
+
+    for n=1, #parties do
+        members = parties[n]:members();
+
+        for x=1, #members do
+            self:_clearMember(members[x]);
+        end
+    end
+end
+
+function opvp.PartyAuraTrackerConnection:_clearMember(member)
 
 end
 
-function opvp.PartyMemberCrowdControlTracker:_setMember(member)
-    if self._member == member then
+function opvp.PartyAuraTrackerConnection:_initializeMember(member)
+    local auras = member:auras();
+    local spell;
+
+    for k, aura in opvp.iter(auras) do
+        spell = self._tracker:findSpellForAura(aura);
+
+        if spell ~= nil then
+            self:_onAuraAdded(member, aura, spell);
+        end
+    end
+end
+
+function opvp.PartyAuraTrackerConnection:_initialize()
+    if self._tracker:isInitialized() == false then
         return;
     end
 
-    self._spells = opvp.SpellList();
-    self._member = nil;
+    local parties = self._tracker:parties();
+    local members;
 
-    if self._member == nil then
-        return;
+    for n=1, #parties do
+        members = parties[n]:members();
+
+        for x=1, #members do
+            self:_initializeMember(members[x]);
+        end
     end
+end
+
+function opvp.PartyAuraTrackerConnection:_onAuraAdded(member, aura, spell)
+
+end
+
+function opvp.PartyAuraTrackerConnection:_onAuraRemoved(member, aura, spell)
+
+end
+
+function opvp.PartyAuraTrackerConnection:_onAuraUpdated(member, aura, spell)
+
 end

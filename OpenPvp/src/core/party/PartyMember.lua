@@ -101,6 +101,8 @@ function opvp.PartyMember:init()
     self._mask        = 0;
     self._auras       = opvp.PartyMemberAuraMap();
     self._cc_state    = opvp.CrowdControlState();
+    self._def_state   = opvp.DefensiveCombatLevelState();
+    self._off_state   = opvp.OffensiveCombatLevelState();
 end
 
 function opvp.PartyMember:affiliation()
@@ -123,12 +125,28 @@ function opvp.PartyMember:classInfo()
     return self._spec:classInfo();
 end
 
+function opvp.PartyMember:defensiveLevel()
+    return self._def_state:level();
+end
+
+function opvp.PartyMember:defensiveState()
+    return self._def_state;
+end
+
 function opvp.PartyMember:faction()
     return self._faction:id();
 end
 
 function opvp.PartyMember:factionInfo()
     return self._faction;
+end
+
+function opvp.PartyMember:findAurasForSpell(spell)
+    return self._auras:findBySpell(spell);
+end
+
+function opvp.PartyMember:findAurasForSpellId(spellId)
+    return self._auras:findBySpellId(spellId);
 end
 
 function opvp.PartyMember:guid()
@@ -141,6 +159,10 @@ end
 
 function opvp.PartyMember:hasAuraForSpell(spell)
     return self._auras:containsSpell(spell);
+end
+
+function opvp.PartyMember:hasAuraForSpellId(spellId)
+    return self._auras:containsSpellId(spell);
 end
 
 function opvp.PartyMember:hasTeam()
@@ -163,8 +185,8 @@ function opvp.PartyMember:isConnected()
     return bit.band(self._mask, opvp.PartyMember.CONNECTED_FLAG) ~= 0;
 end
 
-function opvp.PartyMember:isCrowdControled()
-    return self._cc_state:isCrowdControled()
+function opvp.PartyMember:isCrowdControlled()
+    return self._cc_state:isCrowdControlled()
 end
 
 function opvp.PartyMember:isDead()
@@ -291,6 +313,14 @@ function opvp.PartyMember:nameOrId()
     end
 end
 
+function opvp.PartyMember:offensiveLevel()
+    return self._off_state:level();
+end
+
+function opvp.PartyMember:offensiveState()
+    return self._off_state;
+end
+
 function opvp.PartyMember:race()
     return self._race:id();
 end
@@ -369,6 +399,8 @@ function opvp.PartyMember:_reset(mask)
     if bit.band(mask, opvp.PartyMember.AURAS_FLAG) ~= 0 then
         self._auras:_clear();
         self._cc_state:_clear();
+        self._def_state:_clear();
+        self._off_state:_clear();
     end
 
     self._mask = bit.band(self._mask, bit.bnot(mask));

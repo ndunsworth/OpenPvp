@@ -30,6 +30,16 @@ local opvp = OpenPvp;
 
 local opvp_cc_type_lookup;
 
+local opvp_cc_status_name_lookup = {
+    opvp.strs.CC_FULL,
+    opvp.strs.CC_HALF,
+    opvp.strs.CC_QUARTER,
+    opvp.strs.CC_TAUNT_2,
+    opvp.strs.CC_TAUNT_3,
+    opvp.strs.CC_TAUNT_4,
+    opvp.strs.CC_IMMUNE
+};
+
 local opvp_cc_status_next_lookup = {
     opvp.CrowdControlStatus.HALF,
     opvp.CrowdControlStatus.QUARTER,
@@ -108,6 +118,16 @@ end
 
 function opvp.CrowdControlCategory:name()
     return self._name;
+end
+
+function opvp.CrowdControlCategory:nameForStatus(status)
+    local name = opvp_cc_status_name_lookup[status];
+
+    if name ~= nil then
+        return name;
+    else
+        return "";
+    end
 end
 
 function opvp.CrowdControlCategory:resetTime()
@@ -191,7 +211,7 @@ opvp.CrowdControlCategory.KNOCKBACK = opvp.CrowdControlCategory(
     opvp.strs.CC_KNOCKBACK_DISPLAY_NAME
 );
 
-opvp.CrowdControlCategory.KNOCKBACK = opvp.CrowdControlCategory(
+opvp.CrowdControlCategory.ROOT = opvp.CrowdControlCategory(
     opvp.CrowdControlType.ROOT,
     opvp.strs.CC_ROOT_NAME,
     opvp.strs.CC_ROOT_DISPLAY_NAME

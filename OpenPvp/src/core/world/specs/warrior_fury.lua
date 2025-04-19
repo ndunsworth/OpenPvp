@@ -38,7 +38,8 @@ local spec_info = {
     spells = {
         harmful = {
             talent = {
-                {1719, opvp.SpellTrait.OFFENSIVE_AURA_HIGH, 30}, -- Recklessness
+                {1719, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 3},      -- Recklessness
+                {227847, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_IMMUNE, 6},  -- Bladestorm
             }
         }
     }

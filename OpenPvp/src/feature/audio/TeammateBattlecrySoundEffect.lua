@@ -45,74 +45,72 @@ function opvp.private.TeammateBattlecrySoundEffect:isFeatureEnabled()
 end
 
 function opvp.private.TeammateBattlecrySoundEffect:_onFeatureActivated()
+    opvp.MatchOptionFeature._onFeatureActivated(self);
+
     local match = opvp.match.current();
 
     if match == nil or match:joinedInProgress() == true then
-        opvp.MatchOptionFeature._onFeatureActivated(self);
-
         return;
     end
 
     local team = match:playerTeam();
 
     if team == nil then
-        opvp.MatchOptionFeature._onFeatureActivated(self);
-
         return;
     end
 
     local party_size = team:size();
 
-    if party_size > 1 then
-        local ids = opvp.List();
-
-        for n=1, party_size do
-            ids:append(n);
-        end
-
-        ids:shuffle();
-
-        local count = 0;
-        local max_count;
-        local time_sep;
-        local member;
-        local id;
-
-        if match:isArena() == true then
-            max_count = 2;
-            time_sep = 1.15;
-        else
-            max_count = math.random(3, 4);
-            time_sep = 0.85;
-        end
-
-        while ids:isEmpty() == false and count < max_count do
-            id = ids:popFront();
-
-            member = team:member(id);
-
-            if (
-                member ~= nil and
-                member:isPlayer() == false and
-                member:isSexKnown() == true and
-                member:isRaceKnown() == true
-            ) then
-                local race = member:race();
-                local sex  = member:sex();
-
-                opvp.Timer:singleShot(
-                    (time_sep * count) + (0.25 * math.random()),
-                    function()
-                        opvp.effect.roundBegin(race, sex);
-                    end
-                );
-
-                count = count + 1;
-            end
-        end
+    if party_size <= 1 then
+        return;
     end
 
-    opvp.MatchOptionFeature._onFeatureActivated(self);
+    local ids = opvp.List();
+
+    for n=1, party_size do
+        ids:append(n);
+    end
+
+    ids:shuffle();
+
+    local count = 0;
+    local max_count;
+    local time_sep;
+    local member;
+    local id;
+
+    if match:isArena() == true then
+        max_count = 2;
+        time_sep = 1.15;
+    else
+        max_count = math.random(3, 4);
+        time_sep = 0.85;
+    end
+
+    while ids:isEmpty() == false and count < max_count do
+        id = ids:popFront();
+
+        member = team:member(id);
+
+        if (
+            member ~= nil and
+            member:isPlayer() == false and
+            member:isSexKnown() == true and
+            member:isRaceKnown() == true
+        ) then
+            local race = member:race();
+            local sex  = member:sex();
+
+            opvp.Timer:singleShot(
+                (time_sep * count) + (0.25 * math.random()),
+                function()
+                    opvp.effect.roundBegin(race, sex);
+                end
+            );
+
+            count = count + 1;
+        end
+    end
 end
 
 function opvp.effect.roundBegin(race, sex)

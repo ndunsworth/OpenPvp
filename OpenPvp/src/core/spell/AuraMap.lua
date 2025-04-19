@@ -73,14 +73,16 @@ function opvp.AuraMap:contains(aura)
 end
 
 function opvp.AuraMap:containsSpell(spell)
-    if opvp.IsInstance(spell, opvp.Spell) == true then
-        spell = spell:id();
-    elseif opvp.is_number(aura) == false then
+    return self:containsSpellId(spell:id());
+end
+
+function opvp.AuraMap:containsSpellId(spellId)
+    if opvp.is_number(aura) == false then
         return false;
     end
 
     for id, aura in pairs(self._auras) do
-        if aura:spellId() == spell then
+        if aura:spellId() == spellId then
             return aura;
         end
     end
@@ -92,36 +94,56 @@ function opvp.AuraMap:findById(id)
     return self._auras[id];
 end
 
-function opvp.AuraMap:findByName(name)
+function opvp.AuraMap:findByName(name, map)
+    local auras = opvp.AuraMap();
+
     for id, aura in pairs(self._auras) do
         if aura:name() == name then
-            return aura;
+            auras:add(aura);
         end
     end
 
-    return nil;
+    return auras;
+end
+
+function opvp.AuraMap:findBySpell(spell)
+    return self:findBySpellId(spell:id());
 end
 
 function opvp.AuraMap:findBySpellId(spellId)
+    local auras = opvp.AuraMap();
+
     for id, aura in pairs(self._auras) do
         if aura:spellId() == spellId then
-            return aura;
+            auras:add(aura);
         end
     end
 
-    return nil;
+    return auras;
 end
 
 function opvp.AuraMap:findHarmful()
-    local auras = {};
+    local auras = opvp.AuraMap();
 
     for id, aura in pairs(self._auras) do
         if aura:isHarmful() == true then
-            table.insert(auras, spell);
+            auras:add(aura);
         end
     end
 
-    return spells;
+    return auras;
+end
+
+function opvp.AuraMap:findHelpful()
+    local auras = {};
+
+    for id, aura in pairs(self._auras) do
+        if aura:isHelpful() == true then
+            auras:add(aura);
+        end
+    end
+
+    return auras;
 end
 
 function opvp.AuraMap:isEmpty()

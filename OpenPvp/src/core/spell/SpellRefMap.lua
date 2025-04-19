@@ -74,10 +74,6 @@ function opvp.SpellRef:name()
     return self._spell:name();
 end
 
-function opvp.SpellRef:spell()
-    return self._spell;
-end
-
 function opvp.SpellRef:ref(spell)
     self._count = self._count + 1;
 
@@ -88,6 +84,14 @@ function opvp.SpellRef:ref(spell)
     ) then
         self._spell = spell:clone();
     end
+end
+
+function opvp.SpellRef:refs()
+    return self._count;
+end
+
+function opvp.SpellRef:spell()
+    return self._spell;
 end
 
 opvp.SpellRefMap = opvp.CreateClass();
@@ -111,7 +115,7 @@ function opvp.SpellRefMap:add(spell)
 
             return false;
         else
-            self._spells[spell:id()] = opvp.SpellRef(spell);
+            self._spells[spell] = opvp.SpellRef(spell);
 
             return true;
         end
@@ -216,6 +220,24 @@ end
 
 function opvp.SpellRefMap:isEmpty()
     return opvp.utils.table.isEmpty(self._spells);
+end
+
+function opvp.SpellRefMap:refs(spell)
+    local ref;
+
+    if opvp.is_number(spell) == true then
+        ref = self._spells[spell];
+    elseif opvp.IsInstance(spell, opvp.Spell) == true then
+        ref = self._spells[spell:id()];
+    else
+        return 0;
+    end
+
+    if ref ~= nil then
+        return ref:refs();
+    else
+        return 0;
+    end
 end
 
 function opvp.SpellRefMap:remove(spell)

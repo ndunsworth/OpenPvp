@@ -76,7 +76,18 @@ opvp.Class.WARRIOR = opvp.Class(
     {
         harmful = {
             talent = {
-                {5246, opvp.SpellTrait.DISORIENT_CROWD_CONTROL, 8}, -- Intimidating Shout
+                {107574, opvp.SpellTrait.OFFSENSIVE_ARUA, opvp.SpellProperty.OFFSENSIVE_MEDIUM, 20},  -- Avatar
+                {5246,   opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.DISORIENT, 8, 0.75},       -- Intimidating Shout
+                {132168, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.STUN, 2},                  -- Shockwave
+                {132169, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.STUN, 4, 0.75},            -- Storm Bolt
+            }
+        },
+        helpful = {
+            base = {
+            },
+            talent = {
+                {386208, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 10},       -- Defensive Stance
+                {97463, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 10},        -- Rallying Cry
             }
         }
     }

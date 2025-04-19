@@ -95,7 +95,8 @@ function opvp.Class:init(id, fileId, races, specs, cfgSpells, cfgAuras)
         cfgSpells,
         cfgAuras,
         self._spells,
-        self._auras
+        self._auras,
+        opvp.SpellTrait.BASE
     );
 
     for index, race in ipairs(races) do

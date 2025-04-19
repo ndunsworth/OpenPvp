@@ -28,66 +28,66 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local opvp_match_spell_mask = bit.bor(
+local opvp_class_spell_mask = bit.bor(
     opvp.SpellTrait.CROWD_CONTROL,
     opvp.SpellTrait.DEFENSIVE,
     opvp.SpellTrait.OFFENSIVE
 );
 
-opvp.MatchConfigAuraTracker = opvp.CreateClass(opvp.PartyAuraTracker);
+opvp.ClassConfigAuraTracker = opvp.CreateClass();
 
-function opvp.MatchConfigAuraTracker:init(match)
-    self._match        = match;
-    self._affiliation  = opvp.Affiliation.FRIENDLY;
+function opvp.ClassConfigAuraTracker:init()
     self._spec_counter = opvp.ClassSpecCounter();
+    self._tracker      = nil;
 end
 
-function opvp.MatchConfigAuraTracker:initialize()
-    if self._match == nil then
+function opvp.ClassConfigAuraTracker:initialize(auraTracker)
+    if auraTracker == self._tracker then
         return;
     end
 
-    local teams = self._match:teams();
+    if self._tracker ~= nil then
+        self:shutdown();
+    end
 
-    for n=1, #teams do
-        if self:isPartySupported(teams[n]) == true then
-            self:_addParty(teams[n]);
+    self._tracker = auraTracker;
+
+    self._tracker.partyAdded:connect(self, self._addParty);
+
+    local parties = self._tracker:parties();
+
+    for n=1, #parties do
+        if self:isPartySupported(parties[n]) == true then
+            self:_addParty(parties[n]);
         end
     end
 end
 
-function opvp.MatchConfigAuraTracker:shutdown()
-    if self._match == nil then
+function opvp.ClassConfigAuraTracker:isPartySupported(party)
+    return true;
+end
+
+function opvp.ClassConfigAuraTracker:shutdown()
+    if self._tracker == nil then
         return;
     end
 
-    local teams = self._match:teams();
+    self._tracker.partyAdded:disconnect(self, self._addParty);
 
-    for n=1, #teams do
-        if self:isPartySupported(teams[n]) == true then
-            self:_removeParty(teams[n]);
+    local parties = self._tracker:parties();
+
+    for n=1, #parties do
+        if self:isPartySupported(parties[n]) == true then
+            self:_removeParty(parties[n]);
         end
     end
 
     assert(self._spec_counter:isEmpty() == true);
 
-    self._match = nil;
+    self._tracker = nil;
 end
 
-function opvp.MatchConfigAuraTracker:isPartySupported(party)
-    return bit.band(self._affiliation, party:affiliation()) ~= 0;
-end
-
-function opvp.MatchConfigAuraTracker:setAffiliation(mask)
-    self._affiliation = mask;
-end
-
-function opvp.MatchConfigAuraTracker:_addParty(party)
-    opvp.printDebug(
-        "opvp.MatchConfigAuraTracker:_addParty: %s",
-        tostring(party:isInitialized())
-    );
-
+function opvp.ClassConfigAuraTracker:_addParty(party)
     if party:isInitialized() == true then
         self:_addPartyMembers(party:members());
     end
@@ -98,7 +98,7 @@ function opvp.MatchConfigAuraTracker:_addParty(party)
     party.rosterEndUpdate:connect(self, self._onRosterEndUpdate);
 end
 
-function opvp.MatchConfigAuraTracker:_addPartyMembers(members)
+function opvp.ClassConfigAuraTracker:_addPartyMembers(members)
     local member;
 
     for n=1, #members do
@@ -110,17 +110,15 @@ function opvp.MatchConfigAuraTracker:_addPartyMembers(members)
     end
 end
 
-function opvp.MatchConfigAuraTracker:_addSpells(spells)
-    local tracker = opvp.party.auraTracker();
-
+function opvp.ClassConfigAuraTracker:_addSpells(spells)
     for id, spell in opvp.iter(spells) do
-        if bit.band(spell:mask(), opvp_match_spell_mask) ~= 0 then
-            tracker:addSpell(spell);
+        if bit.band(spell:traits(), opvp_class_spell_mask) ~= 0 then
+            self._tracker:addSpell(spell);
         end
     end
 end
 
-function opvp.MatchConfigAuraTracker:_derefSpec(spec)
+function opvp.ClassConfigAuraTracker:_derefSpec(spec)
     local spec_count, class_count = self._spec_counter:deref(spec);
 
     if class_count == 0 then
@@ -132,7 +130,7 @@ function opvp.MatchConfigAuraTracker:_derefSpec(spec)
     end
 end
 
-function opvp.MatchConfigAuraTracker:_onMemberSpecUpdate(member, newSpec, oldSpec)
+function opvp.ClassConfigAuraTracker:_onMemberSpecUpdate(member, newSpec, oldSpec)
     if newSpec == oldSpec then
         return;
     end
@@ -146,20 +144,20 @@ function opvp.MatchConfigAuraTracker:_onMemberSpecUpdate(member, newSpec, oldSpe
     end
 end
 
-function opvp.MatchConfigAuraTracker:_onRosterEndUpdate(party, newMembers, updatedMembers, removedMembers)
+function opvp.ClassConfigAuraTracker:_onRosterEndUpdate(party, newMembers, updatedMembers, removedMembers)
     self:_addPartyMembers(newMembers);
     self:_removePartyMembers(removedMembers);
 end
 
-function opvp.MatchConfigAuraTracker:_onPartyClosing(party)
+function opvp.ClassConfigAuraTracker:_onPartyClosing(party)
     self:_removePartyMembers(party:members());
 end
 
-function opvp.MatchConfigAuraTracker:_onPartyInitialized(category, guid, party)
+function opvp.ClassConfigAuraTracker:_onPartyInitialized(category, guid, party)
     self:_addPartyMembers(party:members());
 end
 
-function opvp.MatchConfigAuraTracker:_refSpec(spec)
+function opvp.ClassConfigAuraTracker:_refSpec(spec)
     local spec_count, class_count = self._spec_counter:ref(spec);
 
     if class_count == 1 then
@@ -171,12 +169,7 @@ function opvp.MatchConfigAuraTracker:_refSpec(spec)
     end
 end
 
-function opvp.MatchConfigAuraTracker:_removeParty(party)
-    opvp.printDebug(
-        "opvp.MatchConfigAuraTracker:_removeParty: %s",
-        tostring(party:isInitialized())
-    );
-
+function opvp.ClassConfigAuraTracker:_removeParty(party)
     if party:isInitialized() == true then
         self:_removePartyMembers(party:members());
     end
@@ -187,7 +180,7 @@ function opvp.MatchConfigAuraTracker:_removeParty(party)
     party.rosterEndUpdate:disconnect(self, self._onRosterEndUpdate);
 end
 
-function opvp.MatchConfigAuraTracker:_removePartyMembers(members)
+function opvp.ClassConfigAuraTracker:_removePartyMembers(members)
     local member;
 
     for n=1, #members do
@@ -199,12 +192,10 @@ function opvp.MatchConfigAuraTracker:_removePartyMembers(members)
     end
 end
 
-function opvp.MatchConfigAuraTracker:_removeSpells(spells)
-    local tracker = opvp.party.auraTracker();
-
+function opvp.ClassConfigAuraTracker:_removeSpells(spells)
     for id, spell in opvp.iter(spells) do
-        if bit.band(spell:mask(), opvp_match_spell_mask) ~= 0 then
-            tracker:removeSpell(spell);
+        if bit.band(spell:traits(), opvp_class_spell_mask) ~= 0 then
+            self._tracker:removeSpell(spell);
         end
     end
 end
