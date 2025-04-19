@@ -99,6 +99,10 @@ function opvp.PartyMemberProvider:findMemberByName(name)
     return nil;
 end
 
+function opvp.PartyMemberProvider:findMembersWithAura(spell)
+    return {};
+end
+
 function opvp.PartyMemberProvider:hasPlayer()
     return true;
 end
@@ -198,6 +202,10 @@ end
 
 function opvp.PartyMemberProvider:members()
     return {};
+end
+
+function opvp.PartyMemberProvider:player()
+    return nil;
 end
 
 function opvp.PartyMemberProvider:size()

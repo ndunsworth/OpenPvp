@@ -91,6 +91,22 @@ function opvp.GenericPartyMemberProvider:findMemberByName(name)
     return nil;
 end
 
+function opvp.GenericPartyMemberProvider:findMembersWithAura(spell)
+    local members = {};
+
+    local member;
+
+    for n=1, self._members:size() do
+        member = self._members:item(n);
+
+        if member:hasAuraForSpell(spell) == true then
+            table.insert(result, member);
+        end
+    end
+
+    return members;
+end
+
 function opvp.GenericPartyMemberProvider:isEmpty()
     return self._members:isEmpty();
 end
@@ -105,6 +121,10 @@ end
 
 function opvp.GenericPartyMemberProvider:members()
     return self._members:items();
+end
+
+function opvp.GenericPartyMemberProvider:player()
+    return self._player;
 end
 
 function opvp.GenericPartyMemberProvider:size()

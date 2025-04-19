@@ -127,6 +127,14 @@ function opvp.Party:findMemberByUnitId(unitId)
     end
 end
 
+function opvp.Party:findMembersWithAura(spell)
+    if self._provider ~= nil then
+        return self._provider:findMembersWithAura(spell)
+    else
+        return {};
+    end
+end
+
 function opvp.Party:guid()
     return self._guid;
 end
@@ -331,6 +339,14 @@ function opvp.Party:name()
         return self:identifierName();
     else
         return self._name;
+    end
+end
+
+function opvp.Party:player()
+    if self._provider ~= nil then
+        return self._provider:player()
+    else
+        return nil;
     end
 end
 
