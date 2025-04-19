@@ -65,11 +65,11 @@ local function signal_emit_safe(name, connection, ...)
 end
 
 function opvp.signal_emit(name, connection, ...)
-    --~ if opvp.DEBUG == false then
-        --~ signal_emit_safe(name, connection, ...);
-    --~ else
+    if opvp.DEBUG == false then
+        signal_emit_safe(name, connection, ...);
+    else
         signal_emit_dbg(name, connection, ...);
-    --~ end
+    end
 end
 
 opvp.Signal = opvp.CreateClass();
@@ -254,7 +254,7 @@ function opvp.Signal:emit(...)
         end
     end
 
-    --~ opvp.printDebug(
+    --~ opvp.printDebug((
         --~ "opvp.Signal(\"%s\"), end",
         --~ self._name
     --~ );
