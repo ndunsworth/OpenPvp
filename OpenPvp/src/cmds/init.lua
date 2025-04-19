@@ -242,8 +242,13 @@ local function opvp_init_test_slash_cmds()
     test_cmd:setDefaultCommad("arena");
 
     local arena_maps = {
+        opvp.Map.DALARAN_SEWERS,
+        opvp.Map.ENIGMA_CRUCIBLE,
         opvp.Map.NAGRAND_ARENA,
-        opvp.Map.TIGERS_PEAK
+        opvp.Map.NOKHUDON_PROVING_GROUNDS,
+        opvp.Map.RUINS_OF_LORDAERON,
+        opvp.Map.TIGERS_PEAK,
+        opvp.Map.TOL_VIRON_ARENA
     };
 
     local bg_maps = {
@@ -339,7 +344,7 @@ local function opvp_init_test_slash_cmds()
 
                 mgr:beginTest(
                     opvp.PvpType.ARENA,
-                    opvp.Map.NAGRAND_ARENA,
+                    map,
                     bit.bor(
                         opvp.PvpFlag.RATED,
                         opvp.PvpFlag.ROUND,
