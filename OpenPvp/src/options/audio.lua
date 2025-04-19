@@ -478,6 +478,33 @@ This emote is based on the pinging players race/sex.]],
     opvp.options.audio.soundeffect.pvp.trinketRacialReadySample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
 
     opvp.options.audio.soundeffect.pvp.trinketRacialReadySample:setEnabled(opvp.player.hasPvpRacialTrinket());
+
+    --~ Sound Effect / Testing
+
+    opvp.options.audio.soundeffect.test = {};
+
+    opvp.options.audio.soundeffect.test.category = opvp.options.audio.soundeffect.category:createCategory("Test", "Test", "Simulation");
+
+    opvp.options.audio.soundeffect.test.fx = opvp.options.audio.soundeffect.test.category:createOption(
+        opvp.Option.BOOL,
+        "SoundEffects",
+        "Sound Effects",
+        "",
+        true
+    );
+
+    opvp.options.audio.soundeffect.test.music = opvp.options.audio.soundeffect.test.category:createOption(
+        opvp.Option.BOOL,
+        "Music",
+        "Music",
+        "",
+        true
+    );
+
+    local match_test = opvp.match.tester();
+
+    opvp.options.audio.soundeffect.test.music.changed:connect(match_test, match_test.stopMusic);
+
 end
 
 opvp.OnAddonLoad:register(opvp_options_audio_init);

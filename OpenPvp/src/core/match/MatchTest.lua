@@ -37,11 +37,16 @@ local opvp_gate_open_mapid_lookup = {
     [opvp.InstanceId.ARATHI_BASIN_WINTER]       = 25528,
     [opvp.InstanceId.DALARAN_SEWERS]            = 15196,
     [opvp.InstanceId.NAGRAND_ARENA]             = 79311,
+    [opvp.InstanceId.RUINS_OF_LORDAERON]        = 11735,
     [opvp.InstanceId.THE_ROBODROME]             = 134872,
     [opvp.InstanceId.TIGERS_PEAK]               = 28727,
     [opvp.InstanceId.TWIN_PEAKS]                = 20559, --~ Alliance 20557
     [opvp.InstanceId.WARSONG_GULCH]             = 43158,
     [opvp.InstanceId.WARSONG_GULCH_CLASSIC]     = 43158
+};
+
+local opvp_gate_close_mapid_lookup = {
+    [opvp.InstanceId.RUINS_OF_LORDAERON]        = 11736
 };
 
 local opvp_gate_close_mapid_lookup = {
@@ -69,13 +74,14 @@ function opvp.MatchTest:init()
     self._party_index      = 0;
     self._outcome_status   = opvp.MatchWinner.WON;
     self._outcome_team     = nil;
+    self._music_handle     = 0;
 
     self._warmup_timer     = opvp.Timer(1);
     self._active_timer     = opvp.Timer(5);
     self._dampening_timer  = opvp.Timer(5);
 
     self._warmup_timer:setTriggerLimit(4);
-    self._dampening_timer:setTriggerLimit(10);
+    self._dampening_timer:setTriggerLimit(4);
 
     self._active_timer.timeout:connect(self, self._onMatchRoundActiveTimer);
     self._warmup_timer.timeout:connect(self, self._onMatchRoundWarmupTimer);
@@ -141,6 +147,14 @@ function opvp.MatchTest:isSimulation()
     return self._test_type == opvp.MatchTestType.SIMULATION;
 end
 
+function opvp.MatchTest:isSimulationFxEnabled()
+    return opvp.options.audio.soundeffect.test.fx:value();
+end
+
+function opvp.MatchTest:isSimulationMusicEnabled()
+    return opvp.options.audio.soundeffect.test.music:value();
+end
+
 function opvp.MatchTest:match()
     return self._match;
 end
@@ -194,6 +208,14 @@ function opvp.MatchTest:stop()
     self._outcome_team     = nil;
 end
 
+function opvp.MatchTest:stopMusic()
+    if self._music_handle ~= 0 then
+        StopSound(self._music_handle, 2000);
+
+        self._music_handle = 0;
+    end
+end
+
 function opvp.MatchTest:timeElapsed()
     if self._time_started > 0 then
         return GetTime() - self._time_started;
@@ -243,10 +265,12 @@ function opvp.MatchTest:_onMatchEntered()
             true
         );
 
-        if self._match:isBattleground() == true then
-            PlaySound(8459, opvp.SoundChannel.SFX);
-        else
-            PlaySound(8960, opvp.SoundChannel.SFX);
+        if self:isSimulationFxEnabled() == true then
+            if self._match:isBattleground() == true then
+                PlaySound(8459, opvp.SoundChannel.SFX);
+            else
+                PlaySound(8960, opvp.SoundChannel.SFX);
+            end
         end
     end
 
@@ -305,6 +329,8 @@ function opvp.MatchTest:_onMatchRoundActive()
         opvp.MatchStatus.ROUND_ACTIVE,
         self._match:statusNext()
     );
+
+    self:_startMusic();
 end
 
 function opvp.MatchTest:_onMatchRoundDampeningTimer()
@@ -353,6 +379,8 @@ end
 function opvp.MatchTest:_onMatchRoundComplete()
     local is_sim = self:isSimulation();
 
+    self:stopMusic();
+
     self._active_timer:stop();
     self._dampening_timer:stop();
 
@@ -399,10 +427,12 @@ function opvp.MatchTest:_onMatchRoundComplete()
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();
 
-    if is_sim == true then
-        if self:isSimulation() == true and self._match:isShuffle() == true then
-            PlaySound(888, opvp.SoundChannel.SFX);
-        end
+    if (
+        is_sim == true and
+        self._match:isShuffle() == true and
+        self:isSimulationFxEnabled() == true
+    ) then
+        PlaySound(888, opvp.SoundChannel.SFX);
     end
 end
 
@@ -455,16 +485,55 @@ function opvp.MatchTest:_onMatchRoundWarmupTimer()
     else
         self._countdown_active = false;
 
-        if self._match:isBattleground() == true then
-            PlaySound(3439, opvp.SoundChannel.SFX);
-        end
+        if self:isSimulationFxEnabled() == true then
+            if self._match:isBattleground() == true then
+                PlaySound(3439, opvp.SoundChannel.SFX);
+            end
 
-        local sound = opvp_gate_open_mapid_lookup[self._match:map():instanceId()];
+            local sound = opvp_gate_open_mapid_lookup[self._match:map():instanceId()];
 
-        if sound ~= nil then
-            PlaySound(sound, opvp.SoundChannel.SFX);
+            if sound ~= nil then
+                PlaySound(sound, opvp.SoundChannel.SFX);
+            end
         end
 
         self:_onMatchRoundActive();
+    end
+end
+
+function opvp.MatchTest:_startMusic()
+    if (
+        self:isSimulation() == false or
+        self:isSimulationMusicEnabled() == false or
+        opvp.sound.isMusicEnabled() == true or
+        self._music_handle ~= 0
+    ) then
+        return;
+    end
+
+    local map = self._match:map();
+
+    local sound;
+
+    if map:hasMusic() == true then
+        sound = map:music();
+    elseif map:hasMusicIntro() == true then
+        sound = map:musicIntro();
+    end
+
+    if sound == nil then
+        return;
+    end
+
+    local valid, sound_handle;
+
+    if sound:type() == opvp.SoundType.Faction then
+        valid, sound_handle = sound:play(opvp.player.faction());
+    else
+        valid, sound_handle = sound:play();
+    end
+
+    if valid == true then
+        self._music_handle = sound_handle
     end
 end
