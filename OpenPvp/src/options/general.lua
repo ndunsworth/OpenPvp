@@ -48,9 +48,7 @@ local function opvp_options_general_init()
     );
 
     opvp.options.debug.changed:connect(
-        function()
-            local state = opvp.options.debug:value();
-
+        function(state)
             opvp.private.state.debug:setValue(state);
 
             if state == true then
