@@ -74,9 +74,8 @@ function opvp.BoolOption:createWidget(name, parent)
     );
 
     self.changed:connect(
-        function()
-            checkbox:SetChecked(self:value());
-        end
+        checkbox,
+        checkbox.SetChecked
     );
 
     frame:SetWidth(checkbox:GetWidth() + checkbox.text:GetWidth());
@@ -118,7 +117,7 @@ function opvp.BoolOption:setValue(value)
     if value ~= self._value then
         self._value = value;
 
-        self.changed:emit();
+        self.changed:emit(value);
     end
 end
 
