@@ -34,7 +34,8 @@ opvp.RoleType = {
     NONE   = 0,
     DPS    = 1,
     HEALER = 2,
-    TANK   = 3
+    TANK   = 4,
+    ALL    = 7
 };
 
 local opvp_role_icon_lookup = {
@@ -57,13 +58,18 @@ function opvp.Role:fromRoleString(name)
 end
 
 function opvp.Role:init(id, name)
-    self._id   = id;
-    self._name = name;
-    self._icon = opvp_role_icon_lookup[self._id];
+    self._id          = id;
+    self._name        = name;
+    self._icon        = opvp_role_icon_lookup[self._id];
+    self._icon_markup = opvp_role_icon_lookup[self._id];
 end
 
 function opvp.Role:icon()
     return self._icon;
+end
+
+function opvp.Role:iconMarkup()
+    return self._icon_markup;
 end
 
 function opvp.Role:id()
