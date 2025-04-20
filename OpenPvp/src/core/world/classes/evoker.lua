@@ -29,15 +29,17 @@ local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
 opvp.Class.EVOKER = opvp.Class(
-    opvp.EVOKER,
-    "EVOKER",
     {
-        --~ NEUTRAL
-        opvp.Race.DRACTHYR
-    },
-    {
-        opvp.ClassSpec.AUGMENTATION_EVOKER,
-        opvp.ClassSpec.DEVESTATION_EVOKER,
-        opvp.ClassSpec.PRESERVATION_EVOKER
+        id = opvp.EVOKER,
+        file_id = "EVOKER",
+        races = {
+            --~ NEUTRAL
+            opvp.Race.DRACTHYR
+        },
+        specs = {
+            opvp.ClassSpec.AUGMENTATION_EVOKER,
+            opvp.ClassSpec.DEVESTATION_EVOKER,
+            opvp.ClassSpec.PRESERVATION_EVOKER
+        }
     }
 );

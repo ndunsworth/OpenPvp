@@ -29,28 +29,30 @@ local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
 opvp.Class.DRUID = opvp.Class(
-    opvp.DRUID,
-    "DRUID",
     {
-        --~ ALLIANCE
-        opvp.Race.NIGHT_ELF,
-        opvp.Race.WORGEN,
+        id = opvp.DRUID,
+        file_id = "DRUID",
+        races = {
+            --~ ALLIANCE
+            opvp.Race.NIGHT_ELF,
+            opvp.Race.WORGEN,
 
-        --~ ALLIANCE ALLIES
-        opvp.Race.KUL_TIRAN,
+            --~ ALLIANCE ALLIES
+            opvp.Race.KUL_TIRAN,
 
-        --~ HORDE
-        opvp.Race.TAUREN,
-        opvp.Race.TROLL,
+            --~ HORDE
+            opvp.Race.TAUREN,
+            opvp.Race.TROLL,
 
-        --~ HORDE ALLIES
-        opvp.Race.HIGHMOUNTAIN_TAUREN,
-        opvp.Race.ZANDALARI_TROLL
-    },
-    {
-        opvp.ClassSpec.BALANCE_DRUID,
-        opvp.ClassSpec.FERAL_DRUID,
-        opvp.ClassSpec.GUARDIAN_DRUID,
-        opvp.ClassSpec.RESTORATION_DRUID
+            --~ HORDE ALLIES
+            opvp.Race.HIGHMOUNTAIN_TAUREN,
+            opvp.Race.ZANDALARI_TROLL
+        },
+        specs = {
+            opvp.ClassSpec.BALANCE_DRUID,
+            opvp.ClassSpec.FERAL_DRUID,
+            opvp.ClassSpec.GUARDIAN_DRUID,
+            opvp.ClassSpec.RESTORATION_DRUID
+        }
     }
 );

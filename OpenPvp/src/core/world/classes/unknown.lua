@@ -29,8 +29,10 @@ local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
 opvp.Class.UNKNOWN = opvp.Class(
-    opvp.UNKNOWN_CLASS,
-    "",
-    {opvp.Race.UNKNOWN_RACE},
-    {opvp.ClassSpec.UNKNOWN}
+    {
+        id = opvp.UNKNOWN_CLASS,
+        file_id = "",
+        races = {opvp.Race.UNKNOWN_RACE},
+        specs = {opvp.ClassSpec.UNKNOWN}
+    }
 );

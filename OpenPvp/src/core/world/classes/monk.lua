@@ -29,47 +29,49 @@ local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
 opvp.Class.MONK = opvp.Class(
-    opvp.MONK,
-    "MONK",
     {
-        --~ NEUTRAL
-        opvp.Race.EARTHEN,
-        opvp.Race.PANDAREN,
+        id = opvp.MONK,
+        file_id = "MONK",
+        races = {
+            --~ NEUTRAL
+            opvp.Race.EARTHEN,
+            opvp.Race.PANDAREN,
 
-        --~ ALLIANCE
-        opvp.Race.DRAENEI,
-        opvp.Race.DWARF,
-        opvp.Race.GNOME,
-        opvp.Race.HUMAN,
-        opvp.Race.NIGHT_ELF,
-        opvp.Race.WORGEN,
+            --~ ALLIANCE
+            opvp.Race.DRAENEI,
+            opvp.Race.DWARF,
+            opvp.Race.GNOME,
+            opvp.Race.HUMAN,
+            opvp.Race.NIGHT_ELF,
+            opvp.Race.WORGEN,
 
-        --~ ALLIANCE ALLIES
-        opvp.Race.DARK_IRON_DWARF,
-        opvp.Race.KUL_TIRAN,
-        opvp.Race.LIGHTFORGED_DRAENEI,
-        opvp.Race.MECHAGNOME,
-        opvp.Race.VOID_ELF,
-        opvp.Race.WORGEN,
+            --~ ALLIANCE ALLIES
+            opvp.Race.DARK_IRON_DWARF,
+            opvp.Race.KUL_TIRAN,
+            opvp.Race.LIGHTFORGED_DRAENEI,
+            opvp.Race.MECHAGNOME,
+            opvp.Race.VOID_ELF,
+            opvp.Race.WORGEN,
 
-        --~ HORDE
-        opvp.Race.BLOOD_ELF,
-        opvp.Race.GOBLIN,
-        opvp.Race.ORC,
-        opvp.Race.TAUREN,
-        opvp.Race.TROLL,
-        opvp.Race.UNDEAD,
+            --~ HORDE
+            opvp.Race.BLOOD_ELF,
+            opvp.Race.GOBLIN,
+            opvp.Race.ORC,
+            opvp.Race.TAUREN,
+            opvp.Race.TROLL,
+            opvp.Race.UNDEAD,
 
-        --~ HORDE ALLIES
-        opvp.Race.HIGHMOUNTAIN_TAUREN,
-        opvp.Race.MAGHAR_ORC,
-        opvp.Race.NIGHTBORNE,
-        opvp.Race.VULPERA,
-        opvp.Race.ZANDALARI_TROLL
-    },
-    {
-        opvp.ClassSpec.BREWMASTER_MONK,
-        opvp.ClassSpec.MISTWEAVER_MONK,
-        opvp.ClassSpec.WINDWALKER_MONK
+            --~ HORDE ALLIES
+            opvp.Race.HIGHMOUNTAIN_TAUREN,
+            opvp.Race.MAGHAR_ORC,
+            opvp.Race.NIGHTBORNE,
+            opvp.Race.VULPERA,
+            opvp.Race.ZANDALARI_TROLL
+        },
+        specs = {
+            opvp.ClassSpec.BREWMASTER_MONK,
+            opvp.ClassSpec.MISTWEAVER_MONK,
+            opvp.ClassSpec.WINDWALKER_MONK
+        }
     }
 );

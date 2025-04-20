@@ -29,32 +29,34 @@ local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
 opvp.Class.PALADIN = opvp.Class(
-    opvp.PALADIN,
-    "PALADIN",
     {
-        --~ NEUTRAL
-        opvp.Race.EARTHEN,
+        id = opvp.PALADIN,
+        file_id = "PALADIN",
+        races = {
+            --~ NEUTRAL
+            opvp.Race.EARTHEN,
 
-        --~ ALLIANCE
-        opvp.Race.DRAENEI,
-        opvp.Race.DWARF,
-        opvp.Race.HUMAN,
+            --~ ALLIANCE
+            opvp.Race.DRAENEI,
+            opvp.Race.DWARF,
+            opvp.Race.HUMAN,
 
-        --~ ALLIANCE ALLIES
-        opvp.Race.DARK_IRON_DWARF,
-        opvp.Race.LIGHTFORGED_DRAENEI,
+            --~ ALLIANCE ALLIES
+            opvp.Race.DARK_IRON_DWARF,
+            opvp.Race.LIGHTFORGED_DRAENEI,
 
-        --~ HORDE
-        opvp.Race.BLOOD_ELF,
-        opvp.Race.TAUREN,
+            --~ HORDE
+            opvp.Race.BLOOD_ELF,
+            opvp.Race.TAUREN,
 
-        --~ HORDE ALLIES
-        opvp.Race.HIGHMOUNTAIN_TAUREN,
-        opvp.Race.ZANDALARI_TROLL
-    },
-    {
-        opvp.ClassSpec.HOLY_PALADIN,
-        opvp.ClassSpec.PROTECTION_PALADIN,
-        opvp.ClassSpec.RETRIBUTION_PALADIN
+            --~ HORDE ALLIES
+            opvp.Race.HIGHMOUNTAIN_TAUREN,
+            opvp.Race.ZANDALARI_TROLL
+        },
+        specs = {
+            opvp.ClassSpec.HOLY_PALADIN,
+            opvp.ClassSpec.PROTECTION_PALADIN,
+            opvp.ClassSpec.RETRIBUTION_PALADIN
+        }
     }
 );

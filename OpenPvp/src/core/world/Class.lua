@@ -80,33 +80,33 @@ function opvp.Class:fromSpecId(id)
     return opvp.Class:fromClassId(GetClassIDFromSpecID(id));
 end
 
-function opvp.Class:init(id, fileId, races, specs, cfgSpells, cfgAuras)
-    self._id         = id;
-    self._file_id    = fileId;
-    self._races      = races;
+function opvp.Class:init(cfg)
+    self._id         = cfg.id;
+    self._file_id    = cfg.file_id;
+    self._races      = cfg.races;
     self._races_mask = 0;
-    self._specs      = specs;
+    self._specs      = cfg.specs;
     self._role_mask  = 0;
     self._spells     = opvp.SpellMap();
     self._auras      = opvp.SpellMap();
 
     opvp.SpellMap:createFromClassConfig(
         cls,
-        cfgSpells,
-        cfgAuras,
+        cfg.spells,
+        cfg.auras,
         self._spells,
         self._auras,
         opvp.SpellTrait.BASE
     );
 
-    for index, race in ipairs(races) do
+    for index, race in ipairs(self._races) do
         self._races_mask = bit.bor(
             self._races_mask,
             bit.lshift(1, race:id())
         );
     end
 
-    for index, spec in ipairs(specs) do
+    for index, spec in ipairs(self._specs) do
         self._role_mask = bit.bor(
             self._role_mask,
             bit.lshift(1, spec:role():id())

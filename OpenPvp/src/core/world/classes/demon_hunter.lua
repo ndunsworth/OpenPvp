@@ -29,17 +29,19 @@ local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
 opvp.Class.DEMON_HUNTER = opvp.Class(
-    opvp.DEMON_HUNTER,
-    "DEMONHUNTER",
     {
-        --~ ALLIANCE
-        opvp.Race.NIGHT_ELF,
+        id = opvp.DEMON_HUNTER,
+        file_id = "DEMONHUNTER",
+        races  = {
+            --~ ALLIANCE
+            opvp.Race.NIGHT_ELF,
 
-        --~ HORDE
-        opvp.Race.BLOOD_ELF
-    },
-    {
-        opvp.ClassSpec.HAVOC_DEMON_HUNTER,
-        opvp.ClassSpec.VENGANCE_DEMON_HUNTER
+            --~ HORDE
+            opvp.Race.BLOOD_ELF
+        },
+        specs = {
+            opvp.ClassSpec.HAVOC_DEMON_HUNTER,
+            opvp.ClassSpec.VENGANCE_DEMON_HUNTER
+        }
     }
 );

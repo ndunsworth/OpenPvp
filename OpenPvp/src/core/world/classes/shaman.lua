@@ -29,36 +29,38 @@ local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
 opvp.Class.SHAMAN = opvp.Class(
-    opvp.SHAMAN,
-    "SHAMAN",
     {
-        --~ NEUTRAL
-        opvp.Race.EARTHEN,
-        opvp.Race.PANDAREN,
+        id = opvp.SHAMAN,
+        file_id = "SHAMAN",
+        races = {
+            --~ NEUTRAL
+            opvp.Race.EARTHEN,
+            opvp.Race.PANDAREN,
 
-        --~ ALLIANCE
-        opvp.Race.DRAENEI,
-        opvp.Race.DWARF,
+            --~ ALLIANCE
+            opvp.Race.DRAENEI,
+            opvp.Race.DWARF,
 
-        --~ ALLIANCE ALLIES
-        opvp.Race.DARK_IRON_DWARF,
-        opvp.Race.KUL_TIRAN,
+            --~ ALLIANCE ALLIES
+            opvp.Race.DARK_IRON_DWARF,
+            opvp.Race.KUL_TIRAN,
 
-        --~ HORDE
-        opvp.Race.GOBLIN,
-        opvp.Race.ORC,
-        opvp.Race.TAUREN,
-        opvp.Race.TROLL,
+            --~ HORDE
+            opvp.Race.GOBLIN,
+            opvp.Race.ORC,
+            opvp.Race.TAUREN,
+            opvp.Race.TROLL,
 
-        --~ HORDE ALLIES
-        opvp.Race.HIGHMOUNTAIN_TAUREN,
-        opvp.Race.MAGHAR_ORC,
-        opvp.Race.VULPERA,
-        opvp.Race.ZANDALARI_TROLL
-    },
-    {
-        opvp.ClassSpec.ELEMENTAL_SHAMAN,
-        opvp.ClassSpec.ENHANCEMENT_SHAMAN,
-        opvp.ClassSpec.RESTORATION_SHAMAN
+            --~ HORDE ALLIES
+            opvp.Race.HIGHMOUNTAIN_TAUREN,
+            opvp.Race.MAGHAR_ORC,
+            opvp.Race.VULPERA,
+            opvp.Race.ZANDALARI_TROLL
+        },
+        specs = {
+            opvp.ClassSpec.ELEMENTAL_SHAMAN,
+            opvp.ClassSpec.ENHANCEMENT_SHAMAN,
+            opvp.ClassSpec.RESTORATION_SHAMAN
+        }
     }
 );

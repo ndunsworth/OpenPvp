@@ -29,65 +29,84 @@ local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
 opvp.Class.WARRIOR = opvp.Class(
-    opvp.WARRIOR,
-    "WARRIOR",
     {
-        --~ NEUTRAL
-        opvp.Race.DRACTHYR,
-        opvp.Race.EARTHEN,
-        opvp.Race.PANDAREN,
+        id = opvp.WARRIOR,
+        file_id = "WARRIOR",
+        races = {
+            --~ NEUTRAL
+            opvp.Race.DRACTHYR,
+            opvp.Race.EARTHEN,
+            opvp.Race.PANDAREN,
 
-        --~ ALLIANCE
-        opvp.Race.DRAENEI,
-        opvp.Race.DWARF,
-        opvp.Race.GNOME,
-        opvp.Race.HUMAN,
-        opvp.Race.NIGHT_ELF,
-        opvp.Race.WORGEN,
+            --~ ALLIANCE
+            opvp.Race.DRAENEI,
+            opvp.Race.DWARF,
+            opvp.Race.GNOME,
+            opvp.Race.HUMAN,
+            opvp.Race.NIGHT_ELF,
+            opvp.Race.WORGEN,
 
-        --~ ALLIANCE ALLIES
-        opvp.Race.DARK_IRON_DWARF,
-        opvp.Race.KUL_TIRAN,
-        opvp.Race.LIGHTFORGED_DRAENEI,
-        opvp.Race.MECHAGNOME,
-        opvp.Race.VOID_ELF,
-        opvp.Race.WORGEN,
+            --~ ALLIANCE ALLIES
+            opvp.Race.DARK_IRON_DWARF,
+            opvp.Race.KUL_TIRAN,
+            opvp.Race.LIGHTFORGED_DRAENEI,
+            opvp.Race.MECHAGNOME,
+            opvp.Race.VOID_ELF,
+            opvp.Race.WORGEN,
 
-        --~ HORDE
-        opvp.Race.BLOOD_ELF,
-        opvp.Race.GOBLIN,
-        opvp.Race.ORC,
-        opvp.Race.TAUREN,
-        opvp.Race.TROLL,
-        opvp.Race.UNDEAD,
+            --~ HORDE
+            opvp.Race.BLOOD_ELF,
+            opvp.Race.GOBLIN,
+            opvp.Race.ORC,
+            opvp.Race.TAUREN,
+            opvp.Race.TROLL,
+            opvp.Race.UNDEAD,
 
-        --~ HORDE ALLIES
-        opvp.Race.HIGHMOUNTAIN_TAUREN,
-        opvp.Race.MAGHAR_ORC,
-        opvp.Race.NIGHTBORNE,
-        opvp.Race.VULPERA,
-        opvp.Race.ZANDALARI_TROLL
-    },
-    {
-        opvp.ClassSpec.ARMS_WARRIOR,
-        opvp.ClassSpec.FURY_WARRIOR,
-        opvp.ClassSpec.PROTECTION_WARRIOR
-    },
-    {
-        harmful = {
-            talent = {
-                {107574, opvp.SpellTrait.OFFSENSIVE_ARUA, opvp.SpellProperty.OFFSENSIVE_MEDIUM, 20},  -- Avatar
-                {5246,   opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.DISORIENT, 8, 0.75},       -- Intimidating Shout
-                {132168, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.STUN, 2},                  -- Shockwave
-                {132169, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.STUN, 4, 0.75},            -- Storm Bolt
+            --~ HORDE ALLIES
+            opvp.Race.HIGHMOUNTAIN_TAUREN,
+            opvp.Race.MAGHAR_ORC,
+            opvp.Race.NIGHTBORNE,
+            opvp.Race.VULPERA,
+            opvp.Race.ZANDALARI_TROLL
+        },
+        specs = {
+            opvp.ClassSpec.ARMS_WARRIOR,
+            opvp.ClassSpec.FURY_WARRIOR,
+            opvp.ClassSpec.PROTECTION_WARRIOR
+        },
+        spells = {
+            harmful = {
+                talent = {
+                    {107574, opvp.SpellTrait.OFFSENSIVE_ARUA, opvp.SpellProperty.OFFSENSIVE_MEDIUM, 20},          -- Avatar
+                    {5246,   opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.DISORIENT, 8, 0.75},          -- Intimidating Shout
+                    {23920,  opvp.SpellTrait.SNARE, 0, 8},                                                        -- Piercing Howl
+                    {132168, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 2},                     -- Shockwave
+                    {132169, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 4, 0.75},               -- Storm Bolt
+                }
+            },
+            helpful = {
+                talent = {
+                    {                                                                                             -- Berserker Shout
+                        384100,
+                        opvp.SpellTrait.AURA,
+                        bit.bor(
+                            opvp.SpellProperty.DISORIENT_IMMUNITY,
+                            opvp.SpellProperty.DEFENSIVE_LOW
+                        ),
+                        6
+                    },
+                    {386208, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 10},               -- Defensive Stance
+                    {316531, opvp.SpellTrait.DEFENSIVE_IMMUNITY, opvp.SpellProperty.PYHSICAL_IMMUNITY, 6, false}, -- Intervene
+                    {97463,  opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 10},               -- Rallying Cry
+                    {23920,  opvp.SpellTrait.DEFENSIVE_IMMUNITY_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 5},       -- Spell Reflection
+                }
             }
         },
-        helpful = {
-            base = {
-            },
-            talent = {
-                {386208, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 10},       -- Defensive Stance
-                {97463, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 10},        -- Rallying Cry
+        auras = {
+            helpful = {
+                talent = {
+                    {147833, opvp.SpellTrait.DEFENSIVE_IMMUNITY_AURA, opvp.SpellProperty.PYHSICAL_IMMUNITY, 6},   -- Intervene
+                }
             }
         }
     }
