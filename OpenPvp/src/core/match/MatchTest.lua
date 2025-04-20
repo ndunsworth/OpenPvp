@@ -399,7 +399,6 @@ function opvp.MatchTest:_onMatchRoundComplete()
     end
 
     if is_sim == true then
-
         if (
             self._match:isArena() == true and
             self._match:isActive() == true
