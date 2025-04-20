@@ -217,40 +217,40 @@ function opvp.TestPartyMemberProvider:_onConnected()
 
     self._fake_chars_healer = opvp.List:createFromArray(
         {
-            {"Absurd",       opvp.ClassSpec.HOLY_PRIEST,        opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Beep",         opvp.ClassSpec.MISTWEAVER_MONK,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Bopz",         opvp.ClassSpec.RESTORATION_DRUID,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Cheesebaker",  opvp.ClassSpec.DISCIPLINE_PRIEST,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Likewoah",     opvp.ClassSpec.MISTWEAVER_MONK,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Literal",      opvp.ClassSpec.RESTORATION_SHAMAN, opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Lonstar",      opvp.ClassSpec.RESTORATION_SHAMAN, opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Mythical",     opvp.ClassSpec.MISTWEAVER_MONK,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Nrgy",         opvp.ClassSpec.DISCIPLINE_PRIEST,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Salmon",       opvp.ClassSpec.RESTORATION_DRUID,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Spaceship",    opvp.ClassSpec.RESTORATION_DRUID,  opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Thedew",       opvp.ClassSpec.RESTORATION_SHAMAN, opvp.Race.UNKNOWN, opvp.Sex.NONE}
+            {"Absurd",       opvp.ClassSpec.HOLY_PRIEST,            opvp.Race.GNOME,     opvp.Sex.FEMALE},
+            {"Beep",         opvp.ClassSpec.MISTWEAVER_MONK,        opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Bopz",         opvp.ClassSpec.RESTORATION_DRUID,      opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Cheesebaker",  opvp.ClassSpec.DISCIPLINE_PRIEST,      opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Likewoah",     opvp.ClassSpec.MISTWEAVER_MONK,        opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Literal",      opvp.ClassSpec.RESTORATION_SHAMAN,     opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Lonstar",      opvp.ClassSpec.RESTORATION_SHAMAN,     opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Mythical",     opvp.ClassSpec.MISTWEAVER_MONK,        opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Nrgy",         opvp.ClassSpec.DISCIPLINE_PRIEST,      opvp.Race.UNDEAD,    opvp.Sex.MALE},
+            {"Salmon",       opvp.ClassSpec.RESTORATION_DRUID,      opvp.Race.NIGHT_ELF, opvp.Sex.FEMALE},
+            {"Spaceship",    opvp.ClassSpec.RESTORATION_DRUID,      opvp.Race.NIGHT_ELF, opvp.Sex.FEMALE},
+            {"Thedew",       opvp.ClassSpec.RESTORATION_SHAMAN,     opvp.Race.UNKNOWN,   opvp.Sex.NONE}
         }
     );
 
     self._fake_chars_dps = opvp.List:createFromArray(
         {
-            {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER, opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Brolly",       opvp.ClassSpec.WINDWALKER_MONK,        opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Chunchi",      opvp.ClassSpec.WINDWALKER_MONK,        opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN,     opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Ehben",        opvp.ClassSpec.ARCANE_MAGE,            opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Hansolo",      opvp.ClassSpec.FIRE_MAGE,              opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Jahmilycyrus", opvp.ClassSpec.FROST_MAGE,             opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Mvp",          opvp.ClassSpec.HAVOC_DEMON_HUNTER,     opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Pezz",         opvp.ClassSpec.UNHOLY_DEATH_KNIGHT,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Pikadude",     opvp.ClassSpec.SUBTLETY_ROGUE,         opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Ratlord",      opvp.ClassSpec.DESTRUCTION_WARLOCK,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Saulgudman",   opvp.ClassSpec.ELEMENTAL_SHAMAN,       opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Supabreeze",   opvp.ClassSpec.BALANCE_DRUID,          opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Venrookie",    opvp.ClassSpec.FIRE_MAGE,              opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Vikiminahj",   opvp.ClassSpec.ASSASSINATION_ROGUE,    opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Wizman",       opvp.ClassSpec.SHADOW_PRIEST,          opvp.Race.UNKNOWN, opvp.Sex.NONE},
-            {"Xenu",         opvp.ClassSpec.FROST_MAGE,             opvp.Race.UNKNOWN, opvp.Sex.NONE}
+            {"Bellyjeans",   opvp.ClassSpec.MASTER_MARKSMAN_HUNTER, opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Brolly",       opvp.ClassSpec.WINDWALKER_MONK,        opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Chunchi",      opvp.ClassSpec.WINDWALKER_MONK,        opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"DamBig",       opvp.ClassSpec.ENHANCEMENT_SHAMAN,     opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Ehben",        opvp.ClassSpec.ARCANE_MAGE,            opvp.Race.BLOOD_ELF, opvp.Sex.MALE},
+            {"Hansolo",      opvp.ClassSpec.FIRE_MAGE,              opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Jahmilycyrus", opvp.ClassSpec.FROST_MAGE,             opvp.Race.ORC,       opvp.Sex.FEMALE},
+            {"Mvp",          opvp.ClassSpec.HAVOC_DEMON_HUNTER,     opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Pezz",         opvp.ClassSpec.UNHOLY_DEATH_KNIGHT,    opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Pikadude",     opvp.ClassSpec.SUBTLETY_ROGUE,         opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Ratlord",      opvp.ClassSpec.DESTRUCTION_WARLOCK,    opvp.Race.HUMAN,     opvp.Sex.FEMALE},
+            {"Saulgudman",   opvp.ClassSpec.ELEMENTAL_SHAMAN,       opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Supabreeze",   opvp.ClassSpec.BALANCE_DRUID,          opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Venrookie",    opvp.ClassSpec.FIRE_MAGE,              opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Vikiminahj",   opvp.ClassSpec.ASSASSINATION_ROGUE,    opvp.Race.NIGHT_ELF, opvp.Sex.FEMALE},
+            {"Wizman",       opvp.ClassSpec.SHADOW_PRIEST,          opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Xenu",         opvp.ClassSpec.FROST_MAGE,             opvp.Race.UNKNOWN,   opvp.Sex.NONE}
         }
     );
 
