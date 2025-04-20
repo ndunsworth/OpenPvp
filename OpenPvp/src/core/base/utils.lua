@@ -532,22 +532,6 @@ function opvp.testui(t)
     end
 end
 
-opvp.math = {};
-
-function opvp.math.clamp(value, low, high)
-    if value < low then
-        return low;
-    elseif value <= high then
-        return value;
-    else
-        return high;
-    end
-end
-
-function opvp.math.lerp(a, b, mix)
-    return Lerp(a, b, mix);
-end
-
 local opvp_seconds_fmt_lower = CreateFromMixins(SecondsFormatterMixin);
 local opvp_seconds_fmt_upper = CreateFromMixins(SecondsFormatterMixin);
 

@@ -28,6 +28,16 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
+local opvp_log2base_debruijn_bit_position = {
+  0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
+  8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
+}
+
+local opvp_ffs_debruijn_bit_position = {
+  0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
+  31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
+}
+
 opvp.math = {};
 
 function opvp.math.clamp(value, low, high)
@@ -38,4 +48,56 @@ function opvp.math.clamp(value, low, high)
     else
         return value;
     end
+end
+
+function opvp.math.ffs(n)
+    return opvp_ffs_debruijn_bit_position[
+        bit.rshift(
+            bit.band(n, -n) * 0x077CB531,
+            27
+        ) + 1
+    ];
+end
+
+function opvp.math.lerp(a, b, mix)
+    return Lerp(a, b, mix);
+end
+
+function opvp.math.popcount(n)
+    n = n - bit.band(bit.rshift(n, 1), 0x55555555);
+    n = bit.band(n, 0x33333333) + bit.band(bit.rshift(n, 2), 0x33333333);
+
+    return (
+        bit.rshift(
+        bit.band(n + bit.rshift(n, 4), 0xF0F0F0F) * 0x1010101,
+        24
+        )
+    );
+end
+
+function opvp.math.logBase2(value)
+    value = opvp.math.floorPowerOfTwo(value);
+
+    return opvp_log2base_debruijn_bit_position[bit.rshift(value * 0x07C4ACDD, 27) + 1];
+end
+
+function opvp.math.floorPowerOfTwo(n)
+    n = bit.bor(n, bit.rshift(n, 1));
+    n = bit.bor(n, bit.rshift(n, 2));
+    n = bit.bor(n, bit.rshift(n, 4));
+    n = bit.bor(n, bit.rshift(n, 8));
+    n = bit.bor(n, bit.rshift(n, 16));
+
+    return bit.rshift(n + 1, 1);
+end
+
+function opvp.math.ceilPowerOfTwo(n)
+    n = n - 1;
+    n = bit.bor(n, bit.rshift(n, 1));
+    n = bit.bor(n, bit.rshift(n, 2));
+    n = bit.bor(n, bit.rshift(n, 4));
+    n = bit.bor(n, bit.rshift(n, 8));
+    n = bit.bor(n, bit.rshift(n, 16));
+
+    return n + 1;
 end
