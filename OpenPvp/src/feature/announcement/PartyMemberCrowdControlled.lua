@@ -39,14 +39,19 @@ local opvp_cc_valid_mask = bit.bor(
 
 opvp.private.PartyMemberCrowdControlled = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.private.PartyMemberCrowdControlled:init(option, affiliation)
+function opvp.private.PartyMemberCrowdControlled:init(option, mask, affiliation)
     opvp.MatchOptionFeature.init(self, option);
 
+    self._mask        = mask;
     self._affiliation = affiliation;
 end
 
 function opvp.private.PartyMemberCrowdControlled:isFeatureEnabled()
     return self:option():value();
+end
+
+function opvp.private.PartyMemberCrowdControlled:isRoleValid(role)
+    return role:isNull() or self._mask:isRoleEnabled(role);
 end
 
 function opvp.private.PartyMemberCrowdControlled:_onFeatureActivated()
@@ -69,13 +74,19 @@ function opvp.private.PartyMemberCrowdControlled:_onMemberCrowdControlAdded(
     member,
     aura,
     spell,
-    ccValue,
+    ccCategoryState,
     ccMaskNew,
-    ccMaskOld
+    ccMaskOld,
+    newDr
 )
     if (
+        newDr == false or
         member:affiliation() ~= self._affiliation or
-        bit.band(ccMaskNew, opvp_cc_valid_mask) == 0
+        bit.band(ccCategoryState:id(), opvp_cc_valid_mask) == 0 or
+        (
+            self:isRoleValid(member:role()) == false and
+            member:isPlayer() == false
+        )
     ) then
         return
     end
@@ -84,7 +95,9 @@ function opvp.private.PartyMemberCrowdControlled:_onMemberCrowdControlAdded(
     local identifier;
 
     if opvp.match.inMatch() == true then
-        if member:isSpecKnown() == true then
+        if member:isPlayer() == true then
+            msg = opvp.strs.MATCH_SELF_LOS_CONTROL;
+        elseif member:isSpecKnown() == true then
             msg = opvp.strs.MATCH_PLAYER_LOS_CONTROL_WITH_SPEC;
         else
             msg = opvp.strs.MATCH_PLAYER_LOS_CONTROL;
@@ -96,7 +109,9 @@ function opvp.private.PartyMemberCrowdControlled:_onMemberCrowdControlAdded(
             identifier = opvp.strs.MATCH_HOSTILE_PLAYER;
         end
     else
-        if member:isSpecKnown() == true then
+        if member:isPlayer() == true then
+            msg = opvp.strs.PARTY_SELF_LOS_CONTROL;
+        elseif member:isSpecKnown() == true then
             msg = opvp.strs.PARTY_MBR_LOS_CONTROL_WITH_SPEC;
         else
             msg = opvp.strs.PARTY_MBR_LOS_CONTROL;
@@ -120,7 +135,7 @@ function opvp.private.PartyMemberCrowdControlled:_onMemberCrowdControlAdded(
         spec:name(),
         cls:name(),
         C_Spell.GetSpellLink(aura:spellId()),
-        ccValue:drName()
+        ccCategoryState:drName()
     );
 end
 
@@ -130,11 +145,13 @@ local opvp_enemy_cc_announce_singleton;
 local function opvp_party_member_cc_announce_ctor()
     opvp_friendly_cc_announce_singleton = opvp.private.PartyMemberCrowdControlled(
         opvp.options.announcements.friendlyParty.memberCrowdControlled,
+        opvp.options.announcements.friendlyParty.memberCrowdControlledRole,
         opvp.Affiliation.FRIENDLY
     );
 
     opvp_enemy_cc_announce_singleton = opvp.private.PartyMemberCrowdControlled(
         opvp.options.announcements.hostileParty.memberCrowdControlled,
+        opvp.options.announcements.hostileParty.memberCrowdControlledRole,
         opvp.Affiliation.HOSTILE
     );
 end

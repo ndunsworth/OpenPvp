@@ -36,7 +36,7 @@ function opvp.private.TeammateBurstingSoundEffect:init()
     self._valid_test = opvp.MatchTestType.SIMULATION;
     self._match_mask = opvp.PvpType.ARENA;
     self._members    = opvp.List();
-    self._expiration = 0;
+    self._timeouts   = {};
 end
 
 function opvp.private.TeammateBurstingSoundEffect:isActiveMatchStatus(status)
@@ -50,82 +50,45 @@ end
 function opvp.private.TeammateBurstingSoundEffect:_onFeatureActivated()
     opvp.MatchOptionFeature._onFeatureActivated(self);
 
-    local match = opvp.match.current();
-
-    if match == nil then
-        return;
-    end
-
-    local team = match:playerTeam();
-
-    if team == nil then
-        return;
-    end
-
-    if team:size() <= 1 then
-        return;
-    end
-
     opvp.match.playerOffensiveLevelUpdate:connect(self, self._onPlayerOffensiveLevelUpdate);
-
-    self._members = opvp.List:createFromArray(team:members());
-
-    self._members:removeItem(team:player());
-
-    self._members:shuffle();
-
-    self._expiration = 0;
 end
 
 function opvp.private.TeammateBurstingSoundEffect:_onFeatureDeactivated()
     opvp.MatchOptionFeature._onFeatureDeactivated(self);
 
-    self._members:clear();
-
     opvp.match.playerOffensiveLevelUpdate:disconnect(self, self._onPlayerOffensiveLevelUpdate);
+
+    self._timeouts = {};
 end
 
 function opvp.private.TeammateBurstingSoundEffect:_onPlayerOffensiveLevelUpdate(member, newLevel, oldLevel)
+    print(newLevel, oldLevel, member:isRaceKnown(), member:isSexKnown())
     if (
-        member:isFriendly() == true or
         newLevel ~= opvp.SpellProperty.OFFENSIVE_HIGH or
-        GetTime() < self._expiration
+        --~ member:isFriendly() == false or
+        member:isRaceKnown() == false or
+        member:isSexKnown() == false
     ) then
         return;
     end
 
-    local member;
-    local count = 0;
-    local time_sep = math.random(1.35, 1.85);
+    local timeout = self._timeouts[member:guid()];
 
-    for n=1, self._members:size() do
-        member = self._members:item(n);
+    if timeout ~= nil and GetTime() < timeout then
+        return;
+    end
 
-        if (
-            member:isRaceKnown() == true and
-            member:isSexKnown() == true
-        ) then
-            local race = member:race();
-            local sex  = member:sex();
+    self._timeouts[member:guid()] = GetTime() + 10;
 
-            opvp.Timer:singleShot(
-                (time_sep * (count + 1)) + (0.25 * math.random()),
-                function()
-                    opvp.effect.friendlyBursting(race, sex);
-                end
-            );
+    local race = member:race();
+    local sex  = member:sex();
 
-            count = count + 1;
-
-            if count >= 2 then
-                return;
-            end
+    opvp.Timer:singleShot(
+        math.random(1.35, 1.85),
+        function()
+            opvp.effect.friendlyBursting(race, sex);
         end
-    end
-
-    if count ~= 0 then
-        self._expiration = GetTime() + 10;
-    end
+    );
 end
 
 function opvp.effect.friendlyBursting(race, sex)

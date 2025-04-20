@@ -379,7 +379,12 @@ This emote is based on the pinging players race/sex.]],
         opvp.Option.BOOL,
         "TeammateAnnounceDefensive",
         "Teammate Announce Defensive",
-        "",
+        "In an Arena or Shuffle match your teammates will announce when they are bursting offensively.",
+        true
+    );
+
+    opvp.options.audio.soundeffect.match.teammateAnnounceDefensive:setFlags(
+        opvp.Option.HIDDEN_FLAG,
         true
     );
 
@@ -391,11 +396,16 @@ This emote is based on the pinging players race/sex.]],
 
     opvp.options.audio.soundeffect.match.teammateAnnounceDefensiveSample:setFlags(opvp.Option.NEW_LINE_FLAG, false);
 
+    opvp.options.audio.soundeffect.match.teammateAnnounceDefensiveSample:setFlags(
+        opvp.Option.HIDDEN_FLAG,
+        true
+    );
+
     opvp.options.audio.soundeffect.match.teammateAnnounceEnemyBursting = opvp.options.audio.soundeffect.match.category:createOption(
         opvp.Option.BOOL,
         "TeammateAnnounceEnemyBursting",
         "Teammate Announce Enemy Bursting",
-        "",
+        "In an Arena or Shuffle match your teammates will announce when hostile player is bursting offensively.",
         true
     );
 
@@ -552,7 +562,6 @@ This emote is based on the pinging players race/sex.]],
     local match_test = opvp.match.tester();
 
     opvp.options.audio.soundeffect.test.music.changed:connect(match_test, match_test.stopMusic);
-
 end
 
 opvp.OnAddonLoad:register(opvp_options_audio_init);

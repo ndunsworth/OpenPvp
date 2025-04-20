@@ -307,6 +307,22 @@ local function opvp_options_announcements_init()
         false
     );
 
+    opvp.options.announcements.friendlyParty.memberCrowdControlledRole = opvp.options.announcements.friendlyParty.category:createOption(
+        opvp.Option.ROLEMASK,
+        "CrowdControlledRole",
+        "CrowdControlledRole"
+    );
+
+    opvp.options.announcements.friendlyParty.memberCrowdControlledRole:setFlags(
+        opvp.Option.NEW_LINE_FLAG,
+        false
+    );
+
+    opvp.options.announcements.friendlyParty.memberCrowdControlled.changed:connect(
+        opvp.options.announcements.friendlyParty.memberCrowdControlledRole,
+        opvp.options.announcements.friendlyParty.memberCrowdControlledRole.setEnabled
+    );
+
     opvp.options.announcements.friendlyParty.memberJoinLeave = opvp.options.announcements.friendlyParty.category:createOption(
         opvp.Option.BOOL,
         "MemberJoinLeave",
@@ -363,6 +379,22 @@ local function opvp_options_announcements_init()
         "Member Crowd Controlled",
         "",
         false
+    );
+
+    opvp.options.announcements.hostileParty.memberCrowdControlledRole = opvp.options.announcements.hostileParty.category:createOption(
+        opvp.Option.ROLEMASK,
+        "CrowdControlledRole",
+        "CrowdControlledRole"
+    );
+
+    opvp.options.announcements.hostileParty.memberCrowdControlledRole:setFlags(
+        opvp.Option.NEW_LINE_FLAG,
+        false
+    );
+
+    opvp.options.announcements.hostileParty.memberCrowdControlled.changed:connect(
+        opvp.options.announcements.hostileParty.memberCrowdControlledRole,
+        opvp.options.announcements.hostileParty.memberCrowdControlledRole.setEnabled
     );
 
     opvp.options.announcements.hostileParty.memberDeath = opvp.options.announcements.hostileParty.category:createOption(
