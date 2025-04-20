@@ -59,6 +59,7 @@ end
 
 function opvp.AuraMap:clear()
     self._auras = {};
+    self._size  = 0;
 end
 
 function opvp.AuraMap:contains(aura)
@@ -99,7 +100,8 @@ function opvp.AuraMap:findByName(name, map)
 
     for id, aura in pairs(self._auras) do
         if aura:name() == name then
-            auras:add(aura);
+            auras._auras[id] = aura;
+            auras._size = auras._size + 1;
         end
     end
 
@@ -114,8 +116,9 @@ function opvp.AuraMap:findBySpellId(spellId)
     local auras = opvp.AuraMap();
 
     for id, aura in pairs(self._auras) do
-        if aura:spellId() == spellId then
-            auras:add(aura);
+        if id == spellId then
+            auras._auras[id] = aura;
+            auras._size = auras._size + 1;
         end
     end
 
@@ -127,7 +130,8 @@ function opvp.AuraMap:findHarmful()
 
     for id, aura in pairs(self._auras) do
         if aura:isHarmful() == true then
-            auras:add(aura);
+            auras._auras[id] = aura;
+            auras._size = auras._size + 1;
         end
     end
 
@@ -135,11 +139,12 @@ function opvp.AuraMap:findHarmful()
 end
 
 function opvp.AuraMap:findHelpful()
-    local auras = {};
+    local auras = opvp.AuraMap();
 
     for id, aura in pairs(self._auras) do
         if aura:isHelpful() == true then
-            auras:add(aura);
+            auras._auras[id] = aura;
+            auras._size = auras._size + 1;
         end
     end
 
@@ -147,7 +152,7 @@ function opvp.AuraMap:findHelpful()
 end
 
 function opvp.AuraMap:isEmpty()
-    return opvp.utils.table.isEmpty(self._auras);
+    return self._size == 0;
 end
 
 function opvp.AuraMap:release()
