@@ -88,8 +88,8 @@ local function opvp_state_db_ctor()
     );
 
     opvp.private.state.debug.changed:connect(
-        function()
-            opvp.DEBUG = opvp.private.state.debug:value();
+        function(state)
+            opvp.DEBUG = state;
         end
     );
 
