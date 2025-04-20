@@ -128,10 +128,10 @@ function opvp.CrowdControlState:_onAuraAdded(aura, spell)
     local cat = self:category(cat_type);
 
     if cat:isNull() == true then
-        return false, cat, self._mask, self._mask;
+        return false, cat, self._mask, self._mask, false;
     end
 
-    local result = cat:_onAuraAdded(aura, spell);
+    local result, new_dr = cat:_onAuraAdded(aura, spell);
 
     local old_state = self._mask;
 
@@ -139,7 +139,7 @@ function opvp.CrowdControlState:_onAuraAdded(aura, spell)
         self._mask = bit.bor(self._mask, cat_type);
     end
 
-    return result, cat, self._mask, old_state;
+    return result, cat, self._mask, old_state, new_dr;
 end
 
 function opvp.CrowdControlState:_onAuraUpdated(aura, spell)
@@ -147,10 +147,10 @@ function opvp.CrowdControlState:_onAuraUpdated(aura, spell)
     local cat = self:category(cat_type);
 
     if cat:isNull() == true then
-        return false, cat, self._mask, self._mask;
+        return false, cat, self._mask, self._mask, false;
     end
 
-    local result = cat:_onAuraUpdated(aura, spell);
+    local result, new_dr = cat:_onAuraUpdated(aura, spell);
 
     local old_state = self._mask;
 
@@ -158,7 +158,7 @@ function opvp.CrowdControlState:_onAuraUpdated(aura, spell)
         self._mask = bit.bor(self._mask, cat_type);
     end
 
-    return result, cat, self._mask, old_state;
+    return result, cat, self._mask, old_state, new_dr;
 end
 
 function opvp.CrowdControlState:_onAuraRemoved(aura, spell)

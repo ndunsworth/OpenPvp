@@ -76,7 +76,10 @@ end
 
 function opvp.CrowdControlCategoryState:drResetTime()
     if self._expiration > 0 then
-        return self._expiration + self._cat:resetTime();
+        return (
+            (self._expiration - self._duration) +
+            self._cat:resetTime()
+        );
     else
         return 0;
     end
@@ -137,64 +140,50 @@ function opvp.CrowdControlCategoryState:_clear()
 end
 
 function opvp.CrowdControlCategoryState:_onAuraAdded(aura, spell)
-    self._auras:add(aura);
-
     local duration   = aura:duration();
-    local expiration = aura:expiration()
+    local expiration = aura:expiration();
+    local applied    = expiration - duration;
+    local dr         = self._cat:statusForTime(duration, spell:durationPvp());
 
-    if expiration > self._expiration then
+    local exists = not self._auras:add(aura);
+
+    --~ For some reason a Mage Dragon Breath will trigger a Aura Updated
+    --~ and its expiration is the same.  It will be floating point error
+    --~ off most likely.  Thus we test for that type of scenario and bail
+    if (
+        exists == true and
+        duration == self._duration
+    ) then
+        return false, false;
+    end
+
+    local old_dr = self._dr;
+
+    if (
+        applied > self._expiration - self._duration and
+        (
+            dr ~= self._dr or
+            self._auras:size() == 1
+        )
+    ) then
+        self._duration   = duration;
         self._expiration = expiration;
+        self._spell      = spell;
+        self._dr         = dr;
+        self._dr_next    = self._cat:statusNext(self._dr);
     end
 
-    if duration == self._duration then
-        return false;
-    end
-
-    self._dr         = self._cat:statusForTime(duration, spell:durationPvp());
-    self._dr_next    = self._cat:statusNext(self._dr);
-    self._spell      = spell;
-    self._duration   = duration;
-    self._expiration = expiration;
-
-    return true;
+    return true, self._dr == opvp.CrowdControlStatus.FULL or old_dr ~= self._dr;
 end
 
 function opvp.CrowdControlCategoryState:_onAuraUpdated(aura, spell)
-    self._auras:add(aura);
-
-    local duration   = aura:duration();
-    local expiration = aura:expiration();
-    local dr = self._cat:statusForTime(duration, spell:durationPvp());
-
-    if expiration > self._expiration then
-        self._expiration = expiration;
-    end
-
-    if (
-        duration == self._duration and
-        dr == self._dr
-    ) then
-        return false;
-    end
-
-    self._dr         = dr;
-    self._dr_next    = self._cat:statusNext(self._dr);
-    self._spell      = spell;
-    self._duration   = duration;
-    self._expiration = expiration;
-
-    return true;
+    return self:_onAuraAdded(aura, spell);
 end
 
 function opvp.CrowdControlCategoryState:_onAuraRemoved(aura, spell)
     if self._auras:remove(aura) == false then
-        self._dr      = self._cat:statusForTime(aura:duration(), spell:durationPvp());
-        self._dr_next = self._cat:statusNext(self._dr)
-
         return false;
-    end
-
-    if self._auras:isEmpty() == false then
+    elseif self._auras:isEmpty() == false then
         return true;
     end
 

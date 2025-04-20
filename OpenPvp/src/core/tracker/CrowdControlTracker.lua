@@ -67,7 +67,7 @@ function opvp.CrowdControlTracker:_onAuraAdded(member, aura, spell)
 
     local cc_state = member:ccState();
 
-    local result, cc_cat_state, cc_mask_new, cc_mask_old = cc_state:_onAuraAdded(aura, spell);
+    local result, cc_cat_state, cc_mask_new, cc_mask_old, new_dr = cc_state:_onAuraAdded(aura, spell);
 
     if result == true then
         self.memberCrowdControlAdded:emit(
@@ -76,7 +76,8 @@ function opvp.CrowdControlTracker:_onAuraAdded(member, aura, spell)
             spell,
             cc_cat_state,
             cc_mask_new,
-            cc_mask_old
+            cc_mask_old,
+            new_dr
         );
 
         opvp.printDebug(
@@ -97,7 +98,7 @@ function opvp.CrowdControlTracker:_onAuraRemoved(member, aura, spell)
 
     local cc_state = member:ccState();
 
-    local result, cc_cat_state, cc_mask_new, cc_mask_old = cc_state:_onAuraRemoved(aura, spell);
+    local result, cc_cat_state, cc_mask_new, cc_mask_old, new_dr = cc_state:_onAuraRemoved(aura, spell);
 
     if result == true then
         self.memberCrowdControlRemoved:emit(
@@ -128,7 +129,7 @@ function opvp.CrowdControlTracker:_onAuraUpdated(member, aura, spell)
 
     local cc_state = member:ccState();
 
-    local result, cc_cat_state, cc_mask_new, cc_mask_old = cc_state:_onAuraUpdated(aura, spell);
+    local result, cc_cat_state, cc_mask_new, cc_mask_old, new_dr = cc_state:_onAuraUpdated(aura, spell);
 
     if result == true then
         self.memberCrowdControlAdded:emit(
@@ -137,7 +138,8 @@ function opvp.CrowdControlTracker:_onAuraUpdated(member, aura, spell)
             spell,
             cc_cat_state,
             cc_mask_new,
-            cc_mask_old
+            cc_mask_old,
+            new_dr
         );
 
         opvp.printDebug(
