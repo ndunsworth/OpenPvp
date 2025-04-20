@@ -82,7 +82,7 @@ function opvp.SpellRef:ref(spell)
         self._spell:isExtended() == false and
         spell:isExtended() == true
     ) then
-        self._spell = spell:clone();
+        self._spell = spell;
     end
 end
 
