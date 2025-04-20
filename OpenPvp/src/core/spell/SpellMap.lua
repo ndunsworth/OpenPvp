@@ -141,8 +141,10 @@ function opvp.SpellMap:createFromClassConfig(cls, cfgSpell, cfgAura, spells, aur
     end
 
     if cfgAura ~= nil then
+        parentMask = bit.bor(parentMask, opvp.SpellTrait.AURA);
+
         if cfgAura.helpful ~= nil then
-            mask = bit.bor(parentMask, opvp.SpellTrait.BASE, opvp.SpellTrait.HELPFUL);
+            mask = bit.bor(parentMask, opvp.SpellTrait.HELPFUL);
 
             opvp_class_spellmap_init_spell_category(
                 cls,
@@ -154,7 +156,7 @@ function opvp.SpellMap:createFromClassConfig(cls, cfgSpell, cfgAura, spells, aur
         end
 
         if cfgAura.harmful ~= nil then
-            mask = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.HARMFUL);
+            mask = bit.bor(parentMask, opvp.SpellTrait.HARMFUL);
 
             opvp_class_spellmap_init_spell_category(
                 cls,
@@ -173,6 +175,7 @@ end
 
 function opvp.SpellMap:init()
     self._spells = {};
+    self._size   = 0;
 end
 
 function opvp.SpellMap:add(spell)
@@ -184,12 +187,10 @@ function opvp.SpellMap:add(spell)
 
     local value = self._spells[spell:id()];
 
-    if (
-        value == nil or
-        spell:isExtended() == true or
-        value:isExtended() == false
-    ) then
+    if value == nil then
         self._spells[spell:id()] = spell;
+
+        self._size = self._size + 1;
     end
 end
 
@@ -222,11 +223,12 @@ function opvp.SpellMap:findBySpellId(spellId)
 end
 
 function opvp.SpellMap:findCrowdControl()
-    local spells = {};
+    local spells = opvp.SpellMap();
 
     for id, spell in pairs(self._spells) do
         if spell:isCrowdControl() == true then
-            table.insert(spells, spell);
+            spells._spells[id] = aura;
+            spells._size = spells._size + 1;
         end
     end
 
@@ -234,11 +236,12 @@ function opvp.SpellMap:findCrowdControl()
 end
 
 function opvp.SpellMap:findHarmful()
-    local spells = {};
+    local spells = opvp.SpellMap();
 
     for id, spell in pairs(self._spells) do
         if spell:isHarmful() == true then
-            table.insert(spells, spell);
+            spells._spells[id] = aura;
+            spells._size = spells._size + 1;
         end
     end
 
@@ -246,11 +249,12 @@ function opvp.SpellMap:findHarmful()
 end
 
 function opvp.SpellMap:findHelpful()
-    local spells = {};
+    local spells = opvp.SpellMap();
 
     for id, spell in pairs(self._spells) do
         if spell:isHelpful() == true then
-            table.insert(spells, spell);
+            spells._spells[id] = aura;
+            spells._size = spells._size + 1;
         end
     end
 
@@ -258,11 +262,12 @@ function opvp.SpellMap:findHelpful()
 end
 
 function opvp.SpellMap:findRaid()
-    local spells = {};
+    local spells = opvp.SpellMap();
 
     for id, spell in pairs(self._spells) do
         if spell:isRaid() == true then
-            table.insert(spells, spell);
+            spells._spells[id] = aura;
+            spells._size = spells._size + 1;
         end
     end
 
@@ -270,7 +275,7 @@ function opvp.SpellMap:findRaid()
 end
 
 function opvp.SpellMap:isEmpty()
-    return opvp.utils.table.isEmpty(self._spells);
+    return self._size == 0;
 end
 
 function opvp.SpellMap:release()
@@ -290,7 +295,7 @@ function opvp.SpellMap:remove(spell)
 end
 
 function opvp.SpellMap:size()
-    return opvp.utils.table.size(self._spells);
+    return self._size;
 end
 
 function opvp.SpellMap:spells()
@@ -306,8 +311,13 @@ function opvp.SpellMap:swap(other)
         return;
     end
 
-    local tmp = self._spells;
+    local tmp     = self._spells;
 
-    self._spells = other._spells;
+    self._spells  = other._spells;
     other._spells = tmp;
+
+    tmp           = self._size;
+
+    self._size    = other._size;
+    other._size   = tmp;
 end
