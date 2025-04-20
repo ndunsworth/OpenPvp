@@ -29,6 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local OPT_TYPES = {
+    [opvp.Option.BITMASK]    = opvp.BitMaskOption,
     [opvp.Option.BOOL]       = opvp.BoolOption,
     [opvp.Option.BUTTON]     = opvp.ButtonOption,
     [opvp.Option.ENUM]       = opvp.EnumOption,
@@ -37,6 +38,7 @@ local OPT_TYPES = {
     [opvp.Option.LABEL]      = opvp.LabelOption,
     [opvp.Option.LAYOUT]     = opvp.LayoutOption,
     [opvp.Option.MATCH_TYPE] = opvp.MatchTypeOption,
+    [opvp.Option.ROLEMASK]   = opvp.RoleMaskOption,
     [opvp.Option.STRING]     = opvp.StringOption
 };
 

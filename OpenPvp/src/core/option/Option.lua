@@ -30,15 +30,17 @@ local opvp = OpenPvp;
 
 opvp.Option = opvp.CreateClass();
 
-opvp.Option.BOOL       = 1;
-opvp.Option.BUTTON     = 2;
-opvp.Option.ENUM       = 3;
-opvp.Option.FLOAT      = 4;
-opvp.Option.INT        = 5;
-opvp.Option.LABEL      = 6;
-opvp.Option.LAYOUT     = 7;
-opvp.Option.MATCH_TYPE = 8;
-opvp.Option.STRING     = 9;
+opvp.Option.BITMASK    =  1;
+opvp.Option.BOOL       =  2;
+opvp.Option.BUTTON     =  3;
+opvp.Option.ENUM       =  4;
+opvp.Option.FLOAT      =  5;
+opvp.Option.INT        =  6;
+opvp.Option.LABEL      =  7;
+opvp.Option.LAYOUT     =  8;
+opvp.Option.MATCH_TYPE =  9;
+opvp.Option.ROLEMASK   = 10;
+opvp.Option.STRING     = 11;
 
 opvp.Option.DISABLED               = bit.lshift(1, 0);
 opvp.Option.DONT_SAVE_FLAG         = bit.lshift(1, 1);
@@ -143,9 +145,9 @@ function opvp.Option:setDescription(description)
 end
 
 function opvp.Option:setEnabled(state)
-    --~ if state == self:isEnabled() then
-        --~ return;
-    --~ end
+    if state == self:isEnabled() then
+        return;
+    end
 
     if state == true then
         self:setFlags(opvp.Option.DISABLED, false);
