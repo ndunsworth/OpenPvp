@@ -148,13 +148,14 @@ function opvp.AuraTracker:_onMemberAurasAdded(member, auras, fullUpdate)
 
         if spell ~= nil then
             self:_onAuraAdded(member, aura, spell);
-        else
-            opvp.printDebug(
-                "opvp.AuraTracker:_onMemberAurasAdded(%s), ignored spell_id=%d, spell=%s",
-                member:nameOrId(),
-                aura:spellId(),
-                aura:name()
-            );
+        --~ else
+            --~ opvp.printDebug(
+                --~ "opvp.AuraTracker:_onMemberAurasAdded(%s), ignored spell_id=%d, spell=%s, duration=%s",
+                --~ member:nameOrId(),
+                --~ aura:spellId(),
+                --~ aura:name(),
+                --~ opvp.time.formatSeconds(aura:duration())
+            --~ );
         end
     end
 end
@@ -169,10 +170,11 @@ function opvp.AuraTracker:_onMemberAurasRemoved(member, auras, fullUpdate)
             self:_onAuraRemoved(member, aura, spell);
         --~ else
             --~ opvp.printDebug(
-                --~ "opvp.AuraTracker:_onMemberAurasRemoved(%s), ignored spell_id=%d, spell=%s",
+                --~ "opvp.AuraTracker:_onMemberAurasRemoved(%s), ignored spell_id=%d, spell=%s, duration=%s",
                 --~ member:nameOrId(),
                 --~ aura:spellId(),
-                --~ aura:name()
+                --~ aura:name(),
+                --~ opvp.time.formatSeconds(aura:duration())
             --~ );
         end
     end
@@ -188,10 +190,11 @@ function opvp.AuraTracker:_onMemberAurasUpdated(member, auras, fullUpdate)
             self:_onAuraUpdated(member, aura, spell);
         --~ else
             --~ opvp.printDebug(
-                --~ "opvp.AuraTracker:_onMemberAurasUpdated(%s), ignored spell_id=%d, spell=%s",
+                --~ "opvp.AuraTracker:_onMemberAurasUpdated(%s), ignored spell_id=%d, spell=%s, duration=%s",
                 --~ member:nameOrId(),
                 --~ aura:spellId(),
-                --~ aura:name()
+                --~ aura:name(),
+                --~ opvp.time.formatSeconds(aura:duration())
             --~ );
         end
     end
