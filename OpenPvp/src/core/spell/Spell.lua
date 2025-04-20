@@ -90,71 +90,74 @@ opvp.SpellProperty = {
 
 };
 
-opvp.SpellTrait.HARMFUL_AURA          = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.HARMFUL);
-opvp.SpellTrait.HELPFUL_AURA          = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.HELPFUL);
+opvp.SpellTrait.BASE_TALENT                = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.TALENT);
+opvp.SpellTrait.HERO_TALENT                = bit.bor(opvp.SpellTrait.HERO, opvp.SpellTrait.TALENT);
+opvp.SpellTrait.SPEC_TALENT                = bit.bor(opvp.SpellTrait.SPEC, opvp.SpellTrait.TALENT);
 
-opvp.SpellTrait.DEFENSIVE             = bit.bor(opvp.SpellTrait.HELPFUL, opvp.SpellTrait.DEFENSIVE);
-opvp.SpellTrait.DEFENSIVE_AURA        = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.DEFENSIVE);
-opvp.SpellTrait.DEFENSIVE_IMMUNITY    = bit.bor(opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellTrait.IMMUNITY);
-opvp.SpellTrait.OFFENSIVE             = bit.bor(opvp.SpellTrait.HARMFUL, opvp.SpellTrait.OFFENSIVE);
-opvp.SpellTrait.OFFENSIVE_AURA        = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.OFFENSIVE);
-opvp.SpellTrait.OFFENSIVE_IMMUNITY    = bit.bor(opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellTrait.IMMUNITY);
+opvp.SpellTrait.HARMFUL_AURA               = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.HARMFUL);
+opvp.SpellTrait.HELPFUL_AURA               = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.HELPFUL);
+opvp.SpellTrait.HELPFUL_IMMUNITY           = bit.bor(opvp.SpellTrait.HELPFUL_AURA, opvp.SpellTrait.IMMUNITY);
 
-opvp.SpellTrait.INTERRUPT             = bit.bor(opvp.SpellTrait.HARMFUL, opvp.SpellTrait.INTERRUPT);
-opvp.SpellTrait.CROWD_CONTROL         = bit.bor(opvp.SpellTrait.HARMFUL_AURA, opvp.SpellTrait.CROWD_CONTROL);
-opvp.SpellTrait.SNARE                 = bit.bor(opvp.SpellTrait.HARMFUL_AURA, opvp.SpellTrait.SNARE);
+opvp.SpellTrait.DEFENSIVE                  = bit.bor(opvp.SpellTrait.HELPFUL, opvp.SpellTrait.DEFENSIVE);
+opvp.SpellTrait.DEFENSIVE_AURA             = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.DEFENSIVE);
+opvp.SpellTrait.DEFENSIVE_IMMUNITY         = bit.bor(opvp.SpellTrait.DEFENSIVE, opvp.SpellTrait.IMMUNITY);
+opvp.SpellTrait.DEFENSIVE_IMMUNITY_AURA    = bit.bor(opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellTrait.IMMUNITY);
+opvp.SpellTrait.OFFENSIVE                  = bit.bor(opvp.SpellTrait.HARMFUL, opvp.SpellTrait.OFFENSIVE);
+opvp.SpellTrait.OFFENSIVE_AURA             = bit.bor(opvp.SpellTrait.AURA, opvp.SpellTrait.OFFENSIVE);
+opvp.SpellTrait.OFFENSIVE_IMMUNITY         = bit.bor(opvp.SpellTrait.OFFENSIVE, opvp.SpellTrait.IMMUNITY);
+opvp.SpellTrait.OFFENSIVE_IMMUNITY_AURA    = bit.bor(opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellTrait.IMMUNITY);
 
-opvp.SpellTrait.RAID_BUFF             = bit.bor(opvp.SpellTrait.HELPFUL_AURA, opvp.SpellTrait.RAID);
+opvp.SpellTrait.CROWD_CONTROL_AURA         = bit.bor(opvp.SpellTrait.HARMFUL_AURA, opvp.SpellTrait.CROWD_CONTROL);
+opvp.SpellTrait.INTERRUPT                  = bit.bor(opvp.SpellTrait.HARMFUL, opvp.SpellTrait.INTERRUPT);
+opvp.SpellTrait.SNARE_AURA                 = bit.bor(opvp.SpellTrait.HARMFUL_AURA, opvp.SpellTrait.SNARE);
 
-opvp.SpellTrait.BASE_TALENT           = bit.bor(opvp.SpellTrait.BASE, opvp.SpellTrait.TALENT);
-opvp.SpellTrait.HERO_TALENT           = bit.bor(opvp.SpellTrait.HERO, opvp.SpellTrait.TALENT);
-opvp.SpellTrait.SPEC_TALENT           = bit.bor(opvp.SpellTrait.SPEC, opvp.SpellTrait.TALENT);
+opvp.SpellTrait.RAID_BUFF                  = bit.bor(opvp.SpellTrait.HELPFUL_AURA, opvp.SpellTrait.RAID);
 
-opvp.SpellProperty.CROWD_CONTROL_ALL  = bit.bor(
-                                            opvp.SpellProperty.DISARM,
-                                            opvp.SpellProperty.DISORIENT,
-                                            opvp.SpellProperty.INCAPACITATE,
-                                            opvp.SpellProperty.KNOCKBACK,
-                                            opvp.SpellProperty.ROOT,
-                                            opvp.SpellProperty.SILENCE,
-                                            opvp.SpellProperty.STUN,
-                                            opvp.SpellProperty.TAUNT
-                                      );
+opvp.SpellProperty.CROWD_CONTROL_ALL       = bit.bor(
+                                                 opvp.SpellProperty.DISARM,
+                                                 opvp.SpellProperty.DISORIENT,
+                                                 opvp.SpellProperty.INCAPACITATE,
+                                                 opvp.SpellProperty.KNOCKBACK,
+                                                 opvp.SpellProperty.ROOT,
+                                                 opvp.SpellProperty.SILENCE,
+                                                 opvp.SpellProperty.STUN,
+                                                 opvp.SpellProperty.TAUNT
+                                           );
 
-opvp.SpellProperty.DEFENSIVE_ALL      = bit.bor(
-                                            opvp.SpellProperty.DEFENSIVE_LOW,
-                                            opvp.SpellProperty.DEFENSIVE_MEDIUM,
-                                            opvp.SpellProperty.DEFENSIVE_HIGH
-                                      );
+opvp.SpellProperty.DEFENSIVE_ALL           = bit.bor(
+                                                 opvp.SpellProperty.DEFENSIVE_LOW,
+                                                 opvp.SpellProperty.DEFENSIVE_MEDIUM,
+                                                 opvp.SpellProperty.DEFENSIVE_HIGH
+                                           );
 
-opvp.SpellProperty.IMMUNITY_ALL       = bit.bor(
-                                            opvp.SpellProperty.DISARM_IMMUNITY,
-                                            opvp.SpellProperty.DISORIENT_IMMUNITY,
-                                            opvp.SpellProperty.INCAPACITATE_IMMUNITY,
-                                            opvp.SpellProperty.KNOCKBACK_IMMUNITY,
-                                            opvp.SpellProperty.MAGIC_IMMUNITY,
-                                            opvp.SpellProperty.PYHSICAL_IMMUNITY,
-                                            opvp.SpellProperty.ROOT_IMMUNITY,
-                                            opvp.SpellProperty.SILENCE_IMMUNITY,
-                                            opvp.SpellProperty.STUN_IMMUNITY,
-                                            opvp.SpellProperty.TAUNT_IMMUNITY
-                                      );
+opvp.SpellProperty.IMMUNITY_ALL            = bit.bor(
+                                                 opvp.SpellProperty.DISARM_IMMUNITY,
+                                                 opvp.SpellProperty.DISORIENT_IMMUNITY,
+                                                 opvp.SpellProperty.INCAPACITATE_IMMUNITY,
+                                                 opvp.SpellProperty.KNOCKBACK_IMMUNITY,
+                                                 opvp.SpellProperty.MAGIC_IMMUNITY,
+                                                 opvp.SpellProperty.PYHSICAL_IMMUNITY,
+                                                 opvp.SpellProperty.ROOT_IMMUNITY,
+                                                 opvp.SpellProperty.SILENCE_IMMUNITY,
+                                                 opvp.SpellProperty.STUN_IMMUNITY,
+                                                 opvp.SpellProperty.TAUNT_IMMUNITY
+                                           );
 
-opvp.SpellProperty.OFFENSIVE_ALL      = bit.bor(
-                                            opvp.SpellProperty.OFFENSIVE_LOW,
-                                            opvp.SpellProperty.OFFENSIVE_MEDIUM,
-                                            opvp.SpellProperty.OFFENSIVE_HIGH
-                                      );
+opvp.SpellProperty.OFFENSIVE_ALL           = bit.bor(
+                                                 opvp.SpellProperty.OFFENSIVE_LOW,
+                                                 opvp.SpellProperty.OFFENSIVE_MEDIUM,
+                                                 opvp.SpellProperty.OFFENSIVE_HIGH
+                                           );
 
-opvp.SpellProperty.DEFENSIVE_IMMUNE   = bit.lshift(
-                                            opvp.SpellProperty.DEFENSIVE_HIGH,
-                                            opvp.SpellProperty.IMMUNITY_ALL
-                                      );
+opvp.SpellProperty.DEFENSIVE_IMMUNE        = bit.lshift(
+                                                 opvp.SpellProperty.DEFENSIVE_HIGH,
+                                                 opvp.SpellProperty.IMMUNITY_ALL
+                                           );
 
-opvp.SpellProperty.OFFENSIVE_IMMUNE   = bit.lshift(
-                                            opvp.SpellProperty.OFFENSIVE_HIGH,
-                                            opvp.SpellProperty.IMMUNITY_ALL
-                                      );
+opvp.SpellProperty.OFFENSIVE_IMMUNE        = bit.lshift(
+                                                 opvp.SpellProperty.OFFENSIVE_HIGH,
+                                                 opvp.SpellProperty.IMMUNITY_ALL
+                                           );
 
 opvp.Spell = opvp.CreateClass();
 
