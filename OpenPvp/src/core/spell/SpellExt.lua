@@ -95,7 +95,7 @@ function opvp.SpellExt:isBase()
 end
 
 function opvp.SpellExt:isCrowdControl()
-    return bit.band(self._traits, opvp.SpellTrait.CROWD_CONTROL) == opvp.SpellTrait.CROWD_CONTROL;
+    return bit.band(self._traits, opvp.SpellTrait.CROWD_CONTROL) ~= 0;
 end
 
 function opvp.SpellExt:isDefensive()
@@ -116,6 +116,10 @@ end
 
 function opvp.SpellExt:isHero()
     return bit.band(self._traits, opvp.SpellTrait.HERO);
+end
+
+function opvp.SpellExt:isImmunity()
+    return bit.band(self._traits, opvp.SpellTrait.IMMUNITY) ~= 0;
 end
 
 function opvp.SpellExt:isInterupt()
