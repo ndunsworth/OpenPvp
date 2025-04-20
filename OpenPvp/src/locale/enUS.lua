@@ -183,6 +183,8 @@ opvp.locale.enUS = {
     MATCH_PLAYER_LOS_CONTROL           = "Match | %1$s CC - %2$s - %6$s (%7$s)",
     MATCH_PLAYER_SPEC_CHANGED          = "Match | %s Spec - %s (|c%s%s %s|r)",
 
+    MATCH_SELF_LOS_CONTROL             = "Match | Player CC - %6$s (%7$s)",
+
     MATCH_SCORE_ARENA                  = "Match Score | %s %s (|c%s%s %s|r) - kb=%d, deaths=%d, dmg=%s, healing=%s",
     MATCH_SCORE_ARENA_RATED            = "Match Score | %s %s (|c%s%s %s|r) - cr=%d/%d/%s, mmr=%d/%d/%s",
     MATCH_SCORE_SHUFFLE                = "Match Score | %s %s (|c%s%s %s|r) - wins=%d, cr=%d/%d/%s, mmr=%d/%d/%s",
@@ -227,13 +229,13 @@ opvp.locale.enUS = {
     PARTY_MBR_JOINED_WITH_SPEC         = "%s | Member Joined - %s (|c%s%s %s|r)",
     PARTY_MBR_LEAVE                    = "%s | Member Left - %s",
     PARTY_MBR_LEAVE_WITH_SPEC          = "%s | Member Left - %s (|c%s%s %s|r)",
-    PARTY_MBR_LOS_CONTROL_WITH_SPEC    = "%s | Member CC (%s %s) - %s (|c%s%s %s|r)",
-    PARTY_MBR_LOS_CONTROL              = "%s | Member CC (%s %s) - %s",
     PARTY_MBR_LOS_CONTROL_WITH_SPEC    = "%1$s | Member CC - %2$s (|c%3$s%4$s %5$s|r) - %6$s (%7$s)",
     PARTY_MBR_LOS_CONTROL              = "%1$s | Member CC - %2$s - %6$s (%7$s)",
     PARTY_MBR_SPEC_CHANGED             = "%s | Member Spec - %s (|c%s%s %s|r)",
     PARTY_CHANGED_TO_PARTY             = "%s | Converted to Party",
     PARTY_CHANGED_TO_RAID              = "%s | Converted to Raid",
+
+    PARTY_SELF_LOS_CONTROL             = "%1$s | Player CC - %6$s (%7$s)",
 
     PLAYER_SPEC                        = "Player | Spec - |c%s%s|r",
     PLAYER_SPEC_CHANGED                = "Player | Spec Changed - |c%s%s|r",
