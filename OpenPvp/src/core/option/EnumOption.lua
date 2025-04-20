@@ -41,7 +41,7 @@ function opvp.EnumOption:init(key, name, description, values)
         self._index = 0;
     end
 
-    self.changed = opvp.Signal(key);
+    self.changed       = opvp.Signal(key);
     self.valuesChanged = opvp.Signal(self._key .. ".valuesChanged");
 end
 
