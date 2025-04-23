@@ -145,8 +145,6 @@ function opvp.CrowdControlCategoryState:_onAuraAdded(aura, spell)
     local applied    = expiration - duration;
     local dr         = self._cat:statusForTime(duration, spell:durationPvp());
 
-    print("_onAuraAdded", aura:duration(), spell:durationPvp(), spell:pvpMultiplier());
-
     local exists = not self._auras:add(aura);
 
     --~ For some reason a Mage Dragon Breath will trigger a Aura Updated
@@ -185,8 +183,6 @@ function opvp.CrowdControlCategoryState:_onAuraAdded(aura, spell)
 end
 
 function opvp.CrowdControlCategoryState:_onAuraUpdated(aura, spell)
-    print("_onAuraUpdated", aura:duration(), spell:durationPvp(), spell:pvpMultiplier());
-
     return self:_onAuraAdded(aura, spell);
 end
 
