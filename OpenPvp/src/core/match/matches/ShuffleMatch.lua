@@ -382,6 +382,13 @@ function opvp.ShuffleMatch:_updateRoundOutcome()
     if gold_info == nil or purp_info == nil then
         self:_setOutcome(opvp.MatchWinner.NONE, nil, opvp.MatchOutcomeType.ROUND);
 
+        opvp.printDebug(
+            "opvp.ShuffleMatch:_updateRoundOutcome(), map=%d, gold_info=%s, purp_info=%s",
+            self:map():instanceId(),
+            tostring(gold_info),
+            tostring(purp_info)
+        );
+
         return;
     end
 
@@ -390,6 +397,13 @@ function opvp.ShuffleMatch:_updateRoundOutcome()
 
     if gold_text == nil or purp_text == nil then
         self:_setOutcome(opvp.MatchWinner.NONE, nil, opvp.MatchOutcomeType.ROUND);
+
+        opvp.printDebug(
+            "opvp.ShuffleMatch:_updateRoundOutcome(), map=%d, gold_info.text=%s, purp_info.text=%s",
+            self:map():instanceId(),
+            tostring(gold_info.text),
+            tostring(purp_info.text)
+        );
 
         return;
     end
