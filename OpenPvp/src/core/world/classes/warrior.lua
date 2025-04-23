@@ -80,7 +80,7 @@ opvp.Class.WARRIOR = opvp.Class(
                     {132404, opvp.SpellTrait.SNARE_AURA, 0, 12},                                                  -- Hastring
                 },
                 talent = {
-                    {107574, opvp.SpellTrait.OFFENSIVE_ARUA, opvp.SpellProperty.OFFENSIVE_MEDIUM, 20},          -- Avatar
+                    {107574, opvp.SpellTrait.OFFENSIVE_ARUA, opvp.SpellProperty.OFFENSIVE_MEDIUM, 20},            -- Avatar
                     {105771, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.ROOT_NO_DR, 1},               -- Charge
                     {5246,   opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.DISORIENT, 8, 0.75},          -- Intimidating Shout
                     {23920,  opvp.SpellTrait.SNARE, 0, 8},                                                        -- Piercing Howl
