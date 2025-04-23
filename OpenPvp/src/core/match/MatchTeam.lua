@@ -139,59 +139,17 @@ function opvp.MatchTeam:mmr()
 end
 
 function opvp.MatchTeam:_initialize(category, guid)
-    self._dampening_found = false;
-    self._dampening_found = self._match:hasDampening();
-
     opvp.Party._initialize(self, category, guid);
+
+    self._dampening_found = false;
 
     if self:isHostile() == true then
         self:_setActive(true);
+
+        self._dampening = false;
+    else
+        self._dampening = self._match:hasDampening();
     end
-end
-
-function opvp.MatchTeam:_onDifficultyChanged(mask)
-    --~ if self:isFriendly() == true then
-        --~ local do_msg = opvp.options.announcements.friendlyParty.difficultyChanged:value();
-        --~ local name;
-
-        --~ if bit.band(mask, opvp.PartyDifficultyType.DUNGEON) ~= 0 then
-            --~ name = GetDifficultyInfo(self:dungeonDifficulty());
-
-            --~ if name ~= nil then
-                --~ opvp.printMessageOrDebug(
-                    --~ do_msg,
-                    --~ opvp.strs.MATCH_DUNGEON_DIFF_CHANGED,
-                    --~ name
-                --~ );
-            --~ end
-        --~ end
-
-        --~ if bit.band(mask, opvp.PartyDifficultyType.RAID) ~= 0 then
-            --~ name = GetDifficultyInfo(self:raidDifficulty());
-
-            --~ if name ~= nil then
-                --~ opvp.printMessageOrDebug(
-                    --~ do_msg,
-                    --~ opvp.strs.MATCH_RAID_DIFF_CHANGED,
-                    --~ name
-                --~ );
-            --~ end
-        --~ end
-
-        --~ if bit.band(mask, opvp.PartyDifficultyType.RAID_LEGACY) ~= 0 then
-            --~ name = GetDifficultyInfo(self:legacyRaidDifficulty());
-
-            --~ if name ~= nil then
-                --~ opvp.printMessageOrDebug(
-                    --~ do_msg,
-                    --~ opvp.strs.MATCH_RAID_LEGACY_DIFF_CHANGED,
-                    --~ name
-                --~ );
-            --~ end
-        --~ end
-    --~ end
-
-    opvp.Party._onDifficultyChanged(self, mask);
 end
 
 function opvp.MatchTeam:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
@@ -211,28 +169,24 @@ function opvp.MatchTeam:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, au
     local aura;
 
     if self._dampening_found == false then
-        for n=1, #aurasAdded do
-            aura = aurasAdded[n];
+        aura = aurasAdded:findOneBySpellId(110310);
 
-            if aura:spellId() == 110310 then
-                self._match:_setDampening(aura:applications() / 100.0);
+        if aura ~= nil then
+            self._match:_setDampening(aura:applications() / 100.0);
 
-                self._dampening_found = true;
+            self._dampening_found = true;
 
-                return;
-            end
+            return;
         end
     end
 
     for n=1, #aurasUpdated do
-        aura = aurasUpdated[n];
+        aura = aurasUpdated:findOneBySpellId(110310);
 
-        if aura:spellId() == 110310 then
+        if aura ~= nil then
             self._match:_setDampening(aura:applications() / 100.0);
 
-            if self._dampening_found == false then
-                self._dampening_found = true;
-            end
+            self._dampening_found = true;
 
             return;
         end
