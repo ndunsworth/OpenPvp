@@ -180,16 +180,14 @@ function opvp.MatchTeam:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, au
         end
     end
 
-    for n=1, #aurasUpdated do
-        aura = aurasUpdated:findOneBySpellId(110310);
+    aura = aurasUpdated:findOneBySpellId(110310);
 
-        if aura ~= nil then
-            self._match:_setDampening(aura:applications() / 100.0);
+    if aura ~= nil then
+        self._match:_setDampening(aura:applications() / 100.0);
 
-            self._dampening_found = true;
+        self._dampening_found = true;
 
-            return;
-        end
+        return;
     end
 end
 
