@@ -43,6 +43,7 @@ opvp.locale.enUS = {
     CLASS_BAR_WITH_ID                  = "Class Bar %d",
     CURRENCY                           = "Currency",
     CURRENT_RATING                     = "Current Rating",
+    DAMPENING                          = "Dampening",
     DISABLED                           = "Disabled",
     DAILY_WIN                          = "Daily Win",
     EPIC_BATTLEGROUND                  = "Epic Battleground",

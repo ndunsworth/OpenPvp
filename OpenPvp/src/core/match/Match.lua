@@ -890,6 +890,16 @@ function opvp.Match:_onOutcomeReady(outcomeType)
 
     if outcomeType == opvp.MatchOutcomeType.ROUND then
         local msg;
+        local round_time = opvp.time.formatSeconds(self:roundElapsedTime());
+
+        if self:hasDampening() == true and self._dampening > 0 then
+            round_time = string.format(
+                "%s @ %d%% %s",
+                round_time,
+                100 * self._dampening,
+                opvp.strs.DAMPENING
+            );
+        end
 
         if self:isWinner() == true then
             msg = opvp.strs.MATCH_ROUND_COMPLETE_WON;
@@ -903,7 +913,7 @@ function opvp.Match:_onOutcomeReady(outcomeType)
             opvp.options.announcements.match.roundComplete:value(),
             msg,
             self:round(),
-            opvp.time.formatSeconds(self:roundElapsedTime())
+            round_time
         );
 
         opvp.match.outcomeReady:emit(self, outcomeType);
