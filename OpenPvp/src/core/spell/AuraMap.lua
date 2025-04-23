@@ -153,7 +153,7 @@ end
 
 function opvp.AuraMap:findOneBySpellId(spellId)
     for id, aura in pairs(self._auras) do
-        if id == spellId then
+        if aura:spellId() == spellId then
             return aura;
         end
     end
