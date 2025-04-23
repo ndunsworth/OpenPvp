@@ -31,7 +31,7 @@ local opvp = OpenPvp;
 
 local opvp_cc_valid_mask = bit.bor(
     opvp.CrowdControlType.DISARM,
-    opvp.CrowdControlType.ROOT,
+    --~ opvp.CrowdControlType.ROOT,
     opvp.CrowdControlType.DISORIENT,
     opvp.CrowdControlType.INCAPACITATE,
     opvp.CrowdControlType.SILENCE,
