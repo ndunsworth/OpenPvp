@@ -160,6 +160,12 @@ function opvp.Party:identifierName()
 end
 
 function opvp.Party:initialize(category, guid)
+    opvp.printDebug(
+        "opvp.Party:initialize(category=%d, guid=%s)",
+        category,
+        tostring(guid)
+    );
+
     if self._initialized == true then
         return;
     end
@@ -361,6 +367,12 @@ function opvp.Party:readyCheck()
 end
 
 function opvp.Party:shutdown()
+    opvp.printDebug(
+        "opvp.Party:disconnect(category=%d, guid=%s)",
+        self._category,
+        self._guid
+    );
+
     if self._initialized == false then
         return;
     end

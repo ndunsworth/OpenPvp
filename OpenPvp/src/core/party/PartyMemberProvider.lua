@@ -58,6 +58,12 @@ function opvp.PartyMemberProvider:affiliation()
 end
 
 function opvp.PartyMemberProvider:connect(category, guid)
+    opvp.printDebug(
+        "opvp.PartyMemberProvider:connect(category=%d, guid=%s)",
+        category,
+        tostring(guid)
+    );
+
     if self._connected == true then
         return;
     end
@@ -74,6 +80,12 @@ function opvp.PartyMemberProvider:category()
 end
 
 function opvp.PartyMemberProvider:disconnect()
+    opvp.printDebug(
+        "opvp.PartyMemberProvider:disconnect(category=%d, guid=%s)",
+        self._category,
+        self._guid
+    );
+
     if self._connected == false then
         return;
     end
