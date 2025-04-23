@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local function opvp_options_announcements_init()
     local opvp_chat_filter_icon = opvp.utils.textureAtlastMarkup("transmog-icon-chat", 14, 14);
     local opvp_chat_filter_tooltip = "Enabling a feature may remove system chat messages (marked with " .. opvp_chat_filter_icon ..")";
+    local opvp_test_icon = opvp.utils.textureAtlastMarkup("QuestNormal", 14, 14);
 
     opvp.options.announcements = {};
 
@@ -186,7 +187,8 @@ local function opvp_options_announcements_init()
     opvp.options.announcements.player.pvpCurrencyCappedTest = opvp.options.announcements.player.category:createOption(
         opvp.Option.BUTTON,
         "PvpCurrencyCappedTest",
-        opvp_chat_filter_icon
+        opvp_test_icon,
+        "Test Notification"
     );
 
     opvp.options.announcements.player.pvpCurrencyCappedTest:setFlags(opvp.Option.NEW_LINE_FLAG, false);

@@ -424,6 +424,7 @@ src/feature/audio/TrinketRacialReadySoundEffect.lua
 
 src/feature/ui/DisablePlayerCastBar.lua
 src/feature/ui/HidePrestigeBadges.lua
+src/feature/ui/MoveLossOfControlNotification.lua
 
 src/feature/match/AutoDeclineInviteMatchFeature.lua
 src/feature/match/ChatDisableMatchFeature.lua

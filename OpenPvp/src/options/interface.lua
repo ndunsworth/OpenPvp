@@ -29,6 +29,8 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function opvp_options_interface_init()
+    local opvp_test_icon = opvp.utils.textureAtlastMarkup("QuestNormal", 14, 14);
+
     opvp.options.interface = {};
 
     opvp.options.interface.category = opvp.options.category:createCategory(
@@ -72,6 +74,23 @@ local function opvp_options_interface_init()
         "Hides the honor level prestige badge on player frames.",
         false
     );
+
+    opvp.options.interface.frames.moveLossOfControlNotification = opvp.options.interface.frames.category:createOption(
+        opvp.Option.BOOL,
+        "MoveLossOfControlNotification",
+        "Move Loss of Control Notification",
+        "Moves the Loss of Control notification higher up your screen.",
+        false
+    );
+
+    opvp.options.interface.frames.moveLossOfControlNotificationTest = opvp.options.interface.frames.category:createOption(
+        opvp.Option.BUTTON,
+        "MoveLossOfControlNotificationTest",
+        opvp_test_icon,
+        "Test Notification"
+    );
+
+    opvp.options.interface.frames.moveLossOfControlNotificationTest:setFlags(opvp.Option.NEW_LINE_FLAG, false);
 
     opvp.options.interface.frames.prestigeBadgesHide:setFlags(
         opvp.Option.LOCKED_DURING_COMBAT,
