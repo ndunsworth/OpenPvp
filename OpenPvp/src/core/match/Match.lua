@@ -831,7 +831,7 @@ function opvp.Match:_onMatchStateChanged(status, expected)
     return false;
 end
 
-function opvp.Match:_onMemberTrintetUsed(member, spellId)
+function opvp.Match:_onMemberTrintetUsed(member, spellId, timestamp)
     local cls = member:classInfo();
 
     if member:isFriendly() == true then
@@ -882,7 +882,7 @@ function opvp.Match:_onMemberTrintetUsed(member, spellId)
         end
     end
 
-    opvp.match.playerTrinket:emit(member, spellId);
+    opvp.match.playerTrinket:emit(member, spellId, timestamp);
 end
 
 function opvp.Match:_onOutcomeReady(outcomeType)
@@ -963,8 +963,14 @@ function opvp.Match:_onStopTimer(timerType)
     end
 end
 
-function opvp.Match:_onTrintetUsed(guid, name, spellId, hostile)
-    local member = nil;
+function opvp.Match:_onTrintetUsed(
+    timestamp,
+    guid,
+    name,
+    spellId,
+    hostile
+)
+    local member;
 
     if hostile == true then
         member = self:findOpponentByGuid(guid);
@@ -973,7 +979,7 @@ function opvp.Match:_onTrintetUsed(guid, name, spellId, hostile)
     end
 
     if member ~= nil then
-        self:_onMemberTrintetUsed(member, spellId);
+        self:_onMemberTrintetUsed(member, spellId, timestamp);
     end
 end
 

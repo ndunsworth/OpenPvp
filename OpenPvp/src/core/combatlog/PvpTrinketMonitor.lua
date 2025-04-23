@@ -92,6 +92,7 @@ function opvp.PvpTrinketMonitor:triggered(event)
     end
 
     self.trinketUsed:emit(
+        event.timestamp,
         event.sourceGUID,
         event.sourceName,
         spell_id,

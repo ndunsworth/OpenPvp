@@ -78,7 +78,11 @@ function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchExit()
     self:_setMonitorConnected(true);
 end
 
-function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId)
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchTrinketUsed(
+    member,
+    spellId,
+    timestamp
+)
     if (
         member:isHostile() == false and
         member:isRaceKnown() == true and
@@ -88,7 +92,13 @@ function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchTrinketUsed(member,
     end
 end
 
-function opvp.private.FriendlyTrinketUsedSoundEffect:_onTrintetUsed(guid, name, spellId, hostile)
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onTrintetUsed(
+    timestamp,
+    guid,
+    name,
+    spellId,
+    hostile
+)
     if hostile == true or guid == opvp.player.guid() then
         return;
     end
