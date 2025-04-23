@@ -151,6 +151,16 @@ function opvp.AuraMap:findHelpful()
     return auras;
 end
 
+function opvp.AuraMap:findOneBySpellId(spellId)
+    for id, aura in pairs(self._auras) do
+        if id == spellId then
+            return aura;
+        end
+    end
+
+    return nil;
+end
+
 function opvp.AuraMap:isEmpty()
     return self._size == 0;
 end
