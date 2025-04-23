@@ -62,7 +62,7 @@ COMBAT_LOG_EVENT_UNFILTERED {
     print(CombatLogGetCurrentEventInfo());
 end
 
-local opvp_dbg_auras_enabled = false;
+local opvp_dbg_auras;
 local opvp_dbg_combatlog;
 
 opvp.OpenPvpRootCmd = opvp.CreateClass(opvp.GroupAddonCommand);
@@ -78,33 +78,25 @@ end
 opvp.cmds = opvp.OpenPvpRootCmd("OpenPvp");
 
 local function opvp_init_dbg_slash_cmds()
-    local function opvp_dbg_auras(unitId, info)
-         print("opvp.event.UNIT_AURA", unitId);
-
-         DevTools_Dump(info)
-    end
+    --~ opvp_dbg_auras = opvp.DebugAuraTracker();
 
     opvp_dbg_combatlog = opvp.private.DBGCombatLogConnection();
 
     local dbg_cmd = opvp.GroupAddonCommand("dbg", "Debug commands");
 
-    dbg_cmd:addCommand(
-        opvp.FuncAddonCommand(
-            function(editbox, args)
-                if opvp_dbg_auras_enabled == false then
-                    opvp.event.UNIT_AURA:connect(opvp_dbg_auras);
-
-                    opvp_dbg_auras_enabled = true;
-                else
-                    opvp.event.UNIT_AURA:disconnect(opvp_dbg_auras);
-
-                    opvp_dbg_auras_enabled = false;
-                end
-            end,
-            "auras",
-            "Prints UNIT_AURA event information"
-        )
-    );
+    --~ dbg_cmd:addCommand(
+        --~ opvp.FuncAddonCommand(
+            --~ function(editbox, args)
+                --~ if opvp_dbg_auras:isConnected() == false then
+                    --~ opvp_dbg_auras:connect(opvp.party.auraServer());
+                --~ else
+                    --~ opvp_dbg_auras:disconnect();
+                --~ end
+            --~ end,
+            --~ "auras",
+            --~ "Prints UNIT_AURA event information"
+        --~ )
+    --~ );
 
     dbg_cmd:addCommand(
         opvp.FuncAddonCommand(

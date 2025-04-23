@@ -102,7 +102,7 @@ opvp.Class.MAGE = opvp.Class(
                     {31661,  opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.DISORIENT, 3},               -- Dragon's Breath
                     {157997, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.ROOT, 3},                    -- Ice Nova
                     {113724, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.INCAPACITATE, 6, 1, false},  -- Ring of Frost
-                    {389794, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.STUN, 4, 1, false},               -- Snowdrift
+                    {389794, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.STUN, 4, 1},                      -- Snowdrift
                 }
             },
             helpful = {
@@ -115,7 +115,7 @@ opvp.Class.MAGE = opvp.Class(
                     {80353,  opvp.SpellTrait.RAID_BUFF, opvp.SpellProperty.OFFENSIVE_HIGH, 40},                  -- Time Warp
                 },
                 talent = {
-                    {342247, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_MEDIUM, 10},           -- Alter Time
+                    {342246, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_MEDIUM, 10},           -- Alter Time
                     {212801},                                                                                    -- Displacement
                     {110960, 0, 0, 20},                                                                          -- Greater Invisiblity (stealth)
                     {45438,  opvp.SpellTrait.DEFENSIVE_IMMUNITY_AURA, opvp.SpellProperty.DEFENSIVE_IMMUNE, 10},  -- Ice Block

@@ -35,6 +35,9 @@ function opvp.GenericPartyMemberProvider:init()
 
     self._members           = opvp.List();
     self._cache             = opvp.List();
+    self._auras_new         = opvp.AuraMap();
+    self._auras_mod         = opvp.AuraMap();
+    self._auras_rem         = opvp.AuraMap();
     self._player            = nil;
     self._leader            = nil;
 end
@@ -596,9 +599,30 @@ function opvp.GenericPartyMemberProvider:_onUnitAura(unitId, info)
         return;
     end
 
-    local new_auras, mod_auras, rem_auras, isfull = member:_updateAuras(info);
+    self._auras_new:clear();
+    self._auras_mod:clear();
+    self._auras_rem:clear();
 
-    self:_onMemberAuraUpdate(member, new_auras, mod_auras, rem_auras, isfull);
+    local isfull = member:_updateAuras(
+        info,
+        self._auras_new,
+        self._auras_mod,
+        self._auras_rem
+    );
+
+    if (
+        self._auras_new:isEmpty() == false or
+        self._auras_mod:isEmpty() == false or
+        self._auras_rem:isEmpty() == false
+    ) then
+        self:_onMemberAuraUpdate(
+            member,
+            self._auras_new,
+            self._auras_mod,
+            self._auras_rem,
+            isfull
+        );
+    end
 end
 
 function opvp.GenericPartyMemberProvider:_onUnitConnection(unitId, isConnected)

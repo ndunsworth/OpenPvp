@@ -34,7 +34,35 @@ local spec_info = {
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 12981,
-    icon   = "Interface/Icons/ability_warrior_savageblow"
+    icon   = "Interface/Icons/ability_warrior_savageblow",
+    spells = {
+        harmful = {
+            talent = {
+                {227847, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_IMMUNE, 5},     -- Bladestorm
+            },
+            hero = {
+                {                                                                                     -- Demolish
+                    436358,
+                    opvp.SpellTrait.OFFENSIVE_IMMUNITY_AURA,
+                    bit.bor(opvp.SpellProperty.KNOCKBACK_IMMUNITY, opvp.SpellProperty.STUN_IMMUNITY),
+                    2
+                },
+            }
+        },
+        helpful = {
+            talent = {
+                {118038, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_HIGH, 8},       -- Die by the Sword
+                {190456, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 5},        -- Ignore Pain
+            }
+        }
+    },
+    auras = {
+        harmful = {
+            hero = {
+                {429639, opvp.SpellTrait.SNARE_AURA, 0, 4},                                           -- Boneshaker
+            }
+        },
+    },
 };
 
 opvp.ClassSpec.ARMS_WARRIOR = opvp.ClassSpec(spec_info);

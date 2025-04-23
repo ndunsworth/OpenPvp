@@ -34,7 +34,26 @@ local spec_info = {
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 59081,
-    icon   = "Interface/Icons/ability_warrior_defensivestance"
+    icon   = "Interface/Icons/ability_warrior_defensivestance",
+    spells = {
+        harmful = {
+            talent = {
+                {385954, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 4},          -- Shield Charge
+            },
+            pvp = {
+                {199042, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.ROOT, 4},          -- Thunderstruck
+            }
+        },
+        helpful = {
+            talent = {
+                {12975,  opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_HIGH, 8},    -- Last Stand
+                {871,    opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_HIGH, 8},    -- Shield Wall
+            },
+            pvp = {
+                {213871, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_MEDIUM, 60}, -- Bodyguard
+            }
+        }
+    }
 };
 
 opvp.ClassSpec.PROTECTION_WARRIOR = opvp.ClassSpec(spec_info);

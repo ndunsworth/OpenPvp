@@ -168,7 +168,7 @@ function opvp.AuraMap:remove(aura)
         if self._auras[aura] ~= nil then
             self._auras[aura] = nil;
 
-            self._count = self._size - 1;
+            self._size = self._size - 1;
 
             return true;
         end
@@ -176,7 +176,7 @@ function opvp.AuraMap:remove(aura)
         if self._auras[aura:id()] ~= nil then
             self._auras[aura:id()] = nil;
 
-            self._count = self._size - 1;
+            self._size = self._size - 1;
 
             return true;
         end

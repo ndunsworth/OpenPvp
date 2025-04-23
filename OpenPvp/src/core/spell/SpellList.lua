@@ -78,6 +78,34 @@ function opvp.SpellList:findCrowdControl()
     return spells;
 end
 
+function opvp.SpellList:findDefensive()
+    local spells = opvp.SpellMap();
+
+    for n=1, self._spells:size() do
+        spell = self._spells:item(n);
+
+        if spell:isDefensive() == true then
+            table.insert(spells, spell);
+        end
+    end
+
+    return spells;
+end
+
+function opvp.SpellList:findDefensiveOrOffensive()
+    local spells = opvp.SpellMap();
+
+    for n=1, self._spells:size() do
+        spell = self._spells:item(n);
+
+        if spell:isDefensiveOrOffensive() == true then
+            table.insert(spells, spell);
+        end
+    end
+
+    return spells;
+end
+
 function opvp.SpellList:findHarmful()
     local spells = {};
 
@@ -119,6 +147,20 @@ function opvp.SpellList:findRaid()
         spell = self._spells:item(n);
 
         if spell:isRaid() == true then
+            table.insert(spells, spell);
+        end
+    end
+
+    return spells;
+end
+
+function opvp.SpellList:findOffensive()
+    local spells = opvp.SpellMap();
+
+    for n=1, self._spells:size() do
+        spell = self._spells:item(n);
+
+        if spell:findOffensive() == true then
             table.insert(spells, spell);
         end
     end

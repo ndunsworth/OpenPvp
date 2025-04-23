@@ -34,7 +34,44 @@ local spec_info = {
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_MAGIC,
     sound  = 170913,
-    icon   = "Interface/Icons/ability_demonhunter_specdps"
+    icon   = "Interface/Icons/ability_demonhunter_specdps",
+    spells = {
+        harmful = {
+            talent = {
+                {188499, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_LOW},         -- Blade Dance
+                {188499, opvp.SpellTrait.OFFENSIVE, opvp.SpellProperty.OFFENSIVE_MEDIUM},           -- Essence Break
+                {198013, opvp.SpellTrait.OFFENSIVE, opvp.SpellProperty.OFFENSIVE_MEDIUM},           -- Eye Beam
+                {211881, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 3},           -- Fel Eruption
+            },
+            pvp = {
+                {205630, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 5},           -- Illidan's Grasp
+                {206804, opvp.SpellTrait.OFFENSIVE, opvp.SpellProperty.OFFENSIVE_HIGH, 10},         -- Rain from Above
+            }
+        },
+        helpful = {
+            base = {
+                {212800, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_MEDIUM, 10}, -- Blur
+            },
+            pvp = {
+                {196555, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_IMMUNE_DMG}, -- Netherwalk
+            }
+        }
+    },
+    auras = {
+        harmful = {
+            hero = {
+                {247121, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 5},     -- Blade Ward
+            },
+            talent = {
+                {247121, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN_NO_DR, 3},    -- Metamorphosis (stun)
+            }
+        },
+        helpful = {
+            pvp = {
+                {354610, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_IMMUNE_CC},  -- Glimpse
+            }
+        }
+    }
 };
 
 opvp.ClassSpec.HAVOC_DEMON_HUNTER = opvp.ClassSpec(spec_info);

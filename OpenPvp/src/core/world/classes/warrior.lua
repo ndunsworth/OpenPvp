@@ -76,27 +76,47 @@ opvp.Class.WARRIOR = opvp.Class(
         },
         spells = {
             harmful = {
+                base = {
+                    {132404, opvp.SpellTrait.SNARE_AURA, 0, 12},                                                  -- Hastring
+                },
                 talent = {
-                    {107574, opvp.SpellTrait.OFFSENSIVE_ARUA, opvp.SpellProperty.OFFSENSIVE_MEDIUM, 20},          -- Avatar
+                    {107574, opvp.SpellTrait.OFFENSIVE_ARUA, opvp.SpellProperty.OFFENSIVE_MEDIUM, 20},          -- Avatar
+                    {105771, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.ROOT_NO_DR, 1},               -- Charge
                     {5246,   opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.DISORIENT, 8, 0.75},          -- Intimidating Shout
                     {23920,  opvp.SpellTrait.SNARE, 0, 8},                                                        -- Piercing Howl
                     {132168, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 2},                     -- Shockwave
                     {132169, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 4, 0.75},               -- Storm Bolt
+                },
+                pvp = {
+                    {236077, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.DISARM, 5},                   -- Disarm
+                    {206572, opvp.SpellTrait.CROWD_CONTROL, opvp.SpellProperty.KNOCKBACK},                        -- Dragon Charge
                 }
             },
             helpful = {
+                base = {
+                    {132404, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 6},                -- Shield Block
+                },
                 talent = {
-                    {                                                                                             -- Berserker Shout
-                        384100,
-                        opvp.SpellTrait.AURA,
+                    {                                                                                             -- Berserker Rage
+                        18499,
+                        opvp.SpellTrait.HELPFUL_IMMUNITY,
                         bit.bor(
                             opvp.SpellProperty.DISORIENT_IMMUNITY,
-                            opvp.SpellProperty.DEFENSIVE_LOW
+                            opvp.SpellProperty.INCAPACITATE_IMMUNITY
+                        ),
+                        6
+                    },
+                    {                                                                                             -- Berserker Shout
+                        384100,
+                        opvp.SpellTrait.HELPFUL_IMMUNITY,
+                        bit.bor(
+                            opvp.SpellProperty.DISORIENT_IMMUNITY,
+                            opvp.SpellProperty.INCAPACITATE_IMMUNITY
                         ),
                         6
                     },
                     {386208, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 10},               -- Defensive Stance
-                    {316531, opvp.SpellTrait.DEFENSIVE_IMMUNITY, opvp.SpellProperty.PYHSICAL_IMMUNITY, 6, false}, -- Intervene
+                    {316531, opvp.SpellTrait.DEFENSIVE_IMMUNITY, opvp.SpellProperty.PYHSICAL_IMMUNITY, 6},        -- Intervene
                     {97463,  opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 10},               -- Rallying Cry
                     {23920,  opvp.SpellTrait.DEFENSIVE_IMMUNITY_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 5},       -- Spell Reflection
                 }

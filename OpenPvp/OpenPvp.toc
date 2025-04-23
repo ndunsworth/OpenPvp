@@ -1,6 +1,6 @@
-## Interface: 110100, 110007, 110005
+## Interface: 110100, 110105
 ## Title: OpenPvp
-## Version: 1.0.7
+## Version: 1.0.8
 ## IconTexture: Interface/Icons/achievement_pvp_legion08
 ## Category-enUS: PvP
 ## Notes:
@@ -362,7 +362,6 @@ src/core/party/providers/TestPartyMemberProvider.lua
 src/core/party/providers/PvpTestPartyMemberProvider.lua
 
 src/core/match/Match.lua
-src/core/match/MatchAuraTrackerConfig.lua
 src/core/match/MatchDescription.lua
 src/core/match/MatchFeature.lua
 src/core/match/MatchManager.lua
@@ -387,14 +386,6 @@ src/core/match/matches/ArenaMatch.lua
 src/core/match/matches/ShuffleMatch.lua
 src/core/match/matches/BattlegroundMatch.lua
 
-src/core/tracker/AuraTracker.lua
-src/core/tracker/AuraTrackerConnection.lua
-src/core/tracker/PartyAuraTracker.lua
-src/core/tracker/PartyAuraTrackerConnection.lua
-src/core/tracker/ClassConfigAuraTracker.lua
-src/core/tracker/CombatLevelTracker.lua
-src/core/tracker/CrowdControlTracker.lua
-
 src/core/match/namespace.lua
 src/core/queue/namespace.lua
 src/core/party/namespace.lua
@@ -406,8 +397,6 @@ src/options/announcements.lua
 src/options/audio.lua
 src/options/interface.lua
 src/options/match.lua
-
-src/feature/announcement/PartyMemberCrowdControlled.lua
 
 src/feature/audio/effect.lua
 src/feature/audio/SoundEffect.lua
@@ -427,10 +416,8 @@ src/feature/audio/FFAZoneSoundEffect.lua
 src/feature/audio/QueueReadyFailSoundEffect.lua
 src/feature/audio/QueueReadySoundEffect.lua
 src/feature/audio/TeammateBattlecrySoundEffect.lua
-src/feature/audio/TeammateBurstingSoundEffect.lua
 src/feature/audio/TeammateCongratsSoundEffect.lua
 src/feature/audio/TeammateDeathSoundEffect.lua
-src/feature/audio/TeammateEnemyBurstingSoundEffect.lua
 src/feature/audio/TeammateGreetingsSoundEffect.lua
 src/feature/audio/TrinketReadySoundEffect.lua
 src/feature/audio/TrinketRacialReadySoundEffect.lua

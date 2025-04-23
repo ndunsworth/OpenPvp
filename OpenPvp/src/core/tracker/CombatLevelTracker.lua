@@ -28,10 +28,10 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.CombatLevelTracker = opvp.CreateClass(opvp.PartyAuraTrackerConnection);
+opvp.CombatLevelTracker = opvp.CreateClass(opvp.ClassAuraTracker);
 
 function opvp.CombatLevelTracker:init()
-    opvp.PartyAuraTrackerConnection.init(self);
+    opvp.ClassAuraTracker.init(self);
 
     self.memberDefensiveAdded       = opvp.Signal("opvp.CombatLevelTracker.memberDefensiveAdded");
     self.memberDefensiveRemoved     = opvp.Signal("opvp.CombatLevelTracker.memberDefensiveRemoved");
@@ -43,32 +43,38 @@ function opvp.CombatLevelTracker:init()
     self.memberOffensiveLevelUpdate = opvp.Signal("opvp.CombatLevelTracker.memberOffensiveLevelUpdate");
 end
 
-function opvp.CombatLevelTracker:_clearMember(member)
-
+function opvp.CombatLevelTracker:aurasForClass(class)
+    return class:auras():findDefensiveOrOffensive();
 end
 
-function opvp.CombatLevelTracker:_onAuraAdded(member, aura, spell)
+function opvp.CombatLevelTracker:aurasForSpec(spec)
+    return spec:auras():findDefensiveOrOffensive();
+end
+
+function opvp.CombatLevelTracker:_onMemberAuraAdded(member, aura, spell)
     if spell:isDefensive() == true then
-        self:_onAuraDefensiveAdded(member, aura, spell);
+        self:_onMemberAuraDefensiveAdded(member, aura, spell);
     end
 
     if spell:isOffensive() == true then
-        self:_onAuraOffensiveAdded(member, aura, spell);
+        self:_onMemberAuraOffensiveAdded(member, aura, spell);
     end
 end
 
-function opvp.CombatLevelTracker:_onAuraDefensiveAdded(member, aura, spell)
-    opvp.printDebug(
-        "opvp.CombatLevelTracker:_onAuraDefensiveAdded(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        opvp.time.formatSeconds(aura:duration())
-    );
-
+function opvp.CombatLevelTracker:_onMemberAuraDefensiveAdded(member, aura, spell)
     local state = member:defensiveState();
 
     local new_level, old_level = state:_onAuraAdded(aura, spell);
+
+    opvp.printDebug(
+        "opvp.CombatLevelTracker:_onMemberAuraDefensiveAdded(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s, newLevel=%d, oldLevel=%d",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        opvp.time.formatSeconds(aura:duration()),
+        new_level,
+        old_level
+    );
 
     self.memberDefensiveAdded:emit(member, aura, spell);
 
@@ -77,18 +83,20 @@ function opvp.CombatLevelTracker:_onAuraDefensiveAdded(member, aura, spell)
     end
 end
 
-function opvp.CombatLevelTracker:_onAuraOffensiveAdded(member, aura, spell)
-    opvp.printDebug(
-        "opvp.CombatLevelTracker:_onAuraOffensiveAdded(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        opvp.time.formatSeconds(aura:duration())
-    );
-
+function opvp.CombatLevelTracker:_onMemberAuraOffensiveAdded(member, aura, spell)
     local state = member:offensiveState();
 
     local new_level, old_level = state:_onAuraAdded(aura, spell);
+
+    opvp.printDebug(
+        "opvp.CombatLevelTracker:_onMemberAuraOffensiveAdded(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s, newLevel=%d, oldLevel=%d",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        opvp.time.formatSeconds(aura:duration()),
+        new_level,
+        old_level
+    );
 
     self.memberOffensiveAdded:emit(member, aura, spell);
 
@@ -97,28 +105,30 @@ function opvp.CombatLevelTracker:_onAuraOffensiveAdded(member, aura, spell)
     end
 end
 
-function opvp.CombatLevelTracker:_onAuraRemoved(member, aura, spell)
+function opvp.CombatLevelTracker:_onMemberAuraRemoved(member, aura, spell)
     if spell:isDefensive() == true then
-        self:_onAuraDefensiveRemoved(member, aura, spell);
+        self:_onMemberAuraDefensiveRemoved(member, aura, spell);
     end
 
     if spell:isOffensive() == true then
-        self:_onAuraOffensiveRemoved(member, aura, spell);
+        self:_onMemberAuraOffensiveRemoved(member, aura, spell);
     end
 end
 
-function opvp.CombatLevelTracker:_onAuraDefensiveRemoved(member, aura, spell)
-    opvp.printDebug(
-        "opvp.CombatLevelTracker:_onAuraDefensiveRemoved(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        opvp.time.formatSeconds(aura:duration())
-    );
-
+function opvp.CombatLevelTracker:_onMemberAuraDefensiveRemoved(member, aura, spell)
     local state = member:defensiveState();
 
     local new_level, old_level = state:_onAuraRemoved(aura, spell);
+
+    opvp.printDebug(
+        "opvp.CombatLevelTracker:_onMemberAuraDefensiveRemoved(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s, newLevel=%d, oldLevel=%d",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        opvp.time.formatSeconds(aura:duration()),
+        new_level,
+        old_level
+    );
 
     self.memberDefensiveRemoved:emit(member, aura, spell);
 
@@ -127,18 +137,20 @@ function opvp.CombatLevelTracker:_onAuraDefensiveRemoved(member, aura, spell)
     end
 end
 
-function opvp.CombatLevelTracker:_onAuraOffensiveRemoved(member, aura, spell)
-    opvp.printDebug(
-        "opvp.CombatLevelTracker:_onAuraOffensiveRemoved(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        opvp.time.formatSeconds(aura:duration())
-    );
-
+function opvp.CombatLevelTracker:_onMemberAuraOffensiveRemoved(member, aura, spell)
     local state = member:offensiveState();
 
     local new_level, old_level = state:_onAuraRemoved(aura, spell);
+
+    opvp.printDebug(
+        "opvp.CombatLevelTracker:_onMemberAuraOffensiveRemoved(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s, newLevel=%d, oldLevel=%d",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        opvp.time.formatSeconds(aura:duration()),
+        new_level,
+        old_level
+    );
 
     self.memberOffensiveRemoved:emit(member, aura, spell);
 
@@ -147,29 +159,31 @@ function opvp.CombatLevelTracker:_onAuraOffensiveRemoved(member, aura, spell)
     end
 end
 
-function opvp.CombatLevelTracker:_onAuraUpdated(member, aura, spell)
+function opvp.CombatLevelTracker:_onMemberAuraUpdated(member, aura, spell)
     if spell:isDefensive() == true then
-        self:_onAuraDefensiveUpdated(member, aura, spell);
+        self:_onMemberAuraDefensiveUpdated(member, aura, spell);
     end
 
     if spell:isOffensive() == true then
-        self:_onAuraOffensiveUpdated(member, aura, spell);
+        self:_onMemberAuraOffensiveUpdated(member, aura, spell);
         return;
     end
 end
 
-function opvp.CombatLevelTracker:_onAuraDefensiveUpdated(member, aura, spell)
-    opvp.printDebug(
-        "opvp.CombatLevelTracker:_onAuraDefensiveUpdated(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        opvp.time.formatSeconds(aura:duration())
-    );
-
+function opvp.CombatLevelTracker:_onMemberAuraDefensiveUpdated(member, aura, spell)
     local state = member:defensiveState();
 
     local new_level, old_level = state:_onAuraUpdated(aura, spell);
+
+    opvp.printDebug(
+        "opvp.CombatLevelTracker:_onMemberAuraDefensiveUpdated(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s, newLevel=%d, oldLevel=%d",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        opvp.time.formatSeconds(aura:duration()),
+        new_level,
+        old_level
+    );
 
     self.memberDefensiveUpdated:emit(member, aura, spell);
 
@@ -178,18 +192,20 @@ function opvp.CombatLevelTracker:_onAuraDefensiveUpdated(member, aura, spell)
     end
 end
 
-function opvp.CombatLevelTracker:_onAuraOffensiveUpdated(member, aura, spell)
-    opvp.printDebug(
-        "opvp.CombatLevelTracker:_onAuraOffensiveUpdated(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        opvp.time.formatSeconds(aura:duration())
-    );
-
+function opvp.CombatLevelTracker:_onMemberAuraOffensiveUpdated(member, aura, spell)
     local state = member:offensiveState();
 
     local new_level, old_level = state:_onAuraUpdated(aura, spell);
+
+    opvp.printDebug(
+        "opvp.CombatLevelTracker:_onMemberAuraOffensiveUpdated(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s, newLevel=%d, oldLevel=%d",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        opvp.time.formatSeconds(aura:duration()),
+        new_level,
+        old_level
+    );
 
     self.memberOffensiveUpdated:emit(member, aura, spell);
 

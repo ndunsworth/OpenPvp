@@ -60,7 +60,7 @@ function opvp.CombatLevelState:_onAuraAdded(aura, spell)
 
     local level_map = self._levels[aura_level];
 
-    if level_map == nil or level_map:add(spell) == false then
+    if level_map == nil or level_map:add(aura) == false then
         return cur_level, cur_level;
     end
 
@@ -88,7 +88,7 @@ function opvp.CombatLevelState:_onAuraRemoved(aura, spell)
     end
 
     if (
-        level_map:remove(spell) == false or
+        level_map:remove(aura) == false or
         level_map:isEmpty() == false
     ) then
         return cur_level, cur_level;
@@ -111,9 +111,9 @@ function opvp.DefensiveCombatLevelState:init()
     opvp.CombatLevelState.init(self);
 
     self._levels = {
-        [opvp.SpellProperty.DEFENSIVE_LOW]    = opvp.SpellRefMap(),
-        [opvp.SpellProperty.DEFENSIVE_MEDIUM] = opvp.SpellRefMap(),
-        [opvp.SpellProperty.DEFENSIVE_HIGH]   = opvp.SpellRefMap()
+        [opvp.SpellProperty.DEFENSIVE_LOW]    = opvp.AuraMap(),
+        [opvp.SpellProperty.DEFENSIVE_MEDIUM] = opvp.AuraMap(),
+        [opvp.SpellProperty.DEFENSIVE_HIGH]   = opvp.AuraMap()
     };
 end
 
@@ -147,9 +147,9 @@ function opvp.OffensiveCombatLevelState:init()
     opvp.CombatLevelState.init(self);
 
     self._levels = {
-        [opvp.SpellProperty.OFFENSIVE_LOW]    = opvp.SpellRefMap(),
-        [opvp.SpellProperty.OFFENSIVE_MEDIUM] = opvp.SpellRefMap(),
-        [opvp.SpellProperty.OFFENSIVE_HIGH]   = opvp.SpellRefMap()
+        [opvp.SpellProperty.OFFENSIVE_LOW]    = opvp.AuraMap(),
+        [opvp.SpellProperty.OFFENSIVE_MEDIUM] = opvp.AuraMap(),
+        [opvp.SpellProperty.OFFENSIVE_HIGH]   = opvp.AuraMap()
     };
 end
 

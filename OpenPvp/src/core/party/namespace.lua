@@ -103,17 +103,17 @@ function opvp.party.active()
     return opvp.party.party();
 end
 
-function opvp.party.auraTracker()
-    return opvp_party_mgr_singleton:auraTracker();
-end
+--~ function opvp.party.auraServer()
+    --~ return opvp_party_mgr_singleton:auraServer();
+--~ end
 
-function opvp.party.ccTracker()
-    return opvp_party_mgr_singleton:ccTracker();
-end
+--~ function opvp.party.ccTracker()
+    --~ return opvp_party_mgr_singleton:ccTracker();
+--~ end
 
-function opvp.party.combatLevelTracker()
-    return opvp_party_mgr_singleton:combatLevelTracker();
-end
+--~ function opvp.party.combatLevelTracker()
+    --~ return opvp_party_mgr_singleton:combatLevelTracker();
+--~ end
 
 function opvp.party.findMemberByGuid(guid, category)
     return opvp_party_mgr_singleton:findMemberByGuid(guid, category);

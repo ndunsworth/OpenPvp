@@ -78,6 +78,10 @@ function opvp.SpellExt:hasRange()
     return bit.band(self._traits, opvp.SpellTrait.RANGE) ~= 0;
 end
 
+function opvp.SpellExt:hasNoDr()
+    return bit.band(self._traits, opvp.SpellProperty.NO_DR) ~= 0;
+end
+
 function opvp.SpellExt:id()
     return self._id;
 end
@@ -94,12 +98,16 @@ function opvp.SpellExt:isBase()
     return bit.band(self._traits, opvp.SpellTrait.BASE) ~= 0;
 end
 
+function opvp.SpellExt:isDefensiveOrOffensive()
+    return bit.band(self._traits, opvp.SpellTrait.DEFENSIVE_OFFENSIVE) ~= 0;
+end
+
 function opvp.SpellExt:isCrowdControl()
     return bit.band(self._traits, opvp.SpellTrait.CROWD_CONTROL) ~= 0;
 end
 
 function opvp.SpellExt:isDefensive()
-    return bit.band(self._traits, opvp.SpellTrait.DEFENSIVE) == opvp.SpellTrait.DEFENSIVE;
+    return bit.band(self._traits, opvp.SpellTrait.DEFENSIVE) ~= 0;
 end
 
 function opvp.SpellExt:isExtended()
@@ -127,7 +135,7 @@ function opvp.SpellExt:isInterupt()
 end
 
 function opvp.SpellExt:isOffensive()
-    return bit.band(self._traits, opvp.SpellTrait.OFFENSIVE) == opvp.SpellTrait.OFFENSIVE;
+    return bit.band(self._traits, opvp.SpellTrait.OFFENSIVE) ~= 0;
 end
 
 function opvp.SpellExt:isPassive()
@@ -160,6 +168,10 @@ end
 
 function opvp.SpellExt:properties()
     return self._props;
+end
+
+function opvp.SpellExt:pvpMultiplier()
+    return self._pvp_mult;
 end
 
 function opvp.SpellExt:set(id)

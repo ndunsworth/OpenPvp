@@ -58,12 +58,24 @@ function opvp.SpellRef:isCrowdControl()
     return self._spell:isCrowdControl();
 end
 
+function opvp.SpellRef:isDefensive()
+    return self._spell:isDefensive();
+end
+
+function opvp.SpellRef:isDefensiveOrOffensive()
+    return self._spell:isDefensiveOrOffensive();
+end
+
 function opvp.SpellRef:isHarmful()
     return self._spell:isHarmful();
 end
 
 function opvp.SpellRef:isHelpful()
     return self._spell:isHelpful();
+end
+
+function opvp.SpellRef:isOffensive()
+    return self._spell:isOffensive();
 end
 
 function opvp.SpellRef:isRaid()
@@ -182,6 +194,30 @@ function opvp.SpellRefMap:findCrowdControl()
     return spells;
 end
 
+function opvp.SpellRefMap:findDefensive()
+    local spells = {};
+
+    for id, spell in pairs(self._spells) do
+        if spell:isDefensive() == true then
+            table.insert(spells, spell:spell());
+        end
+    end
+
+    return spells;
+end
+
+function opvp.SpellRefMap:findDefensiveOrOffensive()
+    local spells = opvp.SpellMap();
+
+    for id, spell in pairs(self._spells) do
+        if spell:isDefensiveOrOffensive() == true then
+            table.insert(spells, spell:spell());
+        end
+    end
+
+    return spells;
+end
+
 function opvp.SpellRefMap:findHarmful()
     local spells = {};
 
@@ -220,6 +256,18 @@ end
 
 function opvp.SpellRefMap:isEmpty()
     return opvp.utils.table.isEmpty(self._spells);
+end
+
+function opvp.SpellRefMap:findOffensive()
+    local spells = {};
+
+    for id, spell in pairs(self._spells) do
+        if spell:isOffensive() == true then
+            table.insert(spells, spell:spell());
+        end
+    end
+
+    return spells;
 end
 
 function opvp.SpellRefMap:refs(spell)

@@ -555,8 +555,8 @@ function opvp.PartyMember:_setSpec(spec)
     );
 end
 
-function opvp.PartyMember:_updateAuras(info)
-    return self._auras:updateFromEvent(self._id, info);
+function opvp.PartyMember:_updateAuras(info, aurasNew, aurasModified, aurasRemoved)
+    return self._auras:updateFromEvent(self._id, info, aurasNew, aurasModified, aurasRemoved);
 end
 
 function opvp.PartyMember:_updateCharacterInfo()

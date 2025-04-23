@@ -80,18 +80,6 @@ local function opvp_class_spellmap_init_spell_category(cls, spells, auras, cfg, 
         );
     end
 
-    if cfg.pvp ~= nil then
-        base_mask = bit.bor(parentMask, opvp.SpellTrait.PVP, opvp.SpellTrait.TALENT);
-
-        opvp_class_spellmap_init_spell_category2(
-            cls,
-            spells,
-            auras,
-            cfg.pvp,
-            base_mask
-        );
-    end
-
     if cfg.hero ~= nil then
         base_mask = bit.bor(parentMask, opvp.SpellTrait.HERO, opvp.SpellTrait.TALENT);
 
@@ -100,6 +88,18 @@ local function opvp_class_spellmap_init_spell_category(cls, spells, auras, cfg, 
             spells,
             auras,
             cfg.hero,
+            base_mask
+        );
+    end
+
+    if cfg.pvp ~= nil then
+        base_mask = bit.bor(parentMask, opvp.SpellTrait.PVP, opvp.SpellTrait.TALENT);
+
+        opvp_class_spellmap_init_spell_category2(
+            cls,
+            spells,
+            auras,
+            cfg.pvp,
             base_mask
         );
     end
@@ -198,7 +198,22 @@ function opvp.SpellMap:clear()
     self._spells = {};
 end
 
-function opvp.SpellMap:contains(spell)
+function opvp.SpellMap:clone()
+    local result = opvp.SpellMap();
+
+    for id, spell in pairs(self._spells) do
+        spells._spells[id] = spell:clone();
+    end
+
+    return result;
+end
+
+function opvp.SpellMap:difference(other)
+    local spells = opvp.SpellMap();
+
+    if opvp.IsInstance(other, opvp.SpellMap) == false then
+        return spells;
+    end
     if opvp.is_number(spell) == true then
         return self._spells[spell] ~= nil;
     elseif opvp.IsInstance(spell, opvp.Spell) == true then
@@ -206,6 +221,32 @@ function opvp.SpellMap:contains(spell)
     else
         return false;
     end
+end
+
+function opvp.SpellMap:intersection(other)
+    local spells = opvp.SpellMap();
+
+    if opvp.IsInstance(other, opvp.SpellMap) == false then
+        return spells;
+    end
+
+    local a, b;
+
+    if self._size >= other._size then
+        a = other;
+        b = self;
+    else
+        a = self;
+        b = other;
+    end
+
+    for id, spell in pairs(a._spells) do
+        if b._spells[id] ~= nil then
+            spell._spells[id] = spell:clone();
+        end
+    end
+
+    return spells;
 end
 
 function opvp.SpellMap:findByName(name)
@@ -222,12 +263,38 @@ function opvp.SpellMap:findBySpellId(spellId)
     return self._spells[spellId];
 end
 
+function opvp.SpellMap:findDefensive()
+    local spells = opvp.SpellMap();
+
+    for id, spell in pairs(self._spells) do
+        if spell:isDefensive() == true then
+            spells._spells[id] = spell;
+            spells._size = spells._size + 1;
+        end
+    end
+
+    return spells;
+end
+
+function opvp.SpellMap:findDefensiveOrOffensive()
+    local spells = opvp.SpellMap();
+
+    for id, spell in pairs(self._spells) do
+        if spell:isDefensiveOrOffensive() == true then
+            spells._spells[id] = spell;
+            spells._size = spells._size + 1;
+        end
+    end
+
+    return spells;
+end
+
 function opvp.SpellMap:findCrowdControl()
     local spells = opvp.SpellMap();
 
     for id, spell in pairs(self._spells) do
         if spell:isCrowdControl() == true then
-            spells._spells[id] = aura;
+            spells._spells[id] = spell;
             spells._size = spells._size + 1;
         end
     end
@@ -240,7 +307,7 @@ function opvp.SpellMap:findHarmful()
 
     for id, spell in pairs(self._spells) do
         if spell:isHarmful() == true then
-            spells._spells[id] = aura;
+            spells._spells[id] = spell;
             spells._size = spells._size + 1;
         end
     end
@@ -253,7 +320,20 @@ function opvp.SpellMap:findHelpful()
 
     for id, spell in pairs(self._spells) do
         if spell:isHelpful() == true then
-            spells._spells[id] = aura;
+            spells._spells[id] = spell;
+            spells._size = spells._size + 1;
+        end
+    end
+
+    return spells;
+end
+
+function opvp.SpellMap:findOffensive()
+    local spells = opvp.SpellMap();
+
+    for id, spell in pairs(self._spells) do
+        if spell:isOffensive() == true then
+            spells._spells[id] = spell;
             spells._size = spells._size + 1;
         end
     end
@@ -266,10 +346,60 @@ function opvp.SpellMap:findRaid()
 
     for id, spell in pairs(self._spells) do
         if spell:isRaid() == true then
-            spells._spells[id] = aura;
+            spells._spells[id] = spell;
             spells._size = spells._size + 1;
         end
     end
+
+    return spells;
+end
+
+function opvp.SpellMap:intersect(other)
+    self:swap(self:intersection(other));
+end
+
+function opvp.SpellMap:intersection(other)
+    local spells = opvp.SpellMap();
+
+    if opvp.IsInstance(other, opvp.SpellMap) == false then
+        return spells;
+    end
+
+    local a, b;
+
+    if self._size >= other._size then
+        a = other;
+        b = self;
+    else
+        a = self;
+        b = other;
+    end
+
+    for id, spell in pairs(a._spells) do
+        if b._spells[id] ~= nil then
+            spell._spells[id] = spell:clone();
+        end
+    end
+
+    return spells;
+end
+
+function opvp.SpellMap:merge(other)
+    if opvp.IsInstance(other, opvp.SpellMap) == false then
+        return;
+    end
+
+    for id, spell in pairs(other._spells) do
+        if self._spells[id] == nil then
+            spell._spells[id] = spell:clone();
+        end
+    end
+end
+
+function opvp.SpellMap:merged(other)
+    local spells = self.clone();
+
+    spells:merge(other);
 
     return spells;
 end

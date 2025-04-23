@@ -34,7 +34,7 @@ opvp.private = {
 
 opvp.MAJOR_VERSION   = 1;
 opvp.MINOR_VERSION   = 0;
-opvp.RELEASE_VERSION = 7;
+opvp.RELEASE_VERSION = 8;
 
 opvp.VERSION         = string.format(
     "%d.%dv%d",
@@ -90,12 +90,12 @@ opvp.CrowdControlType = {
 
 opvp.DispellType = {
     NONE         = 0,
-    BLEED        = 1,
-    CURSE        = 2,
-    DISEASE      = 3,
-    ENRAGE       = 4,
-    MAGIC        = 5,
-    POISON       = 6
+    BLEED        = bit.lshift(1, 0),
+    CURSE        = bit.lshift(1, 1),
+    DISEASE      = bit.lshift(1, 2),
+    ENRAGE       = bit.lshift(1, 3),
+    MAGIC        = bit.lshift(1, 4),
+    POISON       = bit.lshift(1, 5)
 };
 
 opvp.LootMethod = {

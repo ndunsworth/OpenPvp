@@ -37,12 +37,12 @@ local spec_info = {
     icon   = "Interface/Icons/spell_frost_frostbolt02",
     spells = {
         harmful = {
-            pvp    = {
-                {198144, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 17},  -- Ice Form
-                {389831, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 4},         -- Snowdrift
-            },
             talent = {
                 {12472,  opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 30},  -- Icy Veins
+            },
+            pvp = {
+                {198144, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 17},  -- Ice Form
+                {389794, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 6},         -- Snowdrift (self)
             }
         }
     },
@@ -50,6 +50,9 @@ local spec_info = {
         helpful = {
             hero = {
                 {235313, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 4},    -- Blazing Barrier
+            },
+            pvp = {
+                {389831, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 4},         -- Snowdrift (stun)
             }
         }
     }

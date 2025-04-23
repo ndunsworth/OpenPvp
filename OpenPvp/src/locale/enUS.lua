@@ -58,6 +58,7 @@ opvp.locale.enUS = {
     LIFETIME                           = "Lifetime",
     MEDIUM                             = "Medium",
     NO                                 = "No",
+    NONE                               = "None",
     OFFSEASON                          = "Offseason",
     PARTY                              = "Party",
     PROFILE_CREATE                     = "Create Profile",
@@ -70,6 +71,13 @@ opvp.locale.enUS = {
     UNKNOWN                            = "Unknown",
     YES                                = "Yes",
     YESTERDAY                          = "Yesterday",
+
+    --~ Spell Type
+    CURSE                              = "Curse",
+    DISEASE                            = "Disease",
+    MAGIC                              = "Magic",
+    PHYSICAL                           = "Physical",
+    POISON                             = "Poison",
 
     PVP_CURRENCIES_CAPPED              = "Pvp Currencies Capped",
 

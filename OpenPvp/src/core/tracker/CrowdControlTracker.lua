@@ -28,132 +28,110 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.CrowdControlTracker = opvp.CreateClass(opvp.PartyAuraTrackerConnection);
+opvp.CrowdControlTracker = opvp.CreateClass(opvp.ClassAuraTracker);
 
 function opvp.CrowdControlTracker:init()
-    opvp.PartyAuraTrackerConnection.init(self);
+    opvp.ClassAuraTracker.init(self);
 
     self.memberCrowdControlAdded   = opvp.Signal("opvp.CrowdControlTracker.playerCrowdControlAdded");
     self.memberCrowdControlRemoved = opvp.Signal("opvp.CrowdControlTracker.playerCrowdControlRemoved");
 end
 
-function opvp.CrowdControlTracker:_clearParties()
-    local parties = self._tracker:parties();
-    local members;
-
-    for n=1, #parties do
-        members = parties[n]:members();
-
-        for x=1, #members do
-            members[x]:ccState():_clear();
-        end
-    end
+function opvp.CrowdControlTracker:aurasForClass(class)
+    return class:auras():findCrowdControl();
 end
 
-function opvp.CrowdControlTracker:_clearMember(member)
-    member:ccState():_clear();
+function opvp.CrowdControlTracker:aurasForSpec(spec)
+    return spec:auras():findCrowdControl();
 end
 
-function opvp.CrowdControlTracker:_initialize()
-    opvp.PartyAuraTrackerConnection._initialize(self);
-
-    self._tracker.rosterUpdate:connect(self, self._onRosterUpdate);
-end
-
-function opvp.CrowdControlTracker:_onAuraAdded(member, aura, spell)
-    if spell:isCrowdControl() == false then
-        return;
-    end
-
+function opvp.CrowdControlTracker:_onMemberAuraAdded(member, aura, spell)
     local cc_state = member:ccState();
 
     local result, cc_cat_state, cc_mask_new, cc_mask_old, new_dr = cc_state:_onAuraAdded(aura, spell);
 
-    if result == true then
-        self.memberCrowdControlAdded:emit(
-            member,
-            aura,
-            spell,
-            cc_cat_state,
-            cc_mask_new,
-            cc_mask_old,
-            new_dr
-        );
-
-        opvp.printDebug(
-            "opvp.CrowdControlTracker:_onAuraAdded(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, duration=%s,",
-            member:nameOrId(),
-            aura:spellId(),
-            aura:name(),
-            cc_cat_state:category():name(),
-            cc_cat_state:dr(),
-            opvp.time.formatSeconds(aura:duration())
-        );
-    end
-end
-function opvp.CrowdControlTracker:_onAuraRemoved(member, aura, spell)
-    if spell:isCrowdControl() == false then
+    if result == false then
         return;
     end
 
+    opvp.printDebug(
+        "opvp.CrowdControlTracker:_onAuraAdded(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%0.2f",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        cc_cat_state:category():name(),
+        cc_cat_state:dr(),
+        aura:dispellType(),
+        aura:duration()
+    );
+
+    self.memberCrowdControlAdded:emit(
+        member,
+        aura,
+        spell,
+        cc_cat_state,
+        cc_mask_new,
+        cc_mask_old,
+        new_dr
+    );
+end
+function opvp.CrowdControlTracker:_onMemberAuraRemoved(member, aura, spell)
     local cc_state = member:ccState();
 
     local result, cc_cat_state, cc_mask_new, cc_mask_old, new_dr = cc_state:_onAuraRemoved(aura, spell);
 
-    if result == true then
-        self.memberCrowdControlRemoved:emit(
-            member,
-            aura,
-            spell,
-            cc_cat_state,
-            cc_mask_new,
-            cc_mask_old
-        );
-
-        opvp.printDebug(
-            "opvp.CrowdControlTracker:_onAuraRemoved(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, duration=%s,",
-            member:nameOrId(),
-            aura:spellId(),
-            aura:name(),
-            cc_cat_state:category():name(),
-            cc_cat_state:dr(),
-            opvp.time.formatSeconds(aura:duration())
-        );
-    end
-end
-
-function opvp.CrowdControlTracker:_onAuraUpdated(member, aura, spell)
-    if spell:isCrowdControl() == false then
+    if result == false then
         return;
     end
 
+    opvp.printDebug(
+        "opvp.CrowdControlTracker:_onAuraRemoved(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%0.2f",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        cc_cat_state:category():name(),
+        cc_cat_state:dr(),
+        aura:dispellType(),
+        aura:duration()
+    );
+
+    self.memberCrowdControlRemoved:emit(
+        member,
+        aura,
+        spell,
+        cc_cat_state,
+        cc_mask_new,
+        cc_mask_old
+    );
+end
+
+function opvp.CrowdControlTracker:_onMemberAuraUpdated(member, aura, spell)
     local cc_state = member:ccState();
 
     local result, cc_cat_state, cc_mask_new, cc_mask_old, new_dr = cc_state:_onAuraUpdated(aura, spell);
 
-    if result == true then
-        self.memberCrowdControlAdded:emit(
-            member,
-            aura,
-            spell,
-            cc_cat_state,
-            cc_mask_new,
-            cc_mask_old,
-            new_dr
-        );
-
-        opvp.printDebug(
-            "opvp.CrowdControlTracker:_onAuraUpdated(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, duration=%s,",
-            member:nameOrId(),
-            aura:spellId(),
-            aura:name(),
-            cc_cat_state:category():name(),
-            cc_cat_state:dr(),
-            opvp.time.formatSeconds(aura:duration())
-        );
+    if result == false then
+        return;
     end
-end
 
-function opvp.CrowdControlTracker:_onRosterUpdate(newMembers, removedMembers)
+    opvp.printDebug(
+        "opvp.CrowdControlTracker:_onAuraUpdated(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%0.2f",
+        member:nameOrId(),
+        aura:spellId(),
+        aura:name(),
+        cc_cat_state:category():name(),
+        cc_cat_state:dr(),
+        aura:dispellType(),
+        aura:duration()
+    );
 
+    self.memberCrowdControlAdded:emit(
+        member,
+        aura,
+        spell,
+        cc_cat_state,
+        cc_mask_new,
+        cc_mask_old,
+        new_dr
+    );
 end

@@ -34,19 +34,19 @@ local opvp_match_spell_mask = bit.bor(
     opvp.SpellTrait.OFFENSIVE
 );
 
-opvp.MatchAuraTrackerConfig = opvp.CreateClass();
+opvp.MatchAuraServerConfig = opvp.CreateClass();
 
-function opvp.MatchAuraTrackerConfig:init(match)
+function opvp.MatchAuraServerConfig:init(match)
     self._match        = match;
     self._affiliation  = opvp.Affiliation.FRIENDLY;
 end
 
-function opvp.MatchAuraTrackerConfig:initialize()
+function opvp.MatchAuraServerConfig:initialize()
     if self._match == nil then
         return;
     end
 
-    local tracker         = opvp.party.auraTracker();
+    local server          = opvp.party.auraServer();
     local cc_tracker      = opvp.party.ccTracker();
     local cbt_lvl_tracker = opvp.party.combatLevelTracker();
 
@@ -65,17 +65,17 @@ function opvp.MatchAuraTrackerConfig:initialize()
 
     for n=1, #teams do
         if self:isPartySupported(teams[n]) == true then
-            tracker:addParty(teams[n]);
+            server:addParty(teams[n]);
         end
     end
 end
 
-function opvp.MatchAuraTrackerConfig:shutdown()
+function opvp.MatchAuraServerConfig:shutdown()
     if self._match == nil then
         return;
     end
 
-    local tracker         = opvp.party.auraTracker();
+    local server          = opvp.party.auraServer();
     local cc_tracker      = opvp.party.ccTracker();
     local cbt_lvl_tracker = opvp.party.combatLevelTracker();
 
@@ -83,7 +83,7 @@ function opvp.MatchAuraTrackerConfig:shutdown()
 
     for n=1, #teams do
         if self:isPartySupported(teams[n]) == true then
-            tracker:removeParty(teams[n]);
+            server:removeParty(teams[n]);
         end
     end
 
@@ -101,10 +101,10 @@ function opvp.MatchAuraTrackerConfig:shutdown()
     self._match = nil;
 end
 
-function opvp.MatchAuraTrackerConfig:isPartySupported(party)
+function opvp.MatchAuraServerConfig:isPartySupported(party)
     return bit.band(self._affiliation, party:affiliation()) ~= 0;
 end
 
-function opvp.MatchAuraTrackerConfig:setAffiliation(mask)
+function opvp.MatchAuraServerConfig:setAffiliation(mask)
     self._affiliation = mask;
 end

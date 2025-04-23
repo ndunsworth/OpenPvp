@@ -28,71 +28,44 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.PartyAuraTrackerConnection = opvp.CreateClass(opvp.AuraTrackerConnection);
+opvp.DebugAuraTracker = opvp.CreateClass(opvp.AuraServerConnection);
 
-function opvp.PartyAuraTrackerConnection:init()
-    opvp.AuraTrackerConnection.init(self);
+function opvp.DebugAuraTracker:init()
+    opvp.AuraServerConnection.init(self);
 end
 
-function opvp.PartyAuraTrackerConnection:isTrackerSupported(tracker)
-    return opvp.IsInstance(tracker, opvp.PartyAuraTracker);
-end
-
-function opvp.PartyAuraTrackerConnection:_clear()
-    local parties = self._tracker:parties();
-    local members;
-
-    for n=1, #parties do
-        members = parties[n]:members();
-
-        for x=1, #members do
-            self:_clearMember(members[x]);
-        end
+function opvp.DebugAuraTracker:_onMemberAurasAdded(member, auras, fullUpdate)
+    for id, aura in opvp.iter(auras) do
+        opvp.printDebug(
+            "opvp.DebugAuraTracker:_onMemberAurasAdded(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
+            member:nameOrId(),
+            aura:spellId(),
+            aura:name(),
+            opvp.time.formatSeconds(aura:duration())
+        );
     end
 end
 
-function opvp.PartyAuraTrackerConnection:_clearMember(member)
-
-end
-
-function opvp.PartyAuraTrackerConnection:_initializeMember(member)
-    local auras = member:auras();
-    local spell;
-
-    for k, aura in opvp.iter(auras) do
-        spell = self._tracker:findSpellForAura(aura);
-
-        if spell ~= nil then
-            self:_onAuraAdded(member, aura, spell);
-        end
+function opvp.DebugAuraTracker:_onMemberAurasRemoved(member, auras, fullUpdate)
+    for id, aura in opvp.iter(auras) do
+        opvp.printDebug(
+            "opvp.DebugAuraTracker:_onMemberAurasRemoved(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
+            member:nameOrId(),
+            aura:spellId(),
+            aura:name(),
+            opvp.time.formatSeconds(aura:duration())
+        );
     end
 end
 
-function opvp.PartyAuraTrackerConnection:_initialize()
-    if self._tracker:isInitialized() == false then
-        return;
+function opvp.DebugAuraTracker:_onMemberAurasUpdated(member, auras, fullUpdate)
+    for id, aura in opvp.iter(auras) do
+        opvp.printDebug(
+            "opvp.DebugAuraTracker:_onMemberAurasUpdated(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
+            member:nameOrId(),
+            aura:spellId(),
+            aura:name(),
+            opvp.time.formatSeconds(aura:duration())
+        );
     end
-
-    local parties = self._tracker:parties();
-    local members;
-
-    for n=1, #parties do
-        members = parties[n]:members();
-
-        for x=1, #members do
-            self:_initializeMember(members[x]);
-        end
-    end
-end
-
-function opvp.PartyAuraTrackerConnection:_onAuraAdded(member, aura, spell)
-
-end
-
-function opvp.PartyAuraTrackerConnection:_onAuraRemoved(member, aura, spell)
-
-end
-
-function opvp.PartyAuraTrackerConnection:_onAuraUpdated(member, aura, spell)
-
 end

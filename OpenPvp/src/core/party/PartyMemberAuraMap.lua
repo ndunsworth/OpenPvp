@@ -62,11 +62,13 @@ function opvp.PartyMemberAuraMap:update(unitId)
     AuraUtil.ForEachAura(unitId, "HARMFUL|RAID", nil, callback, true);
 end
 
-function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
-    local auras_new = opvp.AuraMap();
-    local auras_mod = opvp.AuraMap();
-    local auras_rem = opvp.AuraMap();
-
+function opvp.PartyMemberAuraMap:updateFromEvent(
+    unitId,
+    info,
+    aurasNew,
+    aurasModified,
+    aurasRemoved
+)
     local index, aura, tmp;
 
     if info.isFullUpdate == true then
@@ -78,7 +80,7 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
             if aura ~= nil then
                 aura:update(data);
 
-                auras_mod:add(aura);
+                aurasModified:add(aura);
 
                 self._auras[data.auraInstanceID] = nil;
             else
@@ -88,7 +90,7 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
 
                 aura:set(data);
 
-                auras_new:add(aura);
+                aurasNew:add(aura);
             end
 
             auras[data.auraInstanceID] = aura;
@@ -102,7 +104,7 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
             opvp.Aura:release(aura);
         end
 
-        auras_rem:swap(self);
+        aurasRemoved:swap(self);
 
         self._auras = auras;
     else
@@ -114,7 +116,7 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
 
                 self._auras[aura:id()] = aura;
 
-                auras_new:add(aura);
+                aurasNew:add(aura);
             end
         end
 
@@ -128,7 +130,7 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
                     if aura ~= nil then
                         aura:update(tmp);
 
-                        auras_mod:add(aura);
+                        aurasModified:add(aura);
                     else
                         aura = opvp.Aura:acquire();
 
@@ -138,7 +140,7 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
 
                         self._auras[aura:id()] = aura;
 
-                        auras_new:add(aura);
+                        aurasNew:add(aura);
                     end
                 end
             end
@@ -151,7 +153,7 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
                 if aura ~= nil then
                     self._auras[aura:id()] = nil;
 
-                    auras_rem:add(aura);
+                    aurasRemoved:add(aura);
 
                     opvp.Aura:release(aura);
                 end
@@ -159,7 +161,7 @@ function opvp.PartyMemberAuraMap:updateFromEvent(unitId, info)
         end
     end
 
-    return auras_new, auras_mod, auras_rem, info.isFullUpdate;
+    return info.isFullUpdate;
 end
 
 function opvp.PartyMemberAuraMap:_clear()

@@ -199,8 +199,16 @@ function opvp.ClassSpec:init(cfg)
     end
 end
 
-function opvp.ClassSpec:auras()
-    return self._auras;
+function opvp.ClassSpec:auras(includeBase)
+    if includeBase ~= true then
+        return self._auras;
+    else
+        local auras = self._auras:clone();
+
+        auras:merge(self:classInfo():auras());
+
+        return auras;
+    end
 end
 
 function opvp.ClassSpec:class()
