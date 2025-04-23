@@ -185,7 +185,6 @@ function opvp.BitMaskOption:index(mask)
 end
 
 function opvp.BitMaskOption:isBitEnabled(mask)
-    print(mask, self._mask, bit.band(self._mask, mask) ~= 0);
     return bit.band(self._mask, mask) ~= 0;
 end
 
