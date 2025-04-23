@@ -567,31 +567,6 @@ This emote is based on the pinging players race/sex.]],
         opvp.Option.HIDDEN_FLAG,
         true
     );
-
-    opvp.options.audio.soundeffect.match.teammateAnnounceBurstingSample:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
-
-    opvp.options.audio.soundeffect.match.teammateAnnounceDefensive:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
-
-    opvp.options.audio.soundeffect.match.teammateAnnounceDefensiveSample:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
-
-    opvp.options.audio.soundeffect.match.teammateAnnounceEnemyBursting:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
-
-    opvp.options.audio.soundeffect.match.teammateAnnounceEnemyBurstingSample:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
 end
 
 opvp.OnAddonLoad:register(opvp_options_audio_init);

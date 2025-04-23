@@ -320,11 +320,6 @@ local function opvp_options_announcements_init()
         false
     );
 
-    opvp.options.announcements.friendlyParty.memberCrowdControlledRole:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
-
     opvp.options.announcements.friendlyParty.memberJoinLeave = opvp.options.announcements.friendlyParty.category:createOption(
         opvp.Option.BOOL,
         "MemberJoinLeave",
@@ -496,21 +491,6 @@ local function opvp_options_announcements_init()
     opvp.options.announcements.friendlyParty.memberCrowdControlled.changed:connect(
         opvp.options.announcements.friendlyParty.memberCrowdControlledRole,
         opvp.options.announcements.friendlyParty.memberCrowdControlledRole.setEnabled
-    );
-
-    opvp.options.announcements.friendlyParty.memberCrowdControlled:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
-
-    opvp.options.announcements.hostileParty.memberCrowdControlled:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
-
-    opvp.options.announcements.hostileParty.memberCrowdControlledRole:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
     );
 end
 

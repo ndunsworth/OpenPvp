@@ -43,14 +43,14 @@ function opvp.PartyManager:init(guid)
     self._countdown_time  = 0;
     self._countdown_timer = opvp.Timer(1);
     self._socket          = opvp.Socket("OpenPvp");
-    --~ self._aura_server     = opvp.AuraServer();
-    --~ self._cc_tracker      = opvp.CrowdControlTracker();
-    --~ self._cbt_lvl_tracker = opvp.CombatLevelTracker();
+    self._aura_server     = opvp.AuraServer();
+    self._cc_tracker      = opvp.CrowdControlTracker();
+    self._cbt_lvl_tracker = opvp.CombatLevelTracker();
 
-    --~ self._aura_server:initialize();
+    self._aura_server:initialize();
 
-    --~ self._cc_tracker:connect(self._aura_server);
-    --~ self._cbt_lvl_tracker:connect(self._aura_server);
+    self._cc_tracker:connect(self._aura_server);
+    self._cbt_lvl_tracker:connect(self._aura_server);
 
     self._socket:connect();
 
@@ -67,17 +67,17 @@ function opvp.PartyManager:init(guid)
     opvp.OnLogout:connect(self, self._onLogout);
 end
 
---~ function opvp.PartyManager:auraServer()
-    --~ return self._aura_server;
---~ end
+function opvp.PartyManager:auraServer()
+    return self._aura_server;
+end
 
---~ function opvp.PartyManager:ccTracker()
-    --~ return self._cc_tracker;
---~ end
+function opvp.PartyManager:ccTracker()
+    return self._cc_tracker;
+end
 
---~ function opvp.PartyManager:combatLevelTracker()
-    --~ return self._cbt_lvl_tracker;
---~ end
+function opvp.PartyManager:combatLevelTracker()
+    return self._cbt_lvl_tracker;
+end
 
 function opvp.PartyManager:findMemberByGuid(guid, category)
     local party = self:party(category)
@@ -345,12 +345,12 @@ function opvp.PartyManager:_onGroupJoined(category, guid)
 
             self._party_cur:_setSocket(nil);
 
-            --~ self._aura_server:removeParty(self._party_cur);
+            self._aura_server:removeParty(self._party_cur);
         end
 
         self._party_cur = party;
 
-        --~ self._aura_server:addParty(self._party_cur);
+        self._aura_server:addParty(self._party_cur);
     end
 
     opvp.printMessageOrDebug(
