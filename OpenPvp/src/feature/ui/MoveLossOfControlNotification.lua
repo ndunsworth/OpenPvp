@@ -57,6 +57,8 @@ local function testLossOfControlNotification(button, state)
     };
 
     LossOfControlFrame_SetUpDisplay(LossOfControlFrame, true, data);
+
+    PlaySound(3231);
 end
 
 local function config_lossofcontrol_notification_move()
