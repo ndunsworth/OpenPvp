@@ -90,7 +90,10 @@ local function opvp_options_interface_init()
         "Test Notification"
     );
 
-    opvp.options.interface.frames.moveLossOfControlNotificationTest:setFlags(opvp.Option.NEW_LINE_FLAG, false);
+    opvp.options.interface.frames.moveLossOfControlNotificationTest:setFlags(
+        opvp.Option.NEW_LINE_FLAG,
+        false
+    );
 
     opvp.options.interface.frames.prestigeBadgesHide:setFlags(
         opvp.Option.LOCKED_DURING_COMBAT,
@@ -146,6 +149,19 @@ local function opvp_options_interface_init()
         "Season Reward",
         "",
         true
+    );
+
+    opvp.options.interface.minimap.tooltip.seasonRewardExcludeSaddle = opvp.options.interface.minimap.tooltip.category:createOption(
+        opvp.Option.BOOL,
+        "SeasonRewardExcludeSaddle",
+        "Ignore Vicious Saddle",
+        "Only show when the reward is not a Vicious Saddle",
+        false
+    );
+
+    opvp.options.interface.minimap.tooltip.seasonRewardExcludeSaddle:setFlags(
+        opvp.Option.NEW_LINE_FLAG,
+        false
     );
 
     opvp.options.interface.minimap.tooltip.events = opvp.options.interface.minimap.tooltip.category:createOption(

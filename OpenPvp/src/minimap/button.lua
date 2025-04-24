@@ -349,44 +349,52 @@ function opvp.private.OpenPvpMiniMapButton:addSeasonRewardTooltip(tooltip)
         return;
     end
 
-    tooltip:AddLine(opvp.strs.SEASON_REWARD);
-
     local achiev = opvp.season.achievementId();
     local reward_id = C_AchievementInfo.GetRewardItemID(achiev);
     local prog, req = opvp.season.achievementProgress();
 
-    if reward_id ~= nil then
-        local icon = C_Item.GetItemIconByID(reward_id);
-        local name = C_Item.GetItemNameByID(reward_id);
+    if (
+        reward_id == nil or
+        (
+            reward_id == 103533 and
+            opvp.options.interface.minimap.tooltip.seasonRewardExcludeSaddle:value() == true
+        )
+    ) then
+        return;
+    end
 
-        if name ~= nil and icon ~= nil then
-            tooltip:AddDoubleLine(
-                string.format(
-                    "    %s %s",
-                    opvp.utils.textureIdMarkup(icon, 14, 14),
-                    name
-                ),
-                string.format(
-                    "%d/%d",
-                    prog,
-                    req
-                ),
-                1, 1, 1
-            );
-        else
-            tooltip:AddDoubleLine(
-                string.format(
-                    "    %s",
-                    opvp.strs.UNKNOWN
-                ),
-                string.format(
-                    "%d/%d",
-                    prog,
-                    req
-                ),
-                1, 1, 1
-            );
-        end
+    tooltip:AddLine(opvp.strs.SEASON_REWARD);
+
+    local icon = C_Item.GetItemIconByID(reward_id);
+    local name = C_Item.GetItemNameByID(reward_id);
+
+    if name ~= nil and icon ~= nil then
+        tooltip:AddDoubleLine(
+            string.format(
+                "    %s %s",
+                opvp.utils.textureIdMarkup(icon, 14, 14),
+                name
+            ),
+            string.format(
+                "%d/%d",
+                prog,
+                req
+            ),
+            1, 1, 1
+        );
+    else
+        tooltip:AddDoubleLine(
+            string.format(
+                "    %s",
+                opvp.strs.UNKNOWN
+            ),
+            string.format(
+                "%d/%d",
+                prog,
+                req
+            ),
+            1, 1, 1
+        );
     end
 
     --~ GameTooltip_ShowProgressBar(tooltip, 0, req, prog, FormatPercentage(prog / req));
