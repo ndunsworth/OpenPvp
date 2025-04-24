@@ -111,6 +111,7 @@ function opvp.Aura:init()
     self._dispell_type = opvp.DispellType.NONE;
     self._duration     = 0;
     self._expiration   = 0;
+    self._time_mod     = 0;
     self._icon         = 0;
     self._name         = "";
     self._spell_id     = 0;
@@ -132,6 +133,7 @@ function opvp.Aura:clear()
     self._dispell_type = opvp.DispellType.NONE;
     self._duration     = 0;
     self._expiration   = 0;
+    self._time_mod     = 0;
     self._icon         = 0;
     self._name         = "";
     self._spell_id     = 0;
@@ -203,9 +205,10 @@ function opvp.Aura:set(info)
     self._dispell_type = opvp_aura_dispell_type(info.dispelName);
     self._duration     = opvp.number_else(info.duration);
     self._expiration   = opvp.number_else(info.expirationTime);
+    self._time_mod     = opvp.number_else(info.timeMod);
     self._name         = opvp.str_else(info.name);
     self._spell_id     = opvp.number_else(info.spellId);
-    self._source       = opvp.str_else(info.source);
+    self._source       = opvp.str_else(info.sourceUnit);
 
     self._mask         = 0;
 
@@ -224,6 +227,10 @@ function opvp.Aura:source()
     return self._source;
 end
 
+function opvp.Aura:timeModifier()
+    return self._time_mod;
+end
+
 function opvp.Aura:update(info)
     assert(
         info.auraInstanceID == self._id and
@@ -235,7 +242,9 @@ function opvp.Aura:update(info)
     self._charges_max  = opvp.number_else(info.maxCharges);
     self._duration     = opvp.number_else(info.duration);
     self._expiration   = opvp.number_else(info.expirationTime);
+    self._time_mod     = opvp.number_else(info.timeMod);
     self._icon         = opvp.number_else(info.icon);
+    self._source       = opvp.str_else(info.sourceUnit);
 end
 
 opvp_aura_pool = opvp.Pool(OPVP_AURA_POOL_DEFAULT_SIZE, opvp.Aura);
