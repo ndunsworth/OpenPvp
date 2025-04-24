@@ -562,11 +562,6 @@ This emote is based on the pinging players race/sex.]],
     local match_tester = opvp.match.tester();
 
     opvp.options.audio.soundeffect.test.music.changed:connect(match_tester, match_tester.stopMusic);
-
-    opvp.options.audio.soundeffect.match.teammateAnnounceBursting:setFlags(
-        opvp.Option.HIDDEN_FLAG,
-        true
-    );
 end
 
 opvp.OnAddonLoad:register(opvp_options_audio_init);
