@@ -188,11 +188,11 @@ opvp.locale.enUS = {
     MATCH_PLAYER_JOINED_WITH_SPEC      = "Match | %s Joined - %s (|c%s%s %s|r)",
     MATCH_PLAYER_LEAVE                 = "Match | %s Left - %s",
     MATCH_PLAYER_LEAVE_WITH_SPEC       = "Match | %s Left - %s (|c%s%s %s|r)",
-    MATCH_PLAYER_LOS_CONTROL_WITH_SPEC = "Match | %1$s CC - %2$s (|c%3$s%4$s %5$s|r) - %6$s (%7$s)",
-    MATCH_PLAYER_LOS_CONTROL           = "Match | %1$s CC - %2$s - %6$s (%7$s)",
+    MATCH_PLAYER_LOS_CONTROL_WITH_SPEC = "Match | CC %1$s - %2$s (|c%3$s%4$s %5$s|r) - %6$s (%7$s)",
+    MATCH_PLAYER_LOS_CONTROL           = "Match | CC %1$s - %2$s - %6$s (%7$s)",
     MATCH_PLAYER_SPEC_CHANGED          = "Match | %s Spec - %s (|c%s%s %s|r)",
 
-    MATCH_SELF_LOS_CONTROL             = "Match | Player CC - %6$s (%7$s)",
+    MATCH_SELF_LOS_CONTROL             = "Match | CC Player - %6$s (%7$s)",
 
     MATCH_SCORE_ARENA                  = "Match Score | %s %s (|c%s%s %s|r) - kb=%d, deaths=%d, dmg=%s, healing=%s",
     MATCH_SCORE_ARENA_RATED            = "Match Score | %s %s (|c%s%s %s|r) - cr=%d/%d/%s, mmr=%d/%d/%s",
@@ -205,8 +205,8 @@ opvp.locale.enUS = {
     MATCH_FRIENDLY_TEAM                = "Team",
     MATCH_HOSTILE_PLAYER               = "Enemy Player",
     MATCH_HOSTILE_TEAM                 = "Enemy Team",
-    MATCH_TRINKET_USED                 = "Match | Trinket %s - %s (|c%s%s %s|r)",
-    MATCH_TRINKET_USED_WITH_SPEC       = "Match | Trinket %s - %s (|c%s%s %s|r)",
+    MATCH_TRINKET_USED                 = "Match | %s Trinket - %s (|c%s%s %s|r)",
+    MATCH_TRINKET_USED_WITH_SPEC       = "Match | %s Trinket - %s (|c%s%s %s|r)",
 
     MATCH_TEST_BEGIN_HEADER            = "Match Test",
     MATCH_TEST_BEGIN_FOOTER            = "Simulation Starting",
