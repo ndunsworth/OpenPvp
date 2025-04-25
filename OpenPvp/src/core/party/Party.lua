@@ -368,7 +368,7 @@ end
 
 function opvp.Party:shutdown()
     opvp.printDebug(
-        "opvp.Party:disconnect(category=%d, guid=%s)",
+        "opvp.Party:shutdown(category=%d, guid=%s)",
         self._category,
         self._guid
     );
@@ -708,9 +708,9 @@ function opvp.Party:_shutdown()
 
         if self._owns_connection == true then
             self._provider:disconnect();
-        end
 
-        self._owns_connection = false;
+            self._owns_connection = false;
+        end
     end
 
     self._spec_counter:clear();
