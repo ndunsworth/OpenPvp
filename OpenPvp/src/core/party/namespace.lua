@@ -211,8 +211,16 @@ function opvp.party.utils.isCrossFaction(category)
     return C_PartyInfo.IsCrossFactionParty(category);
 end
 
+function opvp.party.utils.hasHomeParty()
+    return opvp.party.utils.isInGroup(opvp.PartyCategory.HOME);
+end
+
+function opvp.party.utils.hasInstanceParty()
+    return opvp.party.utils.isInGroup(opvp.PartyCategory.INSTANCE);
+end
+
 function opvp.party.utils.isFull(category)
-    return C_PartyInfo.IsPartyFull(category);
+    return opvp.party.utils.IsPartyFull(category);
 end
 
 function opvp.party.utils.isGuidInGroup(guid, category)

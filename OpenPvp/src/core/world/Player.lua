@@ -321,15 +321,15 @@ function opvp.Player:inFFA()
 end
 
 function opvp.Player:inParty(category)
-    return opvp.party.hasParty(category);
+    return opvp.party.utils.hasParty(category);
 end
 
 function opvp.Player:hasHomeParty()
-    return opvp.party.hasHomeParty();
+    return opvp.party.utils.hasHomeParty();
 end
 
 function opvp.Player:hasInstanceParty()
-    return opvp.party.hasInstanceParty();
+    return opvp.party.utils.hasInstanceParty();
 end
 
 function opvp.Player:inSanctuary()
