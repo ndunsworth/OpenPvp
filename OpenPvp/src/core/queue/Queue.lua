@@ -478,13 +478,13 @@ function opvp.Queue:_setStatus(status)
     elseif status == opvp.QueueStatus.ROLE_CHECK then
         self:_onStatusRoleCheck();
     elseif status == opvp.QueueStatus.QUEUED then
-        self:_onStatusRoleCheck();
+        self:_onStatusJoin();
     elseif status == opvp.QueueStatus.ACTIVE then
-        self:_onStatusRoleCheck();
+        self:_onStatusActive();
     elseif status == opvp.QueueStatus.READY then
-        self:_onStatusRoleCheck();
+        self:_onStatusReady();
     elseif status == opvp.QueueStatus.SUSPENDED then
-        self:_onStatusRoleCheck();
+        self:_onStatusSuspended();
     else
         return;
     end
