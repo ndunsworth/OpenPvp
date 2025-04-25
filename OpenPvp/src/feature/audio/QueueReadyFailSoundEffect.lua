@@ -45,7 +45,7 @@ function opvp.private.QueueReadyFailSoundEffect:isFeatureEnabled()
 end
 
 function opvp.private.QueueReadyFailSoundEffect:play()
-    opvp.effect.queueReady(
+    opvp.effect.queueReadyFail(
         opvp.player.race(),
         opvp.player.sex()
     );
