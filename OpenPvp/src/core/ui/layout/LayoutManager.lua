@@ -178,15 +178,11 @@ function opvp.LayoutManager:_onLayoutsUpdated(layoutInfo, reconcileLayouts)
                 end
             end
         else
-            for n=1, #layout_infos do
+            for n=layout_count + 1, #layout_infos do
                 layout_info = layout_infos[n];
-                layout = self:findLayout(layout_info.layoutName);
+                layout = opvp.Layout(n + 2, layout_info);
 
-                if layout == nil then
-                    layout = opvp.Layout(n + 2, layout_info);
-
-                    self:_addLayout(n + 2, layout, layoutInfo.activeLayout);
-                end
+                self:_addLayout(n + 2, layout, layoutInfo.activeLayout);
             end
         end
     else
