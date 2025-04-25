@@ -152,6 +152,10 @@ function opvp.Queue:readyCheckPending()
     );
 end
 
+function opvp.Queue:readyCheckSize()
+    return self._ready_check_size;
+end
+
 function opvp.Queue:logStatus()
     local elapsed = self:queueTimeElapsed();
     local estimate = self:queueTimeEstimated();
