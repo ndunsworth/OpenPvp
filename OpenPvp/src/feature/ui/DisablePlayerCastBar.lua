@@ -29,7 +29,13 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function setPlayerCastBarDisabled(state)
-    PlayerCastingBarFrame:SetAndUpdateShowCastbar(not state);
+    if state == true then
+        PlayerCastingBarFrame:SetUnit(nil)
+    else
+        PlayerCastingBarFrame:SetUnit("player")
+    end
+
+    --~ PlayerCastingBarFrame:SetAndUpdateShowCastbar(not state);
 end
 
 local function config_player_cast_bar()
@@ -38,11 +44,7 @@ local function config_player_cast_bar()
     end
 
     opvp.options.interface.frames.playerCastBarDisable.changed:connect(
-        function()
-            setPlayerCastBarDisabled(
-                opvp.options.interface.frames.playerCastBarDisable:value()
-            );
-        end
+        setPlayerCastBarDisabled
     );
 end
 
