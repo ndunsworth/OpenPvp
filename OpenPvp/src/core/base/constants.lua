@@ -66,6 +66,19 @@ opvp.Affiliation = {
     HOSTILE  = bit.lshift(1, 2)
 };
 
+opvp.CompressionLevel = {
+    NONE    = -1,
+    DEFAULT = Enum.CompressionLevel.Default,
+    SPEED   = Enum.CompressionLevel.OptimizeForSpeed,
+    SIZE    = Enum.CompressionLevel.OptimizeForSize
+};
+
+opvp.CompressionType = {
+    DEFLATE = Enum.CompressionMethod.Deflate,
+    GZIP    = Enum.CompressionMethod.Gzip,
+    ZLIB    = Enum.CompressionMethod.Zlib
+};
+
 opvp.CrowdControlStatus = {
     FULL    = 1,
     HALF    = 2,

@@ -8,13 +8,11 @@
 ## SavedVariablesPerCharacter: OpenPvpLocalSettingsDB
 ## LoadOnDemand: 0
 ## DefaultState: Enabled
-## OptionalDependencies: ChatThrottleLib, LibDeflate, LibSerialize, LibStub, LibSharedMedia-3.0
+## OptionalDependencies: ChatThrottleLib, LibStub, LibSharedMedia-3.0
 ## X-Wago-ID: b6mbkyKP
 
 libs/ChatThrottleLib/ChatThrottleLib.lua
 libs/LibStub/LibStub.lua
-libs/LibDeflate/lib.xml
-libs/LibSerialize/lib.xml
 libs/LibSharedMedia-3.0/lib.xml
 
 src/core/base/constants.lua

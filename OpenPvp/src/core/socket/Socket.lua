@@ -28,8 +28,6 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local LibDeflate = LibStub:GetLibrary("LibDeflate");
-
 local HEADER_SINGLE        = "\001";
 local HEADER_MULTIPART     = "\002";
 local HEADER_MULTIPART_END = "\003";
@@ -83,15 +81,15 @@ local opvp_addon_send_msg_status_lookup = {
 opvp.Socket = opvp.CreateClass();
 
 function opvp.Socket:encodeFrom(data)
-    return LibDeflate:DecodeForWoWAddonChannel(data);
+    return C_EncodingUtil:DecodeBase64(data);
 end
 
 function opvp.Socket:encodeTo(data)
-    return LibDeflate:EncodeForWoWAddonChannel(data);
+    return C_EncodingUtil:EncodeBase64(data);
 end
 
 function opvp.Socket:init(prefix)
-    self._prefix      = ""
+    self._prefix    = ""
     self._connected = false;
     self._compress  = true;
     self._error     = opvp.SocketError.NONE;

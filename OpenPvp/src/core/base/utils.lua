@@ -28,9 +28,6 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local LibDeflate = LibStub:GetLibrary("LibDeflate");
-local LibSerialize = LibStub:GetLibrary("LibSerialize");
-
 function opvp.iter(obj)
     return obj:__iter__();
 end
@@ -109,8 +106,8 @@ function opvp.utils.colorStringRGBA(str, r, g, b)
     );
 end
 
-function opvp.utils.compress(str)
-    return LibDeflate:CompressDeflate(str);
+function opvp.utils.compress(source, method, level)
+    return C_EncodingUtil.CompressString(source, method, level);
 end
 
 function opvp.utils.copyTableShallow(tbl)
@@ -168,8 +165,8 @@ function opvp.utils.compareTable(a, b, ignore_mt)
     return true;
 end
 
-function opvp.utils.decompress(str)
-    return LibDeflate:DecompressDeflate(str);
+function opvp.utils.decompress(source, method)
+    return C_EncodingUtil.DecompressString(source, method);
 end
 
 function opvp.utils.deepcopy(orig)
@@ -262,12 +259,20 @@ function opvp.utils.numberToStringShort(n, precision)
     return string.format(fmt, n) .. token;
 end
 
-function opvp.utils.serializeFrom(str)
-     return LibSerialize:Deserialize(str);
+function opvp.utils.serializeFromCBOR(data)
+     return C_EncodingUtil.DeserializeCBOR(data);
 end
 
-function opvp.utils.serializeTo(data)
-    return LibSerialize:Serialize(data);
+function opvp.utils.serializeFromJSON(data)
+     return C_EncodingUtil.DeserializeJSON(data);
+end
+
+function opvp.utils.serializeToCBOR(data)
+    return C_EncodingUtil.SerializeCBOR(data);
+end
+
+function opvp.utils.serializeToJSON(data)
+    return C_EncodingUtil.SerializeJSON(data);
 end
 
 opvp.utils.array = {};
