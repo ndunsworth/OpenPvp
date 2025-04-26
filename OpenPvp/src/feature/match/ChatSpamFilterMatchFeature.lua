@@ -29,6 +29,12 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+local function opvp_insert_if(tbl, value)
+    if value ~= nil then
+        table.insert(tbl, vaue)
+    end
+end
+
 opvp.private.ChatSpamFilterMatchFeature = opvp.CreateClass(opvp.MatchOptionFeature);
 
 function opvp.private.ChatSpamFilterMatchFeature:init(option)
@@ -41,11 +47,11 @@ function opvp.private.ChatSpamFilterMatchFeature:init(option)
     for n=1, #opvp.locales do
         local locale = opvp.locale[opvp.locales[n]];
 
-        table.insert(addon_spam_msgs, locale.DRINKING_SPAM_1);
-        table.insert(addon_spam_msgs, locale.LOW_HEALTH_SPAM_1);
-        table.insert(addon_spam_msgs, locale.ENEMY_SPEC_SPAM_1);
-        table.insert(addon_spam_msgs, locale.RESURRECTING_SPAM_1);
-        table.insert(addon_spam_msgs, locale.TRINKET_USED_SPAM_1);
+        opvp_insert_if(addon_spam_msgs, locale.DRINKING_SPAM_1);
+        opvp_insert_if(addon_spam_msgs, locale.LOW_HEALTH_SPAM_1);
+        opvp_insert_if(addon_spam_msgs, locale.ENEMY_SPEC_SPAM_1);
+        opvp_insert_if(addon_spam_msgs, locale.RESURRECTING_SPAM_1);
+        opvp_insert_if(addon_spam_msgs, locale.TRINKET_USED_SPAM_1);
     end
 
     self._spam_filter = opvp.ChatTypesMessageFilter(
