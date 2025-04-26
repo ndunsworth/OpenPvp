@@ -205,8 +205,8 @@ opvp.locale.enUS = {
     MATCH_FRIENDLY_TEAM                = "Team",
     MATCH_HOSTILE_PLAYER               = "Enemy Player",
     MATCH_HOSTILE_TEAM                 = "Enemy Team",
-    MATCH_TRINKET_USED                 = "Match | %s Trinket - %s (|c%s%s %s|r)",
-    MATCH_TRINKET_USED_WITH_SPEC       = "Match | %s Trinket - %s (|c%s%s %s|r)",
+    MATCH_TRINKET_USED                 = "Match | Trinket %s - %s (|c%s%s %s|r)",
+    MATCH_TRINKET_USED_WITH_SPEC       = "Match | Trinket %s - %s (|c%s%s %s|r)",
 
     MATCH_TEST_BEGIN_HEADER            = "Match Test",
     MATCH_TEST_BEGIN_FOOTER            = "Simulation Starting",
