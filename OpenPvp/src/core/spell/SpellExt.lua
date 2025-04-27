@@ -154,6 +154,10 @@ function opvp.SpellExt:isPvpTalent()
     return bit.band(self._traits, opvp.SpellTrait.PVP) ~= 0;
 end
 
+function opvp.SpellExt:isRacial()
+    return bit.band(self._traits, opvp.SpellTrait.RACIAL) ~= 0;
+end
+
 function opvp.SpellExt:isSpec()
     return bit.band(self._traits, opvp.SpellTrait.SPEC) ~= 0;
 end

@@ -50,11 +50,12 @@ opvp.SpellTrait = {
     PET           = bit.lshift(1, 14),
     POWER_REGEN   = bit.lshift(1, 15),
     PVP           = bit.lshift(1, 16),
-    RAID          = bit.lshift(1, 17),
-    RANGE         = bit.lshift(1, 18),
-    SNARE         = bit.lshift(1, 19),
-    SPEC          = bit.lshift(1, 20),
-    TALENT        = bit.lshift(1, 21)
+    RACIAL        = bit.lshift(1, 17),
+    RAID          = bit.lshift(1, 18),
+    RANGE         = bit.lshift(1, 19),
+    SNARE         = bit.lshift(1, 20),
+    SPEC          = bit.lshift(1, 21),
+    TALENT        = bit.lshift(1, 22)
 };
 
 opvp.SpellProperty = {
