@@ -38,19 +38,19 @@ local spec_info = {
     spells = {
         harmful = {
             talent = {
-                {385954, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 4},          -- Shield Charge
+                {385954, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.STUN, 4}, -- Shield Charge
             },
             pvp = {
-                {199042, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.ROOT, 4},          -- Thunderstruck
+                {199042, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.ROOT, 4}, -- Thunderstruck
             }
         },
         helpful = {
             talent = {
-                {12975,  opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_HIGH, 8},    -- Last Stand
-                {871,    opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_HIGH, 8},    -- Shield Wall
+                {12975,  opvp.SpellProperty.DEFENSIVE_HIGH_AURA, 0, 8},                                  -- Last Stand
+                {871,    opvp.SpellProperty.DEFENSIVE_HIGH_AURA, 0, 8},                                  -- Shield Wall
             },
             pvp = {
-                {213871, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_MEDIUM, 60}, -- Bodyguard
+                {213871, opvp.SpellProperty.DEFENSIVE_MEDIUM_AURA, 0, 60},                               -- Bodyguard
             }
         }
     }

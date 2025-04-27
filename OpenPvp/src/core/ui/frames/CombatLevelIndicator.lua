@@ -128,13 +128,13 @@ function opvp.CombatLevelIndicator:_initWidget(parent)
 
     frame.indicators = {
         {
-            id      = opvp.SpellTrait.DEFENSIVE,
+            id      = opvp.SpellProperty.DEFENSIVE,
             frame   = CreateFrame("Frame", nil, frame),
             level   = 0,
             enabled = true,
         },
         {
-            id      = opvp.SpellTrait.OFFENSIVE,
+            id      = opvp.SpellProperty.OFFENSIVE,
             frame   = CreateFrame("Frame", nil, frame),
             level   = 0,
             enabled = true,
@@ -229,7 +229,7 @@ function opvp.CombatLevelIndicator:_initWidget(parent)
 end
 
 function opvp.CombatLevelIndicator:_indicatorCollapse(indicator)
-    if indicator.id == opvp.SpellTrait.DEFENSIVE then
+    if indicator.id == opvp.SpellProperty.DEFENSIVE then
         indicator.frame:SetPoint("BOTTOM", self._frame, "CENTER");
 
         self._frame.horiz_divider:SetStartPoint("LEFT", self._frame);
@@ -243,7 +243,7 @@ function opvp.CombatLevelIndicator:_indicatorCollapse(indicator)
 end
 
 function opvp.CombatLevelIndicator:_indicatorExpand(indicator)
-    if indicator.id == opvp.SpellTrait.DEFENSIVE then
+    if indicator.id == opvp.SpellProperty.DEFENSIVE then
         indicator.frame:SetPoint("BOTTOM", self._frame);
 
         self._frame.horiz_divider:SetStartPoint("BOTTOMLEFT", self._frame);
@@ -349,7 +349,7 @@ function opvp.CombatLevelIndicator:_setIndicatorEnabled(indicator, state)
 
     local buddy;
 
-    if indicator.id == opvp.SpellTrait.DEFENSIVE then
+    if indicator.id == opvp.SpellProperty.DEFENSIVE then
         buddy = self._frame.indicators[2];
 
         if self:isVisible() == true then

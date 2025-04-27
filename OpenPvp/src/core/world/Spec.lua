@@ -189,7 +189,7 @@ function opvp.ClassSpec:init(cfg)
         cfg.auras,
         self._spells,
         self._auras,
-        opvp.SpellTrait.SPEC
+        opvp.SpellProperty.SPEC
     );
 
     if self._id ~= 0 then

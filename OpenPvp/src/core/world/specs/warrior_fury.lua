@@ -38,15 +38,15 @@ local spec_info = {
     spells = {
         harmful = {
             talent = {
-                {227847, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_IMMUNE, 6},  -- Bladestorm
-                {385060,   opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_LOW, 3},   -- Odyn's Fury (Dancing Blades)
-                {228920, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_LOW, 3},     -- Ravager
-                {1719,   opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 3},    -- Recklessness
+                {227847, opvp.SpellProperty.OFFENSIVE_HIGH_IMMUNITY_AURA, opvp.CrowdControlSpellProperty.IMMUNITY_CC, 6}, -- Bladestorm
+                {385060,   opvp.SpellProperty.OFFENSIVE_LOW_AURA, opvp.CrowdControlSpellProperty.OFFENSIVE_LOW, 3},       -- Odyn's Fury (Dancing Blades)
+                {228920, opvp.SpellProperty.OFFENSIVE_LOW_AURA, 0, 3},                                                    -- Ravager
+                {1719,   opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 3},                                                   -- Recklessness
             }
         },
         helpful = {
             talent = {
-                {184364, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_MEDIUM, 8},  -- Enraged Regen
+                {184364, opvp.SpellProperty.DEFENSIVE_MEDIUM_AURA, 0, 8},                                                 -- Enraged Regen
             }
         }
     }

@@ -38,37 +38,37 @@ local spec_info = {
     spells = {
         harmful = {
             talent = {
-                {188499, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_LOW},         -- Blade Dance
-                {188499, opvp.SpellTrait.OFFENSIVE, opvp.SpellProperty.OFFENSIVE_MEDIUM},           -- Essence Break
-                {198013, opvp.SpellTrait.OFFENSIVE, opvp.SpellProperty.OFFENSIVE_MEDIUM},           -- Eye Beam
-                {211881, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 3},           -- Fel Eruption
+                {188499, opvp.SpellProperty.OFFENSIVE_LOW_AURA, 0},                                                     -- Blade Dance
+                {188499, opvp.SpellProperty.OFFENSIVE_MEDIUM, 0},                                                       -- Essence Break
+                {198013, opvp.SpellProperty.OFFENSIVE_MEDIUM, 0},                                                       -- Eye Beam
+                {211881, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.STUN, 3},                -- Fel Eruption
             },
             pvp = {
-                {205630, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 5},           -- Illidan's Grasp
-                {206804, opvp.SpellTrait.OFFENSIVE, opvp.SpellProperty.OFFENSIVE_HIGH, 10},         -- Rain from Above
+                {205630, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.STUN, 5},                -- Illidan's Grasp
+                {206804, opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 10},                                                -- Rain from Above
             }
         },
         helpful = {
             base = {
-                {212800, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_MEDIUM, 10}, -- Blur
+                {212800, opvp.SpellProperty.DEFENSIVE_MEDIUM_AURA, 0, 10},                                              -- Blur
             },
             pvp = {
-                {196555, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_IMMUNE_DMG}, -- Netherwalk
+                {196555, opvp.SpellProperty.DEFENSIVE_HIGH_IMMUNITY_AURA, opvp.CrowdControlSpellProperty.IMMUNITY_DMG}, -- Netherwalk
             }
         }
     },
     auras = {
         harmful = {
             hero = {
-                {247121, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 5},     -- Blade Ward
+                {247121, opvp.SpellProperty.DEFENSIVE_LOW_AURA, 0, 5},                                                  -- Blade Ward
             },
             talent = {
-                {247121, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN_NO_DR, 3},    -- Metamorphosis (stun)
+                {247121, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.STUN_NO_DR, 3},          -- Metamorphosis (stun)
             }
         },
         helpful = {
             pvp = {
-                {354610, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_IMMUNE_CC},  -- Glimpse
+                {354610, opvp.SpellProperty.DEFENSIVE_IMMUNITY_AURA, opvp.CrowdControlSpellProperty.IMMUNITY_CC},       -- Glimpse
             }
         }
     }

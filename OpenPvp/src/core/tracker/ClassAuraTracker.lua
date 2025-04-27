@@ -29,9 +29,9 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local opvp_class_spell_mask = bit.bor(
-    opvp.SpellTrait.CROWD_CONTROL,
-    opvp.SpellTrait.DEFENSIVE,
-    opvp.SpellTrait.OFFENSIVE
+    opvp.SpellProperty.CROWD_CONTROL,
+    opvp.SpellProperty.DEFENSIVE,
+    opvp.SpellProperty.OFFENSIVE
 );
 
 opvp.ClassAuraTracker = opvp.CreateClass(opvp.AuraServerConnection);

@@ -38,21 +38,21 @@ local spec_info = {
     spells = {
         harmful = {
             talent = {
-                {12472,  opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 30},  -- Icy Veins
+                {12472,  opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 30},                                 -- Icy Veins
             },
             pvp = {
-                {198144, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 17},  -- Ice Form
-                {389794, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 6},         -- Snowdrift (self)
+                {198144, opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 17},                                 -- Ice Form
+                {389794, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.STUN, 6}, -- Snowdrift (self)
             }
         }
     },
     auras = {
         helpful = {
             hero = {
-                {235313, opvp.SpellTrait.DEFENSIVE_AURA, opvp.SpellProperty.DEFENSIVE_LOW, 4},    -- Blazing Barrier
+                {235313, opvp.SpellProperty.DEFENSIVE_LOW_AURA, 0, 4},                                   -- Blazing Barrier
             },
             pvp = {
-                {389831, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 4},         -- Snowdrift (stun)
+                {389831, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.STUN, 4}, -- Snowdrift (stun)
             }
         }
     }

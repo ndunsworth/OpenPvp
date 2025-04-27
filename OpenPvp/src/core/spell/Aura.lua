@@ -213,9 +213,9 @@ function opvp.Aura:set(info)
     self._mask         = 0;
 
     if opvp.bool_else(info.isHarmful, false) == true then
-        self._mask = bit.bor(self._mask, opvp.SpellTrait.HARMFUL);
+        self._mask = bit.bor(self._mask, opvp.SpellProperty.HARMFUL);
     elseif opvp.bool_else(info.isHarmful, false) == true then
-        self._mask = bit.bor(self._mask, opvp.SpellTrait.HELPFUL);
+        self._mask = bit.bor(self._mask, opvp.SpellProperty.HELPFUL);
     end
 end
 

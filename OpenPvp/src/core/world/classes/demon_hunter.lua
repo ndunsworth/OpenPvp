@@ -48,23 +48,23 @@ opvp.Class.DEMON_HUNTER = opvp.Class(
                 base = {
                 },
                 talent = {
-                    {179057, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.STUN, 2, 1.5},                 -- Chaos Nova
-                    {179057, opvp.SpellTrait.DISPELL},                                                             -- Comsume Magic
-                    {179057, opvp.SpellTrait.INTERRUPT, 0, 3},                                                     -- Disrupt
-                    {258920, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_LOW, 10},                -- Immolation Aura
-                    {217832, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.INCAPACITATE, 60, 0.05},       -- Imprison
-                    {162264, opvp.SpellTrait.OFFENSIVE_AURA, opvp.SpellProperty.OFFENSIVE_HIGH, 20},               -- Metamorphosis
-                    {207685, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.DISORIENT, 15, 0.2},           -- Sigil of Misery
-                    {207685, opvp.SpellTrait.OFFENSIVE, opvp.SpellProperty.OFFENSIVE_MEDIUM},                      -- The Hunt
-                    {185245, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.TAUNT, 3},                     -- Torment
+                    {179057, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.STUN, 2, 1.5},                 -- Chaos Nova
+                    {179057, opvp.SpellProperty.DISPELL},                                                                         -- Comsume Magic
+                    {179057, opvp.SpellProperty.INTERRUPT, 0, 3},                                                                 -- Disrupt
+                    {258920, opvp.SpellProperty.OFFENSIVE_LOW_AURA, 0, 10},                                                       -- Immolation Aura
+                    {217832, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.INCAPACITATE, 60, 0.05},       -- Imprison
+                    {162264, opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 20},                                                      -- Metamorphosis
+                    {207685, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.DISORIENT, 15, 0.2},           -- Sigil of Misery
+                    {370965, bit.bor(opvp.SpellProperty.OFFENSIVE, opvp.SpellProperty.OFFENSIVE_MEDIUM)},                         -- The Hunt
+                    {185245, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.TAUNT, 3},                     -- Torment
                 }
             },
             helpful = {
                 base = {
                 },
                 talent = {
-                    {209426, opvp.SpellTrait.DEFENSIVE_IMMUNITY_AURA, opvp.SpellProperty.DEFENSIVE_IMMUNE_DMG, 6}, -- Darkness
-                    {198793, opvp.SpellTrait.DEFENSIVE},                                                           -- Vengeful Retreat
+                    {209426, opvp.SpellProperty.DEFENSIVE_HIGH_IMMUNITY_AURA, opvp.CrowdControlSpellProperty.IMMUNITY_DMG, 6},    -- Darkness
+                    {198793, opvp.SpellProperty.DEFENSIVE},                                                                       -- Vengeful Retreat
                 }
             }
         },
@@ -73,17 +73,17 @@ opvp.Class.DEMON_HUNTER = opvp.Class(
                 base = {
                 },
                 talent = {
-                    {370970, opvp.SpellTrait.CROWD_CONTROL_AURA, opvp.SpellProperty.ROOT_NO_DR, 1.5},              -- The Hunt (root)
-                    {370966, 0, 0, 20},                                                                            -- The Hunt (healing debuff)
-                    {185245, opvp.SpellTrait.SNARE, 0, 3},                                                         -- Master of the Glaive
+                    {370970, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.ROOT_NO_DR, 1.5},              -- The Hunt (root)
+                    {370966, 0, 0, 20},                                                                                           -- The Hunt (healing debuff)
+                    {185245, opvp.SpellProperty.SNARE, 0, 3},                                                                     -- Master of the Glaive
                 },
                 pvp = {
-                    {                                                                                              -- Imprison (Detainment Immunity)
+                    {                                                                                                             -- Imprison (Detainment Immunity)
                         221527,
-                        opvp.SpellTrait.CROWD_CONTROL_AURA,
+                        opvp.SpellProperty.CROWD_CONTROL_AURA,
                         bit.bor(
-                            opvp.SpellProperty.INCAPACITATE,
-                            opvp.SpellProperty.IMMUNITY_ALL
+                            opvp.CrowdControlSpellProperty.INCAPACITATE,
+                            opvp.CrowdControlSpellProperty.IMMUNITY_ALL
                         ),
                         60,
                         0.05
