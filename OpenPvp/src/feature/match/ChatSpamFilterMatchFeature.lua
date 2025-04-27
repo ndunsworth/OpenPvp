@@ -31,7 +31,7 @@ local opvp = OpenPvp;
 
 local function opvp_insert_if(tbl, value)
     if value ~= nil then
-        table.insert(tbl, vaue)
+        table.insert(tbl, value)
     end
 end
 
