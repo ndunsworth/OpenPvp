@@ -92,7 +92,7 @@ function opvp.effect.dampeningHigh(faction)
         sound = opvp.Faction.HORDE:pvpWarningSound();
     end
 
-    sound:play(opvp.SoundChannel.SFX);
+    sound:play(opvp.SoundChannel.SFX, true);
 end
 
 local function opvp_damp_high_sound_effect_sample(button, state)
