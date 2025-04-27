@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.DRAENEI = opvp.Race(opvp.DRAENEI, {opvp.Faction.ALLIANCE});
+opvp.Race.DRAENEI = opvp.Race(
+    {
+        id       = opvp.DRAENEI,
+        factions = {opvp.Faction.ALLIANCE}
+    }
+);

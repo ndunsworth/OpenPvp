@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.HIGHMOUNTAIN_TAUREN = opvp.Race(opvp.HIGHMOUNTAIN_TAUREN, {opvp.Faction.HORDE});
+opvp.Race.HIGHMOUNTAIN_TAUREN = opvp.Race(
+    {
+        id       = opvp.HIGHMOUNTAIN_TAUREN,
+        factions = {opvp.Faction.HORDE}
+    }
+);

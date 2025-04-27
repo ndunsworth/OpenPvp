@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.WORGEN = opvp.Race(opvp.WORGEN, {opvp.Faction.ALLIANCE});
+opvp.Race.WORGEN = opvp.Race(
+    {
+        id       = opvp.WORGEN,
+        factions = {opvp.Faction.ALLIANCE}
+    }
+);

@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.TROLL = opvp.Race(opvp.TROLL, {opvp.Faction.HORDE});
+opvp.Race.TROLL = opvp.Race(
+    {
+        id       = opvp.TROLL,
+        factions = {opvp.Faction.HORDE}
+    }
+);

@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.GOBLIN = opvp.Race(opvp.GOBLIN, {opvp.Faction.HORDE});
+opvp.Race.GOBLIN = opvp.Race(
+    {
+        id       = opvp.GOBLIN,
+        factions = {opvp.Faction.HORDE}
+    }
+);

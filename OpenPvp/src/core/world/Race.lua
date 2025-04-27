@@ -168,19 +168,19 @@ function opvp.Race:fromRaceName(name)
     return opvp.Race.UNKNOWN;
 end
 
-function opvp.Race:init(id, factions)
-    self._id            = id;
-    self._factions      = factions;
+function opvp.Race:init(cfg)
+    self._id            = cfg.id;
+    self._factions      = cfg.factions;
     self._factions_mask = 0;
     self._name          = ""
 
-    if id ~= opvp.UNKNOWN_RACE then
+    if self._id ~= opvp.UNKNOWN_RACE then
         self._name = C_CreatureInfo.GetRaceInfo(
-            opvp_race_map_to_id_lookup[id]
+            opvp_race_map_to_id_lookup[self._id]
         ).raceName;
     end
 
-    for index, faction in ipairs(factions) do
+    for index, faction in ipairs(self._factions) do
         self._factions_mask = bit.bor(
             self._factions_mask,
             bit.lshift(1, faction:id())

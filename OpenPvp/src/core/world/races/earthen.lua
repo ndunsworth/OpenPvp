@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.EARTHEN = opvp.Race(opvp.EARTHEN, {opvp.Faction.NEUTRAL, opvp.Faction.ALLIANCE, opvp.Faction.HORDE});
+opvp.Race.EARTHEN = opvp.Race(
+    {
+        id       = opvp.DWARF,
+        factions = {opvp.Faction.NEUTRAL, opvp.Faction.ALLIANCE, opvp.Faction.HORDE}
+    }
+);

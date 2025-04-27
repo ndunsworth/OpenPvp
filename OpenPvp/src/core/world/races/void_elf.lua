@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.VOID_ELF = opvp.Race(opvp.VOID_ELF, {opvp.Faction.ALLIANCE});
+opvp.Race.VOID_ELF = opvp.Race(
+    {
+        id       = opvp.VOID_ELF,
+        factions = {opvp.Faction.ALLIANCE}
+    }
+);

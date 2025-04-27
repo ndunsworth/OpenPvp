@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.UNKNOWN = opvp.Race(opvp.UNKNOWN_RACE, {opvp.Faction.NEUTRAL});
+opvp.Race.UNKNOWN = opvp.Race(
+    {
+        id       = opvp.UNKNOWN_RACE,
+        factions = {opvp.Faction.NEUTRAL}
+    }
+);

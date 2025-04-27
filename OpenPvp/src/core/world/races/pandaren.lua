@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.PANDAREN = opvp.Race(opvp.PANDAREN, {opvp.Faction.NEUTRAL, opvp.Faction.ALLIANCE, opvp.Faction.HORDE});
+opvp.Race.PANDAREN = opvp.Race(
+    {
+        id       = opvp.PANDAREN,
+        factions = {opvp.Faction.NEUTRAL, opvp.Faction.ALLIANCE, opvp.Faction.HORDE}
+    }
+);

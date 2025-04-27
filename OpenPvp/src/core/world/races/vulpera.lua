@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.VULPERA = opvp.Race(opvp.VULPERA, {opvp.Faction.HORDE});
+opvp.Race.VULPERA = opvp.Race(
+    {
+        id       = opvp.VULPERA,
+        factions = {opvp.Faction.HORDE}
+    }
+);

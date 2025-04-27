@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.KUL_TIRAN = opvp.Race(opvp.KUL_TIRAN, {opvp.Faction.ALLIANCE});
+opvp.Race.KUL_TIRAN = opvp.Race(
+    {
+        id       = opvp.KUL_TIRAN,
+        factions = {opvp.Faction.ALLIANCE}
+    }
+);

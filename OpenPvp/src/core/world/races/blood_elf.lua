@@ -28,4 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.Race.BLOOD_ELF = opvp.Race(opvp.BLOOD_ELF, {opvp.Faction.HORDE});
+opvp.Race.BLOOD_ELF = opvp.Race(
+    {
+        id       = opvp.BLOOD_ELF,
+        factions = {opvp.Faction.HORDE}
+    }
+);

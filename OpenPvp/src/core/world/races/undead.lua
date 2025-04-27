@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.UNDEAD = opvp.Race(opvp.UNDEAD, {opvp.Faction.HORDE});
+opvp.Race.UNDEAD = opvp.Race(
+    {
+        id       = opvp.UNDEAD,
+        factions = {opvp.Faction.HORDE}
+    }
+);

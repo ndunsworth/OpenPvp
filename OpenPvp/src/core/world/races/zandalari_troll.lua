@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.ZANDALARI_TROLL = opvp.Race(opvp.ZANDALARI_TROLL, {opvp.Faction.HORDE});
+opvp.Race.ZANDALARI_TROLL = opvp.Race(
+    {
+        id       = opvp.ZANDALARI_TROLL,
+        factions = {opvp.Faction.HORDE}
+    }
+);

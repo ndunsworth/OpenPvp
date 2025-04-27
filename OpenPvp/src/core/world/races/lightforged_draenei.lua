@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.LIGHTFORGED_DRAENEI = opvp.Race(opvp.LIGHTFORGED_DRAENEI, {opvp.Faction.ALLIANCE});
+opvp.Race.LIGHTFORGED_DRAENEI = opvp.Race(
+    {
+        id       = opvp.LIGHTFORGED_DRAENEI,
+        factions = {opvp.Faction.ALLIANCE}
+    }
+);

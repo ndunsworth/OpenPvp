@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.MAGHAR_ORC = opvp.Race(opvp.MAGHAR_ORC, {opvp.Faction.HORDE});
+opvp.Race.MAGHAR_ORC = opvp.Race(
+    {
+        id       = opvp.MAGHAR_ORC,
+        factions = {opvp.Faction.HORDE}
+    }
+);

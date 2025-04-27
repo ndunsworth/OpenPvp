@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.MECHAGNOME = opvp.Race(opvp.MECHAGNOME, {opvp.Faction.ALLIANCE});
+opvp.Race.MECHAGNOME = opvp.Race(
+    {
+        id       = opvp.MECHAGNOME,
+        factions = {opvp.Faction.ALLIANCE}
+    }
+);

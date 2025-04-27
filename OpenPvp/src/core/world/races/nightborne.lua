@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.NIGHTBORNE = opvp.Race(opvp.NIGHTBORNE, {opvp.Faction.HORDE});
+opvp.Race.NIGHTBORNE = opvp.Race(
+    {
+        id       = opvp.NIGHTBORNE,
+        factions = {opvp.Faction.HORDE}
+    }
+);

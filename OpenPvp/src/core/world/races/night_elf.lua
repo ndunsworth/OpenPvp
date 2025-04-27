@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.NIGHT_ELF = opvp.Race(opvp.NIGHT_ELF, {opvp.Faction.ALLIANCE});
+opvp.Race.NIGHT_ELF = opvp.Race(
+    {
+        id       = opvp.NIGHT_ELF,
+        factions = {opvp.Faction.ALLIANCE}
+    }
+);

@@ -28,4 +28,9 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Race.DRACTHYR            = opvp.Race(opvp.DRACTHYR, {opvp.Faction.NEUTRAL, opvp.Faction.ALLIANCE, opvp.Faction.HORDE});
+opvp.Race.DRACTHYR = opvp.Race(
+    {
+        id       = opvp.DRACTHYR,
+        factions = {opvp.Faction.NEUTRAL, opvp.Faction.ALLIANCE, opvp.Faction.HORDE}
+    }
+);
