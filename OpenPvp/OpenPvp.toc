@@ -1,6 +1,6 @@
 ## Interface: 110100, 110105
 ## Title: OpenPvp
-## Version: 1.0.8
+## Version: 1.0.9
 ## IconTexture: Interface/Icons/achievement_pvp_legion08
 ## Category-enUS: PvP
 ## Notes:

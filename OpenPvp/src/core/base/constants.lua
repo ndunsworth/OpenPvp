@@ -34,7 +34,7 @@ opvp.private = {
 
 opvp.MAJOR_VERSION   = 1;
 opvp.MINOR_VERSION   = 0;
-opvp.RELEASE_VERSION = 8;
+opvp.RELEASE_VERSION = 9;
 
 opvp.VERSION         = string.format(
     "%d.%dv%d",
