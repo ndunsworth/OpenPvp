@@ -343,10 +343,6 @@ function opvp.GenericPartyMemberProvider:_onCombatLogEventOther(event)
 end
 
 function opvp.GenericPartyMemberProvider:_onConnected()
-    if self:isTest() == false then
-        opvp.combatlog.event:connect(self, self._onCombatLogEvent);
-    end
-
     if self:hasPlayer() == true then
         if self._player == nil then
             self._player = self:_createMember("player", opvp.player.guid());
@@ -379,10 +375,6 @@ function opvp.GenericPartyMemberProvider:_onConnected()
 end
 
 function opvp.GenericPartyMemberProvider:_onDisconnected()
-    if self:isTest() == false then
-        opvp.combatlog.event:disconnect(self, self._onCombatLogEvent);
-    end
-
     opvp.PartyMemberProvider._onDisconnected(self);
 end
 
