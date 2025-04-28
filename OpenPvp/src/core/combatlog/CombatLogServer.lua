@@ -28,8 +28,9 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local opvp_combat_log_connection_sig_singleton = nil;
-local opvp_combat_log_connection_mgr_singleton = nil;
+local opvp_combat_log_connection_sig_singleton;
+local opvp_combat_log_server_singleton;
+
 local null_connection = opvp.CombatLogConnection();
 
 opvp.private.CombatLogSignal = opvp.CreateClass(opvp.Signal);
@@ -59,7 +60,7 @@ end
 opvp.CombatLogServer = opvp.CreateClass();
 
 function opvp.CombatLogServer:instance()
-    return opvp_combat_log_connection_mgr_singleton;
+    return opvp_combat_log_server_singleton;
 end
 
 function opvp.CombatLogServer:init()
