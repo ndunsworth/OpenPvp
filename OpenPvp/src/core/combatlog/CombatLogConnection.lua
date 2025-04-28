@@ -36,7 +36,7 @@ end
 
 function opvp.CombatLogConnection:connect()
     if self._connected == false then
-        self._connected = opvp.CombatLogConnectionManager:instance():_addConnection(self);
+        self._connected = opvp.CombatLogServer:instance():_addConnection(self);
     end
 
     return self._connected;
@@ -44,7 +44,7 @@ end
 
 function opvp.CombatLogConnection:disconnect()
     if self._connected == true then
-        opvp.CombatLogConnectionManager:instance():_removeConnection(self);
+        opvp.CombatLogServer:instance():_removeConnection(self);
 
         self._connected = false;
     end

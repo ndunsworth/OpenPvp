@@ -56,28 +56,28 @@ function opvp.private.CombatLogConnectionPriv:event(event)
     opvp.combatlog.event:emit(event);
 end
 
-opvp.CombatLogConnectionManager = opvp.CreateClass();
+opvp.CombatLogServer = opvp.CreateClass();
 
-function opvp.CombatLogConnectionManager:instance()
+function opvp.CombatLogServer:instance()
     return opvp_combat_log_connection_mgr_singleton;
 end
 
-function opvp.CombatLogConnectionManager:init()
+function opvp.CombatLogServer:init()
     self._connections    = opvp.List();
     self._exec           = false;
     self._needs_cleanup  = false;
     self._event          = opvp.CombatLogEvent();
 end
 
-function opvp.CombatLogConnectionManager:isEmpty()
+function opvp.CombatLogServer:isEmpty()
     return self._connections:isEmpty();
 end
 
-function opvp.CombatLogConnectionManager:size()
+function opvp.CombatLogServer:size()
     return self._connections:size();
 end
 
-function opvp.CombatLogConnectionManager:_cleanup()
+function opvp.CombatLogServer:_cleanup()
     if self._needs_cleanup == false then
         return;
     end
@@ -100,12 +100,12 @@ function opvp.CombatLogConnectionManager:_cleanup()
     end
 
     opvp.printDebug(
-        "opvp.CombatLogConnectionManager:_cleanup, size=%d",
+        "opvp.CombatLogServer:_cleanup, size=%d",
         self._connections:size()
     );
 end
 
-function opvp.CombatLogConnectionManager:_addConnection(connection)
+function opvp.CombatLogServer:_addConnection(connection)
     if (
         connection == nil or
         opvp.IsInstance(connection, opvp.CombatLogConnection) == false
@@ -123,14 +123,14 @@ function opvp.CombatLogConnectionManager:_addConnection(connection)
     end
 
     opvp.printDebug(
-        "opvp.CombatLogConnectionManager:_addConnection, size=%d",
+        "opvp.CombatLogServer:_addConnection, size=%d",
         self._connections:size()
     );
 
     return true;
 end
 
-function opvp.CombatLogConnectionManager:_removeConnection(connection)
+function opvp.CombatLogServer:_removeConnection(connection)
     if self._exec == true then
         local index = self._connections:index(connection);
 
@@ -156,12 +156,12 @@ function opvp.CombatLogConnectionManager:_removeConnection(connection)
     end
 
     opvp.printDebug(
-        "opvp.CombatLogConnectionManager:_removeConnection, size=%d",
+        "opvp.CombatLogServer:_removeConnection, size=%d",
         self._connections:size()
     );
 end
 
-function opvp.CombatLogConnectionManager:_onEvent()
+function opvp.CombatLogServer:_onEvent()
     self._exec = true;
 
     self:_cleanup();
@@ -169,7 +169,7 @@ function opvp.CombatLogConnectionManager:_onEvent()
     self._event:update();
 
     --~ opvp.printMessage(
-        --~ "CombatLogConnectionManager[\"%s\"], %d connection",
+        --~ "CombatLogServer[\"%s\"], %d connection",
         --~ opvp.utils.colorStringChatType(
             --~ self._event.subevent,
             --~ opvp.CHAT_TYPE_SYSTEM
@@ -192,13 +192,13 @@ function opvp.CombatLogConnectionManager:_onEvent()
     self._exec = true;
 end
 
-local function opvp_combat_log_connection_mgr_singleton_ctor()
+local function opvp_combat_log_server_singleton_ctor()
     opvp_combat_log_connection_sig_singleton = opvp.private.CombatLogConnectionPriv();
-    opvp_combat_log_connection_mgr_singleton = opvp.CombatLogConnectionManager();
+    opvp_combat_log_server_singleton         = opvp.CombatLogServer();
 
-    opvp.printDebug("CombatLogConnectionManager - Initialized");
+    opvp.printDebug("CombatLogServer - Initialized");
 
     opvp.combatlog.event = opvp.private.CombatLogSignal();
 end
 
-opvp.OnAddonLoad:register(opvp_combat_log_connection_mgr_singleton_ctor);
+opvp.OnAddonLoad:register(opvp_combat_log_server_singleton_ctor);
