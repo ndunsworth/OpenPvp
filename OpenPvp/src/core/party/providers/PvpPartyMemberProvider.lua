@@ -85,7 +85,7 @@ function opvp.PvpPartyMemberProvider:_connectSignals()
 
     monitor.trinketUsed:connect(
         self,
-        self._onTrintetUsed
+        self._onTrinketUsed
     );
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onScoreUpdate);
@@ -112,7 +112,7 @@ function opvp.PvpPartyMemberProvider:_disconnectSignals()
 
     monitor.trinketUsed:disconnect(
         self,
-        self._onTrintetUsed
+        self._onTrinketUsed
     );
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
@@ -224,7 +224,7 @@ function opvp.PvpPartyMemberProvider:_onMemberInspect(member, mask)
     end
 end
 
-function opvp.PvpPartyMemberProvider:_onMemberTrintetUsed(member, spellId, timestamp)
+function opvp.PvpPartyMemberProvider:_onMemberTrinketUsed(member, spellId, timestamp)
     local duration;
 
     if opvp.spell.isPvpRacialTrinket(spellId) == true then
@@ -252,12 +252,12 @@ function opvp.PvpPartyMemberProvider:_onMemberTrintetUsed(member, spellId, times
     end
 
     if duration ~= nil then
-        print("opvp.PvpPartyMemberProvider:_onMemberTrintetUsed,", member:id(), timestamp);
+        print("opvp.PvpPartyMemberProvider:_onMemberTrinketUsed,", member:id(), timestamp);
 
         member:trinketState():_onUpdate(spellId, timestamp, duration);
     end
 
-    self._match:_onMemberTrintetUsed(member, spellId, timestamp);
+    self._match:_onMemberTrinketUsed(member, spellId, timestamp);
 end
 
 function opvp.PvpPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
@@ -300,7 +300,7 @@ function opvp.PvpPartyMemberProvider:_onScoreUpdate()
     self.scoreUpdate:emit();
 end
 
-function opvp.PvpPartyMemberProvider:_onTrintetUsed(
+function opvp.PvpPartyMemberProvider:_onTrinketUsed(
     timestamp,
     guid,
     name,
@@ -314,7 +314,7 @@ function opvp.PvpPartyMemberProvider:_onTrintetUsed(
     local member = self:findMemberByGuid(guid);
 
     if member ~= nil then
-        self:_onMemberTrintetUsed(member, spellId, timestamp);
+        self:_onMemberTrinketUsed(member, spellId, timestamp);
     end
 end
 
