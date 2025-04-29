@@ -134,7 +134,9 @@ function opvp.ArenaPartyMemberProvider:_memberInspect(member)
         self:_onMemberInfoUpdate(member, mask);
     end
 
-    C_PvP.RequestCrowdControlSpell(member:id());
+    if self:isUpdatingRoster() == false then
+        C_PvP.RequestCrowdControlSpell(member:id());
+    end
 end
 
 function opvp.ArenaPartyMemberProvider:_onGroupRosterUpdate()
@@ -266,6 +268,10 @@ end
 
 function opvp.ArenaPartyMemberProvider:_updateMember(unitId, member, created)
     local mask = opvp.PvpPartyMemberProvider._updateMember(self, unitId, member, created);
+
+    if member:trinketState():hasTrinket() == false then
+        C_PvP.RequestCrowdControlSpell(member:id());
+    end
 
     if self._is_shuffle == false then
         return mask;
