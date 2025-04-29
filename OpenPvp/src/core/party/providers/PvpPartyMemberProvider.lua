@@ -35,7 +35,8 @@ function opvp.PvpPartyMemberProvider:init(factory)
         factory = opvp.PvpPartyMemberFactory();
     end
 
-    self._match = nil;
+    self._match      = nil;
+    self._cc_updates = false;
 
     self.scoreUpdate = opvp.Signal("opvp.PvpPartyMemberProvider.scoreUpdate");
 
@@ -68,6 +69,18 @@ function opvp.PvpPartyMemberProvider:_connectSignals()
         opvp.GenericPartyMemberProvider._connectSignals(self);
     end
 
+    if self._cc_updates == true then
+        opvp.event.ARENA_COOLDOWNS_UPDATE:connect(
+            self,
+            self._onArenaCooldownsUpdate
+        );
+
+        opvp.event.ARENA_CROWD_CONTROL_SPELL_UPDATE:connect(
+            self,
+            self._onArenaCrowdControlSpellUpdate
+        );
+    end
+
     local monitor = opvp.PvpTrinketMonitor:instance();
 
     monitor.trinketUsed:connect(
@@ -83,6 +96,18 @@ function opvp.PvpPartyMemberProvider:_disconnectSignals()
         opvp.GenericPartyMemberProvider._disconnectSignals(self);
     end
 
+    if self._cc_updates == true then
+        opvp.event.ARENA_COOLDOWNS_UPDATE:connect(
+            self,
+            self._onArenaCooldownsUpdate
+        );
+
+        opvp.event.ARENA_CROWD_CONTROL_SPELL_UPDATE:disconnect(
+            self,
+            self._onArenaCrowdControlSpellUpdate
+        );
+    end
+
     local monitor = opvp.PvpTrinketMonitor:instance();
 
     monitor.trinketUsed:disconnect(
@@ -91,6 +116,59 @@ function opvp.PvpPartyMemberProvider:_disconnectSignals()
     );
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
+end
+
+function opvp.PvpPartyMemberProvider:_onArenaCooldownsUpdate(unitId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil then
+        return;
+    end
+
+    local trinket_state = member:trinketState();
+
+    local spell_id, start_time, duration = C_PvP.GetArenaCrowdControlInfo(unitId);
+
+    if spell_id == nil or start_time == nil or duration == nil then
+        if trinket_state:hasTrinket() == false then
+            self:_memberInspect(member);
+        end
+    else
+        opvp.printDebug(
+            "opvp.PvpPartyMemberProvider:_onArenaCooldownsUpdate, %s, %d, %f, %f",
+            unitId,
+            spell_id,
+            start_time / 1000,
+            duration / 1000
+        );
+        trinket_state:_onUpdate(
+            spell_id,
+            start_time / 1000,
+            duration / 1000
+        );
+    end
+end
+
+function opvp.PvpPartyMemberProvider:_onArenaCrowdControlSpellUpdate(unitId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil then
+        return;
+    end
+
+    opvp.printDebug(
+        "opvp.PvpPartyMemberProvider:_onArenaCrowdControlSpellUpdate, %s, %d",
+        unitId,
+        spellId
+    );
+
+    local trinket_state = member:trinketState();
+
+    if opvp.spell.isPvpTrinket(spellId) == true then
+        trinket_state:_setTrinket(spellId);
+    elseif opvp.spell.isPvpRacialTrinket(spellId) == true then
+        trinket_state:_setRacial(spellId);
+    end
 end
 
 function opvp.PvpPartyMemberProvider:_onCombatLogEventFriendly(event)
@@ -116,6 +194,11 @@ end
 
 function opvp.PvpPartyMemberProvider:_onConnected()
     self._match = opvp.match.current();
+    self._cc_updates = (
+        self:isArena() == true or
+        self:isRated() == true or
+        self:isHostile() == false
+    );
 
     opvp.GenericPartyMemberProvider._onConnected(self);
 end
@@ -126,7 +209,54 @@ function opvp.PvpPartyMemberProvider:_onDisconnected()
     self._match = nil;
 end
 
+function opvp.PvpPartyMemberProvider:_onMemberInspect(member, mask)
+    opvp.GenericPartyMemberProvider._onMemberInspect(self, member, mask);
+
+    if member:isFriendly() == true then
+        local trinket_state = member:trinketState();
+
+        if (
+            trinket_state:_setTrinketFromInspect(member:id()) < 0 and
+            self._match:isRoundWarmup() == true
+        ) then
+            self:_memberInspect(member);
+        end
+    end
+end
+
 function opvp.PvpPartyMemberProvider:_onMemberTrinketUsed(member, spellId, timestamp)
+    local duration;
+
+    if opvp.spell.isPvpRacialTrinket(spellId) == true then
+        if spellId == 7744 then
+            duration = 120;
+        else
+            duration = 180;
+        end
+
+        timestamp = timestamp - opvp.system.bootTime();
+    elseif self:isArena() == false and self:isRated() == false then
+        local role = member:role();
+
+        if role:isValid() == false then
+            role = opvp.unit.role(member:id());
+        end
+
+        if role:isHealer() == true then
+            duration = 90;
+        else
+            duration = 120;
+        end
+
+        timestamp = timestamp - opvp.system.bootTime();
+    end
+
+    if duration ~= nil then
+        print("opvp.PvpPartyMemberProvider:_onMemberTrinketUsed,", member:id(), timestamp);
+
+        member:trinketState():_onUpdate(spellId, timestamp, duration);
+    end
+
     self.memberTrinketUsed:emit(member, spellId, timestamp);
 end
 
@@ -191,6 +321,10 @@ end
 function opvp.PvpPartyMemberProvider:_updateMember(unitId, member, created)
     if created == true then
         member:_setStats(self._match:map():stats());
+
+        if self._cc_updates == true and self:isHostile() == true then
+            C_PvP.RequestCrowdControlSpell(member:id());
+        end
     end
 
     return bit.bor(
