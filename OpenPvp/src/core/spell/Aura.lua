@@ -104,7 +104,7 @@ function opvp.Aura:release(aura)
         opvp_aura_pool:release(aura);
     elseif opvp.IsInstance(aura, opvp.AuraMap) then
         for id, a in opvp.iter(aura) do
-            opvp_aura_pool:release(aura);
+            opvp_aura_pool:release(a);
         end
     end
 end
