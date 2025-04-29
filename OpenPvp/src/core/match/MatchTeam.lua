@@ -138,9 +138,47 @@ function opvp.MatchTeam:mmr()
     end
 end
 
-function opvp.MatchTeam:_initialize(category, guid)
-    opvp.Party._initialize(self, category, guid);
+function opvp.MatchTeam:_connectSignals()
+    if self:isTest() == false and self:hasPlayer() == true then
+        opvp.event.PARTY_LOOT_METHOD_CHANGED:connect(self, self._onLootMethodChanged);
+        opvp.event.PLAYER_DIFFICULTY_CHANGED:connect(self, self._onDifficultyChangedEvent);
+        opvp.event.READY_CHECK:connect(self, self._onReadyCheck);
+        opvp.event.READY_CHECK_CONFIRM:connect(self, self._onReadyCheckConfirm);
+        opvp.event.READY_CHECK_FINISHED:connect(self, self._onReadyCheckFinished);
+    end
 
+    self._provider.memberTrinketUpdate:connect(
+        self,
+        self._onMemberTrinketUpdate
+    );
+
+    self._provider.memberTrinketUsed:connect(
+        self,
+        self._onMemberTrinketUsed
+    );
+end
+
+function opvp.MatchTeam:_disconnectSignals()
+    if self:isTest() == false and self:hasPlayer() == true then
+        opvp.event.PARTY_LOOT_METHOD_CHANGED:disconnect(self, self._onLootMethodChanged);
+        opvp.event.PLAYER_DIFFICULTY_CHANGED:disconnect(self, self._onDifficultyChangedEvent);
+        opvp.event.READY_CHECK:disconnect(self, self._onReadyCheck);
+        opvp.event.READY_CHECK_CONFIRM:disconnect(self, self._onReadyCheckConfirm);
+        opvp.event.READY_CHECK_FINISHED:disconnect(self, self._onReadyCheckFinished);
+    end
+
+    self._provider.memberTrinketUpdate:disconnect(
+        self,
+        self._onMemberTrinketUpdate
+    );
+
+    self._provider.memberTrinketUsed:disconnect(
+        self,
+        self._onMemberTrinketUsed
+    );
+end
+
+function opvp.MatchTeam:_onInitialized()
     self._dampening_found = false;
 
     if self:isHostile() == true then
@@ -258,6 +296,64 @@ function opvp.MatchTeam:_onMemberSpecUpdate(member, newSpec, oldSpec)
     );
 end
 
+function opvp.MatchTeam:_onMemberTrinketUpdate(member)
+    opvp.match.playerTrinketUpdate:emit(member);
+end
+
+function opvp.MatchTeam:_onMemberTrinketUsed(member, spellId, timestamp)
+    local cls = member:classInfo();
+
+    if member:isFriendly() == true then
+        if member:isPlayer() == false then
+            if member:isSpecKnown() == true then
+                opvp.printMessageOrDebug(
+                    opvp.options.announcements.friendlyParty.memberTrinket:value(),
+                    opvp.strs.MATCH_TRINKET_USED_WITH_SPEC,
+                    opvp.strs.MATCH_FRIENDLY_PLAYER,
+                    member:nameOrId(),
+                    cls:color():GenerateHexColor(),
+                    member:specInfo():name(),
+                    cls:colorString(cls:name())
+                );
+            else
+                opvp.printMessageOrDebug(
+                    opvp.options.announcements.friendlyParty.memberTrinket:value(),
+                    opvp.strs.MATCH_TRINKET_USED,
+                    opvp.strs.MATCH_FRIENDLY_PLAYER,
+                    member:nameOrId(),
+                    cls:color():GenerateHexColor(),
+                    member:raceInfo():name(),
+                    cls:colorString(cls:name())
+                );
+            end
+        end
+    else
+        if member:isSpecKnown() == true then
+            opvp.printMessageOrDebug(
+                opvp.options.announcements.hostileParty.memberTrinket:value(),
+                opvp.strs.MATCH_TRINKET_USED_WITH_SPEC,
+                opvp.strs.MATCH_HOSTILE_PLAYER,
+                member:nameOrId(),
+                cls:color():GenerateHexColor(),
+                member:specInfo():name(),
+                cls:colorString(cls:name())
+            );
+        else
+            opvp.printMessageOrDebug(
+                opvp.options.announcements.hostileParty.memberTrinket:value(),
+                opvp.strs.MATCH_TRINKET_USED,
+                opvp.strs.MATCH_HOSTILE_PLAYER,
+                member:nameOrId(),
+                cls:color():GenerateHexColor(),
+                member:raceInfo():name(),
+                cls:colorString(cls:name())
+            );
+        end
+    end
+
+    opvp.match.playerTrinket:emit(member, spellId, timestamp);
+end
+
 function opvp.MatchTeam:_onRosterBeginUpdate()
     opvp.Party._onRosterBeginUpdate(self);
 
@@ -334,6 +430,9 @@ function opvp.MatchTeam:_onRosterEndUpdate(newMembers, updatedMembers, removedMe
             end
         end
     end
+end
+
+function opvp.MatchTeam:_onShutdown()
 end
 
 function opvp.MatchTeam:_setId(id)

@@ -817,60 +817,6 @@ function opvp.Match:_onMatchStateChanged(status, expected)
     return false;
 end
 
-function opvp.Match:_onMemberTrinketUsed(member, spellId, timestamp)
-    local cls = member:classInfo();
-
-    if member:isFriendly() == true then
-        if member:isPlayer() == false then
-            if member:isSpecKnown() == true then
-                opvp.printMessageOrDebug(
-                    opvp.options.announcements.friendlyParty.memberTrinket:value(),
-                    opvp.strs.MATCH_TRINKET_USED_WITH_SPEC,
-                    opvp.strs.MATCH_FRIENDLY_PLAYER,
-                    member:nameOrId(),
-                    cls:color():GenerateHexColor(),
-                    member:specInfo():name(),
-                    cls:colorString(cls:name())
-                );
-            else
-                opvp.printMessageOrDebug(
-                    opvp.options.announcements.friendlyParty.memberTrinket:value(),
-                    opvp.strs.MATCH_TRINKET_USED,
-                    opvp.strs.MATCH_FRIENDLY_PLAYER,
-                    member:nameOrId(),
-                    cls:color():GenerateHexColor(),
-                    member:raceInfo():name(),
-                    cls:colorString(cls:name())
-                );
-            end
-        end
-    else
-        if member:isSpecKnown() == true then
-            opvp.printMessageOrDebug(
-                opvp.options.announcements.hostileParty.memberTrinket:value(),
-                opvp.strs.MATCH_TRINKET_USED_WITH_SPEC,
-                opvp.strs.MATCH_HOSTILE_PLAYER,
-                member:nameOrId(),
-                cls:color():GenerateHexColor(),
-                member:specInfo():name(),
-                cls:colorString(cls:name())
-            );
-        else
-            opvp.printMessageOrDebug(
-                opvp.options.announcements.hostileParty.memberTrinket:value(),
-                opvp.strs.MATCH_TRINKET_USED,
-                opvp.strs.MATCH_HOSTILE_PLAYER,
-                member:nameOrId(),
-                cls:color():GenerateHexColor(),
-                member:raceInfo():name(),
-                cls:colorString(cls:name())
-            );
-        end
-    end
-
-    opvp.match.playerTrinket:emit(member, spellId, timestamp);
-end
-
 function opvp.Match:_onOutcomeReady(outcomeType)
     opvp.printDebug("opvp.Match._onOutcomeReady(%d)", outcomeType);
 
