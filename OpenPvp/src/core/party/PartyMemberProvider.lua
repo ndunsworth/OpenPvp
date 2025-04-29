@@ -103,7 +103,7 @@ function opvp.PartyMemberProvider:findMemberByGuid(guid)
     return nil;
 end
 
-function opvp.PartyMemberProvider:findMemberByUnitId(guid)
+function opvp.PartyMemberProvider:findMemberByUnitId(unitId)
     return nil;
 end
 
@@ -121,6 +121,22 @@ end
 
 function opvp.PartyMemberProvider:guid()
     return self._guid;
+end
+
+function opvp.PartyMemberProvider:inspectMemberByGuid(guid)
+    local member = self:findMemberByGuid(guid);
+
+    if member ~= nil then
+        self:_memberInspect(member);
+    end
+end
+
+function opvp.PartyMemberProvider:inspectMemberByUnitId(unitId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member ~= nil then
+        self:_memberInspect(member);
+    end
 end
 
 function opvp.PartyMemberProvider:isConnected()

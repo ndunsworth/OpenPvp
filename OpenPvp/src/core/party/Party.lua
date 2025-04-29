@@ -179,6 +179,18 @@ function opvp.Party:initialize(category, guid)
     self.initialized:emit(category, guid, self);
 end
 
+function opvp.Party:inspectMemberByGuid(guid)
+    if self._provider ~= nil then
+        self._provider:inspectMemberByGuid(guid);
+    end
+end
+
+function opvp.Party:inspectMemberByUnitId(unitId)
+    if self._provider ~= nil then
+        self._provider:inspectMemberByUnitId(unitId);
+    end
+end
+
 function opvp.Party:isActive()
     return self._active;
 end
