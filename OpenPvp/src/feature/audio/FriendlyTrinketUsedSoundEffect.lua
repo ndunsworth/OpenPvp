@@ -92,7 +92,7 @@ function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchTrinketUsed(
     end
 end
 
-function opvp.private.FriendlyTrinketUsedSoundEffect:_onTrintetUsed(
+function opvp.private.FriendlyTrinketUsedSoundEffect:_onTrinketUsed(
     timestamp,
     guid,
     name,
@@ -131,12 +131,12 @@ function opvp.private.FriendlyTrinketUsedSoundEffect:_setMonitorConnected(state)
     if state == true then
         monitor.trinketUsed:connect(
             self,
-            self._onTrintetUsed
+            self._onTrinketUsed
         );
     else
         monitor.trinketUsed:disconnect(
             self,
-            self._onTrintetUsed
+            self._onTrinketUsed
         );
     end
 

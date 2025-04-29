@@ -369,7 +369,7 @@ function opvp.MatchTest:_onMatchRoundActiveTimer()
     end
 
     if member ~= nil then
-        self._match:_onMemberTrintetUsed(
+        self._match:_onMemberTrinketUsed(
             member,
             336126
         );
