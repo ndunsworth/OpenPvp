@@ -563,3 +563,7 @@ function opvp.time.formatSeconds(seconds, uppercase)
         return opvp_seconds_fmt_upper:Format(seconds);
     end
 end
+
+function opvp.time.bootTime()
+    return opvp.system.bootTime();
+end
