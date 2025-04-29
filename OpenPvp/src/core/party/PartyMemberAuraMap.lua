@@ -100,14 +100,22 @@ function opvp.PartyMemberAuraMap:updateFromEvent(
         AuraUtil.ForEachAura(unitId, "HELPFUL", nil, callback, true);
         AuraUtil.ForEachAura(unitId, "HARMFUL|RAID", nil, callback, true);
 
-        for id, aura in pairs(self._auras) do
-            opvp.Aura:release(aura);
-        end
-
         aurasRemoved:swap(self);
 
         self._auras = auras;
     else
+        if info.removedAuraInstanceIDs then
+            for n=1, #info.removedAuraInstanceIDs do
+                aura = self._auras[info.removedAuraInstanceIDs[n]];
+
+                if aura ~= nil then
+                    self._auras[aura:id()] = nil;
+
+                    aurasRemoved:add(aura);
+                end
+            end
+        end
+
         if info.addedAuras then
             for n=1, #info.addedAuras do
                 aura = opvp.Aura:acquire();
@@ -142,20 +150,6 @@ function opvp.PartyMemberAuraMap:updateFromEvent(
 
                         aurasNew:add(aura);
                     end
-                end
-            end
-        end
-
-        if info.removedAuraInstanceIDs then
-            for n=1, #info.removedAuraInstanceIDs do
-                aura = self._auras[info.removedAuraInstanceIDs[n]];
-
-                if aura ~= nil then
-                    self._auras[aura:id()] = nil;
-
-                    aurasRemoved:add(aura);
-
-                    opvp.Aura:release(aura);
                 end
             end
         end
