@@ -40,17 +40,19 @@ function opvp.PartyMemberProvider:init()
     self._factory       = opvp.PartyMemberFactory(opvp.PartyMemberFactoryCache(40));
     self._owns_factory  = true;
 
-    self.connected         = opvp.Signal("opvp.PartyMemberProvider.connected");
-    self.disconnecting     = opvp.Signal("opvp.PartyMemberProvider.disconnecting");
-    self.disconnected      = opvp.Signal("opvp.PartyMemberProvider.disconnected");
-    self.leaderChanged     = opvp.Signal("opvp.PartyMemberProvider.leaderChanged");
-    self.memberAuraUpdate  = opvp.Signal("opvp.PartyMemberProvider.memberAuraUpdate");
-    self.memberInfoUpdate  = opvp.Signal("opvp.PartyMemberProvider.memberInfoUpdate");
-    self.memberInspect     = opvp.Signal("opvp.PartyMemberProvider.memberInspect");
-    self.memberSpecUpdate  = opvp.Signal("opvp.PartyMemberProvider.memberSpecUpdate");
-    self.rosterBeginUpdate = opvp.Signal("opvp.PartyMemberProvider.rosterBeginUpdate");
-    self.rosterEndUpdate   = opvp.Signal("opvp.PartyMemberProvider.rosterEndUpdate");
-    self.typeChanged       = opvp.Signal("opvp.PartyMemberProvider.typeChanged");
+    self.connected           = opvp.Signal("opvp.PartyMemberProvider.connected");
+    self.disconnecting       = opvp.Signal("opvp.PartyMemberProvider.disconnecting");
+    self.disconnected        = opvp.Signal("opvp.PartyMemberProvider.disconnected");
+    self.leaderChanged       = opvp.Signal("opvp.PartyMemberProvider.leaderChanged");
+    self.memberAuraUpdate    = opvp.Signal("opvp.PartyMemberProvider.memberAuraUpdate");
+    self.memberInfoUpdate    = opvp.Signal("opvp.PartyMemberProvider.memberInfoUpdate");
+    self.memberInspect       = opvp.Signal("opvp.PartyMemberProvider.memberInspect");
+    self.memberTrinketUpdate = opvp.Signal("opvp.PartyMemberProvider.memberTrinketUpdate");
+    self.memberTrinketUsed   = opvp.Signal("opvp.PartyMemberProvider.memberTrinketUsed");
+    self.memberSpecUpdate    = opvp.Signal("opvp.PartyMemberProvider.memberSpecUpdate");
+    self.rosterBeginUpdate   = opvp.Signal("opvp.PartyMemberProvider.rosterBeginUpdate");
+    self.rosterEndUpdate     = opvp.Signal("opvp.PartyMemberProvider.rosterEndUpdate");
+    self.typeChanged         = opvp.Signal("opvp.PartyMemberProvider.typeChanged");
 end
 
 function opvp.PartyMemberProvider:affiliation()
