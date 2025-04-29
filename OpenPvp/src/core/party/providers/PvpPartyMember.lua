@@ -33,17 +33,18 @@ opvp.PvpPartyMember = opvp.CreateClass(opvp.PartyMember);
 function opvp.PvpPartyMember:init()
     opvp.PartyMember.init(self);
 
-    self._kills     = 0;
-    self._deaths    = 0;
-    self._damage    = 0;
-    self._healing   = 0;
+    self._kills         = 0;
+    self._deaths        = 0;
+    self._damage        = 0;
+    self._healing       = 0;
 
-    self._cr        = 0;
-    self._cr_gain   = 0;
-    self._mmr       = 0;
-    self._mmr_gain  = 0;
-    self._team      = nil;
-    self._stats     = opvp.List();
+    self._cr            = 0;
+    self._cr_gain       = 0;
+    self._mmr           = 0;
+    self._mmr_gain      = 0;
+    self._team          = nil;
+    self._stats         = opvp.List();
+    self._trinket_state = opvp.PvpTrinketState();
 end
 
 function opvp.PvpPartyMember:cr()
@@ -132,6 +133,10 @@ function opvp.PvpPartyMember:team()
     return self._team;
 end
 
+function opvp.PvpPartyMember:trinketState()
+    return self._trinket_state;
+end
+
 function opvp.PvpPartyMember:_reset(mask)
     opvp.PartyMember._reset(self, mask);
 
@@ -152,6 +157,10 @@ function opvp.PvpPartyMember:_reset(mask)
         self._healing   = 0;
 
         self._stats:clear();
+    end
+
+    if bit.band(mask, opvp.PartyMember.PVP_TRINKET_FLAG) then
+        self._trinket_state:_reset();
     end
 
     if bit.band(mask, opvp.PartyMember.TEAM_FLAG) then

@@ -117,6 +117,7 @@ src/core/spell/CombatLevelState.lua
 src/core/spell/CrowdControlCategory.lua
 src/core/spell/CrowdControlCategoryState.lua
 src/core/spell/CrowdControlState.lua
+src/core/spell/PvpTrinketState.lua
 
 src/core/world/expansion.lua
 src/core/world/season.lua

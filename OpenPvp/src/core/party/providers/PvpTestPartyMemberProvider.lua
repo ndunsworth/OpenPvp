@@ -101,6 +101,8 @@ function opvp.PvpTestPartyMemberProvider:_updateMember(unitId, member, created)
 
     member:_setStats(self._match:map():stats());
 
+    member:trinketState():_setRacialFromRaceId(member:race());
+
     return 0;
 end
 
