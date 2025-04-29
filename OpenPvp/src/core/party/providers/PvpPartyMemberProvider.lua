@@ -135,11 +135,11 @@ function opvp.PvpPartyMemberProvider:_onArenaCooldownsUpdate(unitId)
         end
     else
         opvp.printDebug(
-            "opvp.PvpPartyMemberProvider:_onArenaCooldownsUpdate, %s, %d, %d, %d",
+            "opvp.PvpPartyMemberProvider:_onArenaCooldownsUpdate, %s, %d, %f, %f",
             unitId,
             spell_id,
-            start_time,
-            duration
+            start_time / 1000,
+            duration / 1000
         );
         trinket_state:_onUpdate(
             spell_id,
@@ -225,7 +225,38 @@ function opvp.PvpPartyMemberProvider:_onMemberInspect(member, mask)
 end
 
 function opvp.PvpPartyMemberProvider:_onMemberTrintetUsed(member, spellId, timestamp)
-    print("opvp.PvpPartyMemberProvider:_onMemberTrintetUsed,", member:id(), timestamp);
+    local duration;
+
+    if opvp.spell.isPvpRacialTrinket(spellId) == true then
+        if spellId == 7744 then
+            duration = 120;
+        else
+            duration = 180;
+        end
+
+        timestamp = timestamp - opvp.system.bootTime();
+    elseif self:isArena() == false and self:isRated() == false then
+        local role = member:role();
+
+        if role:isValid() == false then
+            role = opvp.unit.role(member:id());
+        end
+
+        if role:isHealer() == true then
+            duration = 90;
+        else
+            duration = 120;
+        end
+
+        timestamp = timestamp - opvp.system.bootTime();
+    end
+
+    if duration ~= nil then
+        print("opvp.PvpPartyMemberProvider:_onMemberTrintetUsed,", member:id(), timestamp);
+
+        member:trinketState():_onUpdate(spellId, timestamp, duration);
+    end
+
     self._match:_onMemberTrintetUsed(member, spellId, timestamp);
 end
 
