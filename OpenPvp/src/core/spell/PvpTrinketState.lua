@@ -68,6 +68,8 @@ local function opvp_is_slot_pvp_trinket_spell(unitId, slot)
 
     if opvp.spell.isPvpTrinket(spell_id) == true then
         return spell_id;
+    elseif C_Item.GetItemIconByID(item_id) == 895886 then
+        return 336135;
     else
         return 0;
     end
@@ -124,7 +126,7 @@ end
 function opvp.PvpTrinketState:isRacialOffCooldown()
     return (
         self._racial_spell_id ~= 0 and
-        GetTime() > self._racial_duration
+        GetTime() > self:racialOffCooldownTime()
     );
 end
 
@@ -135,7 +137,7 @@ end
 function opvp.PvpTrinketState:isTrinketOffCooldown()
     return (
         self._trinket_spell_id ~= 0 and
-        GetTime() > self._trinket_duration
+        GetTime() > self:trinketOffCooldownTime()
     );
 end
 
@@ -190,10 +192,6 @@ function opvp.PvpTrinketState:_clear()
 end
 
 function opvp.PvpTrinketState:_onUpdate(spellId, startTime, duration)
-    if startTime == 0 or duration == 0 then
-        return false;
-    end
-
     if (
         self:hasAny() == false or
         self:isAnySpellId(spellId) == false
@@ -208,38 +206,36 @@ function opvp.PvpTrinketState:_onUpdate(spellId, startTime, duration)
     end
 
     if spellId == self._trinket_spell_id then
-        if (
-            self._trinket_used > 0 and
-            self:trinketOffCooldownTime() >= startTime + duration
-        ) then
-            return false;
-        end
-
-        print("opvp.PvpTrinketState:_onUpdate,", spellId, startTime, duration);
+        local old_used         = self._trinket_used;
 
         self._trinket_used     = startTime;
         self._trinket_duration = duration;
 
         self:_onTrinketUsed();
 
-        return true;
-    elseif spellId == self._racial_spell_id then
-        if (
-            self._racial_used > 0 and
-            self:racialOffCooldownTime() >= startTime + duration
-        ) then
-            return false;
-        end
+        if old_used ~= self._trinket_used then
+            print("opvp.PvpTrinketState:_onUpdate,", spellId, startTime, duration, old_used);
 
-        print("opvp.PvpTrinketState:_onUpdate,", spellId, startTime, duration);
+            self:_onTrinketUsed();
+
+            return true;
+        end
+    elseif spellId == self._racial_spell_id then
+        local old_used        = self._racial_used;
 
         self._racial_used     = startTime;
         self._racial_duration = duration;
 
-        self:_onRacialUsed();
+        if old_used ~= self._racial_used then
+            print("opvp.PvpTrinketState:_onUpdate,", spellId, startTime, duration, old_used);
 
-        return true;
+            self:_onRacialUsed();
+
+            return true;
+        end
     end
+
+    return false;
 end
 
 function opvp.PvpTrinketState:_onRacialUsed()
@@ -276,7 +272,7 @@ end
 
 function opvp.PvpTrinketState:_setRacial(spellId)
     if spellId == self._racial_spell_id then
-        return;
+        return false;
     end
 
     opvp.printWarning(
@@ -295,19 +291,23 @@ function opvp.PvpTrinketState:_setRacial(spellId)
     else
         self._dual_timeout = 90;
     end
+
+    return true;
 end
 
 function opvp.PvpTrinketState:_setRacialFromRaceId(raceId)
     if raceId == opvp.HUMAN then
-        self:_setRacial(59752);
+        return self:_setRacial(59752);
     elseif raceId == opvp.UNDEAD then
-        self:_setRacial(7744);
+        return self:_setRacial(7744);
+    else
+        return false;
     end
 end
 
 function opvp.PvpTrinketState:_setTrinket(spellId)
     if spellId == self._trinket_spell_id then
-        return;
+        return false;
     end
 
     opvp.printWarning(
@@ -321,6 +321,8 @@ function opvp.PvpTrinketState:_setTrinket(spellId)
         self._trinket_used     = 0;
         self._trinket_duration = 0;
     end
+
+    return true;
 end
 
 function opvp.PvpTrinketState:_setTrinketFromInspect(unitId)
