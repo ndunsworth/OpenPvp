@@ -88,7 +88,7 @@ function opvp.private.EnemyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, sp
     end
 end
 
-function opvp.private.EnemyTrinketUsedSoundEffect:_onTrintetUsed(
+function opvp.private.EnemyTrinketUsedSoundEffect:_onTrinketUsed(
     timestamp,
     guid,
     name,
@@ -127,12 +127,12 @@ function opvp.private.EnemyTrinketUsedSoundEffect:_setMonitorConnected(state)
     if state == true then
         monitor.trinketUsed:connect(
             self,
-            self._onTrintetUsed
+            self._onTrinketUsed
         );
     else
         monitor.trinketUsed:disconnect(
             self,
-            self._onTrintetUsed
+            self._onTrinketUsed
         );
     end
 

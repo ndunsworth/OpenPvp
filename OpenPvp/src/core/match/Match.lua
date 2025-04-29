@@ -817,7 +817,7 @@ function opvp.Match:_onMatchStateChanged(status, expected)
     return false;
 end
 
-function opvp.Match:_onMemberTrintetUsed(member, spellId, timestamp)
+function opvp.Match:_onMemberTrinketUsed(member, spellId, timestamp)
     local cls = member:classInfo();
 
     if member:isFriendly() == true then
