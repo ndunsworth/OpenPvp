@@ -133,19 +133,12 @@ function opvp.PvpPartyMemberProvider:_onArenaCooldownsUpdate(unitId)
         if trinket_state:hasTrinket() == false then
             self:_memberInspect(member);
         end
-    else
-        opvp.printDebug(
-            "opvp.PvpPartyMemberProvider:_onArenaCooldownsUpdate, %s, %d, %f, %f",
-            unitId,
-            spell_id,
-            start_time / 1000,
-            duration / 1000
-        );
-        trinket_state:_onUpdate(
-            spell_id,
-            start_time / 1000,
-            duration / 1000
-        );
+    elseif trinket_state:_onUpdate(
+        spell_id,
+        start_time / 1000,
+        duration / 1000
+    ) == true then
+        self.memberTrinketUpdate:emit(member);
     end
 end
 
@@ -156,18 +149,16 @@ function opvp.PvpPartyMemberProvider:_onArenaCrowdControlSpellUpdate(unitId, spe
         return;
     end
 
-    opvp.printDebug(
-        "opvp.PvpPartyMemberProvider:_onArenaCrowdControlSpellUpdate, %s, %d",
-        unitId,
-        spellId
-    );
-
     local trinket_state = member:trinketState();
 
     if opvp.spell.isPvpTrinket(spellId) == true then
-        trinket_state:_setTrinket(spellId);
+        if trinket_state:_setTrinket(spellId) == true then
+            self.memberTrinketUpdate:emit(member);
+        end
     elseif opvp.spell.isPvpRacialTrinket(spellId) == true then
-        trinket_state:_setRacial(spellId);
+        if trinket_state:_setRacial(spellId) == true then
+            self.memberTrinketUpdate:emit(member);
+        end
     end
 end
 
@@ -252,24 +243,32 @@ function opvp.PvpPartyMemberProvider:_onMemberTrinketUsed(member, spellId, times
     end
 
     if duration ~= nil then
-        print("opvp.PvpPartyMemberProvider:_onMemberTrinketUsed,", member:id(), timestamp);
+        local trinket_state = member:trinketState();
 
-        member:trinketState():_onUpdate(spellId, timestamp, duration);
+        if trinket_state:_onUpdate(spellId, timestamp, duration) == true then
+            self.memberTrinketUpdate:emit(member);
+        end
     end
 
     self.memberTrinketUsed:emit(member, spellId, timestamp);
 end
 
 function opvp.PvpPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
-    local member, mask;
+    local member, mask, valid;
 
     for n=1, #newMembers do
         member = newMembers[n];
 
         if member:race() == opvp.HUMAN then
-            member:trinketState():_setRacial(59752);
+            valid = member:trinketState():_setRacial(59752);
         elseif member:race() == opvp.UNDEAD then
-            member:trinketState():_setRacial(7744);
+            valid = member:trinketState():_setRacial(7744);
+        else
+            valid = false;
+        end
+
+        if valid == true then
+            self.memberTrinketUpdate:emit(member);
         end
     end
 
@@ -278,9 +277,15 @@ function opvp.PvpPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembe
 
         if bit.band(mask, opvp.PartyMember.RACE_FLAG) ~= 0 then
             if member:race() == opvp.HUMAN then
-                member:trinketState():_setRacial(59752);
+                valid = member:trinketState():_setRacial(59752);
             elseif member:race() == opvp.UNDEAD then
-                member:trinketState():_setRacial(7744);
+                valid = member:trinketState():_setRacial(7744);
+            else
+                valid = false;
+            end
+
+            if valid == true then
+                self.memberTrinketUpdate:emit(member);
             end
         end
     end
