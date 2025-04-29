@@ -51,6 +51,7 @@ opvp.match.playerCrowdControlRemoved  = opvp.Signal("opvp.match.playerCrowdContr
 opvp.match.playerInfoUpdate           = opvp.Signal("opvp.match.playerInfoUpdate");
 opvp.match.playerSpecUpdate           = opvp.Signal("opvp.Party.playerSpecUpdate");
 opvp.match.playerTrinket              = opvp.Signal("opvp.match.playerTrinket");
+opvp.match.playerTrinketUpdate        = opvp.Signal("opvp.match.playerTrinketUpdate");
 opvp.match.rosterBeginUpdate          = opvp.Signal("opvp.match.rosterBeginUpdate");
 opvp.match.rosterEndUpdate            = opvp.Signal("opvp.match.rosterEndUpdate");
 opvp.match.roundWarmup                = opvp.Signal("opvp.match.roundWarmup");
