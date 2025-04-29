@@ -176,6 +176,8 @@ function opvp.Party:initialize(category, guid)
 
     self._initialized = true;
 
+    self:_onInitialized();
+
     self.initialized:emit(category, guid, self);
 end
 
@@ -395,6 +397,8 @@ function opvp.Party:shutdown()
 
     self._initialized = false;
 
+    self:_onShutdown();
+
     self.closed:emit(self);
 end
 
@@ -580,6 +584,9 @@ function opvp.Party:_onDifficultyChangedEvent()
     end
 end
 
+function opvp.Party:_onInitialized()
+end
+
 function opvp.Party:_onLootMethodChanged(state)
     self.lootMethodChanged:emit(state);
 end
@@ -638,6 +645,9 @@ function opvp.Party:_onRosterEndUpdate(newMembers, updatedMembers, removedMember
     end
 
     self.rosterEndUpdate:emit(self, newMembers, updatedMembers, removedMembers);
+end
+
+function opvp.Party:_onShutdown()
 end
 
 function opvp.Party:_onSuspendChanged(state)
