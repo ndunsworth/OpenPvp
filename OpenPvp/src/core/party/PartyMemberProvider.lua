@@ -358,6 +358,8 @@ end
 
 function opvp.PartyMemberProvider:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
     self.memberAuraUpdate:emit(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate);
+
+    opvp.Aura:release(aurasRemoved);
 end
 
 function opvp.PartyMemberProvider:_onMemberInfoUpdate(member, mask)
