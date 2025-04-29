@@ -224,7 +224,7 @@ function opvp.PvpPartyMemberProvider:_onMemberInspect(member, mask)
     end
 end
 
-function opvp.PvpPartyMemberProvider:_onMemberTrinketUsed(member, spellId, timestamp)
+function opvp.PvpPartyMemberProvider:_onMemberTrintetUsed(member, spellId, timestamp)
     local duration;
 
     if opvp.spell.isPvpRacialTrinket(spellId) == true then
