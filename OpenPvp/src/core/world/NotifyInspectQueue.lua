@@ -48,10 +48,6 @@ end
 
 function opvp.NotifyInspectQueueItem:notifyInspect(state)
     self:emit(self._id, state);
-
-    if state == true then
-        ClearInspectPlayer();
-    end
 end
 
 function opvp.NotifyInspectQueueItem:register(...)
@@ -82,8 +78,6 @@ function opvp.NotifyInspectQueueItem:requestInspect()
             --~ "NotifyRequest(%s): Requested",
             --~ self._id
         --~ );
-
-        ClearInspectPlayer();
 
         NotifyInspect(token);
 
@@ -351,6 +345,8 @@ function opvp.NotifyInspectQueue:_onRequestReady(guid)
 
         item:notifyInspect(true);
 
+        ClearInspectPlayer();
+
         self:_advance();
     end
 end
@@ -446,3 +442,19 @@ local function opvp_inspect_queue_singleton_ctor()
 end
 
 opvp.OnAddonLoad:register(opvp_inspect_queue_singleton_ctor);
+
+--~ hooksecurefunc(
+    --~ "ClearInspectPlayer",
+    --~ function()
+        --~ print("ClearInspectPlayer hooksecurefunc", GetTime());
+        --~ print(opvp.utils.debugstack(1));
+    --~ end
+--~ );
+
+--~ hooksecurefunc(
+    --~ "NotifyInspect",
+    --~ function(unitId)
+        --~ print("NotifyInspect hooksecurefunc", unitId, GetTime());
+        --~ print(opvp.utils.debugstack(1));
+    --~ end
+--~ );
