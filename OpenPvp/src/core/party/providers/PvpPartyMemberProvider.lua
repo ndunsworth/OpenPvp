@@ -127,7 +127,7 @@ function opvp.PvpPartyMemberProvider:_onDisconnected()
 end
 
 function opvp.PvpPartyMemberProvider:_onMemberTrinketUsed(member, spellId, timestamp)
-    self._match:_onMemberTrinketUsed(member, spellId, timestamp);
+    self.memberTrinketUsed:emit(member, spellId, timestamp);
 end
 
 function opvp.PvpPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
