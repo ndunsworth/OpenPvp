@@ -133,6 +133,8 @@ function opvp.ArenaPartyMemberProvider:_memberInspect(member)
     if mask ~= 0 and self:isUpdatingRoster() == false then
         self:_onMemberInfoUpdate(member, mask);
     end
+
+    C_PvP.RequestCrowdControlSpell(member:id());
 end
 
 function opvp.ArenaPartyMemberProvider:_onGroupRosterUpdate()
