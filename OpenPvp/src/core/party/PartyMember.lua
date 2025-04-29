@@ -30,26 +30,27 @@ local opvp = OpenPvp;
 
 opvp.PartyMember = opvp.CreateClass();
 
-opvp.PartyMember.AFFILIATION_FLAG    = bit.lshift(1,  8);
-opvp.PartyMember.AURAS_FLAG          = bit.lshift(1,  0);
-opvp.PartyMember.COMBAT_FLAG         = bit.lshift(1,  1);
-opvp.PartyMember.CONNECTED_FLAG      = bit.lshift(1,  2);
-opvp.PartyMember.DEAD_FLAG           = bit.lshift(1,  3);
-opvp.PartyMember.ENABLED_FLAG        = bit.lshift(1,  4);
-opvp.PartyMember.HEALTH_FLAG         = bit.lshift(1,  5);
-opvp.PartyMember.FACTION_FLAG        = bit.lshift(1,  6);
-opvp.PartyMember.GUID_FLAG           = bit.lshift(1,  7);
+opvp.PartyMember.AFFILIATION_FLAG    = bit.lshift(1,  0);
+opvp.PartyMember.AURAS_FLAG          = bit.lshift(1,  1);
+opvp.PartyMember.COMBAT_FLAG         = bit.lshift(1,  2);
+opvp.PartyMember.CONNECTED_FLAG      = bit.lshift(1,  3);
+opvp.PartyMember.DEAD_FLAG           = bit.lshift(1,  4);
+opvp.PartyMember.ENABLED_FLAG        = bit.lshift(1,  5);
+opvp.PartyMember.HEALTH_FLAG         = bit.lshift(1,  6);
+opvp.PartyMember.FACTION_FLAG        = bit.lshift(1,  7);
+opvp.PartyMember.GUID_FLAG           = bit.lshift(1,  8);
 opvp.PartyMember.ID_FLAG             = bit.lshift(1,  9);
 opvp.PartyMember.NAME_FLAG           = bit.lshift(1, 10);
 opvp.PartyMember.PLAYER_FLAG         = bit.lshift(1, 11);
-opvp.PartyMember.RACE_FLAG           = bit.lshift(1, 12);
-opvp.PartyMember.RANGE_FLAG          = bit.lshift(1, 13);
-opvp.PartyMember.RATING_CURRENT_FLAG = bit.lshift(1, 14);
-opvp.PartyMember.RATING_GAIN_FLAG    = bit.lshift(1, 15);
-opvp.PartyMember.SCORE_FLAG          = bit.lshift(1, 16);
-opvp.PartyMember.SEX_FLAG            = bit.lshift(1, 17);
-opvp.PartyMember.SPEC_FLAG           = bit.lshift(1, 18);
-opvp.PartyMember.TEAM_FLAG           = bit.lshift(1, 19);
+opvp.PartyMember.PVP_TRINKET_FLAG    = bit.lshift(1, 12);
+opvp.PartyMember.RACE_FLAG           = bit.lshift(1, 13);
+opvp.PartyMember.RANGE_FLAG          = bit.lshift(1, 14);
+opvp.PartyMember.RATING_CURRENT_FLAG = bit.lshift(1, 15);
+opvp.PartyMember.RATING_GAIN_FLAG    = bit.lshift(1, 16);
+opvp.PartyMember.SCORE_FLAG          = bit.lshift(1, 17);
+opvp.PartyMember.SEX_FLAG            = bit.lshift(1, 18);
+opvp.PartyMember.SPEC_FLAG           = bit.lshift(1, 19);
+opvp.PartyMember.TEAM_FLAG           = bit.lshift(1, 20);
 
 opvp.PartyMember.CHARACTER_FLAGS = bit.bor(
     opvp.PartyMember.FACTION_FLAG,
@@ -75,6 +76,7 @@ opvp.PartyMember.STATE_FLAGS = bit.bor(
     opvp.PartyMember.AFFILIATION_FLAG,
     opvp.PartyMember.RANGE_FLAG,
     opvp.PartyMember.PLAYER_FLAG,
+    opvp.PartyMember.PVP_TRINKET_FLAG,
     opvp.PartyMember.RATING_CURRENT_FLAG,
     opvp.PartyMember.RATING_GAIN_FLAG,
     opvp.PartyMember.SCORE_FLAG,
