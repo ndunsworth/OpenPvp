@@ -95,9 +95,13 @@ function opvp.PvpTestPartyMemberProvider:_onScoreUpdate()
 end
 
 function opvp.PvpTestPartyMemberProvider:_updateMember(unitId, member, created)
-    if created == true and self._match ~= nil then
-        member:_setStats(self._match:map():stats());
+    if created == false then
+        return 0;
     end
+
+    member:_setStats(self._match:map():stats());
+
+    return 0;
 end
 
 function opvp.PvpTestPartyMemberProvider:_updateMemberScore(member, rated)
