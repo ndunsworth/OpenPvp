@@ -29,7 +29,8 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 --~ Default for a 3v3
-local OPVP_AURA_POOL_DEFAULT_SIZE = 40 * 6;
+--~ Allow for overflow since a UNIT_AURA event might hit the cap.
+local OPVP_AURA_POOL_DEFAULT_SIZE = 40 * 7;
 
 local opvp_aura_pool = nil;
 
@@ -99,7 +100,13 @@ function opvp.Aura:reduce()
 end
 
 function opvp.Aura:release(aura)
-    opvp_aura_pool:release(aura);
+    if opvp.IsInstance(aura, opvp.Aura) then
+        opvp_aura_pool:release(aura);
+    else if opvp.IsInstance(aura, opvp.AuraMap) then
+        for id, a in opvp.iter(aura) do
+            opvp_aura_pool:release(aura);
+        end
+    end
 end
 
 function opvp.Aura:init()
