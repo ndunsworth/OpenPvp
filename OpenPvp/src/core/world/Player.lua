@@ -275,6 +275,14 @@ function opvp.Player:hasPvpRacialTrinket()
     return self._pvp_trinket_racial_spellid ~= 0;
 end
 
+function opvp.Player:hasPvpTrinket()
+    return self._pvp_trinket_spell_id ~= 0;
+end
+
+function opvp.Player:hasPvpTrinket()
+    return self._pvp_trinket_spell_id ~= 0;
+end
+
 function opvp.Player:honorKillsLifetime()
     local hks, max_rank = GetPVPLifetimeStats();
 
@@ -389,6 +397,14 @@ end
 
 function opvp.Player:parties()
     return self._parties:items();
+end
+
+function opvp.Player:pvpRacialTrinketSpellId()
+    return self._pvp_trinket_racial_spellid;
+end
+
+function opvp.Player:pvpTrinketSpellId()
+    return self._pvp_trinket_spell_id;
 end
 
 function opvp.Player:role()
@@ -824,6 +840,10 @@ function opvp.player.hasPvpRacialTrinket()
     return opvp_user_player_singleton:hasPvpRacialTrinket();
 end
 
+function opvp.player.hasPvpTrinket()
+    return opvp_user_player_singleton:hasPvpTrinket();
+end
+
 function opvp.player.honorKillsLifetime()
     return opvp_user_player_singleton:honorKillsLifetime();
 end
@@ -938,6 +958,14 @@ end
 
 function opvp.player.parties()
     return opvp_user_player_singleton:parties();
+end
+
+function opvp.player.pvpRacialTrinketSpellId()
+    return opvp_user_player_singleton:pvpRacialTrinketSpellId();
+end
+
+function opvp.player.pvpTrinketSpellId()
+    return opvp_user_player_singleton:pvpTrinketSpellId();
 end
 
 function opvp.player.race()
