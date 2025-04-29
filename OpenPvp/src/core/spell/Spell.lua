@@ -348,3 +348,19 @@ end
 function opvp.Spell:texture()
     return C_Spell.GetSpellTexture(self._id);
 end
+
+opvp.spell = {};
+
+function opvp.spell.isPvpRacialTrinket(spellId)
+    return (
+        spellId == 7744 or
+        spellId == 59752
+    );
+end
+
+function opvp.spell.isPvpTrinket(spellId)
+    return (
+        spellId == 336126 or
+        spellId == 336135
+    );
+end
