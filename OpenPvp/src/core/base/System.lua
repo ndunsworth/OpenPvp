@@ -49,9 +49,14 @@ function opvp.System:init()
     self._reload_time     = 0;
     self._load_state      = opvp.SystemStatus.NONE;
     self._vars_loaded     = false;
+    self._boot_time       = time() - GetTimePreciseSec();
 
     opvp.event.PLAYER_LOGOUT:connect(self, self._onLogout);
     opvp.event.VARIABLES_LOADED:connect(self, self._onVarsLoaded);
+end
+
+function opvp.System:bootTime()
+    return self._boot_time;
 end
 
 function opvp.System:isLastLoginValid()
@@ -135,6 +140,10 @@ function opvp.System:_onVarsLoaded()
 end
 
 opvp.system = {};
+
+function opvp.system.bootTime()
+    return opvp_system_singleton:bootTime();
+end
 
 function opvp.system.isLoading()
     return opvp_system_singleton:isLoading();
