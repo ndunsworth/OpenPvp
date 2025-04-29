@@ -214,8 +214,6 @@ function opvp.PvpTrinketState:_onUpdate(spellId, startTime, duration)
         self:_onTrinketUsed();
 
         if old_used ~= self._trinket_used then
-            print("opvp.PvpTrinketState:_onUpdate,", spellId, startTime, duration, old_used);
-
             self:_onTrinketUsed();
 
             return true;
@@ -227,8 +225,6 @@ function opvp.PvpTrinketState:_onUpdate(spellId, startTime, duration)
         self._racial_duration = duration;
 
         if old_used ~= self._racial_used then
-            print("opvp.PvpTrinketState:_onUpdate,", spellId, startTime, duration, old_used);
-
             self:_onRacialUsed();
 
             return true;
@@ -275,11 +271,6 @@ function opvp.PvpTrinketState:_setRacial(spellId)
         return false;
     end
 
-    opvp.printWarning(
-        "opvp.PvpTrinketState:_setRacial(%d)",
-        spellId
-    );
-
     self._racial_spell_id = spellId;
 
     if self._racial_spell_id == 0 then
@@ -310,11 +301,6 @@ function opvp.PvpTrinketState:_setTrinket(spellId)
         return false;
     end
 
-    opvp.printWarning(
-        "opvp.PvpTrinketState:_setTrinket(%d)",
-        spellId
-    );
-
     self._trinket_spell_id = spellId;
 
     if self._trinket_spell_id == 0 then
@@ -331,8 +317,6 @@ function opvp.PvpTrinketState:_setTrinketFromInspect(unitId)
     end
 
     local spell_id = opvp_pvp_trinket_spell(unitId);
-
-    print("opvp.PvpTrinketState:_setTrinketFromInspect,", unitId, spell_id);
 
     if spell_id > 0 then
         self:_setTrinket(spell_id);
