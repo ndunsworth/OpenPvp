@@ -49,6 +49,13 @@ function opvp.PvpPartyMemberProvider:init(factory)
     self:_setFactory(factory);
 end
 
+function opvp.PvpPartyMemberProvider:isArena()
+    return (
+        self._match ~= nil and
+        self._match:isArena()
+    );
+end
+
 function opvp.PvpPartyMemberProvider:isRated()
     return (
         self._match ~= nil and
@@ -61,6 +68,13 @@ function opvp.PvpPartyMemberProvider:_connectSignals()
         opvp.GenericPartyMemberProvider._connectSignals(self);
     end
 
+    local monitor = opvp.PvpTrinketMonitor:instance();
+
+    monitor.trinketUsed:connect(
+        self,
+        self._onTrintetUsed
+    );
+
     opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onScoreUpdate);
 end
 
@@ -68,6 +82,13 @@ function opvp.PvpPartyMemberProvider:_disconnectSignals()
     if self:hasPlayer() == true then
         opvp.GenericPartyMemberProvider._disconnectSignals(self);
     end
+
+    local monitor = opvp.PvpTrinketMonitor:instance();
+
+    monitor.trinketUsed:disconnect(
+        self,
+        self._onTrintetUsed
+    );
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
 end
@@ -105,6 +126,38 @@ function opvp.PvpPartyMemberProvider:_onDisconnected()
     self._match = nil;
 end
 
+function opvp.PvpPartyMemberProvider:_onMemberTrintetUsed(member, spellId, timestamp)
+    self._match:_onMemberTrintetUsed(member, spellId, timestamp);
+end
+
+function opvp.PvpPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
+    local member, mask;
+
+    for n=1, #newMembers do
+        member = newMembers[n];
+
+        if member:race() == opvp.HUMAN then
+            member:trinketState():_setRacial(59752);
+        elseif member:race() == opvp.UNDEAD then
+            member:trinketState():_setRacial(7744);
+        end
+    end
+
+    for n=1, #updatedMembers do
+        member, mask = unpack(updatedMembers[n]);
+
+        if bit.band(mask, opvp.PartyMember.RACE_FLAG) ~= 0 then
+            if member:race() == opvp.HUMAN then
+                member:trinketState():_setRacial(59752);
+            elseif member:race() == opvp.UNDEAD then
+                member:trinketState():_setRacial(7744);
+            end
+        end
+    end
+
+    opvp.GenericPartyMemberProvider._onRosterEndUpdate(self, newMembers, updatedMembers, removedMembers);
+end
+
 function opvp.PvpPartyMemberProvider:_onScoreUpdate()
     local rated = self:isRated();
 
@@ -117,8 +170,26 @@ function opvp.PvpPartyMemberProvider:_onScoreUpdate()
     self.scoreUpdate:emit();
 end
 
+function opvp.PvpPartyMemberProvider:_onTrintetUsed(
+    timestamp,
+    guid,
+    name,
+    spellId,
+    hostile
+)
+    if hostile ~= self:isHostile() then
+        return;
+    end
+
+    local member = self:findMemberByGuid(guid);
+
+    if member ~= nil then
+        self:_onMemberTrintetUsed(member, spellId, timestamp);
+    end
+end
+
 function opvp.PvpPartyMemberProvider:_updateMember(unitId, member, created)
-    if created == true and self._match ~= nil then
+    if created == true then
         member:_setStats(self._match:map():stats());
     end
 

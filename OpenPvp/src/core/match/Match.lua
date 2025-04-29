@@ -513,13 +513,6 @@ end
 
 function opvp.Match:_close()
     if self:isTest() == false then
-        local monitor = opvp.PvpTrinketMonitor:instance();
-
-        monitor.trinketUsed:disconnect(
-            self,
-            self._onTrintetUsed
-        );
-
         opvp.Aura:reduce();
 
         opvp.event.START_TIMER:disconnect(self, self._onStartTimer);
@@ -655,13 +648,6 @@ function opvp.Match:_onMatchEntered()
     );
 
     if self:isTest() == false then
-        local monitor = opvp.PvpTrinketMonitor:instance();
-
-        monitor.trinketUsed:connect(
-            self,
-            self._onTrintetUsed
-        );
-
         opvp.event.START_TIMER:connect(self, self._onStartTimer);
     end
 
@@ -970,26 +956,6 @@ end
 function opvp.Match:_onStopTimer(timerType)
     if timerType == Enum.StartTimerType.PvPBeginTimer then
         self:_countdownCancel();
-    end
-end
-
-function opvp.Match:_onTrintetUsed(
-    timestamp,
-    guid,
-    name,
-    spellId,
-    hostile
-)
-    local member;
-
-    if hostile == true then
-        member = self:findOpponentByGuid(guid);
-    else
-        member = self:findTeamateByGuid(guid);
-    end
-
-    if member ~= nil then
-        self:_onMemberTrintetUsed(member, spellId, timestamp);
     end
 end
 
