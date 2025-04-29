@@ -144,8 +144,6 @@ function opvp.GenericPartyMemberProvider:_connect(category, guid)
     if self._name == "" then
         self:setName(opvp.PartyMemberProvider.name(self));
     end
-
-    self:_connectSignals();
 end
 
 function opvp.GenericPartyMemberProvider:_connectSignals()
@@ -174,8 +172,6 @@ end
 
 function opvp.GenericPartyMemberProvider:_disconnect()
     opvp.PartyMemberProvider._disconnect(self);
-
-    self:_disconnectSignals();
 
     for n=1, self._members:size() do
         self:_releaseMember(self._members:item(n));
@@ -304,7 +300,7 @@ function opvp.GenericPartyMemberProvider:_findMemberByGuid2(unitId, guid, create
 end
 
 function opvp.GenericPartyMemberProvider:_memberInspect(member)
-    if member:isGuidKnown() == true and member:isPlayer() == false then
+    if member:isGuidKnown() == true then
         --~ opvp.printDebug(
             --~ "opvp.GenericPartyMemberProvider:_memberInspect, %s=%s",
             --~ member:nameOrId(),
@@ -343,6 +339,8 @@ function opvp.GenericPartyMemberProvider:_onCombatLogEventOther(event)
 end
 
 function opvp.GenericPartyMemberProvider:_onConnected()
+    self:_connectSignals();
+
     if self:hasPlayer() == true then
         if self._player == nil then
             self._player = self:_createMember("player", opvp.player.guid());
@@ -375,6 +373,8 @@ function opvp.GenericPartyMemberProvider:_onConnected()
 end
 
 function opvp.GenericPartyMemberProvider:_onDisconnected()
+    self:_disconnectSignals();
+
     opvp.PartyMemberProvider._onDisconnected(self);
 end
 
