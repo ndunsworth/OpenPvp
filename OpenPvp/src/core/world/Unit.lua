@@ -498,12 +498,6 @@ function opvp.unit.nameAndServerFromGuid(guid)
     return name, server;
 end
 
-function opvp.unit.race(unitId)
-    local race_name, race_file, race_id = UnitRace(unitId);
-
-    return opvp.Race:fromRaceId(race_id);
-end
-
 function opvp.unit.power(unitId, powerType)
     return UnitPower(unitId, powerType);
 end
@@ -524,6 +518,16 @@ function opvp.unit.powerTypeFromToken(powerToken)
     else
         return opvp.PowerType.NONE;
     end
+end
+
+function opvp.unit.race(unitId)
+    local race_name, race_file, race_id = UnitRace(unitId);
+
+    return opvp.Race:fromRaceId(race_id);
+end
+
+function opvp.unit.role(unitId)
+    return opvp.Role:fromRoleString(UnitGroupRolesAssigned(unitId));
 end
 
 function opvp.unit.server(unitId)
