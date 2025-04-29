@@ -165,6 +165,10 @@ function opvp.utils.compareTable(a, b, ignore_mt)
     return true;
 end
 
+function opvp.utils.debugstack(start)
+    return debugstack(nil, start);
+end
+
 function opvp.utils.decompress(source, method)
     return C_EncodingUtil.DecompressString(source, method);
 end

@@ -112,7 +112,7 @@ function opvp.Signal:connect(...)
     end
 
     if connection[1] == nil or connection[2] == nil or type(connection[2]) ~= "function" then
-        opvp.printWarning(debugstack());
+        opvp.printWarning(opvp.utils.debugstack(2));
 
         return false;
     end
