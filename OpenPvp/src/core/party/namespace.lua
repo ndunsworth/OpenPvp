@@ -220,7 +220,7 @@ function opvp.party.utils.hasInstanceParty()
 end
 
 function opvp.party.utils.isFull(category)
-    return opvp.party.utils.IsPartyFull(category);
+    return C_PartyInfo.IsPartyFull(category);
 end
 
 function opvp.party.utils.isGuidInGroup(guid, category)
