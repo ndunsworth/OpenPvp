@@ -58,7 +58,8 @@ function opvp.AuraMap:auras()
 end
 
 function opvp.AuraMap:clear()
-    self._auras = {};
+    table.wipe(self._auras);
+
     self._size  = 0;
 end
 

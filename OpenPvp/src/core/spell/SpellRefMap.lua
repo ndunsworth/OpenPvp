@@ -149,7 +149,7 @@ function opvp.SpellRefMap:add(spell)
 end
 
 function opvp.SpellRefMap:clear()
-    self._spells = {};
+    table.wipe(self._spells);
 end
 
 function opvp.SpellRefMap:contains(spell)

@@ -75,9 +75,7 @@ function opvp.List:append(item)
 end
 
 function opvp.List:clear()
-    if #self._items > 0 then
-        self._items = {};
-    end
+    table.wipe(self._items);
 end
 
 function opvp.List:contains(item, cmp)

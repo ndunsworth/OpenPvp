@@ -195,7 +195,7 @@ function opvp.SpellMap:add(spell)
 end
 
 function opvp.SpellMap:clear()
-    self._spells = {};
+    table.wipe(self._spells);
 end
 
 function opvp.SpellMap:clone()
