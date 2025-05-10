@@ -116,7 +116,7 @@ function opvp.Queue:isPvp()
 end
 
 function opvp.Queue:isPaused()
-    return self._status == opvp.QueueStatus.SUSPENDED;
+    return self:isSuspended();
 end
 
 function opvp.Queue:isQueued()
@@ -129,6 +129,10 @@ end
 
 function opvp.Queue:isReadyCheck()
     return self._ready_check;
+end
+
+function opvp.Queue:isSuspended()
+    return self._status == opvp.QueueStatus.SUSPENDED;
 end
 
 function opvp.Queue:readyCheckAccepted()
@@ -372,6 +376,10 @@ function opvp.Queue:_logStatus(newStatus, oldStatus, elapsed, estimate, override
 end
 
 function opvp.Queue:_onReadyCheckBegin()
+    if self._ready_check == true then
+        return;
+    end
+
     self._ready_check = true;
 
     if self._ready_check_accepted > 0 then
@@ -388,6 +396,10 @@ function opvp.Queue:_onReadyCheckBegin()
 end
 
 function opvp.Queue:_onReadyCheckEnd()
+    if self._ready_check == false then
+        return;
+    end
+
     local msg;
 
     if self._ready_check_declined == 0 then
