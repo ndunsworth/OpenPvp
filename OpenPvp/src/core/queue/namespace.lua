@@ -55,6 +55,30 @@ function opvp.queue.isEnteringMatch()
     return opvp_queue_mgr_singleton:isEnteringMatch();
 end
 
+function opvp.queue.isLFDEnabled()
+    return C_LFGInfo.IsLFDEnabled();
+end
+
+function opvp.queue.isLFDUsable()
+    return select(1, C_LFGInfo.CanPlayerUseLFD());
+end
+
+function opvp.queue.isLFREnabled()
+    return C_LFGInfo.IsLFREnabled();
+end
+
+function opvp.queue.isLFRUsable()
+    return select(1, C_LFGInfo.CanPlayerUseLFR());
+end
+
+function opvp.queue.isGroupFinderEnabled()
+    return select(1, C_LFGInfo.IsGroupFinderEnabled());
+end
+
+function opvp.queue.isGroupFinderUsable()
+    return select(1, C_LFGInfo.CanPlayerUseGroupFinder());
+end
+
 function opvp.queue.logPendingStatus()
     return opvp_queue_mgr_singleton:logPendingStatus();
 end
@@ -69,6 +93,45 @@ end
 
 function opvp.queue.pendingSize()
     return opvp_queue_mgr_singleton:pendingSize();
+end
+
+opvp.queue.utils = {};
+
+function opvp.queue.lfgProposal()
+    local
+    proposalExists,
+    id,
+    typeID,
+    subtypeID,
+    name,
+    backgroundTexture,
+    role,
+    hasResponded,
+    totalEncounters,
+    completedEncounters,
+    numMembers,
+    isLeader,
+    isHoliday,
+    proposalCategory,
+    isSilent = GetLFGProposal();
+
+    return {
+        background_tex       = backgroundTexture,
+        category             = proposalCategory,
+        encounters_completed = completedEncounters,
+        encounters_total     = totalEncounters,
+        exists               = proposalExists,
+        id                   = id,
+        is_holiday           = isHoliday,
+        is_leader            = isLeader,
+        is_silent            = isSilent,
+        members              = numMembers,
+        name                 = name,
+        responded            = hasResponded,
+        role                 = role,
+        subtype_id           = subtypeID,
+        type_id              = typeID
+    };
 end
 
 local function opvp_queue_mgr_singleton_ctor()
