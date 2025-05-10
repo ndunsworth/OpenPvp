@@ -68,7 +68,7 @@ function opvp.RatedQueue:hasMinimumItemLevel()
     return self._bracket:hasMinimumItemLevel();
 end
 
-function opvp.Queue:hasReadyCheck()
+function opvp.RatedQueue:hasReadyCheck()
     return (
         self:isBlitz() == true or
         self:isShuffle() == true
