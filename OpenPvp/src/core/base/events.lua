@@ -95,8 +95,26 @@ opvp.event.EDITMODE_LAYOUTS_SAVED                  = opvp.EventRegistrySignal("E
 opvp.event.EDITMODE_EXIT                           = opvp.EventRegistrySignal("EditMode.Exit");
 
 --~ LFG events
+opvp.event.LFG_ROLE_CHECK_HIDE                     = opvp.EventRegistrySignal("LFG_ROLE_CHECK_HIDE");
+opvp.event.LFG_ROLE_CHECK_SHOW                     = opvp.EventRegistrySignal("LFG_ROLE_CHECK_SHOW");
+opvp.event.LFG_ROLE_CHECK_UPDATE                   = opvp.EventRegistrySignal("LFG_ROLE_CHECK_UPDATE");
+opvp.event.LFG_PROPOSAL_DONE                       = opvp.EventRegistrySignal("LFG_PROPOSAL_DONE");
+opvp.event.LFG_PROPOSAL_FAILED                     = opvp.EventRegistrySignal("LFG_PROPOSAL_FAILED");
+opvp.event.LFG_PROPOSAL_SHOW                       = opvp.EventRegistrySignal("LFG_PROPOSAL_SHOW");
+opvp.event.LFG_PROPOSAL_SUCCEEDED                  = opvp.EventRegistrySignal("LFG_PROPOSAL_SUCCEEDED");
+opvp.event.LFG_PROPOSAL_UPDATE                     = opvp.EventRegistrySignal("LFG_PROPOSAL_UPDATE");
 opvp.event.LFG_QUEUE_STATUS_UPDATE                 = opvp.EventRegistrySignal("LFG_QUEUE_STATUS_UPDATE");
+opvp.event.LFG_READY_CHECK_DECLINED                = opvp.EventRegistrySignal("LFG_READY_CHECK_DECLINED");
+opvp.event.LFG_READY_CHECK_HIDE                    = opvp.EventRegistrySignal("LFG_READY_CHECK_HIDE");
+opvp.event.LFG_READY_CHECK_PLAYER_IS_READY         = opvp.EventRegistrySignal("LFG_READY_CHECK_PLAYER_IS_READY");
+opvp.event.LFG_READY_CHECK_SHOW                    = opvp.EventRegistrySignal("LFG_READY_CHECK_SHOW");
+opvp.event.LFG_READY_CHECK_UPDATE                  = opvp.EventRegistrySignal("LFG_READY_CHECK_UPDATE");
 opvp.event.LFG_UPDATE                              = opvp.EventRegistrySignal("LFG_UPDATE");
+opvp.event.LOBBY_MATCHMAKER_QUEUE_ABANDONED        = opvp.EventRegistrySignal("LOBBY_MATCHMAKER_QUEUE_ABANDONED");
+opvp.event.LOBBY_MATCHMAKER_QUEUE_ERROR            = opvp.EventRegistrySignal("LOBBY_MATCHMAKER_QUEUE_ERROR");
+opvp.event.LOBBY_MATCHMAKER_QUEUE_EXPIRED          = opvp.EventRegistrySignal("LOBBY_MATCHMAKER_QUEUE_EXPIRED");
+opvp.event.LOBBY_MATCHMAKER_QUEUE_POPPED           = opvp.EventRegistrySignal("LOBBY_MATCHMAKER_QUEUE_POPPED");
+opvp.event.LOBBY_MATCHMAKER_QUEUE_STATUS_UPDATE    = opvp.EventRegistrySignal("LOBBY_MATCHMAKER_QUEUE_STATUS_UPDATE");
 
 --~ Login events
 opvp.event.ADDON_LOADED                            = opvp.EventRegistrySignal("ADDON_LOADED");
