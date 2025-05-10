@@ -66,15 +66,17 @@ function opvp.CombatLogFilter:setOp(op)
         return;
     end
 
+    local old_op = self._op;
+
     self._op = op;
 
-    self:_onOpChanged();
+    self:_onOpChanged(self._op, old_op);
 end
 
 function opvp.CombatLogFilter:triggered(event)
 
 end
 
-function opvp.CombatLogFilter:_onOpChanged()
+function opvp.CombatLogFilter:_onOpChanged(newOp, oldOp)
 
 end
