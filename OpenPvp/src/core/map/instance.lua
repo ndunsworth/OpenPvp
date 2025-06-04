@@ -75,3 +75,9 @@ opvp.InstanceId = {
     TIGERS_PEAK                = 1134,
     TOL_VIRON_ARENA            =  980
 };
+
+opvp.instance = {};
+
+function opvp.instance.isFollowerDungeon()
+    return C_LFGInfo.IsInLFGFollowerDungeon()
+end
