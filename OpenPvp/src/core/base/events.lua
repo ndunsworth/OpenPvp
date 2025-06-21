@@ -133,6 +133,7 @@ opvp.event.NAME_PLATE_UNIT_ADDED                   = opvp.EventRegistrySignal("N
 opvp.event.NAME_PLATE_UNIT_REMOVED                 = opvp.EventRegistrySignal("NAME_PLATE_UNIT_REMOVED");
 
 --~ Player events
+opvp.event.ACTIVE_TALENT_GROUP_CHANGED             = opvp.EventRegistrySignal("ACTIVE_TALENT_GROUP_CHANGED");
 opvp.event.BARBER_SHOP_APPEARANCE_APPLIED          = opvp.EventRegistrySignal("BARBER_SHOP_APPEARANCE_APPLIED");
 opvp.event.PLAYER_ALIVE                            = opvp.EventRegistrySignal("PLAYER_ALIVE");
 opvp.event.PLAYER_CAMPING                          = opvp.EventRegistrySignal("PLAYER_CAMPING");
@@ -142,9 +143,11 @@ opvp.event.PLAYER_DEAD                             = opvp.EventRegistrySignal("P
 opvp.event.PLAYER_EQUIPMENT_CHANGED                = opvp.EventRegistrySignal("PLAYER_EQUIPMENT_CHANGED");
 opvp.event.PLAYER_FLAGS_CHANGED                    = opvp.EventRegistrySignal("PLAYER_FLAGS_CHANGED");
 opvp.event.PLAYER_FOCUS_CHANGED                    = opvp.EventRegistrySignal("PLAYER_FOCUS_CHANGED");
+opvp.event.PLAYER_LEVEL_UP                         = opvp.EventRegistrySignal("PLAYER_LEVEL_UP");
 opvp.event.PLAYER_REGEN_DISABLED                   = opvp.EventRegistrySignal("PLAYER_REGEN_DISABLED");
 opvp.event.PLAYER_REGEN_ENABLED                    = opvp.EventRegistrySignal("PLAYER_REGEN_ENABLED");
 opvp.event.PLAYER_SPECIALIZATION_CHANGED           = opvp.EventRegistrySignal("PLAYER_SPECIALIZATION_CHANGED");
+opvp.event.PLAYER_TALENT_UPDATE                    = opvp.EventRegistrySignal("PLAYER_TALENT_UPDATE");
 opvp.event.PLAYER_TARGET_CHANGED                   = opvp.EventRegistrySignal("PLAYER_TARGET_CHANGED");
 opvp.event.PLAYER_UNGHOST                          = opvp.EventRegistrySignal("PLAYER_UNGHOST");
 opvp.event.PLAYER_UPDATE_RESTING                   = opvp.EventRegistrySignal("PLAYER_UPDATE_RESTING");
@@ -308,6 +311,8 @@ opvp.event.ZONE_CHANGED_NEW_AREA                   = opvp.EventRegistrySignal("Z
 opvp.event.PLAYER_ENTERING_WORLD_LOGIN             = opvp.Signal("PLAYER_ENTERING_WORLD_LOGIN");
 opvp.event.PLAYER_ENTERING_WORLD_LOGIN_RELOAD      = opvp.Signal("PLAYER_ENTERING_WORLD_LOGIN_RELOAD");
 opvp.event.PLAYER_ENTERING_WORLD_RELOAD            = opvp.Signal("PLAYER_ENTERING_WORLD_RELOAD");
+
+opvp.event.SetItemRef                              = opvp.EventRegistrySignal("SetItemRef", nil, false, true);
 
 local function opvp_player_entering_world(isInitialLogin, isReloadingUi)
     if isInitialLogin == true then
