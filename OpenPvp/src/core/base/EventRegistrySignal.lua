@@ -32,10 +32,10 @@ opvp.EventRegistrySignal = opvp.CreateClass(opvp.Signal);
 
 local opvp_registered_evenregistry_events = opvp.List();
 
-function opvp.EventRegistrySignal:init(event, name, reverse)
+function opvp.EventRegistrySignal:init(event, name, reverse, forceCallback)
     self._event = event;
 
-    self._is_frame_event = string.find(self._event, "%.") == nil;
+    self._is_frame_event = forceCallback ~= true and string.find(self._event, "%.") == nil;
 
     if name == nil then
         name = event;
