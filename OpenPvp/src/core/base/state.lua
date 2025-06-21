@@ -69,10 +69,10 @@ end
 
 local function opvp_state_db_ctor()
     opvp_state_db_singleton = opvp.RootOption(
-        "OpenPvp",
-        "OpenPvp",
+        opvp.LIB_NAME,
+        opvp.LIB_NAME,
         "",
-        opvp.VERSION
+        opvp.LIB_VERSION
     );
 
     opvp.event.PLAYER_LOGIN:connect(opvp_state_db_on_login);
