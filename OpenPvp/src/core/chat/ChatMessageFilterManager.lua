@@ -154,6 +154,8 @@ local function opvp_msg_filter_mgr_ctor()
         opvp.options.announcements.friendlyParty.memberJoinLeave,
         {opvp.ChatType.SYSTEM},
         {
+            ERR_BG_PLAYER_LEFT_S,
+            ERR_BG_PLAYER_JOINED_SS,
             ERR_INSTANCE_GROUP_ADDED_S,
             ERR_INSTANCE_GROUP_REMOVED_S,
             ERR_LEFT_GROUP_YOU,
