@@ -275,7 +275,7 @@ function opvp.Socket:_onMessageEvent(
 )
     if (
         prefix ~= self._prefix or
-        UnitIsUnit(Ambiguate(sender, "none"), "player")
+        UnitIsUnit(Ambiguate(sender, "none"), opvp.unitid.PLAYER)
     ) then
         return;
     end
