@@ -32,25 +32,26 @@ opvp.PartyMember = opvp.CreateClass();
 
 opvp.PartyMember.AFFILIATION_FLAG    = bit.lshift(1,  0);
 opvp.PartyMember.AURAS_FLAG          = bit.lshift(1,  1);
-opvp.PartyMember.COMBAT_FLAG         = bit.lshift(1,  2);
-opvp.PartyMember.CONNECTED_FLAG      = bit.lshift(1,  3);
-opvp.PartyMember.DEAD_FLAG           = bit.lshift(1,  4);
-opvp.PartyMember.ENABLED_FLAG        = bit.lshift(1,  5);
-opvp.PartyMember.HEALTH_FLAG         = bit.lshift(1,  6);
-opvp.PartyMember.FACTION_FLAG        = bit.lshift(1,  7);
-opvp.PartyMember.GUID_FLAG           = bit.lshift(1,  8);
-opvp.PartyMember.ID_FLAG             = bit.lshift(1,  9);
-opvp.PartyMember.NAME_FLAG           = bit.lshift(1, 10);
-opvp.PartyMember.PLAYER_FLAG         = bit.lshift(1, 11);
-opvp.PartyMember.PVP_TRINKET_FLAG    = bit.lshift(1, 12);
-opvp.PartyMember.RACE_FLAG           = bit.lshift(1, 13);
-opvp.PartyMember.RANGE_FLAG          = bit.lshift(1, 14);
-opvp.PartyMember.RATING_CURRENT_FLAG = bit.lshift(1, 15);
-opvp.PartyMember.RATING_GAIN_FLAG    = bit.lshift(1, 16);
-opvp.PartyMember.SCORE_FLAG          = bit.lshift(1, 17);
-opvp.PartyMember.SEX_FLAG            = bit.lshift(1, 18);
-opvp.PartyMember.SPEC_FLAG           = bit.lshift(1, 19);
-opvp.PartyMember.TEAM_FLAG           = bit.lshift(1, 20);
+opvp.PartyMember.CAST_FLAG           = bit.lshift(1,  2);
+opvp.PartyMember.COMBAT_FLAG         = bit.lshift(1,  3);
+opvp.PartyMember.CONNECTED_FLAG      = bit.lshift(1,  4);
+opvp.PartyMember.DEAD_FLAG           = bit.lshift(1,  5);
+opvp.PartyMember.ENABLED_FLAG        = bit.lshift(1,  6);
+opvp.PartyMember.HEALTH_FLAG         = bit.lshift(1,  7);
+opvp.PartyMember.FACTION_FLAG        = bit.lshift(1,  8);
+opvp.PartyMember.GUID_FLAG           = bit.lshift(1,  9);
+opvp.PartyMember.ID_FLAG             = bit.lshift(1, 10);
+opvp.PartyMember.NAME_FLAG           = bit.lshift(1, 11);
+opvp.PartyMember.PLAYER_FLAG         = bit.lshift(1, 12);
+opvp.PartyMember.PVP_TRINKET_FLAG    = bit.lshift(1, 13);
+opvp.PartyMember.RACE_FLAG           = bit.lshift(1, 14);
+opvp.PartyMember.RANGE_FLAG          = bit.lshift(1, 15);
+opvp.PartyMember.RATING_CURRENT_FLAG = bit.lshift(1, 16);
+opvp.PartyMember.RATING_GAIN_FLAG    = bit.lshift(1, 17);
+opvp.PartyMember.SCORE_FLAG          = bit.lshift(1, 18);
+opvp.PartyMember.SEX_FLAG            = bit.lshift(1, 19);
+opvp.PartyMember.SPEC_FLAG           = bit.lshift(1, 20);
+opvp.PartyMember.TEAM_FLAG           = bit.lshift(1, 21);
 
 opvp.PartyMember.CHARACTER_FLAGS = bit.bor(
     opvp.PartyMember.FACTION_FLAG,
@@ -69,6 +70,7 @@ opvp.PartyMember.CHARACTER_RACE_SEX_MASK = bit.bor(
 
 opvp.PartyMember.STATE_FLAGS = bit.bor(
     opvp.PartyMember.AURAS_FLAG,
+    opvp.PartyMember.CAST_FLAG,
     opvp.PartyMember.COMBAT_FLAG,
     opvp.PartyMember.CONNECTED_FLAG,
     opvp.PartyMember.DEAD_FLAG,
@@ -92,19 +94,30 @@ opvp.PartyMember.ALL_FLAGS = bit.bor(
 );
 
 function opvp.PartyMember:init()
-    self._guid        = "";
-    self._id          = "";
-    self._affiliation = opvp.Affiliation.UNKNOWN;
-    self._faction     = opvp.Faction.NEUTRAL;
-    self._race        = opvp.Race.UNKNOWN;
-    self._sex         = opvp.Sex.NONE;
-    self._spec        = opvp.ClassSpec.UNKNOWN;
-    self._name        = "";
-    self._mask        = 0;
-    self._auras       = opvp.PartyMemberAuraMap();
-    self._cc_state    = opvp.CrowdControlState();
-    self._def_state   = opvp.DefensiveCombatLevelState();
-    self._off_state   = opvp.OffensiveCombatLevelState();
+    self._guid                     = "";
+    self._id                       = "";
+    self._affiliation              = opvp.Affiliation.UNKNOWN;
+    self._faction                  = opvp.Faction.NEUTRAL;
+    self._race                     = opvp.Race.UNKNOWN;
+    self._sex                      = opvp.Sex.NONE;
+    self._spec                     = opvp.ClassSpec.UNKNOWN;
+    self._name                     = "";
+    self._server                   = "";
+    self._mask                     = 0;
+    self._auras                    = opvp.PartyMemberAuraMap();
+    self._cc_state                 = opvp.CrowdControlState();
+    self._def_state                = opvp.DefensiveCombatLevelState();
+    self._off_state                = opvp.OffensiveCombatLevelState();
+    self._pvp_trinket_state        = opvp.PvpTrinketState();
+    self._casting_id               = "";
+    self._casting_spell_id         = 0;
+    self._casting_spell_start      = 0;
+    self._casting_spell_end        = 0;
+    self._last_casting_id          = "";
+    self._last_casting_spell_id    = 0;
+    self._last_casting_spell_start = 0;
+    self._last_casting_spell_end   = 0;
+    self._channeling               = false;
 end
 
 function opvp.PartyMember:affiliation()
@@ -113,6 +126,50 @@ end
 
 function opvp.PartyMember:auras()
     return self._auras;
+end
+
+function opvp.PartyMember:castingEndTime()
+    return self._casting_spell_end;
+end
+
+function opvp.PartyMember:castingEndTimePrev()
+    return self._last_casting_spell_end;
+end
+
+function opvp.PartyMember:castingGuid()
+    return self._casting_id;
+end
+
+function opvp.PartyMember:castingSpellId()
+    return self._casting_spell_id;
+end
+
+function opvp.PartyMember:castingSpellIdPrev()
+    return self._last_casting_spell_id;
+end
+
+function opvp.PartyMember:castingSpellDuration()
+    if self._casting_spell_id ~= 0 then
+        return self._casting_spell_end - self._casting_spell_start;
+    else
+        return 0;
+    end
+end
+
+function opvp.PartyMember:castingSpellDurationPrev()
+    if self._last_casting_spell_id ~= 0 then
+        return self._last_casting_spell_end - self._last_casting_spell_start;
+    else
+        return 0;
+    end
+end
+
+function opvp.PartyMember:castingStartTime()
+    return self._casting_spell_start;
+end
+
+function opvp.PartyMember:castingStartTimePrev()
+    return self._last_casting_spell_start;
 end
 
 function opvp.PartyMember:ccState()
@@ -175,6 +232,10 @@ function opvp.PartyMember:hasTeam()
     return self._team ~= nil;
 end
 
+function opvp.PartyMember:health()
+    return opvp.unit.health(self._id);
+end
+
 function opvp.PartyMember:id()
     return self._id;
 end
@@ -185,6 +246,14 @@ end
 
 function opvp.PartyMember:isAlive()
     return bit.band(self._mask, opvp.PartyMember.DEAD_FLAG) == 0;
+end
+
+function opvp.PartyMember:isCasting()
+    return self._casting_spell_id ~= 0;
+end
+
+function opvp.PartyMember:isChanneling()
+    return self._channeling == true;
 end
 
 function opvp.PartyMember:isConnected()
@@ -271,6 +340,10 @@ function opvp.PartyMember:isPlayer()
     return bit.band(self._mask, opvp.PartyMember.PLAYER_FLAG) ~= 0;
 end
 
+function opvp.PartyMember:isPvp()
+    return false;
+end
+
 function opvp.PartyMember:isRaceKnown()
     return bit.band(self._mask, opvp.PartyMember.RACE_FLAG) ~= 0;
 end
@@ -307,16 +380,70 @@ function opvp.PartyMember:mask()
     return self._mask;
 end
 
-function opvp.PartyMember:name()
-    return self._name;
+function opvp.PartyMember:name(includeSpec, excludeServer)
+    local name = self._name;
+
+    if name == "" then
+        return name;
+    end
+
+    if excludeServer ~= true then
+        name = name .. "-" .. self._server;
+    end
+
+    if includeSpec == true then
+        local cls = self._spec:classInfo();
+
+        if self:isSpecKnown() == true then
+            name = string.format(
+                "%s (|c%s%s %s|r)",
+                name,
+                cls:color():GenerateHexColor(),
+                self._spec:name(),
+                self._spec:classInfo():name()
+            );
+        else
+            name = string.format(
+                "%s (|c%s%s|r)",
+                name,
+                cls:color():GenerateHexColor(),
+                opvp.strs.UNKNOWN
+            );
+        end
+    end
+
+    return name;
 end
 
-function opvp.PartyMember:nameOrId()
+function opvp.PartyMember:nameOrId(includeSpec, excludeServer)
     if self:isNameKnown() == true then
-        return self._name;
-    else
-        return self._id;
+        return self:name(includeSpec, excludeServer);
     end
+
+    local name = self._id;
+
+    if includeSpec == true then
+        local cls = self._spec:classInfo();
+
+        if self:isSpecKnown() == true then
+            name = string.format(
+                "%s (|c%s%s %s|r)",
+                name,
+                cls:color():GenerateHexColor(),
+                self._spec:name(),
+                self._spec:classInfo():name()
+            );
+        else
+            name = string.format(
+                "%s (|c%s%s|r)",
+                name,
+                cls:color():GenerateHexColor(),
+                opvp.strs.UNKNOWN
+            );
+        end
+    end
+
+    return name;
 end
 
 function opvp.PartyMember:offensiveLevel()
@@ -325,6 +452,10 @@ end
 
 function opvp.PartyMember:offensiveState()
     return self._off_state;
+end
+
+function opvp.PartyMember:pvpTrinketState()
+    return self._pvp_trinket_state;
 end
 
 function opvp.PartyMember:race()
@@ -345,6 +476,10 @@ end
 
 function opvp.PartyMember:raceInfo()
     return self._race;
+end
+
+function opvp.PartyMember:server()
+    return self._server;
 end
 
 function opvp.PartyMember:sex()
@@ -368,6 +503,7 @@ function opvp.PartyMember:_reset(mask)
         self._sex     = opvp.Sex.NONE;
         self._spec    = opvp.ClassSpec.UNKNOWN;
         self._name    = "";
+        self._server  = "";
     else
         if bit.band(mask, opvp.PartyMember.GUID_FLAG) ~= 0 then
             self._guid = "";
@@ -379,6 +515,7 @@ function opvp.PartyMember:_reset(mask)
 
         if bit.band(mask, opvp.PartyMember.NAME_FLAG) ~= 0 then
             self._name = "";
+            self._server  = "";
         end
 
         if bit.band(mask, opvp.PartyMember.FACTION_FLAG) ~= 0 then
@@ -404,9 +541,21 @@ function opvp.PartyMember:_reset(mask)
 
     if bit.band(mask, opvp.PartyMember.AURAS_FLAG) ~= 0 then
         self._auras:_clear();
+
         self._cc_state:_clear();
         self._def_state:_clear();
         self._off_state:_clear();
+    end
+
+    if bit.band(mask, opvp.PartyMember.CAST_FLAG) then
+        self._casting_id          = "";
+        self._casting_spell_id    = 0;
+        self._casting_spell_start = 0;
+        self._casting_spell_end   = 0;
+    end
+
+    if bit.band(mask, opvp.PartyMember.PVP_TRINKET_FLAG) then
+        self._pvp_trinket_state:_reset();
     end
 
     self._mask = bit.band(self._mask, bit.bnot(mask));
@@ -481,7 +630,7 @@ function opvp.PartyMember:_setFriendly(state)
 end
 
 function opvp.PartyMember:_setGUID(guid)
-    if guid == nil then
+    if guid == nil or guid == "" then
         self._guid = "";
 
         self:_setFlags(
@@ -493,7 +642,7 @@ function opvp.PartyMember:_setGUID(guid)
 
         self:_setFlags(
             opvp.PartyMember.GUID_FLAG,
-            self._guid ~= ""
+            true
         );
     end
 end
@@ -521,13 +670,36 @@ function opvp.PartyMember:_setId(id)
     end
 end
 
-function opvp.PartyMember:_setName(name)
-    self._name = name;
-
+function opvp.PartyMember:_setInRange(state)
     self:_setFlags(
-        opvp.PartyMember.NAME_FLAG,
-        self._name ~= ""
+        opvp.PartyMember.RANGE_FLAG,
+        state
     );
+end
+
+function opvp.PartyMember:_setName(name)
+    if name ~= "" then
+        self._name, self._server = opvp.unit.splitNameAndServer(name);
+
+        if self._server == "" then
+            self._server = opvp.unit.server("player");
+        end
+
+        assert(self._name ~= nil and self._server ~= nil);
+
+        self:_setFlags(
+            opvp.PartyMember.NAME_FLAG,
+            true
+        );
+    else
+        self._name   = "";
+        self._server = "";
+
+        self:_setFlags(
+            opvp.PartyMember.NAME_FLAG,
+            false
+        );
+    end
 end
 
 function opvp.PartyMember:_setRace(race)
@@ -557,6 +729,44 @@ function opvp.PartyMember:_setSpec(spec)
     );
 end
 
+function opvp.PartyMember:_setSpellCasting(guid, spellId, startTime, endTime)
+    if self._casting_spell_id ~= 0 then
+        self._last_casting_id          = self._casting_id;
+        self._last_casting_spell_id    = self._casting_spell_id;
+        self._last_casting_spell_start = self._casting_spell_start;
+        self._last_casting_spell_end   = self._casting_spell_end;
+    end
+
+    if guid == nil then
+        guid = "";
+    end
+
+    self._casting_id          = guid;
+    self._casting_spell_id    = spellId;
+    self._casting_spell_start = startTime;
+    self._casting_spell_end   = endTime;
+    self._channeling          = false;
+end
+
+function opvp.PartyMember:_setSpellChanneling(guid, spellId, startTime, endTime)
+    if self._casting_spell_id ~= 0 then
+        self._last_casting_id          = self._casting_id;
+        self._last_casting_spell_id    = self._casting_spell_id;
+        self._last_casting_spell_start = self._casting_spell_start;
+        self._last_casting_spell_end   = self._casting_spell_end;
+    end
+
+    if guid == nil then
+        guid = "";
+    end
+
+    self._casting_id          = guid;
+    self._casting_spell_id    = spellId;
+    self._casting_spell_start = startTime;
+    self._casting_spell_end   = endTime;
+    self._channeling          = spellId ~= 0;
+end
+
 function opvp.PartyMember:_updateAuras(info, aurasNew, aurasModified, aurasRemoved)
     return self._auras:updateFromEvent(self._id, info, aurasNew, aurasModified, aurasRemoved);
 end
@@ -577,7 +787,7 @@ function opvp.PartyMember:_updateCharacterInfoById()
     local old_mask = self._mask;
 
     if self:isGuidKnown() == false then
-        local guid = UnitGUID(self._id);
+        local guid = opvp.unit.guid(self._id);
 
         if guid ~= nil and guid ~= "" then
             self._guid = guid;
@@ -595,19 +805,18 @@ function opvp.PartyMember:_updateCharacterInfoById()
         if self:isGuidKnown() == true then
             name, server = opvp.unit.nameAndServerFromGuid(self._guid);
 
-            if name ~= "" then
-                if server ~= GetRealmName() then
-                    name = name .. "-" .. server;
-                end
-            else
-                name = opvp.unit.name(self._id);
+            if name == "" then
+                name, server = opvp.unit.nameAndServer(self._id);
             end
         else
-            name = opvp.unit.name(self._id);
+            name, server = opvp.unit.nameAndServer(self._id);
         end
 
         if name ~= "" then
             self._name = name;
+            self._server = server;
+
+            assert(self._name ~= nil and self._server ~= nil);
 
             self._mask = bit.bor(self._mask, opvp.PartyMember.NAME_FLAG);
         end
@@ -658,16 +867,15 @@ function opvp.PartyMember:_updateCharacterInfoByGuid()
     if self:isNameKnown() == false then
         local name, server = opvp.unit.nameAndServerFromGuid(self._guid);
 
-        if name ~= "" then
-            if server ~= GetRealmName() then
-                name = name .. "-" .. server;
-            end
-        else
-            name = opvp.unit.name(self._id);
+        if name == "" then
+            name, server = opvp.unit.nameAndServer(self._id);
         end
 
         if name ~= "" then
             self._name = name;
+            self._server = server;
+
+            assert(self._name ~= nil and self._server ~= nil);
 
             self._mask = bit.bor(self._mask, opvp.PartyMember.NAME_FLAG);
         end

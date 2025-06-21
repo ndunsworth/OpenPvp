@@ -32,7 +32,7 @@ local function setPlayerCastBarDisabled(state)
     if state == true then
         PlayerCastingBarFrame:SetUnit(nil)
     else
-        PlayerCastingBarFrame:SetUnit("player")
+        PlayerCastingBarFrame:SetUnit(opvp.unitid.PLAYER)
     end
 
     --~ PlayerCastingBarFrame:SetAndUpdateShowCastbar(not state);

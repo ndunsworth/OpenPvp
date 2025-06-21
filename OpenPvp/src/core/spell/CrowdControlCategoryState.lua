@@ -50,16 +50,8 @@ function opvp.CrowdControlCategoryState:category()
     return self._cat;
 end
 
-function opvp.CrowdControlCategoryState:id()
-    return self._cat:id();
-end
-
-function opvp.CrowdControlCategoryState:hasAura(aura)
-    self._auras:contains(aura)
-end
-
-function opvp.CrowdControlCategoryState:hasDr()
-    return self._dr ~= opvp.CrowdControlStatus.FULL;
+function opvp.CrowdControlCategoryState:categoryName()
+    return self._cat:name();
 end
 
 function opvp.CrowdControlCategoryState:dr()
@@ -83,6 +75,18 @@ function opvp.CrowdControlCategoryState:drResetTime()
     else
         return 0;
     end
+end
+
+function opvp.CrowdControlCategoryState:id()
+    return self._cat:id();
+end
+
+function opvp.CrowdControlCategoryState:hasAura(aura)
+    self._auras:contains(aura)
+end
+
+function opvp.CrowdControlCategoryState:hasDr()
+    return self._dr ~= opvp.CrowdControlStatus.FULL;
 end
 
 function opvp.CrowdControlCategoryState:duration()
@@ -157,13 +161,14 @@ function opvp.CrowdControlCategoryState:_onAuraAdded(aura, spell)
         return false, false;
     end
 
-    local old_dr = self._dr;
-
+    --~ FIX ME - Set duration etc
     if spell:hasNoDr() == true then
         self._auras:add(aura);
 
         return true, false;
     end
+
+    local old_dr = self._dr;
 
     if (
         applied > self._expiration - self._duration and

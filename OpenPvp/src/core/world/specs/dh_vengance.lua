@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.DEMON_HUNTER,
     id     = opvp.ClassSpecId.VENGANCE_DEMON_HUNTER,
+    index  = 2,
     role   = opvp.Role.TANK,
     traits = opvp.ClassSpecTrait.MELEE_MAGIC,
     sound  = 62555,

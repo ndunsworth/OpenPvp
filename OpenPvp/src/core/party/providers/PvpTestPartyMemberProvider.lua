@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.PvpTestPartyMemberProvider = opvp.CreateClass(opvp.TestPartyMemberProvider);
 
@@ -49,11 +49,37 @@ end
 function opvp.PvpTestPartyMemberProvider:_connectSignals()
     opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onScoreUpdate);
 
+    opvp.event.UNIT_SPELLCAST_CHANNEL_START:connect(self, self._onUnitSpellCastChannelStart);
+    opvp.event.UNIT_SPELLCAST_CHANNEL_STOP:connect(self, self._onUnitSpellCastChannelStop);
+    opvp.event.UNIT_SPELLCAST_CHANNEL_UPDATE:connect(self, self._onUnitSpellCastChannelUpdate);
+    opvp.event.UNIT_SPELLCAST_EMPOWER_START:connect(self, self._onUnitSpellCastEmpowerStart);
+    opvp.event.UNIT_SPELLCAST_EMPOWER_STOP:connect(self, self._onUnitSpellCastEmpowerStop);
+    opvp.event.UNIT_SPELLCAST_EMPOWER_UPDATE:connect(self, self._onUnitSpellCastEmpowerUpdate);
+    opvp.event.UNIT_SPELLCAST_FAILED:connect(self, self._onUnitSpellCastFailed);
+    opvp.event.UNIT_SPELLCAST_FAILED_QUIET:connect(self, self._onUnitSpellCastFailedQuiet);
+    opvp.event.UNIT_SPELLCAST_INTERRUPTED:connect(self, self._onUnitSpellCastInterrupted);
+    opvp.event.UNIT_SPELLCAST_START:connect(self, self._onUnitSpellCastStart);
+    opvp.event.UNIT_SPELLCAST_STOP:connect(self, self._onUnitSpellCastStop);
+    opvp.event.UNIT_SPELLCAST_SUCCEEDED:connect(self, self._onUnitSpellCastSucceeded);
+
     opvp.TestPartyMemberProvider._connectSignals(self);
 end
 
 function opvp.PvpTestPartyMemberProvider:_disconnectSignals()
     opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
+
+    opvp.event.UNIT_SPELLCAST_CHANNEL_START:disconnect(self, self._onUnitSpellCastChannelStart);
+    opvp.event.UNIT_SPELLCAST_CHANNEL_STOP:disconnect(self, self._onUnitSpellCastChannelStop);
+    opvp.event.UNIT_SPELLCAST_CHANNEL_UPDATE:disconnect(self, self._onUnitSpellCastChannelUpdate);
+    opvp.event.UNIT_SPELLCAST_EMPOWER_START:disconnect(self, self._onUnitSpellCastEmpowerStart);
+    opvp.event.UNIT_SPELLCAST_EMPOWER_STOP:disconnect(self, self._onUnitSpellCastEmpowerStop);
+    opvp.event.UNIT_SPELLCAST_EMPOWER_UPDATE:disconnect(self, self._onUnitSpellCastEmpowerUpdate);
+    opvp.event.UNIT_SPELLCAST_FAILED:disconnect(self, self._onUnitSpellCastFailed);
+    opvp.event.UNIT_SPELLCAST_FAILED_QUIET:disconnect(self, self._onUnitSpellCastFailedQuiet);
+    opvp.event.UNIT_SPELLCAST_INTERRUPTED:disconnect(self, self._onUnitSpellCastInterrupted);
+    opvp.event.UNIT_SPELLCAST_START:disconnect(self, self._onUnitSpellCastStart);
+    opvp.event.UNIT_SPELLCAST_STOP:disconnect(self, self._onUnitSpellCastStop);
+    opvp.event.UNIT_SPELLCAST_SUCCEEDED:disconnect(self, self._onUnitSpellCastSucceeded);
 
     opvp.TestPartyMemberProvider._disconnectSignals(self);
 end
@@ -101,24 +127,21 @@ function opvp.PvpTestPartyMemberProvider:_updateMember(unitId, member, created)
 
     member:_setStats(self._match:map():stats());
 
-    member:trinketState():_setRacialFromRaceId(member:race());
-
     return 0;
 end
 
 function opvp.PvpTestPartyMemberProvider:_updateMemberScore(member, rated)
     if rated == true then
         if member:isRatingKnown() == false then
-            local cr = math.random(2100, 2500);
-            local mmr = max(cr, math.random(2100, 2500));
+            local cr = math.random(2375, 2475);
+            local mmr = max(cr, math.random(2400, 2495));
 
             member:_setRating(cr, mmr);
         elseif self._match:isComplete() == true then
             if member:team() == self._tester:outcomeTeam() then
-                member:_setRatingGain(
-                    math.random(0, 94),
-                    math.random(0, 94)
-                );
+                local gain = math.random(10, 40);
+
+                member:_setRatingGain(gain, gain);
 
                 if self._match:isShuffle() == true then
                     local stat = member:findStatById(opvp.PvpStatId.ROUNDS_WON);
@@ -128,10 +151,9 @@ function opvp.PvpTestPartyMemberProvider:_updateMemberScore(member, rated)
                     end
                 end
             else
-                member:_setRatingGain(
-                    math.random(-58, -10),
-                    math.random(-58, -10)
-                );
+                local gain = math.random(-48, -25);
+
+                member:_setRatingGain(gain, gain);
 
                 if self._match:isShuffle() == true then
                     local stat = member:findStatById(opvp.PvpStatId.ROUNDS_WON);

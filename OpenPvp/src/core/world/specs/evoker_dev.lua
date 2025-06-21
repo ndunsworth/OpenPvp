@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.EVOKER,
     id     = opvp.ClassSpecId.DEVESTATION_EVOKER,
+    index  = 1,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_MAGIC,
     sound  = 218711,

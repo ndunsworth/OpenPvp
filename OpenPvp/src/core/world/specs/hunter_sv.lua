@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.HUNTER,
     id     = opvp.ClassSpecId.SURVIVAL_HUNTER,
+    index  = 3,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 72676,

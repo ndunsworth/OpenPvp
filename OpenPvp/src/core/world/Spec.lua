@@ -25,11 +25,17 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 local opvp_spec_tooltip;
 local opvp_spec_tooltip_lookup;
+
+opvp.PvpTalentSlot = {
+    SLOT_1 = 1,
+    SLOT_2 = 2,
+    SLOT_3 = 3,
+};
 
 opvp.ClassSpecId = {
     UNKNOWN                =  0,
@@ -176,6 +182,7 @@ function opvp.ClassSpec:init(cfg)
     self._cls    = cfg.class;
     self._id     = cfg.id;
     self._role   = cfg.role;
+    self._index  = cfg.index;
     self._icon   = cfg.icon;
     self._sound  = cfg.sound;
     self._traits = cfg.traits;
@@ -267,12 +274,108 @@ function opvp.ClassSpec:role()
     return self._role;
 end
 
+function opvp.ClassSpec:set()
+    if self._index > 0 and self._cls == opvp.player.class() then
+        opvp.spec.setSpec(self._index)
+    end
+end
+
 function opvp.ClassSpec:sound()
     return self._sound;
 end
 
 function opvp.ClassSpec:spells()
     return self._spells;
+end
+
+opvp.spec = {};
+
+function opvp.spec.hasNewPvpTalent()
+    local unspent, talent = C_SpecializationInfo.GetPvpTalentAlertStatus();
+
+    return talent;
+end
+
+function opvp.spec.hasUnspentPvpTalent()
+    local unspent, talent = C_SpecializationInfo.GetPvpTalentAlertStatus();
+
+    return unspent;
+end
+
+function opvp.spec.isPvpTalentsEnabled()
+    local valid, err = C_SpecializationInfo.CanPlayerUsePVPTalentUI();
+
+    return valid;
+end
+
+function opvp.spec.isPvpTalentLocked(talentId)
+    return C_SpecializationInfo.IsPvpTalentLocked(talentId);
+end
+
+function opvp.spec.isPvpTalentSlotEnabled(talentSlot)
+    return opvp.spec.pvpTalentSlotInfo(talentSlot).enabled;
+end
+
+function opvp.spec.isSpecTalentsEnabled()
+    local valid, err = C_SpecializationInfo.CanPlayerUseTalentSpecUI();
+
+    return valid;
+end
+
+function opvp.spec.isTalentsEnabled()
+    local valid, err = C_SpecializationInfo.CanPlayerUseTalentUI();
+
+    return valid;
+end
+
+function opvp.spec.class(specId)
+    return opvp.Class:fromSpecId(specId);
+end
+
+function opvp.spec.pvpTalents()
+    return C_SpecializationInfo.GetAllSelectedPvpTalentIDs();
+end
+
+function opvp.spec.pvpTalentInfo(talentId)
+    return C_SpecializationInfo.GetPvpTalentInfo(talentId);
+end
+
+function opvp.spec.pvpTalentLevel(talentId)
+    return opvp.number_else(
+        C_SpecializationInfo.GetPvpTalentUnlockLevel(talentId),
+        0
+    );
+end
+
+function opvp.spec.pvpTalentSlotLevel(talentSlot)
+    return opvp.number_else(
+        C_SpecializationInfo.GetPvpTalentSlotUnlockLevel(talentSlot),
+        0
+    );
+end
+
+function opvp.spec.pvpTalentSlotInfo(talentSlot)
+    local info = C_SpecializationInfo.GetPvpTalentSlotInfo(talentSlot);
+
+    if info ~= nil then
+        return info;
+    else
+        return {
+            enabled = false,
+            level   = 0,
+            availableTalentIDs = {}
+        };
+    end
+end
+
+function opvp.spec.setPvpTalent(talentSlot, talentId)
+    if opvp.isPvpTalentSlotEnabled(talentSlot) == true then
+        LearnPvpTalent(talentId, talentSlot);
+    end
+end
+
+function opvp.spec.setSpec(specIndex)
+    return C_SpecializationInfo.SetSpecialization(specIndex);
 end
 
 opvp.ClassSpec.SPECS        = {};

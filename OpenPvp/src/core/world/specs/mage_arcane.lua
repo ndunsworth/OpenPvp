@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.MAGE,
     id     = opvp.ClassSpecId.ARCANE_MAGE,
+    index  = 1,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 85547,

@@ -28,19 +28,57 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local spec_info = {
-    class  = opvp.SHAMAN,
-    id     = opvp.ClassSpecId.ENHANCEMENT_SHAMAN,
-    index  = 2,
-    role   = opvp.Role.DPS,
-    traits = opvp.ClassSpecTrait.MELEE_MAGIC,
-    sound  = 164991,
-    icon   = "Interface/Icons/spell_shaman_improvedstormstrike"
-};
+local function setOrderHallCommandBarDisabled(state)
+    if (
+        OrderHallCommandBar == nil or
+        C_Garrison.IsPlayerInGarrison(Enum.GarrisonType.Type_7_0_Garrison) == false
+    ) then
+        return;
+    end
 
-opvp.ClassSpec.ENHANCEMENT_SHAMAN = opvp.ClassSpec(spec_info);
+    if state == true then
+        OrderHallCommandBar:Hide();
+    else
+        OrderHallCommandBar:Show();
+    end
+end
 
-table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.ENHANCEMENT_SHAMAN);
-table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.ENHANCEMENT_SHAMAN);
+local function opvp_orderhall_on_show()
+    if opvp.options.interface.frames.orderHallCommandBarHide:value() == true then
+        setOrderHallCommandBarDisabled(true);
+    end
+end
 
-spec_info = nil;
+local function opvp_orderhall_ui_addon_loaded()
+    hooksecurefunc(
+        OrderHallCommandBar,
+        "Show",
+        opvp_orderhall_on_show
+    );
+
+    if OrderHallCommandBar:IsShown() == true then
+        opvp_orderhall_on_show();
+    end
+end
+
+local function opvp_addon_loaded(addon)
+    if addon == "Blizzard_OrderHallUI" then
+        opvp_orderhall_ui_addon_loaded();
+    end
+end
+
+local function hide_orderhall_command_bar_hide_init()
+    opvp.options.interface.frames.orderHallCommandBarHide.changed:connect(
+        setOrderHallCommandBarDisabled
+    );
+
+    if C_AddOns.IsAddOnLoaded("Blizzard_OrderHallUI") == false then
+        opvp.event.ADDON_LOADED:connect(
+            opvp_addon_loaded
+        );
+    else
+        opvp_orderhall_ui_addon_loaded();
+    end
+end
+
+opvp.OnAddonLoad:register(hide_orderhall_command_bar_hide_init);

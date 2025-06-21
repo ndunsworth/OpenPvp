@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.EVOKER,
     id     = opvp.ClassSpecId.PRESERVATION_EVOKER,
+    index  = 2,
     role   = opvp.Role.HEALER,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 201157,

@@ -31,10 +31,34 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.PALADIN,
     id     = opvp.ClassSpecId.HOLY_PALADIN,
+    index  = 1,
     role   = opvp.Role.HEALER,
     traits = opvp.ClassSpecTrait.MELEE_MAGIC,
     sound  = 96464,
-    icon   = "Interface/Icons/paladin_holy"
+    icon   = "Interface/Icons/paladin_holy",
+    spells = {
+        harmful = {
+        },
+        helpful = {
+            talent = {
+                    {31821,  opvp.SpellProperty.DEFENSIVE_HIGH_AURA, 0, 8},                                             -- Aura Mastery
+                    {216331, opvp.SpellProperty.DEFENSIVE_HIGH_AURA, 0, 8},                                             -- Avenging Crusader
+                    {31884,  opvp.SpellProperty.DEFENSIVE_HIGH_AURA, opvp.CrowdControlSpellProperty.IMMUNITY_ALL, 8},   -- Avenging Wrath
+            },
+        }
+    },
+    auras = {
+        harmful = {
+        },
+        helpful = {
+            hero = {
+                    {317929, opvp.SpellProperty.DEFENSIVE_MEDIUM, opvp.CrowdControlSpellProperty.SILENCE_IMMUNITY, 8},  -- Aura Mastery (Concentration Aura)
+                    {379017, opvp.SpellProperty.DEFENSIVE_LOW, 0, 5},                                                   -- Faiths Armor
+                    {432607, opvp.SpellProperty.DEFENSIVE_MEDIUM, 0, 30},                                               -- Holy Bulwark
+                    {432502, opvp.SpellProperty.OFFENSIVE_MEDIUM, 0, 20},                                               -- Sacred Weapon
+            },
+        }
+    }
 };
 
 opvp.ClassSpec.HOLY_PALADIN = opvp.ClassSpec(spec_info);

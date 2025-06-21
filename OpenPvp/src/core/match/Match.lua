@@ -513,8 +513,6 @@ end
 
 function opvp.Match:_close()
     if self:isTest() == false then
-        opvp.Aura:reduce();
-
         opvp.event.START_TIMER:disconnect(self, self._onStartTimer);
     end
 
@@ -762,6 +760,10 @@ function opvp.Match:_onMatchStateChanged(status, expected)
         elseif status == opvp.MatchStatus.ROUND_COMPLETE then
             self:_onMatchRoundComplete();
         elseif status == opvp.MatchStatus.COMPLETE then
+            if self:isRoundBased() == false then
+                self:_onMatchRoundComplete();
+            end
+
             self:_onMatchComplete();
         elseif status == opvp.MatchStatus.EXIT then
             self:_onMatchExit();
@@ -829,7 +831,7 @@ function opvp.Match:_onOutcomeReady(outcomeType)
                 "%s @ %d%% %s",
                 round_time,
                 100 * self._dampening,
-                opvp.strs.DAMPENING
+                opvp.spell.link(110310)
             );
         end
 
@@ -847,13 +849,11 @@ function opvp.Match:_onOutcomeReady(outcomeType)
             self:round(),
             round_time
         );
-
-        opvp.match.outcomeReady:emit(self, outcomeType);
     elseif outcomeType == opvp.MatchOutcomeType.MATCH then
         local msg;
         local elapsed = self:timeElapsed();
 
-        if self._surrendered == true then
+        if self:surrendered() == true then
             msg = opvp.strs.MATCH_SURRENDERED;
         else
             if self:isRoundBased() == true then
@@ -872,9 +872,9 @@ function opvp.Match:_onOutcomeReady(outcomeType)
                 self:roundsLost()
             );
         end
-
-        opvp.match.outcomeReady:emit(self, outcomeType);
     end
+
+    opvp.match.outcomeReady:emit(self, outcomeType);
 end
 
 function opvp.Match:_onPartyAboutToJoin(category, guid)

@@ -113,6 +113,10 @@ function opvp.ShuffleMatch:roundsLost()
     return self._rounds_lost;
 end
 
+function opvp.ShuffleMatch:roundsKnown()
+    return opvp.math.popcount(self._rounds_mask);
+end
+
 function opvp.ShuffleMatch:roundsWon()
     return self._rounds_won;
 end
@@ -300,10 +304,7 @@ function opvp.ShuffleMatch:_onOutcomeReady(outcomeType)
             do_msg,
             opvp.strs.MATCH_SCORE_SHUFFLE,
             spec:role():icon(),
-            member:nameOrId(),
-            cls:color():GenerateHexColor(),
-            spec:name(),
-            cls:name(),
+            member:nameOrId(true),
             wins,
             member:cr(),
             member:cr() + member:crGain(),

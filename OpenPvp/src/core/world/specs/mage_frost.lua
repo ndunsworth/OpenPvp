@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.MAGE,
     id     = opvp.ClassSpecId.FROST_MAGE,
+    index  = 3,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 85506,

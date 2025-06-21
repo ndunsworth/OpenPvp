@@ -30,7 +30,45 @@ local opvp = OpenPvp;
 
 opvp.private.DBGCombatLogConnection = opvp.CreateClass(opvp.CombatLogConnection);
 
+function opvp.private.DBGCombatLogConnection:init(partyOnly)
+    opvp.CombatLogConnection.init(self);
+
+    self._party_only = partyOnly == true;
+    self._party = nil;
+
+    if self._party_only == true then
+        opvp.party.joined:connect(self, self._onPartyJoined);
+        opvp.party.left:connect(self, self._onPartyLeft);
+    end
+end
+
+function opvp.private.DBGCombatLogConnection:_onPartyJoined(party)
+    if self._party == nil or self._party:isHome() == true then
+        self._party = party;
+    end
+end
+
+function opvp.private.DBGCombatLogConnection:_onPartyLeft(party)
+    if party:isHome() == true then
+        self._party = opvp.party.instance();
+    else
+        self._party = opvp.party.home();
+    end
+end
+
 function opvp.private.DBGCombatLogConnection:event(event)
+    if (
+        self._party_only == true and (
+            self._party == nil or
+            (
+                self._party:findMemberByGuid(event.sourceGUID) == nil and
+                self._party:findMemberByGuid(event.destGUID) == nil
+            )
+        )
+    ) then
+        return;
+    end
+
     opvp.printDebug(
 [[
 COMBAT_LOG_EVENT_UNFILTERED {
@@ -45,6 +83,7 @@ COMBAT_LOG_EVENT_UNFILTERED {
     destName = %s,
     destFlags = %d,
     destRaidFlags = %d
+    spellId = %d
 }
 ]],
         event.timestamp,
@@ -56,14 +95,19 @@ COMBAT_LOG_EVENT_UNFILTERED {
         event.sourceRaidFlags,
         tostring(event.destGUID),
         tostring(event.destName),
-        event.destFlags
+        event.destFlags,
+        event.destRaidFlags,
+        (
+            event.subevent == opvp.combatlog.SPELL_CAST_SUCCESS
+            and select(12, CombatLogGetCurrentEventInfo())
+            or 0
+        )
     );
-
-    print(CombatLogGetCurrentEventInfo());
 end
 
 local opvp_dbg_auras;
 local opvp_dbg_combatlog;
+local opvp_dbg_combatlog2;
 
 opvp.OpenPvpRootCmd = opvp.CreateClass(opvp.GroupAddonCommand);
 
@@ -75,28 +119,29 @@ function opvp.OpenPvpRootCmd:show()
     opvp.options.match.category:show();
 end
 
-opvp.cmds = opvp.OpenPvpRootCmd("OpenPvp");
+opvp.cmds = opvp.OpenPvpRootCmd(opvp.LIB_NAME);
 
 local function opvp_init_dbg_slash_cmds()
-    --~ opvp_dbg_auras = opvp.DebugAuraTracker();
+    opvp_dbg_auras = opvp.DebugAuraTracker();
 
     opvp_dbg_combatlog = opvp.private.DBGCombatLogConnection();
+    opvp_dbg_combatlog2 = opvp.private.DBGCombatLogConnection(true);
 
     local dbg_cmd = opvp.GroupAddonCommand("dbg", "Debug commands");
 
-    --~ dbg_cmd:addCommand(
-        --~ opvp.FuncAddonCommand(
-            --~ function(editbox, args)
-                --~ if opvp_dbg_auras:isConnected() == false then
-                    --~ opvp_dbg_auras:connect(opvp.party.auraServer());
-                --~ else
-                    --~ opvp_dbg_auras:disconnect();
-                --~ end
-            --~ end,
-            --~ "auras",
-            --~ "Prints UNIT_AURA event information"
-        --~ )
-    --~ );
+    dbg_cmd:addCommand(
+        opvp.FuncAddonCommand(
+            function(editbox, args)
+                if opvp_dbg_auras:isConnected() == false then
+                    opvp_dbg_auras:connect(opvp.party.auraServer());
+                else
+                    opvp_dbg_auras:disconnect();
+                end
+            end,
+            "auras",
+            "Prints UNIT_AURA event information"
+        )
+    );
 
     dbg_cmd:addCommand(
         opvp.FuncAddonCommand(
@@ -108,6 +153,20 @@ local function opvp_init_dbg_slash_cmds()
                 end
             end,
             "combatlog",
+            "Prints COMBAT_LOG_EVENT_UNFILTERED event information"
+        )
+    );
+
+    dbg_cmd:addCommand(
+        opvp.FuncAddonCommand(
+            function(editbox, args)
+                if opvp_dbg_combatlog2:isConnected() == false then
+                    opvp_dbg_combatlog2:connect();
+                else
+                    opvp_dbg_combatlog2:disconnect();
+                end
+            end,
+            "combatlog2",
             "Prints COMBAT_LOG_EVENT_UNFILTERED event information"
         )
     );

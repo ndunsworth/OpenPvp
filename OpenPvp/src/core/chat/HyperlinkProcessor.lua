@@ -28,19 +28,37 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local spec_info = {
-    class  = opvp.SHAMAN,
-    id     = opvp.ClassSpecId.ENHANCEMENT_SHAMAN,
-    index  = 2,
-    role   = opvp.Role.DPS,
-    traits = opvp.ClassSpecTrait.MELEE_MAGIC,
-    sound  = 164991,
-    icon   = "Interface/Icons/spell_shaman_improvedstormstrike"
-};
+opvp.HyperlinkProcessor = opvp.CreateClass();
 
-opvp.ClassSpec.ENHANCEMENT_SHAMAN = opvp.ClassSpec(spec_info);
+function opvp.HyperlinkProcessor:init(name)
+    self._name = name;
+end
 
-table.insert(opvp.ClassSpec.SPECS, opvp.ClassSpec.ENHANCEMENT_SHAMAN);
-table.insert(opvp.ClassSpec.DPS_SPECS, opvp.ClassSpec.ENHANCEMENT_SHAMAN);
+function opvp.HyperlinkProcessor:connect()
+    opvp.event.SetItemRef:connect(self, self._onEventInt);
+end
 
-spec_info = nil;
+function opvp.HyperlinkProcessor:disconnect()
+    opvp.event.SetItemRef:disconnect(self, self._onEventInt);
+end
+
+function opvp.HyperlinkProcessor:name()
+    return self._name;
+end
+
+function opvp.HyperlinkProcessor:_onEvent(id, data, chatFrame, button)
+
+end
+
+function opvp.HyperlinkProcessor:_onEventInt(link, text, button, chatFrame)
+    local _, addon, id, data = strsplit(":", link, 4);
+
+    if addon == self._name then
+        self:_onEvent(
+            tonumber(id),
+            opvp.utils.serializeFromJSON(data),
+            chatFrame,
+            button
+        );
+    end
+end

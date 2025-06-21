@@ -63,26 +63,27 @@ function opvp.Party:init()
     self._name             = "";
     self._spec_counter     = opvp.ClassSpecCounter();
 
-    self.difficultyChanged     = opvp.Signal("opvp.Party.difficultyChanged");
-    self.closed                = opvp.Signal("opvp.Party.closed");
-    self.closing               = opvp.Signal("opvp.Party.closing");
-    self.initializing          = opvp.Signal("opvp.Party.initializing");
-    self.initialized           = opvp.Signal("opvp.Party.initialized");
-    self.leaderChanged         = opvp.Signal("opvp.Party.leaderChanged");
-    self.lootMethodChanged     = opvp.Signal("opvp.Party.lootMethodChanged");
-    self.memberAuraUpdate      = opvp.Signal("opvp.Party.memberAuraUpdate");
-    self.memberInfoUpdate      = opvp.Signal("opvp.Party.memberInfoUpdate");
-    self.memberKickEnded       = opvp.Signal("opvp.Party.memberKickEnded");
-    self.memberKickStarted     = opvp.Signal("opvp.Party.memberKickStarted");
-    self.memberRoleChanged     = opvp.Signal("opvp.Party.memberRoleChanged");
-    self.memberSpecUpdate      = opvp.Signal("opvp.Party.memberSpecUpdate");
-    self.memberStatusChanged   = opvp.Signal("opvp.Party.memberStatusChanged");
-    self.readyCheckBegin       = opvp.Signal("opvp.Party.readyCheckBegin");
-    self.readyCheckConfirm     = opvp.Signal("opvp.Party.readyCheckConfirm");
-    self.readyCheckFinished    = opvp.Signal("opvp.Party.readyCheckFinished");
-    self.rosterBeginUpdate     = opvp.Signal("opvp.Party.rosterBeginUpdate");
-    self.rosterEndUpdate       = opvp.Signal("opvp.Party.rosterEndUpdate");
-    self.typeChanged           = opvp.Signal("opvp.Party.typeChanged");
+    self.difficultyChanged      = opvp.Signal("opvp.Party.difficultyChanged");
+    self.closed                 = opvp.Signal("opvp.Party.closed");
+    self.closing                = opvp.Signal("opvp.Party.closing");
+    self.initializing           = opvp.Signal("opvp.Party.initializing");
+    self.initialized            = opvp.Signal("opvp.Party.initialized");
+    self.leaderChanged          = opvp.Signal("opvp.Party.leaderChanged");
+    self.lootMethodChanged      = opvp.Signal("opvp.Party.lootMethodChanged");
+    self.memberAuraUpdate       = opvp.Signal("opvp.Party.memberAuraUpdate");
+    self.memberInfoUpdate       = opvp.Signal("opvp.Party.memberInfoUpdate");
+    self.memberKickEnded        = opvp.Signal("opvp.Party.memberKickEnded");
+    self.memberKickStarted      = opvp.Signal("opvp.Party.memberKickStarted");
+    self.memberRoleChanged      = opvp.Signal("opvp.Party.memberRoleChanged");
+    self.memberSpecUpdate       = opvp.Signal("opvp.Party.memberSpecUpdate");
+    self.memberSpellInterrupted = opvp.Signal("opvp.Party.memberSpellInterrupted");
+    self.memberStatusChanged    = opvp.Signal("opvp.Party.memberStatusChanged");
+    self.readyCheckBegin        = opvp.Signal("opvp.Party.readyCheckBegin");
+    self.readyCheckConfirm      = opvp.Signal("opvp.Party.readyCheckConfirm");
+    self.readyCheckFinished     = opvp.Signal("opvp.Party.readyCheckFinished");
+    self.rosterBeginUpdate      = opvp.Signal("opvp.Party.rosterBeginUpdate");
+    self.rosterEndUpdate        = opvp.Signal("opvp.Party.rosterEndUpdate");
+    self.typeChanged            = opvp.Signal("opvp.Party.typeChanged");
 end
 
 function opvp.Party:affiliation()
@@ -508,6 +509,9 @@ function opvp.Party:_initialize(category, guid)
     self._provider.leaderChanged:connect(self, self._onPartyLeaderChanged);
     self._provider.memberAuraUpdate:connect(self, self._onMemberAuraUpdate);
     self._provider.memberInfoUpdate:connect(self, self._onMemberInfoUpdate);
+    self._provider.memberPvpTrinketUpdate:connect(self, self._onMemberPvpTrinketUpdate);
+    self._provider.memberPvpTrinketUsed:connect(self, self._onMemberPvpTrinketUsed);
+    self._provider.memberSpellInterrupted:connect(self, self._onMemberSpellInterrupted);
     self._provider.memberSpecUpdate:connect(self, self._onMemberSpecUpdate);
     self._provider.rosterBeginUpdate:connect(self, self._onRosterBeginUpdate);
     self._provider.rosterEndUpdate:connect(self, self._onRosterEndUpdate);
@@ -607,8 +611,44 @@ function opvp.Party:_onMemberInfoUpdate(member, mask)
     self.memberInfoUpdate:emit(member, mask);
 end
 
+function opvp.Party:_onMemberPvpTrinketUpdate(member, mask)
+
+end
+
+function opvp.Party:_onMemberPvpTrinketUsed(member, spellId, timestamp)
+
+end
+
 function opvp.Party:_onMemberSpecUpdate(member, newSpec, oldSpec)
     self.memberSpecUpdate:emit(member, newSpec, oldSpec);
+end
+
+function opvp.Party:_onMemberSpellInterrupted(
+    member,
+    sourceName,
+    sourceGUID,
+    spellId,
+    spellName,
+    spellSchool,
+    extraSpellId,
+    extraSpellName,
+    extraSpellSchool,
+    castLength,
+    castProgress
+)
+    self.memberSpellInterrupted:emit(
+        member,
+        sourceName,
+        sourceGUID,
+        spellId,
+        spellName,
+        spellSchool,
+        extraSpellId,
+        extraSpellName,
+        extraSpellSchool,
+        castLength,
+        castProgress
+    );
 end
 
 function opvp.Party:_onPartyLeaderChanged(newLeader, oldLeader)
@@ -723,6 +763,9 @@ function opvp.Party:_shutdown()
         self._provider.leaderChanged:disconnect(self, self._onPartyLeaderChanged);
         self._provider.memberAuraUpdate:disconnect(self, self._onMemberAuraUpdate);
         self._provider.memberInfoUpdate:disconnect(self, self._onMemberInfoUpdate);
+        self._provider.memberPvpTrinketUpdate:disconnect(self, self._onMemberPvpTrinketUpdate);
+        self._provider.memberPvpTrinketUsed:disconnect(self, self._onMemberPvpTrinketUsed);
+        self._provider.memberSpellInterrupted:disconnect(self, self._onMemberSpellInterrupted);
         self._provider.memberSpecUpdate:disconnect(self, self._onMemberSpecUpdate);
         self._provider.rosterBeginUpdate:disconnect(self, self._onRosterBeginUpdate);
         self._provider.rosterEndUpdate:disconnect(self, self._onRosterEndUpdate);

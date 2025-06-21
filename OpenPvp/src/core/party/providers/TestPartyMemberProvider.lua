@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 local opvp_test_player_index = 1;
 
@@ -93,6 +93,7 @@ function opvp.TestPartyMemberProvider:addMembers(count)
             member:_setRace(race);
             member:_setSex(sex);
             member:_setSpec(spec);
+            member:pvpTrinketState():_setRacialFromRaceId(race:id());
 
             if race:isNeutralSupported() == true then
                 member:_setFaction(race:factions()[2]);
@@ -130,6 +131,10 @@ end
 
 function opvp.TestPartyMemberProvider:hasPlayer()
     return self._has_player;
+end
+
+function opvp.TestPartyMemberProvider:isCombatLogEnabled()
+    return false;
 end
 
 function opvp.TestPartyMemberProvider:isCrossFaction()
@@ -221,7 +226,8 @@ function opvp.TestPartyMemberProvider:_onConnected()
             {"Beep",         opvp.ClassSpec.MISTWEAVER_MONK,        opvp.Race.UNKNOWN,   opvp.Sex.NONE},
             {"Bopz",         opvp.ClassSpec.RESTORATION_DRUID,      opvp.Race.UNKNOWN,   opvp.Sex.NONE},
             {"Cheesebaker",  opvp.ClassSpec.DISCIPLINE_PRIEST,      opvp.Race.UNKNOWN,   opvp.Sex.NONE},
-            {"Likewoah",     opvp.ClassSpec.MISTWEAVER_MONK,        opvp.Race.UNKNOWN,   opvp.Sex.NONE},
+            {"Looners",      opvp.ClassSpec.HOLY_PALADIN,           opvp.Race.BLOOD_ELF, opvp.Sex.FEMALE},
+            {"Likewoah",     opvp.ClassSpec.MISTWEAVER_MONK,        opvp.Race.NIGHT_ELF, opvp.Sex.MALE},
             {"Literal",      opvp.ClassSpec.RESTORATION_SHAMAN,     opvp.Race.UNKNOWN,   opvp.Sex.NONE},
             {"Lonstar",      opvp.ClassSpec.RESTORATION_SHAMAN,     opvp.Race.UNKNOWN,   opvp.Sex.NONE},
             {"Mythical",     opvp.ClassSpec.MISTWEAVER_MONK,        opvp.Race.UNKNOWN,   opvp.Sex.NONE},

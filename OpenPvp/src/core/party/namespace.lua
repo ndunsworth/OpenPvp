@@ -92,12 +92,24 @@ end
 
 opvp.party = {};
 
-opvp.party.aboutToJoin = opvp.Signal("opvp.party.aboutToJoin");
-opvp.party.formed      = opvp.Signal("opvp.party.formed");
-opvp.party.joined      = opvp.Signal("opvp.party.joined");
-opvp.party.left        = opvp.Signal("opvp.party.left");
-
-opvp.party.countdown   = opvp.Signal("opvp.party.countdown");
+opvp.party.aboutToJoin                = opvp.Signal("opvp.party.aboutToJoin");
+opvp.party.formed                     = opvp.Signal("opvp.party.formed");
+opvp.party.joined                     = opvp.Signal("opvp.party.joined");
+opvp.party.left                       = opvp.Signal("opvp.party.left");
+opvp.party.memberDefensiveAdded       = opvp.Signal("opvp.party.memberDefensiveAdded");
+opvp.party.memberDefensiveRemoved     = opvp.Signal("opvp.party.memberDefensiveRemoved");
+opvp.party.memberDefensiveLevelUpdate = opvp.Signal("opvp.party.memberDefensiveLevelUpdate");
+opvp.party.memberOffensiveAdded       = opvp.Signal("opvp.party.memberOffensiveAdded");
+opvp.party.memberOffensiveLevelUpdate = opvp.Signal("opvp.party.memberOffensiveLevelUpdate");
+opvp.party.memberOffensiveRemoved     = opvp.Signal("opvp.party.memberOffensiveRemoved");
+opvp.party.memberCrowdControlAdded    = opvp.Signal("opvp.party.memberCrowdControlAdded");
+opvp.party.memberCrowdControlRemoved  = opvp.Signal("opvp.party.memberCrowdControlRemoved");
+opvp.party.memberInfoUpdate           = opvp.Signal("opvp.party.memberInfoUpdate");
+opvp.party.memberSpecUpdate           = opvp.Signal("opvp.party.memberSpecUpdate");
+opvp.party.memberSpellInterrupted     = opvp.Signal("opvp.party.memberSpellInterrupted");
+opvp.party.memberTrinket              = opvp.Signal("opvp.party.memberTrinket");
+opvp.party.memberTrinketUpdate        = opvp.Signal("opvp.party.playerTrinketUpdate");
+opvp.party.countdown                  = opvp.Signal("opvp.party.countdown");
 
 function opvp.party.active()
     return opvp.party.party();
@@ -197,16 +209,6 @@ end
 
 opvp.party.utils = {};
 
-function opvp.party.utils.findUnitTokenForGuid(guid)
-    local token = UnitTokenFromGUID(guid);
-
-    if token ~= nil then
-        return token;
-    else
-        return "";
-    end
-end
-
 function opvp.party.utils.isCrossFaction(category)
     return C_PartyInfo.IsCrossFactionParty(category);
 end
@@ -248,8 +250,8 @@ function opvp.party.utils.isInRaid(category)
 end
 
 function opvp.party.utils.leader(category)
-    if opvp.party.utils.isGroupLeader("player", category) then
-        return "player";
+    if opvp.party.utils.isGroupLeader(opvp.unitid.PLAYER, category) then
+        return opvp.unitid.PLAYER;
     end
 
     local grp_size = opvp.party.utils.size(category);
@@ -338,9 +340,9 @@ function opvp.party.utils.token(category)
     local party_type = opvp.party.utils.type(category);
 
     if party_type == opvp.PartyType.RAID then
-        return RAID;
+        return "raid";
     elseif party_type == opvp.PartyType.PARTY then
-        return PARTY;
+        return "party";
     else
         return "";
     end

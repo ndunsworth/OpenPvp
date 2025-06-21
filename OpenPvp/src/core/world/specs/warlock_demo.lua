@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.WARLOCK,
     id     = opvp.ClassSpecId.DEMONOLOGY_WARLOCK,
+    index  = 2,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 6097,

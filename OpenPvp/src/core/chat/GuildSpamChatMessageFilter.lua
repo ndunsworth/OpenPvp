@@ -50,8 +50,6 @@ function opvp.GuildSpamChatMessageFilter:eval(chatFrame, event, msg, msgLower, p
 
     local score = self:messageScore(msgLower, self._threshold);
 
-    print("score:", score, msg);
-
     if score < self._threshold then
         return false;
     end

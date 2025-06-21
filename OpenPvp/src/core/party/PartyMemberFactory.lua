@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.PartyMemberFactory = opvp.CreateClass();
 
@@ -41,7 +41,7 @@ end
 function opvp.PartyMemberFactory:create(unitId, guid)
     local member;
 
-    if guid == nil then
+    if guid == nil or guid == "" then
         guid = opvp.unit.guid(unitId)
     end
 
@@ -50,12 +50,14 @@ function opvp.PartyMemberFactory:create(unitId, guid)
     if self._cache ~= nil and guid ~= "" then
         member = self._cache:find(guid);
 
-        if member == nil then
-            member = self:_create();
-        else
+        if member ~= nil then
             cached = true;
+        else
+            member = self._cache:pop();
         end
-    else
+    end
+
+    if member == nil then
         member = self:_create();
     end
 
@@ -78,6 +80,8 @@ end
 
 function opvp.PartyMemberFactory:release(member)
     if self._cache ~= nil then
+        member:auras():_clear();
+
         self._cache:release(member);
     else
         member:_reset(opvp.PartyMember.DESTROY_FLAGS);

@@ -239,7 +239,7 @@ function opvp.Class:spec(specId)
         end
     end
 
-    return opvp.ClassSpec.UKNOWN;
+    return opvp.ClassSpec.UNKNOWN;
 end
 
 function opvp.Class:specs()

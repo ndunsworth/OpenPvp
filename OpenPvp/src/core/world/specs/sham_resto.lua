@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.SHAMAN,
     id     = opvp.ClassSpecId.RESTORATION_SHAMAN,
+    index  = 3,
     role   = opvp.Role.HEALER,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 164991,

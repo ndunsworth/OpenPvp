@@ -57,7 +57,7 @@ function opvp.GenericPartyMemberProvider:findMemberByGuid(guid)
 end
 
 function opvp.GenericPartyMemberProvider:findMemberByUnitId(unitId)
-    if unitId == "player" then
+    if unitId == opvp.unitid.PLAYER then
         return self._player;
     end
 
@@ -81,12 +81,14 @@ function opvp.GenericPartyMemberProvider:findMemberByUnitId(unitId)
 end
 
 function opvp.GenericPartyMemberProvider:findMemberByName(name)
+    local n, s = opvp.unit.splitNameAndServer(name);
+
     local member;
 
     for n=1, self._members:size() do
         member = self._members:item(n);
 
-        if member:name() == name then
+        if member:name() == n and member:server() == s then
             return member;
         end
     end
@@ -108,6 +110,10 @@ function opvp.GenericPartyMemberProvider:findMembersWithAura(spell)
     end
 
     return members;
+end
+
+function opvp.GenericPartyMemberProvider:isCombatLogEnabled()
+    return true;
 end
 
 function opvp.GenericPartyMemberProvider:isEmpty()
@@ -147,64 +153,101 @@ function opvp.GenericPartyMemberProvider:_connect(category, guid)
 end
 
 function opvp.GenericPartyMemberProvider:_connectSignals()
-    if (
-        self:isInstance() == true or
-        opvp.party.hasInstanceParty() == false
-    ) then
+    if self:hasPlayer() == true then
         opvp.event.GROUP_ROSTER_UPDATE:connect(self, self._onGroupRosterUpdate);
         opvp.event.PARTY_LEADER_CHANGED:connect(self, self._onGroupLeaderChanged);
         opvp.event.PARTY_MEMBER_ENABLE:connect(self, self._onMemberEnable);
         opvp.event.PARTY_MEMBER_DISABLE:connect(self, self._onMemberDisable);
         opvp.event.PLAYER_SPECIALIZATION_CHANGED:connect(self, self._onUnitSpecUpdate);
+    end
+
+    if (
+        self:isInstance() == true or
+        opvp.party.hasInstanceParty() == false
+    ) then
         opvp.event.UNIT_AURA:connect(self, self._onUnitAura);
         opvp.event.UNIT_CONNECTION:connect(self, self._onUnitConnection);
         opvp.event.UNIT_FACTION:connect(self, self._onUnitFactionUpdate);
         opvp.event.UNIT_HEALTH:connect(self, self._onUnitHealth);
         opvp.event.UNIT_NAME_UPDATE:connect(self, self._onUnitNameUpdate);
         opvp.event.UNIT_IN_RANGE_UPDATE:connect(self, self._onUnitRangeUpdate);
+
+        opvp.event.UNIT_SPELLCAST_CHANNEL_START:connect(self, self._onUnitSpellCastChannelStart);
+        opvp.event.UNIT_SPELLCAST_CHANNEL_STOP:connect(self, self._onUnitSpellCastChannelStop);
+        opvp.event.UNIT_SPELLCAST_CHANNEL_UPDATE:connect(self, self._onUnitSpellCastChannelUpdate);
+        opvp.event.UNIT_SPELLCAST_EMPOWER_START:connect(self, self._onUnitSpellCastEmpowerStart);
+        opvp.event.UNIT_SPELLCAST_EMPOWER_STOP:connect(self, self._onUnitSpellCastEmpowerStop);
+        opvp.event.UNIT_SPELLCAST_EMPOWER_UPDATE:connect(self, self._onUnitSpellCastEmpowerUpdate);
+        opvp.event.UNIT_SPELLCAST_FAILED:connect(self, self._onUnitSpellCastFailed);
+        opvp.event.UNIT_SPELLCAST_FAILED_QUIET:connect(self, self._onUnitSpellCastFailedQuiet);
+        opvp.event.UNIT_SPELLCAST_INTERRUPTED:connect(self, self._onUnitSpellCastInterrupted);
+        opvp.event.UNIT_SPELLCAST_START:connect(self, self._onUnitSpellCastStart);
+        opvp.event.UNIT_SPELLCAST_STOP:connect(self, self._onUnitSpellCastStop);
+        opvp.event.UNIT_SPELLCAST_SUCCEEDED:connect(self, self._onUnitSpellCastSucceeded);
     end
 
     if self:isHome() == true then
         opvp.party.aboutToJoin:connect(self, self._onInstanceGroupJoined);
         opvp.party.left:connect(self, self._onInstanceGroupLeft);
     end
+
+    local monitor = opvp.PvpTrinketMonitor:instance();
+
+    monitor.trinketUsed:connect(
+        self,
+        self._onPvpTrinketUsed
+    );
 end
 
 function opvp.GenericPartyMemberProvider:_disconnect()
     opvp.PartyMemberProvider._disconnect(self);
-
-    for n=1, self._members:size() do
-        self:_releaseMember(self._members:item(n));
-    end
-
-    self._members:clear();
-
-    self._player = nil;
-    self._leader = nil;
 end
 
 function opvp.GenericPartyMemberProvider:_disconnectSignals()
+    if self:hasPlayer() == true then
+        opvp.event.GROUP_ROSTER_UPDATE:disconnect(self, self._onGroupRosterUpdate);
+        opvp.event.PARTY_LEADER_CHANGED:disconnect(self, self._onGroupLeaderChanged);
+        opvp.event.PARTY_MEMBER_ENABLE:disconnect(self, self._onMemberEnable);
+        opvp.event.PARTY_MEMBER_DISABLE:disconnect(self, self._onMemberDisable);
+        opvp.event.PLAYER_SPECIALIZATION_CHANGED:disconnect(self, self._onUnitSpecUpdate);
+    end
+
     if (
         self:isInstance() == true or
         opvp.party.hasInstanceParty() == false
     ) then
-        opvp.event.PARTY_LEADER_CHANGED:disconnect(self, self._onGroupLeaderChanged);
-        opvp.event.GROUP_ROSTER_UPDATE:disconnect(self, self._onGroupRosterUpdate);
-        opvp.event.PARTY_MEMBER_ENABLE:disconnect(self, self._onMemberEnable);
-        opvp.event.PARTY_MEMBER_DISABLE:disconnect(self, self._onMemberDisable);
-        opvp.event.PLAYER_SPECIALIZATION_CHANGED:disconnect(self, self._onUnitSpecUpdate);
         opvp.event.UNIT_AURA:disconnect(self, self._onUnitAura);
         opvp.event.UNIT_CONNECTION:disconnect(self, self._onUnitConnection);
         opvp.event.UNIT_FACTION:disconnect(self, self._onUnitFactionUpdate);
         opvp.event.UNIT_HEALTH:disconnect(self, self._onUnitHealth);
         opvp.event.UNIT_NAME_UPDATE:disconnect(self, self._onUnitNameUpdate);
         opvp.event.UNIT_IN_RANGE_UPDATE:disconnect(self, self._onUnitRangeUpdate);
+
+        opvp.event.UNIT_SPELLCAST_CHANNEL_START:disconnect(self, self._onUnitSpellCastChannelStart);
+        opvp.event.UNIT_SPELLCAST_CHANNEL_STOP:disconnect(self, self._onUnitSpellCastChannelStop);
+        opvp.event.UNIT_SPELLCAST_CHANNEL_UPDATE:disconnect(self, self._onUnitSpellCastChannelUpdate);
+        opvp.event.UNIT_SPELLCAST_EMPOWER_START:disconnect(self, self._onUnitSpellCastEmpowerStart);
+        opvp.event.UNIT_SPELLCAST_EMPOWER_STOP:disconnect(self, self._onUnitSpellCastEmpowerStop);
+        opvp.event.UNIT_SPELLCAST_EMPOWER_UPDATE:disconnect(self, self._onUnitSpellCastEmpowerUpdate);
+        opvp.event.UNIT_SPELLCAST_FAILED:disconnect(self, self._onUnitSpellCastFailed);
+        opvp.event.UNIT_SPELLCAST_FAILED_QUIET:disconnect(self, self._onUnitSpellCastFailedQuiet);
+        opvp.event.UNIT_SPELLCAST_INTERRUPTED:disconnect(self, self._onUnitSpellCastInterrupted);
+        opvp.event.UNIT_SPELLCAST_START:disconnect(self, self._onUnitSpellCastStart);
+        opvp.event.UNIT_SPELLCAST_STOP:disconnect(self, self._onUnitSpellCastStop);
+        opvp.event.UNIT_SPELLCAST_SUCCEEDED:disconnect(self, self._onUnitSpellCastSucceeded);
     end
 
     if self:isHome() == true then
         opvp.party.aboutToJoin:disconnect(self, self._onInstanceGroupJoined);
         opvp.party.left:disconnect(self, self._onInstanceGroupLeft);
     end
+
+    local monitor = opvp.PvpTrinketMonitor:instance();
+
+    monitor.trinketUsed:disconnect(
+        self,
+        self._onPvpTrinketUsed
+    );
 end
 
 function opvp.GenericPartyMemberProvider:_findMemberByUnitId(unitId, create)
@@ -272,7 +315,7 @@ function opvp.GenericPartyMemberProvider:_findMemberByGuid(unitId, create)
 end
 
 function opvp.GenericPartyMemberProvider:_findMemberByGuid2(unitId, guid, create)
-    if self:isUnitIdSupported(unitId) == false then
+    if self:isUnitIdSupported(unitId) == false or guid == nil or guid == "" then
         return nil, 0, false;
     end
 
@@ -317,33 +360,12 @@ function opvp.GenericPartyMemberProvider:_memberInspect(member)
     end
 end
 
-function opvp.GenericPartyMemberProvider:_onCombatLogEventFriendly(event)
-    --~ opvp.printDebug(
-        --~ "opvp.GenericPartyMemberProvider:_onCombatLogEventFriendly, %s",
-        --~ event.subevent
-    --~ );
-end
-
-function opvp.GenericPartyMemberProvider:_onCombatLogEventHostile(event)
-    --~ opvp.printDebug(
-        --~ "opvp.GenericPartyMemberProvider:_onCombatLogEventHostile, %s",
-        --~ event.subevent
-    --~ );
-end
-
-function opvp.GenericPartyMemberProvider:_onCombatLogEventOther(event)
-    --~ opvp.printDebug(
-        --~ "opvp.GenericPartyMemberProvider:_onCombatLogEventOther, %s",
-        --~ event.subevent
-    --~ );
-end
-
 function opvp.GenericPartyMemberProvider:_onConnected()
     self:_connectSignals();
 
     if self:hasPlayer() == true then
         if self._player == nil then
-            self._player = self:_createMember("player", opvp.player.guid());
+            self._player = self:_createMember(opvp.unitid.PLAYER, opvp.player.guid());
 
             self._player:_setFlags(opvp.PartyMember.PLAYER_FLAG, true);
             self._player:_setFaction(opvp.player.factionInfo());
@@ -373,9 +395,18 @@ function opvp.GenericPartyMemberProvider:_onConnected()
 end
 
 function opvp.GenericPartyMemberProvider:_onDisconnected()
+    opvp.PartyMemberProvider._onDisconnected(self);
+
     self:_disconnectSignals();
 
-    opvp.PartyMemberProvider._onDisconnected(self);
+    self._player = nil;
+    self._leader = nil;
+
+    for n=1, self._members:size() do
+        self:_releaseMember(self._members:item(n));
+    end
+
+    self._members:clear();
 end
 
 function opvp.GenericPartyMemberProvider:_onGroupLeaderChanged()
@@ -386,7 +417,7 @@ function opvp.GenericPartyMemberProvider:_onGroupLeaderChanged()
     local unitid = opvp.party.utils.leader(self._category);
 
     if unitid ~= "" then
-        if unitid == "player" then
+        if unitid == opvp.unitid.PLAYER then
             self._leader = self._player;
         else
             self._leader = self:findMemberByUnitId(unitid);
@@ -559,7 +590,9 @@ function opvp.GenericPartyMemberProvider:_onMemberInspectInt(guid, valid)
             guid
         );
 
-        self:_memberInspect(member);
+        if opvp.instance.isFollowerDungeon() == false then
+            self:_memberInspect(member);
+        end
     else
         opvp.printDebug(
             "opvp.GenericPartyMemberProvider:_onMemberInspectInt, failed because unit is opposite faction [%s] %s=%s",
@@ -581,6 +614,64 @@ function opvp.GenericPartyMemberProvider:_onMemberInspectInt(guid, valid)
 
             self:_onMemberSpecUpdate(member, spec, opvp.ClassSpec.UNKNOWN);
         end
+    end
+end
+
+function opvp.GenericPartyMemberProvider:_onMemberPvpTrinketUsed(member, spellId, timestamp)
+    local duration;
+
+    if opvp.spell.isPvpRacialTrinket(spellId) == true then
+        if spellId == 7744 then
+            duration = 120;
+        else
+            duration = 180;
+        end
+    else
+        local role = member:role();
+
+        if role:isValid() == false then
+            role = opvp.unit.role(member:id());
+        end
+
+        if role:isHealer() == true then
+            duration = 90;
+        else
+            duration = 120;
+        end
+    end
+
+    local mask = member:pvpTrinketState():_onUpdate(
+        spellId,
+        timestamp,
+        duration
+    );
+
+    if mask ~= 0 then
+        self:_onMemberPvpTrinketUpdate(member, mask);
+    end
+
+    opvp.PartyMemberProvider._onMemberPvpTrinketUsed(self, member, spellId, timestamp);
+end
+
+function opvp.GenericPartyMemberProvider:_onPvpTrinketUsed(
+    timestamp,
+    guid,
+    name,
+    spellId,
+    hostile
+)
+    if hostile ~= self:isHostile() then
+        return;
+    end
+
+    local member = self:findMemberByGuid(guid);
+
+    if member ~= nil then
+        self:_onMemberPvpTrinketUsed(
+            member,
+            spellId,
+            timestamp - opvp.system.bootTime()
+        );
     end
 end
 
@@ -641,7 +732,7 @@ function opvp.GenericPartyMemberProvider:_onUnitHealth(unitId)
         return;
     end
 
-    local health = UnitHealth(unitId);
+    local health = member:health();
 
     local mask = opvp.PartyMember.HEALTH_FLAG;
 
@@ -729,7 +820,7 @@ function opvp.GenericPartyMemberProvider:_onUnitRangeUpdate(unitId, state)
         return;
     end
 
-    member:_setFlags(opvp.PartyMember.RANGE_FLAG, state);
+    member:_setInRange(state);
 
     self:_onMemberInfoUpdate(member, opvp.PartyMember.RANGE_FLAG);
 end
@@ -740,6 +831,136 @@ function opvp.GenericPartyMemberProvider:_onUnitSpecUpdate(unitId)
     if member ~= nil then
         self:_memberInspect(member);
     end
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastChannelStart(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil then
+        return;
+    end
+
+    local info = opvp.unit.channelInfo(unitId);
+
+    member:_setSpellChanneling(castId, spellId, info.start_time, info.end_time);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastChannelStop(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or castId ~= member:castingGuid() then
+        return;
+    end
+
+    member:_setSpellChanneling("", 0, 0, 0);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastChannelUpdate(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or castId ~= member:castingGuid() then
+        return;
+    end
+
+    local info = opvp.unit.channelInfo(unitId);
+
+    member:_setSpellChanneling(castId, spellId, info.start_time, info.end_time);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastEmpowerStart(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil then
+        return;
+    end
+
+    local info = opvp.unit.channelInfo(unitId);
+
+    member:_setSpellChanneling(castId, spellId, info.start_time, info.end_time);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastEmpowerStop(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil then
+        return;
+    end
+
+    member:_setSpellChanneling("", 0, 0, 0);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastEmpowerUpdate(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or castId ~= member:castingGuid() then
+        return;
+    end
+
+    local info = opvp.unit.channelInfo(unitId);
+
+    member:_setSpellChanneling(castId, spellId, info.start_time, info.end_time);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastFailed(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or castId ~= member:castingGuid() then
+        return;
+    end
+
+    member:_setSpellCasting("", 0, 0, 0);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastFailedQuiet(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or castId ~= member:castingGuid() then
+        return;
+    end
+
+    member:_setSpellCasting("", 0, 0, 0);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastInterrupted(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or castId ~= member:castingGuid() then
+        return;
+    end
+
+    member:_setSpellCasting("", 0, 0, 0);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastStart(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil then
+        return;
+    end
+
+    local info = opvp.unit.castInfo(unitId);
+
+    member:_setSpellCasting(castId, spellId, info.start_time, info.end_time);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastStop(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or spellId ~= member:castingSpellId() then
+        return;
+    end
+
+    member:_setSpellCasting("", 0, 0, 0);
+end
+
+function opvp.GenericPartyMemberProvider:_onUnitSpellCastSucceeded(unitId, castId, spellId)
+    local member = self:findMemberByUnitId(unitId);
+
+    if member == nil or castId ~= member:castingGuid() then
+        return;
+    end
+
+    member:_setSpellCasting("", 0, 0, 0);
 end
 
 function opvp.GenericPartyMemberProvider:_scanMembers()
@@ -784,6 +1005,8 @@ function opvp.GenericPartyMemberProvider:_scanMembers()
 
             members:append(member);
         else
+            assert(index > 0);
+
             self._members:removeIndex(index);
 
             mask = self:_updateMember(unitid, member, created);

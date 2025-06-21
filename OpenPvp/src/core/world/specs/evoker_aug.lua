@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.EVOKER,
     id     = opvp.ClassSpecId.AUGMENTATION_EVOKER,
+    index  = 3,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 200748,

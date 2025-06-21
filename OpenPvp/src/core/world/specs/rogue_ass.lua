@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.ROGUE,
     id     = opvp.ClassSpecId.ASSASSINATION_ROGUE,
+    index  = 1,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 55696,

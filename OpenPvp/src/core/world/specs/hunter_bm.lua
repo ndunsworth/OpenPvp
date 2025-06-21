@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.HUNTER,
     id     = opvp.ClassSpecId.BEASTMASTER_HUNTER,
+    index  = 1,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RANGED_PHYSICAL,
     sound  = 84922,

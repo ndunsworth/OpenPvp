@@ -82,7 +82,7 @@ opvp.private.OpenPvpMiniMapButton = opvp.CreateClass(opvp.MiniMapButton);
 function opvp.private.OpenPvpMiniMapButton:init()
     opvp.MiniMapButton.init(self);
 
-    self:setName("OpenPvp");
+    self:setName(opvp.LIB_NAME);
 
     self:setCompartmentIcon("Interface/Icons/achievement_pvp_legion08");
 
@@ -162,34 +162,36 @@ function opvp.private.OpenPvpMiniMapButton:addCurrencyTooltip(tooltip)
     tooltip:AddLine(opvp.strs.CURRENCY);
 
     --~ if season_active == true then
-        if opvp.Currency.CONQUEST:hasMax() == true then
-            tooltip:AddDoubleLine(
-                string.format(
-                    "    %s %s",
-                    opvp.utils.textureIdMarkup(opvp.Currency.CONQUEST:icon(), 14, 14),
-                    opvp.Currency.CONQUEST:name()
-                ),
-                string.format(
-                    "%d/%d/%d",
-                    opvp.currency.conquest(),
-                    opvp.currency.conquestEarned(),
-                    opvp.currency.conquestMax()
-                ),
-                1, 1, 1
-            );
-        else
-            tooltip:AddDoubleLine(
-                string.format(
-                    "    %s %s",
-                    opvp.utils.textureIdMarkup(opvp.Currency.CONQUEST:icon(), 14, 14),
-                    opvp.Currency.CONQUEST:name()
-                ),
-                string.format(
-                    "%d",
-                    opvp.currency.conquest()
-                ),
-                1, 1, 1
-            );
+        if opvp.player.isMaxLevel() == true then
+            if opvp.Currency.CONQUEST:hasMax() == true then
+                tooltip:AddDoubleLine(
+                    string.format(
+                        "    %s %s",
+                        opvp.utils.textureIdMarkup(opvp.Currency.CONQUEST:icon(), 14, 14),
+                        opvp.Currency.CONQUEST:name()
+                    ),
+                    string.format(
+                        "%d/%d/%d",
+                        opvp.currency.conquest(),
+                        opvp.currency.conquestEarned(),
+                        opvp.currency.conquestMax()
+                    ),
+                    1, 1, 1
+                );
+            else
+                tooltip:AddDoubleLine(
+                    string.format(
+                        "    %s %s",
+                        opvp.utils.textureIdMarkup(opvp.Currency.CONQUEST:icon(), 14, 14),
+                        opvp.Currency.CONQUEST:name()
+                    ),
+                    string.format(
+                        "%d",
+                        opvp.currency.conquest()
+                    ),
+                    1, 1, 1
+                );
+            end
         end
 
         if opvp.Currency.BLOODY_TOKEN:hasMax() == true then
@@ -267,6 +269,10 @@ function opvp.private.OpenPvpMiniMapButton:addRatingTooltip(tooltip)
     --~ if season_active == false then
         --~ return;
     --~ end
+
+    if opvp.player.isMaxLevel() == false then
+        return;
+    end
 
     tooltip:AddLine(opvp.strs.CURRENT_RATING);
 
@@ -456,7 +462,7 @@ function opvp.private.OpenPvpMiniMapButton:_onEnter(frame)
 
     local season_active = opvp.season.isActive();
 
-    local header = "OpenPvp";
+    local header = opvp.LIB_NAME;
     local footer = "";
 
     if season_active == true then

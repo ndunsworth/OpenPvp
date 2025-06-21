@@ -31,10 +31,60 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.DRUID,
     id     = opvp.ClassSpecId.BALANCE_DRUID,
+    index  = 1,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 83382,
-    icon   = "Interface/Icons/spell_nature_starfall"
+    icon   = "Interface/Icons/spell_nature_starfall",
+    spells = {
+        harmful = {
+            talent = {
+                {391528, opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 3},    -- Convoke the Spirits
+                {390414, opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 20},   -- Incarnation: Chosen of Elune
+                {                                                          -- Incarnation: Chosen of Elune
+                    102560,
+                    bit.bor(
+                        opvp.SpellProperty.OFFENSIVE_HIGH_AURA,
+                        opvp.SpellProperty.CHARGES
+                    ),
+                    0,
+                    16
+                },
+                {202770, opvp.SpellProperty.OFFENSIVE_LOW, 0, 8},          -- Fury of Elune
+                {202425, opvp.SpellProperty.OFFENSIVE_MEDIUM_AURA, 0, 25}, -- Warrior of Elune
+                {78675,  opvp.SpellProperty.INTERRUPT, 0, 5},              -- Solar Beam
+            },
+            pvp = {
+                {                                                          -- Faerie Swarm
+                    209749,
+                    bit.bor(
+                        opvp.SpellProperty.CROWD_CONTROL_AURA,
+                        opvp.SpellProperty.SNARE
+                    ),
+                    opvp.CrowdControlSpellProperty.DISARM,
+                    5
+                },
+            }
+        }
+    },
+    auras = {
+        harmful = {
+            talent = {
+                {                                                          -- Solar Beam
+                    81261,
+                    bit.bor(
+                        opvp.SpellProperty.CROWD_CONTROL_AURA,
+                        opvp.SpellProperty.INTERRUPT
+                    ),
+                    opvp.CrowdControlSpellProperty.SILENCE,
+                    8
+                },
+            },
+            hero = {
+                {430589, opvp.SpellProperty.OFFENSIVE_LOW},                -- Atmospheric Exposure
+            }
+        }
+    }
 };
 
 opvp.ClassSpec.BALANCE_DRUID = opvp.ClassSpec(spec_info);

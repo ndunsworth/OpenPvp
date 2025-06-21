@@ -57,6 +57,8 @@ src/core/sound/SyntheticSound.lua
 src/core/sound/namespace.lua
 
 src/core/chat/namespace.lua
+src/core/chat/friends.lua
+src/core/chat/hyperlink.lua
 src/core/chat/Emote.lua
 src/core/chat/ChatMessageFilter.lua
 src/core/chat/ChatMessageFilterManager.lua
@@ -66,6 +68,9 @@ src/core/chat/MatchChatTypesMessageFilter.lua
 src/core/chat/MatchOptionChatTypesMessageFilter.lua
 src/core/chat/MuteChatTypesMessageFilter.lua
 src/core/chat/OptionChatTypesMessageFilter.lua
+src/core/chat/HyperlinkProcessor.lua
+src/core/chat/CallbackHyperlinkProcessor.lua
+src/core/chat/hyperlinks/PartyMemberCrowdControl.lua
 
 src/core/chat/emotes/unknown.lua
 src/core/chat/emotes/applaud.lua
@@ -435,6 +440,7 @@ src/feature/audio/TrinketReadySoundEffect.lua
 src/feature/audio/TrinketRacialReadySoundEffect.lua
 
 src/feature/ui/DisablePlayerCastBar.lua
+src/feature/ui/HideOrderHallCommandBar.lua
 src/feature/ui/HidePrestigeBadges.lua
 src/feature/ui/MoveLossOfControlNotification.lua
 
@@ -455,8 +461,9 @@ src/feature/match/HideUnitFramesMatchFeature.lua
 src/feature/match/LayoutMatchFeature.lua
 src/feature/match/MuteNPCDialogMatchFeature.lua
 src/feature/match/ScreenshotMatchFeature.lua
+src/feature/match/ScreenshotMatchRoundFeature.lua
 
-src/bindings/Focus.lua
+## src/bindings/Focus.lua
 
 src/minimap/button.lua
 

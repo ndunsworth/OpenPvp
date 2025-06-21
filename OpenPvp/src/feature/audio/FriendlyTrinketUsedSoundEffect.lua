@@ -41,9 +41,7 @@ function opvp.private.FriendlyTrinketUsedSoundEffect:isFeatureEnabled()
 end
 
 function opvp.private.FriendlyTrinketUsedSoundEffect:_onFeatureActivated()
-    if opvp.match.inMatch() == false then
-        self:_setMonitorConnected(true);
-    end
+    self:_setMonitorConnected(opvp.match.inMatch() == false);
 
     opvp.OptionFeature._onFeatureActivated(self)
 end
@@ -85,6 +83,8 @@ function opvp.private.FriendlyTrinketUsedSoundEffect:_onMatchTrinketUsed(
 )
     if (
         member:isHostile() == false and
+        member:isPlayer() == false and
+        --~ member:inRange() == true and
         member:isRaceKnown() == true and
         member:isSexKnown() == true
     ) then

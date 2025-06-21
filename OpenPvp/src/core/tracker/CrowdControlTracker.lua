@@ -54,16 +54,16 @@ function opvp.CrowdControlTracker:_onMemberAuraAdded(member, aura, spell)
         return;
     end
 
-    opvp.printDebug(
-        "opvp.CrowdControlTracker:_onAuraAdded(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%0.2f",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        cc_cat_state:category():name(),
-        cc_cat_state:dr(),
-        aura:dispellType(),
-        aura:duration()
-    );
+    --~ opvp.printDebug(
+        --~ "opvp.CrowdControlTracker:_onAuraAdded(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%0.2f",
+        --~ member:nameOrId(),
+        --~ aura:spellId(),
+        --~ aura:name(),
+        --~ cc_cat_state:category():name(),
+        --~ cc_cat_state:dr(),
+        --~ aura:dispellType(),
+        --~ aura:duration()
+    --~ );
 
     self.memberCrowdControlAdded:emit(
         member,
@@ -75,6 +75,7 @@ function opvp.CrowdControlTracker:_onMemberAuraAdded(member, aura, spell)
         new_dr
     );
 end
+
 function opvp.CrowdControlTracker:_onMemberAuraRemoved(member, aura, spell)
     local cc_state = member:ccState();
 
@@ -84,16 +85,16 @@ function opvp.CrowdControlTracker:_onMemberAuraRemoved(member, aura, spell)
         return;
     end
 
-    opvp.printDebug(
-        "opvp.CrowdControlTracker:_onAuraRemoved(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%0.2f",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        cc_cat_state:category():name(),
-        cc_cat_state:dr(),
-        aura:dispellType(),
-        aura:duration()
-    );
+    --~ opvp.printDebug(
+        --~ "opvp.CrowdControlTracker:_onAuraRemoved(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%0.2f",
+        --~ member:nameOrId(),
+        --~ aura:spellId(),
+        --~ aura:name(),
+        --~ cc_cat_state:category():name(),
+        --~ cc_cat_state:dr(),
+        --~ aura:dispellType(),
+        --~ aura:duration()
+    --~ );
 
     self.memberCrowdControlRemoved:emit(
         member,
@@ -114,16 +115,16 @@ function opvp.CrowdControlTracker:_onMemberAuraUpdated(member, aura, spell)
         return;
     end
 
-    opvp.printDebug(
-        "opvp.CrowdControlTracker:_onAuraUpdated(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%0.2f",
-        member:nameOrId(),
-        aura:spellId(),
-        aura:name(),
-        cc_cat_state:category():name(),
-        cc_cat_state:dr(),
-        aura:dispellType(),
-        aura:duration()
-    );
+    --~ opvp.printDebug(
+        --~ "opvp.CrowdControlTracker:_onAuraUpdated(\"%s\"), spellId=%d, spellName=\"%s\", type=\"%s\", dr=%d, dispell=%d, duration=%.2f",
+        --~ member:nameOrId(),
+        --~ aura:spellId(),
+        --~ aura:name(),
+        --~ cc_cat_state:category():name(),
+        --~ cc_cat_state:dr(),
+        --~ aura:dispellType(),
+        --~ aura:duration()
+    --~ );
 
     self.memberCrowdControlAdded:emit(
         member,

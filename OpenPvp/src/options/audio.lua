@@ -541,7 +541,7 @@ This emote is based on the pinging players race/sex.]],
 
     opvp.options.audio.soundeffect.test = {};
 
-    opvp.options.audio.soundeffect.test.category = opvp.options.audio.soundeffect.category:createCategory("Test", "Test", "Simulation");
+    opvp.options.audio.soundeffect.test.category = opvp.options.audio.soundeffect.category:createCategory("Test", "Test Mode", "Simulation");
 
     opvp.options.audio.soundeffect.test.fx = opvp.options.audio.soundeffect.test.category:createOption(
         opvp.Option.BOOL,

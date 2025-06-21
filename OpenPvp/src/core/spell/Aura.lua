@@ -76,7 +76,11 @@ function opvp.Aura:acquire()
 
     opvp_aura_pool:setSize(opvp_aura_pool:size() * 2);
 
-    return opvp_aura_pool:acquire();
+    aura = opvp_aura_pool:acquire();
+
+    assert(aura ~= nil);
+
+    return aura;
 end
 
 function opvp.Aura:reduce()
@@ -189,6 +193,14 @@ function opvp.Aura:id()
     return self._id;
 end
 
+function opvp.Aura:isHarmful()
+    return bit.band(self._mask, opvp.SpellProperty.HARMFUL) ~= 0;
+end
+
+function opvp.Aura:isHelpful()
+    return bit.band(self._mask, opvp.SpellProperty.HELPFUL) ~= 0;
+end
+
 function opvp.Aura:isNull()
     return self._id == 0;
 end
@@ -206,6 +218,8 @@ function opvp.Aura:set(info)
 
     self._id           = info.auraInstanceID;
 
+    assert(self._id ~= nil);
+
     self._applications = opvp.number_else(info.applications);
     self._charges      = opvp.number_else(info.charges);
     self._charges_max  = opvp.number_else(info.maxCharges);
@@ -219,10 +233,10 @@ function opvp.Aura:set(info)
 
     self._mask         = 0;
 
-    if opvp.bool_else(info.isHarmful, false) == true then
-        self._mask = bit.bor(self._mask, opvp.SpellProperty.HARMFUL);
-    elseif opvp.bool_else(info.isHarmful, false) == true then
+    if opvp.bool_else(info.isHelpful, false) == true then
         self._mask = bit.bor(self._mask, opvp.SpellProperty.HELPFUL);
+    elseif opvp.bool_else(info.isHarmful, false) == true then
+        self._mask = bit.bor(self._mask, opvp.SpellProperty.HARMFUL);
     end
 end
 

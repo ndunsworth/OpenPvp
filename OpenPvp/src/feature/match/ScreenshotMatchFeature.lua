@@ -90,7 +90,7 @@ local opvp_screenshot_match_feature;
 
 local function opvp_screenshot_match_feature_ctor()
     opvp_screenshot_match_feature = opvp.private.ScreenshotMatchFeature(
-        opvp.options.match.general.screenshot
+        opvp.options.match.general.screenshotMatch
     );
 end
 

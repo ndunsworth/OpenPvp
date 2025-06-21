@@ -58,9 +58,11 @@ function opvp.AuraMap:auras()
 end
 
 function opvp.AuraMap:clear()
-    table.wipe(self._auras);
+    if self._size > 0 then
+        table.wipe(self._auras);
 
-    self._size  = 0;
+        self._size = 0;
+    end
 end
 
 function opvp.AuraMap:contains(aura)
@@ -111,6 +113,16 @@ end
 
 function opvp.AuraMap:findBySpell(spell)
     return self:findBySpellId(spell:id());
+end
+
+function opvp.AuraMap:findOneBySpellId(spellId)
+    for id, aura in pairs(self._auras) do
+        if id == spellId then
+            return aura;
+        end
+    end
+
+    return nil;
 end
 
 function opvp.AuraMap:findBySpellId(spellId)
@@ -170,6 +182,7 @@ function opvp.AuraMap:release()
     local result = self._auras;
 
     self._auras = {};
+    self._size  = 0;
 
     return result;
 end

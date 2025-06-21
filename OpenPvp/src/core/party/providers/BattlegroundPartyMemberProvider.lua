@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.BattlegroundPartyMemberProvider = opvp.CreateClass(opvp.PvpPartyMemberProvider);
 
@@ -35,9 +35,9 @@ function opvp.BattlegroundPartyMemberProvider:init(factory)
 
     self._data    = opvp.List();
     self._faction = opvp.ALLIANCE;
-    self._timer   = opvp.Timer(5);
+    --~ self._timer   = opvp.Timer(5);
 
-    self._timer.timeout:connect(RequestBattlefieldScoreData);
+    --~ self._timer.timeout:connect(RequestBattlefieldScoreData);
 
     self:_setHostile(true);
 end
@@ -67,15 +67,29 @@ function opvp.BattlegroundPartyMemberProvider:tokenParty()
 end
 
 function opvp.BattlegroundPartyMemberProvider:_categorySize()
-    return self:size();
+    return self._data:size();
 end
 
 function opvp.BattlegroundPartyMemberProvider:_connectSignals()
+    opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onScoreUpdate);
 
+    local monitor = opvp.PvpTrinketMonitor:instance();
+
+    monitor.trinketUsed:connect(
+        self,
+        self._onPvpTrinketUsed
+    );
 end
 
 function opvp.BattlegroundPartyMemberProvider:_disconnectSignals()
+    opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
 
+    local monitor = opvp.PvpTrinketMonitor:instance();
+
+    monitor.trinketUsed:disconnect(
+        self,
+        self._onPvpTrinketUsed
+    );
 end
 
 function opvp.BattlegroundPartyMemberProvider:_findMemberByUnitId(unitId, create)
@@ -205,7 +219,7 @@ function opvp.BattlegroundPartyMemberProvider:_scanMembers()
 
     self:_onRosterBeginUpdate();
 
-    local party_count     = self._data:size();
+    local party_count     = self:_categorySize();
     local members         = opvp.List();
     local new_members     = opvp.List();
     local removed_members = opvp.List();
@@ -229,28 +243,31 @@ function opvp.BattlegroundPartyMemberProvider:_scanMembers()
             true
         );
 
-        assert(member ~= nil);
+        if member ~= nil then
+            if created == true then
+                assert(member:guid() ~= "" and member:guid() ~= nil);
 
-        if created == true then
-            new_members:append(member);
+                new_members:append(member);
 
-            member:_setName(score_info.name);
-            member:_setRace(opvp.Race:fromRaceName(score_info.raceName));
-            member:_setSpec(opvp.ClassSpec:fromSpecName(score_info.talentSpec));
+                member:_setInRange(true);
+                member:_setName(score_info.name);
+                member:_setRace(opvp.Race:fromRaceName(score_info.raceName));
+                member:_setSpec(opvp.ClassSpec:fromSpecName(score_info.talentSpec));
 
-            self:_updateMember(unitid, member, created);
+                members:append(member);
+            else
+                assert(index > 0);
 
-            members:append(member);
-        else
-            self._members:removeIndex(index);
+                self._members:removeIndex(index);
 
-            mask = self:_updateMember(unitid, member, created);
+                mask = self:_updateMember(unitid, member, created);
 
-            if mask ~= 0 then
-                update_members:append({member, mask});
+                if mask ~= 0 then
+                    update_members:append({member, mask});
+                end
+
+                members:append(member);
             end
-
-            members:append(member);
         end
     end
 
@@ -264,15 +281,15 @@ function opvp.BattlegroundPartyMemberProvider:_scanMembers()
 end
 
 function opvp.BattlegroundPartyMemberProvider:_updateMember(unitId, member, created)
-    local mask = member:mask();
+    local mask = 0;
 
     if unitId ~= member:id() then
-        member:_setId(unitid);
+        member:_setId(unitId);
 
         mask = opvp.PartyMember.ID_FLAG;
     end
 
-    if member:isInfoComplete() == true or member:isGuidKnown() == false then
+    if member:isInfoComplete() == true then
         return mask;
     end
 
@@ -280,10 +297,6 @@ function opvp.BattlegroundPartyMemberProvider:_updateMember(unitId, member, crea
         local name, server = opvp.unit.nameAndServerFromGuid(member:guid());
 
         if name ~= "" then
-            if server ~= GetRealmName() then
-                name = name .. "-" .. server;
-            end
-
             member:_setName(name);
 
             mask = bit.bor(mask, opvp.PartyMember.NAME_FLAG);

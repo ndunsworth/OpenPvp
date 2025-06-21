@@ -41,9 +41,7 @@ function opvp.private.EnemyTrinketUsedSoundEffect:isFeatureEnabled()
 end
 
 function opvp.private.EnemyTrinketUsedSoundEffect:_onFeatureActivated()
-    if opvp.match.inMatch() == false then
-        self:_setMonitorConnected(true);
-    end
+    self:_setMonitorConnected(opvp.match.inMatch() == false);
 
     opvp.OptionFeature._onFeatureActivated(self)
 end
@@ -81,6 +79,7 @@ end
 function opvp.private.EnemyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId, timestamp)
     if (
         member:isHostile() == true and
+        --~ member:inRange() == true and
         member:isRaceKnown() == true and
         member:isSexKnown() == true
     ) then

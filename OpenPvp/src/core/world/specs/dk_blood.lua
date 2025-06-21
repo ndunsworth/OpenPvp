@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.DEATH_KNIGHT,
     id     = opvp.ClassSpecId.BLOOD_DEATH_KNIGHT,
+    index  = 1,
     role   = opvp.Role.TANK,
     traits = opvp.ClassSpecTrait.MELEE_MAGIC,
     sound  = 12874,

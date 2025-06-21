@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.UNKNOWN_CLASS,
     id     = opvp.ClassSpecId.UNKNOWN,
+    index  = 0,
     role   = opvp.Role.NONE,
     traits = 0,
     sound  = 0,

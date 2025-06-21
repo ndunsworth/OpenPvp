@@ -41,7 +41,7 @@ local opvp_cc_valid_mask = bit.bor(
 opvp.private.PartyMemberCrowdControlled = opvp.CreateClass(opvp.OptionFeature);
 
 function opvp.private.PartyMemberCrowdControlled:init(option, mask, affiliation)
-    opvp.MatchOptionFeature.init(self, option);
+    opvp.OptionFeature.init(self, option);
 
     self._mask        = mask;
     self._affiliation = affiliation;
@@ -98,10 +98,8 @@ function opvp.private.PartyMemberCrowdControlled:_onMemberCrowdControlAdded(
     if opvp.match.inMatch() == true then
         if member:isPlayer() == true then
             msg = opvp.strs.MATCH_SELF_LOS_CONTROL;
-        elseif member:isSpecKnown() == true then
-            msg = opvp.strs.MATCH_PLAYER_LOS_CONTROL_WITH_SPEC;
         else
-            msg = opvp.strs.MATCH_PLAYER_LOS_CONTROL;
+            msg = opvp.strs.MATCH_PLAYER_LOC;
         end
 
         if member:isFriendly() == true then
@@ -112,10 +110,8 @@ function opvp.private.PartyMemberCrowdControlled:_onMemberCrowdControlAdded(
     else
         if member:isPlayer() == true then
             msg = opvp.strs.PARTY_SELF_LOS_CONTROL;
-        elseif member:isSpecKnown() == true then
-            msg = opvp.strs.PARTY_MBR_LOS_CONTROL_WITH_SPEC;
         else
-            msg = opvp.strs.PARTY_MBR_LOS_CONTROL;
+            msg = opvp.strs.PARTY_MBR_LOC;
         end
 
         if opvp.party.isParty() == true then
@@ -125,17 +121,19 @@ function opvp.private.PartyMemberCrowdControlled:_onMemberCrowdControlAdded(
         end
     end
 
-    local cls = member:classInfo();
-    local spec = member:specInfo();
+    --~ opvp.printMessage(
+        --~ msg,
+        --~ identifier,
+        --~ member:nameOrId(member:isSpecKnown(), true),
+        --~ opvp.private.hyperlink.createPartyMemberCrowdControl(member, aura, ccCategoryState)
+    --~ );
 
     opvp.printMessage(
         msg,
         identifier,
-        member:nameOrId(),
-        cls:color():GenerateHexColor(),
-        spec:name(),
-        cls:name(),
-        C_Spell.GetSpellLink(aura:spellId()),
+        member:nameOrId(member:isSpecKnown(), true),
+        opvp.spell.link(aura:spellId()),
+        ccCategoryState:categoryName(),
         ccCategoryState:drName()
     );
 end

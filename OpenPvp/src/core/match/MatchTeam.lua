@@ -28,14 +28,6 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local function opvp_member_type_name(member)
-    if member:isHostile() == true then
-        return opvp.strs.MATCH_HOSTILE_PLAYER;
-    else
-        return opvp.strs.MATCH_FRIENDLY_PLAYER;
-    end
-end
-
 opvp.MatchTeam = opvp.CreateClass(opvp.Party);
 
 function opvp.MatchTeam:init(match)
@@ -84,6 +76,22 @@ function opvp.MatchTeam:identifierName()
         return opvp.strs.MATCH_HOSTILE_TEAM;
     else
         return opvp.strs.MATCH_FRIENDLY_TEAM;
+    end
+end
+
+function opvp.MatchTeam:identifierMemberName(invert)
+    if invert == true then
+        if self:isHostile() == true then
+            return opvp.strs.MATCH_FRIENDLY_PLAYER;
+        else
+            return opvp.strs.MATCH_HOSTILE_PLAYER;
+        end
+    else
+        if self:isHostile() == true then
+            return opvp.strs.MATCH_HOSTILE_PLAYER;
+        else
+            return opvp.strs.MATCH_FRIENDLY_PLAYER;
+        end
     end
 end
 
@@ -146,16 +154,6 @@ function opvp.MatchTeam:_connectSignals()
         opvp.event.READY_CHECK_CONFIRM:connect(self, self._onReadyCheckConfirm);
         opvp.event.READY_CHECK_FINISHED:connect(self, self._onReadyCheckFinished);
     end
-
-    self._provider.memberTrinketUpdate:connect(
-        self,
-        self._onMemberTrinketUpdate
-    );
-
-    self._provider.memberTrinketUsed:connect(
-        self,
-        self._onMemberTrinketUsed
-    );
 end
 
 function opvp.MatchTeam:_disconnectSignals()
@@ -166,16 +164,6 @@ function opvp.MatchTeam:_disconnectSignals()
         opvp.event.READY_CHECK_CONFIRM:disconnect(self, self._onReadyCheckConfirm);
         opvp.event.READY_CHECK_FINISHED:disconnect(self, self._onReadyCheckFinished);
     end
-
-    self._provider.memberTrinketUpdate:disconnect(
-        self,
-        self._onMemberTrinketUpdate
-    );
-
-    self._provider.memberTrinketUsed:disconnect(
-        self,
-        self._onMemberTrinketUsed
-    );
 end
 
 function opvp.MatchTeam:_onInitialized()
@@ -240,32 +228,16 @@ function opvp.MatchTeam:_onMemberInfoUpdate(member, mask)
 
     if bit.band(mask, opvp.PartyMember.DEAD_FLAG) ~= 0 then
         if member:isDead() == true then
-            local do_msg;
-
-            if self:isFriendly() == true then
-                do_msg = opvp.options.announcements.friendlyParty.memberDeath:value();
-            else
-                do_msg = opvp.options.announcements.hostileParty.memberDeath:value();
-            end
-
-            if member:isSpecKnown() == true then
-                opvp.printMessageOrDebug(
-                    do_msg,
-                    opvp.strs.MATCH_PLAYER_DIED_WITH_SPEC,
-                    opvp_member_type_name(member),
-                    member:nameOrId(),
-                    member:classInfo():color():GenerateHexColor(),
-                    member:specInfo():name(),
-                    member:classInfo():name()
-                );
-            else
-                opvp.printMessageOrDebug(
-                    do_msg,
-                    opvp.strs.MATCH_PLAYER_DIED,
-                    opvp_member_type_name(member),
-                    member:nameOrId()
-                );
-            end
+            opvp.printMessageOrDebug(
+                (
+                    self:isFriendly()
+                    and opvp.options.announcements.friendlyParty.memberDeath:value()
+                    or opvp.options.announcements.hostileParty.memberDeath:value()
+                ),
+                opvp.strs.MATCH_PLAYER_DIED,
+                self:identifierMemberName(),
+                member:nameOrId(member:isSpecKnown(), true)
+            );
         end
     end
 end
@@ -277,78 +249,161 @@ function opvp.MatchTeam:_onMemberSpecUpdate(member, newSpec, oldSpec)
         return;
     end
 
-    local do_msg;
-
-    if self:isFriendly() == true then
-        do_msg = opvp.options.announcements.friendlyParty.memberSpecUpdate:value();
-    else
-        do_msg = opvp.options.announcements.hostileParty.memberSpecUpdate:value();
-    end
-
     opvp.printMessageOrDebug(
-        do_msg,
+        (
+            self:isFriendly()
+            and opvp.options.announcements.friendlyParty.memberSpecUpdate:value()
+            or opvp.options.announcements.hostileParty.memberSpecUpdate:value()
+        ),
         opvp.strs.MATCH_PLAYER_SPEC_CHANGED,
-        opvp_member_type_name(member),
-        member:nameOrId(),
+        self:identifierMemberName(),
+        member:nameOrId(false, true),
         member:classInfo():color():GenerateHexColor(),
         member:specInfo():name(),
         member:classInfo():name()
     );
 end
 
-function opvp.MatchTeam:_onMemberTrinketUpdate(member)
-    opvp.match.playerTrinketUpdate:emit(member);
-end
+function opvp.MatchTeam:_onMemberSpellInterrupted(
+    member,
+    sourceName,
+    sourceGUID,
+    spellId,
+    spellName,
+    spellSchool,
+    extraSpellId,
+    extraSpellName,
+    extraSpellSchool,
+    castLength,
+    castProgress
+)
+    opvp.Party._onMemberSpellInterrupted(
+        self,
+        member,
+        sourceName,
+        sourceGUID,
+        spellId,
+        spellName,
+        spellSchool,
+        extraSpellId,
+        extraSpellName,
+        extraSpellSchool,
+        castLength,
+        castProgress
+    );
 
-function opvp.MatchTeam:_onMemberTrinketUsed(member, spellId, timestamp)
-    local cls = member:classInfo();
+    local do_msg = (
+        self:isFriendly()
+        and (opvp.options.announcements.friendlyParty.memberSpellInterrupted:value() and opvp.options.announcements.friendlyParty.memberSpellInterruptedRole:isRoleEnabled(member:role()))
+        or (opvp.options.announcements.hostileParty.memberSpellInterrupted:value() and opvp.options.announcements.hostileParty.memberSpellInterruptedRole:isRoleEnabled(member:role()))
+    );
 
-    if member:isFriendly() == true then
-        if member:isPlayer() == false then
-            if member:isSpecKnown() == true then
-                opvp.printMessageOrDebug(
-                    opvp.options.announcements.friendlyParty.memberTrinket:value(),
-                    opvp.strs.MATCH_TRINKET_USED_WITH_SPEC,
-                    opvp.strs.MATCH_FRIENDLY_PLAYER,
-                    member:nameOrId(),
-                    cls:color():GenerateHexColor(),
-                    member:specInfo():name(),
-                    cls:colorString(cls:name())
-                );
-            else
-                opvp.printMessageOrDebug(
-                    opvp.options.announcements.friendlyParty.memberTrinket:value(),
-                    opvp.strs.MATCH_TRINKET_USED,
-                    opvp.strs.MATCH_FRIENDLY_PLAYER,
-                    member:nameOrId(),
-                    cls:color():GenerateHexColor(),
-                    member:raceInfo():name(),
-                    cls:colorString(cls:name())
-                );
-            end
+    local msg;
+
+    if castProgress > 0 then
+        if member:isPlayer() == true then
+            msg = opvp.strs.MATCH_SELF_SPELL_INTERRUPTED_WITH_TIME;
+        else
+            msg = opvp.strs.MATCH_PLAYER_SPELL_INTERRUPTED_WITH_TIME;
         end
     else
-        if member:isSpecKnown() == true then
-            opvp.printMessageOrDebug(
-                opvp.options.announcements.hostileParty.memberTrinket:value(),
-                opvp.strs.MATCH_TRINKET_USED_WITH_SPEC,
-                opvp.strs.MATCH_HOSTILE_PLAYER,
-                member:nameOrId(),
-                cls:color():GenerateHexColor(),
-                member:specInfo():name(),
-                cls:colorString(cls:name())
-            );
+        if member:isPlayer() == true then
+            msg = opvp.strs.MATCH_SELF_SPELL_INTERRUPTED;
         else
+            msg = opvp.strs.MATCH_PLAYER_SPELL_INTERRUPTED;
+        end
+    end
+
+    opvp.printMessageOrDebug(
+        do_msg,
+        msg,
+        self:identifierMemberName(),
+        member:nameOrId(member:isSpecKnown(), true),
+        opvp.spell.link(extraSpellId),
+        castProgress,
+        castLength
+    );
+
+    opvp.match.playerSpellInterrupted:emit(
+        member,
+        sourceName,
+        sourceGUID,
+        spellId,
+        spellName,
+        spellSchool,
+        extraSpellId,
+        extraSpellName,
+        extraSpellSchool
+    );
+end
+
+function opvp.MatchTeam:_onMemberPvpTrinketUpdate(member, mask)
+    if self._match:isActive() == true then
+        local cls = member:classInfo();
+        local trinket_state = member:pvpTrinketState();
+        local do_msg = (
+            self:isHostile()
+            and opvp.options.announcements.hostileParty.memberTrinketOffCooldown:value()
+            or opvp.options.announcements.friendlyParty.memberTrinketOffCooldown:value()
+        );
+
+        if (
+            bit.band(mask, opvp.PvpTrinketUpdate.RACIAL_COOLDOWN) ~= 0 and
+            trinket_state:isRacialOffCooldown() == true and
+            member:isPlayer() == false
+        ) then
+
             opvp.printMessageOrDebug(
-                opvp.options.announcements.hostileParty.memberTrinket:value(),
-                opvp.strs.MATCH_TRINKET_USED,
-                opvp.strs.MATCH_HOSTILE_PLAYER,
-                member:nameOrId(),
-                cls:color():GenerateHexColor(),
-                member:raceInfo():name(),
-                cls:colorString(cls:name())
+                do_msg,
+                opvp.strs.MATCH_TRINKET_RACIAL_OFF_CD,
+                self:identifierMemberName(),
+                member:nameOrId(member:isSpecKnown(), true)
             );
         end
+
+        if (
+            bit.band(mask, opvp.PvpTrinketUpdate.TRINKET_COOLDOWN) ~= 0 and
+            trinket_state:isTrinketOffCooldown() == true and
+            member:isPlayer() == false
+        ) then
+            opvp.printMessageOrDebug(
+                do_msg,
+                opvp.strs.MATCH_TRINKET_OFF_CD,
+                self:identifierMemberName(),
+                member:nameOrId(member:isSpecKnown(), true)
+            );
+        end
+
+        --~ opvp.printWarning(
+            --~ "opvp.MatchTeam:_onMemberTrinketUpdate(%s, %d), racial=%s, trinket=%s, racial_cd=%s, trinket_cd=%s",
+            --~ member:nameOrId(),
+            --~ mask,
+            --~ tostring(trinket_state:hasRacial()),
+            --~ tostring(trinket_state:hasTrinket()),
+            --~ tostring(trinket_state:hasRacial() and not trinket_state:isRacialOffCooldown()),
+            --~ tostring(trinket_state:hasTrinket() and not trinket_state:isTrinketOffCooldown())
+        --~ );
+    end
+
+    opvp.match.playerTrinketUpdate:emit(member, mask);
+end
+
+function opvp.MatchTeam:_onMemberPvpTrinketUsed(member, spellId, timestamp)
+    local cls = member:classInfo();
+
+    local do_msg = (
+        self:isHostile()
+        and opvp.options.announcements.hostileParty.memberTrinket:value()
+        or opvp.options.announcements.friendlyParty.memberTrinket:value()
+    );
+
+    if member:isPlayer() == false then
+        opvp.printMessageOrDebug(
+            do_msg,
+            opvp.strs.MATCH_TRINKET_USED,
+            self:identifierMemberName(),
+            member:nameOrId(member:isSpecKnown(), true)
+        );
     end
 
     opvp.match.playerTrinket:emit(member, spellId, timestamp);
@@ -383,24 +438,12 @@ function opvp.MatchTeam:_onRosterEndUpdate(newMembers, updatedMembers, removedMe
         member:_setTeam(nil);
 
         if member:isPlayer() == false then
-            if member:isSpecKnown() == true then
-                opvp.printMessageOrDebug(
-                    do_msg1,
-                    opvp.strs.MATCH_PLAYER_LEAVE_WITH_SPEC,
-                    opvp_member_type_name(member),
-                    member:nameOrId(),
-                    member:classInfo():color():GenerateHexColor(),
-                    member:specInfo():name(),
-                    member:classInfo():name()
-                );
-            else
-                opvp.printMessageOrDebug(
-                    do_msg1,
-                    opvp.strs.MATCH_PLAYER_LEAVE,
-                    opvp_member_type_name(member),
-                    member:nameOrId()
-                );
-            end
+            opvp.printMessageOrDebug(
+                do_msg1,
+                opvp.strs.MATCH_PLAYER_LEAVE,
+                self:identifierMemberName(),
+                member:nameOrId(member:isSpecKnown())
+            );
         end
     end
 
@@ -410,24 +453,12 @@ function opvp.MatchTeam:_onRosterEndUpdate(newMembers, updatedMembers, removedMe
         member:_setTeam(self);
 
         if member:isPlayer() == false then
-            if member:isSpecKnown() == true then
-                opvp.printMessageOrDebug(
-                    do_msg2,
-                    opvp.strs.MATCH_PLAYER_JOINED_WITH_SPEC,
-                    opvp_member_type_name(member),
-                    member:nameOrId(),
-                    member:classInfo():color():GenerateHexColor(),
-                    member:specInfo():name(),
-                    member:classInfo():name()
-                );
-            else
-                opvp.printMessageOrDebug(
-                    do_msg2,
-                    opvp.strs.MATCH_PLAYER_JOINED,
-                    opvp_member_type_name(member),
-                    member:nameOrId()
-                );
-            end
+            opvp.printMessageOrDebug(
+                do_msg2,
+                opvp.strs.MATCH_PLAYER_JOINED,
+                self:identifierMemberName(),
+                member:nameOrId(member:isSpecKnown())
+            );
         end
     end
 end

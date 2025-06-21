@@ -31,28 +31,30 @@ local opvp = OpenPvp;
 opvp.PartyMemberProvider = opvp.CreateClass();
 
 function opvp.PartyMemberProvider:init()
-    self._category      = opvp.PartyCategory.HOME;
-    self._guid          = "";
-    self._type          = opvp.PartyType.PARTY;
-    self._connected     = false;
-    self._roster_update = false;
-    self._affiliation   = opvp.Affiliation.FRIENDLY;
-    self._factory       = opvp.PartyMemberFactory(opvp.PartyMemberFactoryCache(40));
-    self._owns_factory  = true;
+    self._category             = opvp.PartyCategory.HOME;
+    self._guid                 = "";
+    self._type                 = opvp.PartyType.PARTY;
+    self._connected            = false;
+    self._roster_update        = false;
+    self._affiliation          = opvp.Affiliation.FRIENDLY;
+    self._factory              = opvp.PartyMemberFactory(opvp.PartyMemberFactoryCache(40));
+    self._owns_factory         = true;
+    self._combat_log_connected = false;
 
-    self.connected           = opvp.Signal("opvp.PartyMemberProvider.connected");
-    self.disconnecting       = opvp.Signal("opvp.PartyMemberProvider.disconnecting");
-    self.disconnected        = opvp.Signal("opvp.PartyMemberProvider.disconnected");
-    self.leaderChanged       = opvp.Signal("opvp.PartyMemberProvider.leaderChanged");
-    self.memberAuraUpdate    = opvp.Signal("opvp.PartyMemberProvider.memberAuraUpdate");
-    self.memberInfoUpdate    = opvp.Signal("opvp.PartyMemberProvider.memberInfoUpdate");
-    self.memberInspect       = opvp.Signal("opvp.PartyMemberProvider.memberInspect");
-    self.memberTrinketUpdate = opvp.Signal("opvp.PartyMemberProvider.memberTrinketUpdate");
-    self.memberTrinketUsed   = opvp.Signal("opvp.PartyMemberProvider.memberTrinketUsed");
-    self.memberSpecUpdate    = opvp.Signal("opvp.PartyMemberProvider.memberSpecUpdate");
-    self.rosterBeginUpdate   = opvp.Signal("opvp.PartyMemberProvider.rosterBeginUpdate");
-    self.rosterEndUpdate     = opvp.Signal("opvp.PartyMemberProvider.rosterEndUpdate");
-    self.typeChanged         = opvp.Signal("opvp.PartyMemberProvider.typeChanged");
+    self.connected              = opvp.Signal("opvp.PartyMemberProvider.connected");
+    self.disconnecting          = opvp.Signal("opvp.PartyMemberProvider.disconnecting");
+    self.disconnected           = opvp.Signal("opvp.PartyMemberProvider.disconnected");
+    self.leaderChanged          = opvp.Signal("opvp.PartyMemberProvider.leaderChanged");
+    self.memberAuraUpdate       = opvp.Signal("opvp.PartyMemberProvider.memberAuraUpdate");
+    self.memberInfoUpdate       = opvp.Signal("opvp.PartyMemberProvider.memberInfoUpdate");
+    self.memberInspect          = opvp.Signal("opvp.PartyMemberProvider.memberInspect");
+    self.memberPvpTrinketUpdate = opvp.Signal("opvp.PartyMemberProvider.memberPvpTrinketUpdate");
+    self.memberPvpTrinketUsed   = opvp.Signal("opvp.PartyMemberProvider.memberPvpTrinketUsed");
+    self.memberSpellInterrupted = opvp.Signal("opvp.PartyMemberProvider.memberSpellInterrupted");
+    self.memberSpecUpdate       = opvp.Signal("opvp.PartyMemberProvider.memberSpecUpdate");
+    self.rosterBeginUpdate      = opvp.Signal("opvp.PartyMemberProvider.rosterBeginUpdate");
+    self.rosterEndUpdate        = opvp.Signal("opvp.PartyMemberProvider.rosterEndUpdate");
+    self.typeChanged            = opvp.Signal("opvp.PartyMemberProvider.typeChanged");
 end
 
 function opvp.PartyMemberProvider:affiliation()
@@ -141,6 +143,10 @@ function opvp.PartyMemberProvider:inspectMemberByUnitId(unitId)
     end
 end
 
+function opvp.PartyMemberProvider:isCombatLogEnabled()
+    return false;
+end
+
 function opvp.PartyMemberProvider:isConnected()
     return self._connected;
 end
@@ -206,7 +212,7 @@ function opvp.PartyMemberProvider:isUpdatingRoster()
 end
 
 function opvp.PartyMemberProvider:isUnitIdSupported(unitId)
-    if unitId == "player" then
+    if unitId == opvp.unitid.PLAYER then
         return self:hasPlayer();
     end
 
@@ -339,11 +345,27 @@ function opvp.PartyMemberProvider:_onCombatLogEvent(event)
 end
 
 function opvp.PartyMemberProvider:_onCombatLogEventFriendly(event)
+    local member = self:findMemberByGuid(event.destGUID);
 
+    if member == nil then
+        return;
+    end
+
+    if event.subevent == opvp.combatlog.SPELL_INTERRUPT then
+        self:_onMemberSpellInterrupted(member, event);
+    end
 end
 
 function opvp.PartyMemberProvider:_onCombatLogEventHostile(event)
+    local member = self:findMemberByGuid(event.destGUID);
 
+    if member == nil then
+        return;
+    end
+
+    if event.subevent == opvp.combatlog.SPELL_INTERRUPT then
+        self:_onMemberSpellInterrupted(member, event);
+    end
 end
 
 function opvp.PartyMemberProvider:_onCombatLogEventOther(event)
@@ -351,17 +373,31 @@ function opvp.PartyMemberProvider:_onCombatLogEventOther(event)
 end
 
 function opvp.PartyMemberProvider:_onConnected()
+    if self:isCombatLogEnabled() == true then
+        opvp.CombatLogServer:instance():_addPartyMemberProvider(self);
+
+        self._combat_log_connected = true;
+    end
+
     self.connected:emit();
 end
 
 function opvp.PartyMemberProvider:_onDisconnected()
+    if self._combat_log_connected == true then
+        opvp.CombatLogServer:instance():_removePartyMemberProvider(self);
+
+        self._combat_log_connected = false;
+    end
+
     self.disconnected:emit();
 end
 
 function opvp.PartyMemberProvider:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
     self.memberAuraUpdate:emit(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate);
 
-    opvp.Aura:release(aurasRemoved);
+    if aurasRemoved:isEmpty() == false then
+        opvp.Aura:release(aurasRemoved);
+    end
 end
 
 function opvp.PartyMemberProvider:_onMemberInfoUpdate(member, mask)
@@ -376,8 +412,48 @@ function opvp.PartyMemberProvider:_onMemberInspect(member, mask)
     end
 end
 
+function opvp.PartyMemberProvider:_onMemberPvpTrinketUpdate(member, mask)
+    self.memberPvpTrinketUpdate:emit(member,  mask);
+end
+
+function opvp.PartyMemberProvider:_onMemberPvpTrinketUsed(member, spellId, timestamp, duration)
+    self.memberPvpTrinketUsed:emit(member, spellId, timestamp);
+end
+
 function opvp.PartyMemberProvider:_onMemberSpecUpdate(member, newSpec, oldSpec)
     self.memberSpecUpdate:emit(member, newSpec, oldSpec);
+end
+
+function opvp.PartyMemberProvider:_onMemberSpellInterrupted(member, event)
+    local spellId, spellName, spellSchool, extraSpellId, extraSpellName, extraSpellSchool = select(12, CombatLogGetCurrentEventInfo());
+
+    local cast_len  = 0;
+    local cast_prog = 0;
+
+    if extraSpellId == member:castingSpellIdPrev() then
+        cast_len = member:castingSpellDurationPrev();
+        cast_prog = min(
+            member:castingSpellDurationPrev(),
+            max(
+                0,
+                GetTime() - member:castingStartTimePrev()
+            )
+        );
+    end
+
+    self.memberSpellInterrupted:emit(
+        member,
+        event.sourceName,
+        event.sourceGUID,
+        spellId,
+        spellName,
+        spellSchool,
+        extraSpellId,
+        extraSpellName,
+        extraSpellSchool,
+        cast_len,
+        cast_prog
+    );
 end
 
 function opvp.PartyMemberProvider:_onPartyLeaderChanged(newLeader, oldLeader)

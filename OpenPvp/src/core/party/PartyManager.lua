@@ -42,7 +42,7 @@ function opvp.PartyManager:init(guid)
     self._countdown_name  = "";
     self._countdown_time  = 0;
     self._countdown_timer = opvp.Timer(1);
-    self._socket          = opvp.Socket("OpenPvp");
+    self._socket          = opvp.Socket(opvp.LIB_NAME);
     self._aura_server     = opvp.AuraServer();
     self._cc_tracker      = opvp.CrowdControlTracker();
     self._cbt_lvl_tracker = opvp.CombatLevelTracker();
@@ -65,6 +65,17 @@ function opvp.PartyManager:init(guid)
     opvp.OnLoadingScreenEnd:connect(self, self._onLoginReload);
 
     opvp.OnLogout:connect(self, self._onLogout);
+
+    self._cc_tracker.memberCrowdControlAdded:connect(opvp.party.memberCrowdControlAdded);
+    self._cc_tracker.memberCrowdControlRemoved:connect(opvp.party.memberCrowdControlRemoved);
+
+    self._cbt_lvl_tracker.memberDefensiveAdded:connect(opvp.party.memberDefensiveAdded);
+    self._cbt_lvl_tracker.memberDefensiveLevelUpdate:connect(opvp.party.memberDefensiveLevelUpdate);
+    self._cbt_lvl_tracker.memberDefensiveRemoved:connect(opvp.party.memberDefensiveRemoved);
+
+    self._cbt_lvl_tracker.memberOffensiveAdded:connect(opvp.party.memberOffensiveAdded);
+    self._cbt_lvl_tracker.memberOffensiveLevelUpdate:connect(opvp.party.memberOffensiveLevelUpdate);
+    self._cbt_lvl_tracker.memberOffensiveRemoved:connect(opvp.party.memberOffensiveRemoved);
 end
 
 function opvp.PartyManager:auraServer()

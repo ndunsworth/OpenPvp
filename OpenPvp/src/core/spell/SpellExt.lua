@@ -36,7 +36,7 @@ function opvp.SpellExt:null()
     return opvp_null_spell;
 end
 
-function opvp.SpellExt:init(class, id, spellProps, ccProps, duration, pvpMult)
+function opvp.SpellExt:init(class, id, spellProps, ccProps, duration, pvpMult, effect)
     opvp.Spell.init(self, id);
 
     self._class    = class;
@@ -44,6 +44,7 @@ function opvp.SpellExt:init(class, id, spellProps, ccProps, duration, pvpMult)
     self._cc_props = opvp.number_else(ccProps);
     self._duration = opvp.number_else(duration);
     self._pvp_mult = opvp.number_else(pvpMult, 1);
+    self._effect   = opvp.number_else(effect);
 end
 
 function opvp.SpellExt:class()
@@ -79,7 +80,7 @@ function opvp.SpellExt:hasRange()
 end
 
 function opvp.SpellExt:hasNoDr()
-    return bit.band(self._props, opvp.CrowdControlSpellProperty.NO_DR) ~= 0;
+    return bit.band(self._cc_props, opvp.CrowdControlSpellProperty.NO_DR) ~= 0;
 end
 
 function opvp.SpellExt:id()
@@ -167,11 +168,11 @@ function opvp.SpellExt:isTalent()
 end
 
 function opvp.SpellExt:offensiveLevel()
-    return bit.band(self._cc_props, opvp.SpellProperty.OFFENSIVE_ALL);
+    return bit.band(self._props, opvp.SpellProperty.OFFENSIVE_ALL);
 end
 
 function opvp.SpellExt:properties()
-    return self._cc_props;
+    return self._props;
 end
 
 function opvp.SpellExt:pvpMultiplier()

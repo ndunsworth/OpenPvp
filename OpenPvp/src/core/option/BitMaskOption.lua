@@ -196,6 +196,10 @@ function opvp.BitMaskOption:isBitValid(mask)
     return bit.band(self._mask_all, mask) == mask;
 end
 
+function opvp.BitMaskOption:isZero()
+    return self._mask == 0;
+end
+
 function opvp.BitMaskOption:labelForIndex(index)
     if index > 0 and index <= self._size then
         return "value " .. index

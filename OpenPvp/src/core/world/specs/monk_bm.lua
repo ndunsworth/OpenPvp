@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.MONK,
     id     = opvp.ClassSpecId.BREWMASTER_MONK,
+    index  = 1,
     role   = opvp.Role.TANK,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 260813,

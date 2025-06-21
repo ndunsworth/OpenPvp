@@ -83,38 +83,28 @@ end
 function opvp.private.PartyPriv:_onMemberInfoUpdate(member, mask)
     opvp.Party._onMemberInfoUpdate(self, member, mask);
 
+    opvp.party.memberInfoUpdate:emit(member, mask);
+
     if member:isPlayer() == true then
         return;
     end
 
     if bit.band(mask, opvp.PartyMember.DEAD_FLAG) ~= 0 then
         if member:isDead() == true then
-            local do_msg = opvp.options.announcements.friendlyParty.memberDeath:value();
-
-            if member:isSpecKnown() == true then
-                opvp.printMessageOrDebug(
-                    do_msg,
-                    opvp.strs.PARTY_MBR_DIED_WITH_SPEC,
-                    self:identifierName(),
-                    member:nameOrId(),
-                    member:classInfo():color():GenerateHexColor(),
-                    member:specInfo():name(),
-                    member:classInfo():name()
-                );
-            else
-                opvp.printMessageOrDebug(
-                    do_msg,
-                    opvp.strs.PARTY_MBR_DIED,
-                    self:identifierName(),
-                    member:nameOrId()
-                );
-            end
+            opvp.printMessageOrDebug(
+                opvp.options.announcements.friendlyParty.memberDeath:value(),
+                opvp.strs.PARTY_MBR_DIED,
+                self:identifierName(),
+                member:nameOrId(member:isSpecKnown())
+            );
         end
     end
 end
 
 function opvp.private.PartyPriv:_onMemberSpecUpdate(member, newSpec, oldSpec)
     opvp.Party._onMemberSpecUpdate(self, member, newSpec, oldSpec);
+
+    opvp.party.memberSpecUpdate:emit(member, newSpec, oldSpec);
 
     if member:isPlayer() == true or newSpec == oldSpec then
         return;
@@ -126,11 +116,88 @@ function opvp.private.PartyPriv:_onMemberSpecUpdate(member, newSpec, oldSpec)
         do_msg,
         opvp.strs.PARTY_MBR_SPEC_CHANGED,
         self:identifierName(),
-        member:nameOrId(),
-        member:classInfo():color():GenerateHexColor(),
-        member:specInfo():name(),
-        member:classInfo():name()
+        member:nameOrId(true)
     );
+end
+
+function opvp.private.PartyPriv:_onMemberSpellInterrupted(
+    member,
+    sourceName,
+    sourceGUID,
+    spellId,
+    spellName,
+    spellSchool,
+    extraSpellId,
+    extraSpellName,
+    extraSpellSchool,
+    castLength,
+    castProgress
+)
+    opvp.Party._onMemberSpellInterrupted(
+        self,
+        member,
+        sourceName,
+        sourceGUID,
+        spellId,
+        spellName,
+        spellSchool,
+        extraSpellId,
+        extraSpellName,
+        extraSpellSchool,
+        castLength,
+        castProgress
+    );
+
+    local do_msg = (
+        opvp.options.announcements.friendlyParty.memberSpellInterrupted:value() and
+        opvp.options.announcements.friendlyParty.memberSpellInterruptedRole:isRoleEnabled(member:role())
+    );
+
+    local msg;
+
+    if castProgress > 0 then
+        if member:isPlayer() == true then
+            msg = opvp.strs.PARTY_SELF_SPELL_INTERRUPTED_WITH_TIME;
+        else
+            msg = opvp.strs.PARTY_MBR_SPELL_INTERRUPTED_WITH_TIME;
+        end
+    else
+        if member:isPlayer() == true then
+            msg = opvp.strs.PARTY_SELF_SPELL_INTERRUPTED;
+        else
+            msg = opvp.strs.PARTY_MBR_SPELL_INTERRUPTED;
+        end
+    end
+
+    opvp.printMessageOrDebug(
+        do_msg,
+        msg,
+        self:identifierName(),
+        member:nameOrId(member:isSpecKnown()),
+        opvp.spell.link(extraSpellId),
+        castProgress,
+        castLength
+    );
+
+    opvp.party.memberSpellInterrupted:emit(
+        member,
+        sourceName,
+        sourceGUID,
+        spellId,
+        spellName,
+        spellSchool,
+        extraSpellId,
+        extraSpellName,
+        extraSpellSchool
+    );
+end
+
+function opvp.private.PartyPriv:_onMemberPvpTrinketUpdate(member, mask)
+    opvp.party.memberTrinketUpdate:emit(member, mask);
+end
+
+function opvp.private.PartyPriv:_onMemberPvpTrinketUsed(member, spellId, timestamp)
+    oopvp.party.memberTrinket:emit(member, spellId, timestamp);
 end
 
 function opvp.private.PartyPriv:_onPartyTypeChanged(newPartyType, oldPartyType)
@@ -154,24 +221,12 @@ function opvp.private.PartyPriv:_onRosterEndUpdate(newMembers, updatedMembers, r
         member = removedMembers[n];
 
         if member:isPlayer() == false then
-            if member:isSpecKnown() == true then
-                opvp.printMessageOrDebug(
-                    do_msg,
-                    opvp.strs.PARTY_MBR_LEAVE_WITH_SPEC,
-                    self:identifierName(),
-                    member:nameOrId(),
-                    member:classInfo():color():GenerateHexColor(),
-                    member:specInfo():name(),
-                    member:classInfo():name()
-                );
-            else
-                opvp.printMessageOrDebug(
-                    do_msg,
-                    opvp.strs.PARTY_MBR_LEAVE,
-                    self:identifierName(),
-                    member:nameOrId()
-                );
-            end
+            opvp.printMessageOrDebug(
+                do_msg,
+                opvp.strs.PARTY_MBR_LEAVE,
+                self:identifierName(),
+                member:nameOrId(member:isSpecKnown())
+            );
         end
     end
 
@@ -179,24 +234,12 @@ function opvp.private.PartyPriv:_onRosterEndUpdate(newMembers, updatedMembers, r
         member = newMembers[n];
 
         if member:isPlayer() == false then
-            if member:isSpecKnown() == true then
-                opvp.printMessage(
-                    do_msg,
-                    opvp.strs.PARTY_MBR_JOINED_WITH_SPEC,
-                    self:identifierName(),
-                    member:nameOrId(),
-                    member:classInfo():color():GenerateHexColor(),
-                    member:specInfo():name(),
-                    member:classInfo():name()
-                );
-            else
-                opvp.printMessageOrDebug(
-                    do_msg,
-                    opvp.strs.PARTY_MBR_JOINED,
-                    self:identifierName(),
-                    member:nameOrId()
-                );
-            end
+            opvp.printMessageOrDebug(
+                do_msg,
+                opvp.strs.PARTY_MBR_JOINED,
+                self:identifierName(),
+                member:nameOrId(member:isSpecKnown())
+            );
         end
     end
 

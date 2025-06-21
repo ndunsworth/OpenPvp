@@ -61,7 +61,7 @@ function opvp.NotifyInspectQueueItem:register(...)
 end
 
 function opvp.NotifyInspectQueueItem:requestInspect()
-    local token = opvp.party.utils.findUnitTokenForGuid(self._id);
+    local token = opvp.unit.tokenForGuid(self._id);
 
     if token == "" then
         self._retries = self._retries - 1;

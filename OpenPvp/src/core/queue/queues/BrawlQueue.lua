@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.BrawlQueue = opvp.CreateClass(opvp.GenericPvpQueue);
 
@@ -38,11 +38,15 @@ function opvp.BrawlQueue:init(pvpType, flags, name, description)
     self._brawl_type = Enum.BrawlType.None;
 
     if bit.band(flags, opvp.PvpFlag.EVENT) ~= 0 then
+        self._brawl_type = Enum.BrawlType.LFG;
+
         opvp.event.PVP_SPECIAL_EVENT_INFO_UPDATED:connect(
             self,
             self.updateInfo
         );
     else
+        self._brawl_type = Enum.BrawlType.Battleground;
+
         opvp.event.PVP_BRAWL_INFO_UPDATED:connect(
             self,
             self.updateInfo
@@ -62,7 +66,7 @@ function opvp.BrawlQueue:bonusRoles()
 
     if bonus ~= nil then
         for n=1, #bonus.validRoles do
-            role = opvp.Role:fromRoleString(bonus.validRoles[n]);
+            role = opvp.Role:fromRoleToken(bonus.validRoles[n]);
 
             if role:isValid() == true then
                 table.insert(roles, role);
@@ -97,6 +101,10 @@ function opvp.BrawlQueue:hasEnlistmentBonus()
     local bg, brawl = C_PvP.IsBattlegroundEnlistmentBonusActive();
 
     return brawl;
+end
+
+function opvp.BrawlQueue:hasReadyCheck()
+    return self:isEvent();
 end
 
 function opvp.BrawlQueue:isLFG()
@@ -159,6 +167,58 @@ function opvp.BrawlQueue:_info()
         return C_PvP.GetAvailableBrawlInfo();
     else
         return nil;
+    end
+end
+
+function opvp.BrawlQueue:_onLfgRoleProposalDone()
+    if self:isActive() == true then
+        return;
+    end
+
+    self:_onReadyCheckEnd();
+end
+
+function opvp.BrawlQueue:_onLfgRoleProposalFailed()
+end
+
+function opvp.BrawlQueue:_onLfgRoleProposalShow()
+    local info = opvp.queue.lfgProposal();
+
+    self._ready_check_size = info.members;
+
+    self:_onReadyCheckBegin();
+
+    self:_onLfgRoleProposalUpdate();
+end
+
+function opvp.BrawlQueue:_onLfgRoleProposalSucceeded()
+end
+
+function opvp.BrawlQueue:_onLfgRoleProposalUpdate()
+    if self:isActive() == true then
+        return;
+    end
+
+    local info = opvp.queue.lfgProposal();
+
+    if info.responded == false then
+        return;
+    end
+
+    local members_accepted = 0;
+
+    for n=1, info.members do
+        local isLeader, role, level, responded, accepted, name, class = GetLFGProposalMember(n);
+
+        if responded == true and accepted == true then
+            members_accepted = members_accepted + 1;
+        end
+    end
+
+    if members_accepted ~= self._ready_check_accepted then
+        self._ready_check_accepted = members_accepted;
+
+        self:_onReadyCheckUpdate();
     end
 end
 

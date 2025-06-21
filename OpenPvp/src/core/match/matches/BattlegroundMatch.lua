@@ -34,15 +34,19 @@ function opvp.BattlegroundMatch:init(queue, description, testType)
     opvp.GenericMatch.init(self, queue, description, testType);
 
     if testType == opvp.MatchTestType.NONE then
+        local cache_size = description:teamSize() * 2;
+
         if queue:isRated() == true then
             self._enemy_provider = opvp.ArenaPartyMemberProvider();
 
             self._enemy_provider:_setTeamSize(description:teamSize());
         else
             self._enemy_provider = opvp.BattlegroundPartyMemberProvider();
+
+            cache_size = cache_size + 10;
         end
 
-        local cache = opvp.PartyMemberFactoryCache(description:teamSize() * 2);
+        local cache = opvp.PartyMemberFactoryCache(cache_size);
 
         self._friendly_provider:_memberFactory():setCache(cache);
         self._enemy_provider:_memberFactory():setCache(cache);
@@ -92,10 +96,7 @@ function opvp.BattlegroundMatch:_onOutcomeReady(outcomeType)
                 do_msg,
                 opvp.strs.MATCH_SCORE_ARENA,
                 spec:role():icon(),
-                member:nameOrId(),
-                cls:color():GenerateHexColor(),
-                spec:name(),
-                cls:name(),
+                member:nameOrId(true),
                 member:kills(),
                 member:deaths(),
                 opvp.utils.numberToStringShort(member:damage(), 1),
@@ -113,10 +114,7 @@ function opvp.BattlegroundMatch:_onOutcomeReady(outcomeType)
                 do_msg,
                 opvp.strs.MATCH_SCORE_ARENA_RATED,
                 spec:role():icon(),
-                member:nameOrId(),
-                cls:color():GenerateHexColor(),
-                spec:name(),
-                cls:name(),
+                member:nameOrId(true),
                 member:cr(),
                 member:cr() + member:crGain(),
                 opvp.utils.colorNumberPosNeg(

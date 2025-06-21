@@ -32,7 +32,7 @@ local function opvp_class_spellmap_init_spell_category2(cls, spells, auras, cfg,
     local spell, spell_id, spell_props, cc_props, duration, pvpMult, ignore_aura;
 
     for n=1, #cfg do
-        spell_id, spell_props, cc_props, duration, pvpMult, ignore_aura = unpack(cfg[n]);
+        spell_id, spell_props, cc_props, duration, pvpMult, effect = unpack(cfg[n]);
 
         spell = opvp.SpellExt(
             cls,
@@ -40,7 +40,8 @@ local function opvp_class_spellmap_init_spell_category2(cls, spells, auras, cfg,
             bit.bor(parentMask, opvp.number_else(spell_props)),
             cc_props,
             duration,
-            pvpMult
+            pvpMult,
+            effect
         );
 
         spells:add(spell);
@@ -196,6 +197,8 @@ end
 
 function opvp.SpellMap:clear()
     table.wipe(self._spells);
+
+    self._size = 0;
 end
 
 function opvp.SpellMap:clone()
@@ -214,13 +217,11 @@ function opvp.SpellMap:difference(other)
     if opvp.IsInstance(other, opvp.SpellMap) == false then
         return spells;
     end
-    if opvp.is_number(spell) == true then
-        return self._spells[spell] ~= nil;
-    elseif opvp.IsInstance(spell, opvp.Spell) == true then
-        return self._spells[spell:id()] ~= nil;
-    else
-        return false;
-    end
+
+    --~ FIX ME!!!
+    assert(false);
+
+    return spells;
 end
 
 function opvp.SpellMap:intersection(other)
@@ -242,7 +243,8 @@ function opvp.SpellMap:intersection(other)
 
     for id, spell in pairs(a._spells) do
         if b._spells[id] ~= nil then
-            spell._spells[id] = spell:clone();
+            spells._spells[id] = spell:clone();
+            spells._size = spells._size + 1;
         end
     end
 
@@ -377,7 +379,8 @@ function opvp.SpellMap:intersection(other)
 
     for id, spell in pairs(a._spells) do
         if b._spells[id] ~= nil then
-            spell._spells[id] = spell:clone();
+            spells._spells[id] = spell:clone();
+            spells._size = spells._size + 1;
         end
     end
 
@@ -392,12 +395,13 @@ function opvp.SpellMap:merge(other)
     for id, spell in pairs(other._spells) do
         if self._spells[id] == nil then
             spell._spells[id] = spell:clone();
+            spells._size = spells._size + 1;
         end
     end
 end
 
 function opvp.SpellMap:merged(other)
-    local spells = self.clone();
+    local spells = self:clone();
 
     spells:merge(other);
 
@@ -412,15 +416,22 @@ function opvp.SpellMap:release()
     local result = self._spells;
 
     self._spells = {};
+    self._size   = 0;
 
     return result;
 end
 
 function opvp.SpellMap:remove(spell)
     if opvp.is_number(spell) == true then
-        self._spells[spell] = nil;
+        if self._spells[spell] ~= nil then
+            self._spells[spell] = nil;
+            self._size          = self._size - 1;
+        end
     elseif opvp.IsInstance(spell, opvp.Spell) == true then
-        self._spells[spell:id()] = nil;
+        if self._spells[spell:id()] ~= nil then
+            self._spells[spell:id()] = nil;
+            self._size          = self._size - 1;
+        end
     end
 end
 

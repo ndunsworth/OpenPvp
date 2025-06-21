@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.ArenaPartyMemberProvider = opvp.CreateClass(opvp.PvpPartyMemberProvider);
 
@@ -80,14 +80,7 @@ function opvp.ArenaPartyMemberProvider:_connect(category, guid)
 end
 
 function opvp.ArenaPartyMemberProvider:_connectSignals()
-    opvp.event.ARENA_OPPONENT_UPDATE:connect(self, self._onOpponentUpdate);
-    opvp.event.PLAYER_SPECIALIZATION_CHANGED:connect(self, self._onUnitSpecUpdate);
-    opvp.event.UNIT_AURA:connect(self, self._onUnitAura);
-    opvp.event.UNIT_CONNECTION:connect(self, self._onUnitConnection);
-    opvp.event.UNIT_FACTION:connect(self, self._onUnitFactionUpdate);
-    opvp.event.UNIT_HEALTH:connect(self, self._onUnitHealth);
-    opvp.event.UNIT_NAME_UPDATE:connect(self, self._onUnitNameUpdate);
-    opvp.event.UNIT_IN_RANGE_UPDATE:connect(self, self._onUnitRangeUpdate);
+    opvp.PvpPartyMemberProvider._connectSignals(self);
 
     if self._is_shuffle == true then
         opvp.event.GROUP_ROSTER_UPDATE:connect(
@@ -101,22 +94,27 @@ function opvp.ArenaPartyMemberProvider:_connectSignals()
         );
     end
 
-    opvp.PvpPartyMemberProvider._connectSignals(self);
+    opvp.event.ARENA_OPPONENT_UPDATE:connect(self, self._onOpponentUpdate);
+    opvp.event.PLAYER_SPECIALIZATION_CHANGED:connect(self, self._onUnitSpecUpdate);
 end
 
 function opvp.ArenaPartyMemberProvider:_disconnectSignals()
-    opvp.event.ARENA_OPPONENT_UPDATE:disconnect(self, self._onOpponentUpdate);
-    opvp.event.ARENA_PREP_OPPONENT_SPECIALIZATIONS:disconnect(self, self._onOpponentSpecUpdate);
-    opvp.event.GROUP_ROSTER_UPDATE:disconnect(self, self._onGroupRosterUpdate);
-    opvp.event.PLAYER_SPECIALIZATION_CHANGED:disconnect(self, self._onUnitSpecUpdate);
-    opvp.event.UNIT_AURA:disconnect(self, self._onUnitAura);
-    opvp.event.UNIT_CONNECTION:disconnect(self, self._onUnitConnection);
-    opvp.event.UNIT_FACTION:disconnect(self, self._onUnitFactionUpdate);
-    opvp.event.UNIT_HEALTH:disconnect(self, self._onUnitHealth);
-    opvp.event.UNIT_NAME_UPDATE:disconnect(self, self._onUnitNameUpdate);
-    opvp.event.UNIT_IN_RANGE_UPDATE:disconnect(self, self._onUnitRangeUpdate);
-
     opvp.PvpPartyMemberProvider._disconnectSignals(self);
+
+    if self._is_shuffle == true then
+        opvp.event.GROUP_ROSTER_UPDATE:disconnect(
+            self,
+            self._onGroupRosterUpdate
+        );
+    end
+
+    opvp.event.ARENA_PREP_OPPONENT_SPECIALIZATIONS:disconnect(
+        self,
+        self._onOpponentSpecUpdate
+    );
+
+    opvp.event.ARENA_OPPONENT_UPDATE:disconnect(self, self._onOpponentUpdate);
+    opvp.event.PLAYER_SPECIALIZATION_CHANGED:disconnect(self, self._onUnitSpecUpdate);
 end
 
 function opvp.ArenaPartyMemberProvider:_findMemberByGuid(unitId, create)
@@ -269,8 +267,8 @@ end
 function opvp.ArenaPartyMemberProvider:_updateMember(unitId, member, created)
     local mask = opvp.PvpPartyMemberProvider._updateMember(self, unitId, member, created);
 
-    if member:trinketState():hasTrinket() == false then
-        C_PvP.RequestCrowdControlSpell(member:id());
+    if member:pvpTrinketState():hasTrinket() == false then
+        C_PvP.RequestCrowdControlSpell(unitId);
     end
 
     if self._is_shuffle == false then
@@ -284,7 +282,7 @@ function opvp.ArenaPartyMemberProvider:_updateMember(unitId, member, created)
         return mask;
     end
 
-    local info = C_PvP.GetScoreInfoByPlayerGuid(self:guid());
+    local info = C_PvP.GetScoreInfoByPlayerGuid(member:guid());
 
     if info == nil then
         return mask;

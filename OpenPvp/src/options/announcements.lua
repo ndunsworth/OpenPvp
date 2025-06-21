@@ -282,28 +282,9 @@ local function opvp_options_announcements_init()
         false
     );
 
-    opvp.options.announcements.friendlyParty.memberDeath = opvp.options.announcements.friendlyParty.category:createOption(
-        opvp.Option.BOOL,
-        "Death",
-        "Member Death",
-        "",
-        false
-    );
-
-    opvp.options.announcements.friendlyParty.memberDeathIcon = opvp.options.announcements.friendlyParty.category:createOption(
-        opvp.Option.LABEL,
-        "DeathIcon",
-        opvp_chat_filter_icon
-    );
-
-    opvp.options.announcements.friendlyParty.memberDeathIcon:setFlags(
-        opvp.Option.NEW_LINE_FLAG,
-        false
-    );
-
     opvp.options.announcements.friendlyParty.memberCrowdControlled = opvp.options.announcements.friendlyParty.category:createOption(
         opvp.Option.BOOL,
-        "CrowdControlled",
+        "MemberCrowdControlled",
         "Member Crowd Controlled",
         "",
         false
@@ -311,12 +292,20 @@ local function opvp_options_announcements_init()
 
     opvp.options.announcements.friendlyParty.memberCrowdControlledRole = opvp.options.announcements.friendlyParty.category:createOption(
         opvp.Option.ROLEMASK,
-        "CrowdControlledRole",
-        "CrowdControlledRole"
+        "MemberCrowdControlledRole",
+        "MemberCrowdControlledRole"
     );
 
     opvp.options.announcements.friendlyParty.memberCrowdControlledRole:setFlags(
         opvp.Option.NEW_LINE_FLAG,
+        false
+    );
+
+    opvp.options.announcements.friendlyParty.memberDeath = opvp.options.announcements.friendlyParty.category:createOption(
+        opvp.Option.BOOL,
+        "MemberDeath",
+        "Member Death",
+        "",
         false
     );
 
@@ -339,6 +328,30 @@ local function opvp_options_announcements_init()
         false
     );
 
+    opvp.options.announcements.friendlyParty.memberSpellInterrupted = opvp.options.announcements.friendlyParty.category:createOption(
+        opvp.Option.BOOL,
+        "MemberSpellInterrupted",
+        "Member Spell Interrupted",
+        "",
+        false
+    );
+
+    opvp.options.announcements.friendlyParty.memberSpellInterruptedRole = opvp.options.announcements.friendlyParty.category:createOption(
+        opvp.Option.ROLEMASK,
+        "MemberSpellInterruptedRole",
+        "MemberSpellInterruptedRole"
+    );
+
+    opvp.options.announcements.friendlyParty.memberSpellInterruptedRole:setFlags(
+        opvp.Option.NEW_LINE_FLAG,
+        false
+    );
+
+    opvp.options.announcements.friendlyParty.memberSpellInterrupted.changed:connect(
+        opvp.options.announcements.friendlyParty.memberSpellInterruptedRole,
+        opvp.options.announcements.friendlyParty.memberSpellInterruptedRole.setEnabled
+    );
+
     opvp.options.announcements.friendlyParty.memberSpecUpdate = opvp.options.announcements.friendlyParty.category:createOption(
         opvp.Option.BOOL,
         "MemberSpecUpdate",
@@ -351,6 +364,14 @@ local function opvp_options_announcements_init()
         opvp.Option.BOOL,
         "MemberTrinketUsed",
         "Member Trinket Used",
+        "",
+        false
+    );
+
+    opvp.options.announcements.friendlyParty.memberTrinketOffCooldown = opvp.options.announcements.friendlyParty.category:createOption(
+        opvp.Option.BOOL,
+        "MemberTrinketOffCooldown",
+        "Member Trinket Off Cooldown",
         "",
         false
     );
@@ -372,7 +393,7 @@ local function opvp_options_announcements_init()
 
     opvp.options.announcements.hostileParty.memberCrowdControlled = opvp.options.announcements.hostileParty.category:createOption(
         opvp.Option.BOOL,
-        "CrowdControlled",
+        "MemberCrowdControlled",
         "Member Crowd Controlled",
         "",
         false
@@ -380,8 +401,8 @@ local function opvp_options_announcements_init()
 
     opvp.options.announcements.hostileParty.memberCrowdControlledRole = opvp.options.announcements.hostileParty.category:createOption(
         opvp.Option.ROLEMASK,
-        "CrowdControlledRole",
-        "CrowdControlledRole"
+        "MemberCrowdControlledRole",
+        "MemberCrowdControlledRole"
     );
 
     opvp.options.announcements.hostileParty.memberCrowdControlledRole:setFlags(
@@ -396,7 +417,7 @@ local function opvp_options_announcements_init()
 
     opvp.options.announcements.hostileParty.memberDeath = opvp.options.announcements.hostileParty.category:createOption(
         opvp.Option.BOOL,
-        "Death",
+        "MemberDeath",
         "Member Death",
         "",
         false
@@ -408,6 +429,30 @@ local function opvp_options_announcements_init()
         "Member Join/Leave",
         "",
         false
+    );
+
+    opvp.options.announcements.hostileParty.memberSpellInterrupted = opvp.options.announcements.hostileParty.category:createOption(
+        opvp.Option.BOOL,
+        "MemberSpellInterrupted",
+        "Member Spell Interrupted",
+        "",
+        false
+    );
+
+    opvp.options.announcements.hostileParty.memberSpellInterruptedRole = opvp.options.announcements.hostileParty.category:createOption(
+        opvp.Option.ROLEMASK,
+        "MemberSpellInterruptedRole",
+        "MemberSpellInterruptedRole"
+    );
+
+    opvp.options.announcements.hostileParty.memberSpellInterruptedRole:setFlags(
+        opvp.Option.NEW_LINE_FLAG,
+        false
+    );
+
+    opvp.options.announcements.hostileParty.memberSpellInterrupted.changed:connect(
+        opvp.options.announcements.hostileParty.memberSpellInterruptedRole,
+        opvp.options.announcements.hostileParty.memberSpellInterruptedRole.setEnabled
     );
 
     opvp.options.announcements.hostileParty.memberSpecUpdate = opvp.options.announcements.hostileParty.category:createOption(
@@ -422,6 +467,14 @@ local function opvp_options_announcements_init()
         opvp.Option.BOOL,
         "MemberTrinketUsed",
         "Member Trinket Used",
+        "",
+        false
+    );
+
+    opvp.options.announcements.hostileParty.memberTrinketOffCooldown = opvp.options.announcements.hostileParty.category:createOption(
+        opvp.Option.BOOL,
+        "MemberTrinketOffCooldown",
+        "Member Trinket Off Cooldown",
         "",
         false
     );

@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 local opvp_rating_brackets_known = false;
 
@@ -110,7 +110,7 @@ function opvp.RatingBracket:bonusRoles()
 
     if bonus ~= nil then
         for n=1, #bonus.validRoles do
-            role = opvp.Role:fromRoleString(bonus.validRoles[n]);
+            role = opvp.Role:fromRoleToken(bonus.validRoles[n]);
 
             if role:isValid() == true then
                 table.insert(roles, role);

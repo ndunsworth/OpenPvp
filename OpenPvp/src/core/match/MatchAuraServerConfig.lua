@@ -28,12 +28,6 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local opvp_match_spell_mask = bit.bor(
-    opvp.SpellProperty.CROWD_CONTROL,
-    opvp.SpellProperty.DEFENSIVE,
-    opvp.SpellProperty.OFFENSIVE
-);
-
 opvp.MatchAuraServerConfig = opvp.CreateClass();
 
 function opvp.MatchAuraServerConfig:init(match)

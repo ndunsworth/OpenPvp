@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.PartyMemberFactoryCache = opvp.CreateClass(opvp.PartyMemberFactory);
 
@@ -62,13 +62,7 @@ function opvp.PartyMemberFactoryCache:find(guid)
         end
     end
 
-    member = self._cache:popFront();
-
-    if member ~= nil then
-        self:_resetMember(member);
-    end
-
-    return member;
+    return nil;
 end
 
 function opvp.PartyMemberFactoryCache:limit()
@@ -81,6 +75,16 @@ end
 
 function opvp.PartyMemberFactoryCache:memberResetFlags(mask)
     return self._reset_mask;
+end
+
+function opvp.PartyMemberFactoryCache:pop()
+    local member = self._cache:popFront();
+
+    if member ~= nil then
+        self:_resetMember(member);
+    end
+
+    return member;
 end
 
 function opvp.PartyMemberFactoryCache:release(member)

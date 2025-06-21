@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.Class.MAGE = opvp.Class(
     {
@@ -101,7 +101,7 @@ opvp.Class.MAGE = opvp.Class(
                     {157981, opvp.SpellProperty.CROWD_CONTROL, 0, 0},                                                           -- Blast Wave
                     {31661,  opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.DISORIENT, 3},               -- Dragon's Breath
                     {157997, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.ROOT, 3},                    -- Ice Nova
-                    {113724, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.INCAPACITATE, 6, 1, false},  -- Ring of Frost
+                    {113724, opvp.SpellProperty.CROWD_CONTROL, opvp.CrowdControlSpellProperty.INCAPACITATE, 6, 1},              -- Ring of Frost
                     {389794, opvp.SpellProperty.CROWD_CONTROL, opvp.CrowdControlSpellProperty.STUN, 4, 1},                      -- Snowdrift
                 }
             },

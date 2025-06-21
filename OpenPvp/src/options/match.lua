@@ -114,11 +114,19 @@ Chat Messages Filtered:
         true
     );
 
-    opvp.options.match.general.screenshot = opvp.options.match.general.category:createOption(
+    opvp.options.match.general.screenshotShuffleRound = opvp.options.match.general.category:createOption(
+        opvp.Option.BOOL,
+        "ScreenshotShuffleRound",
+        "Screenshot Shuffle Round",
+        "Screenshot on Shuffle round completion",
+        false
+    );
+
+    opvp.options.match.general.screenshotMatch = opvp.options.match.general.category:createOption(
         opvp.Option.BOOL,
         "ScreenshotScoreboard",
         "Screenshot Scoreboard",
-        "Screenshot scoreboard on match completion",
+        "Screenshot scoreboard on Match completion",
         false
     );
 

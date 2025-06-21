@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.PvpPartyMemberProvider = opvp.CreateClass(opvp.GenericPartyMemberProvider);
 
@@ -36,7 +36,7 @@ function opvp.PvpPartyMemberProvider:init(factory)
     end
 
     self._match      = nil;
-    self._cc_updates = false;
+    self._arena_cd_updates = false;
 
     self.scoreUpdate = opvp.Signal("opvp.PvpPartyMemberProvider.scoreUpdate");
 
@@ -64,12 +64,18 @@ function opvp.PvpPartyMemberProvider:isRated()
     );
 end
 
-function opvp.PvpPartyMemberProvider:_connectSignals()
-    if self:hasPlayer() == true then
-        opvp.GenericPartyMemberProvider._connectSignals(self);
+function opvp.PvpPartyMemberProvider:isFull()
+    if self._match ~= nil then
+        return self._match:description():teamSize() == self:size()
+    else
+        return false;
     end
+end
 
-    if self._cc_updates == true then
+function opvp.PvpPartyMemberProvider:_connectSignals()
+    opvp.GenericPartyMemberProvider._connectSignals(self);
+
+    if self._arena_cd_updates == true then
         opvp.event.ARENA_COOLDOWNS_UPDATE:connect(
             self,
             self._onArenaCooldownsUpdate
@@ -81,23 +87,14 @@ function opvp.PvpPartyMemberProvider:_connectSignals()
         );
     end
 
-    local monitor = opvp.PvpTrinketMonitor:instance();
-
-    monitor.trinketUsed:connect(
-        self,
-        self._onTrinketUsed
-    );
-
     opvp.event.UPDATE_BATTLEFIELD_SCORE:connect(self, self._onScoreUpdate);
 end
 
 function opvp.PvpPartyMemberProvider:_disconnectSignals()
-    if self:hasPlayer() == true then
-        opvp.GenericPartyMemberProvider._disconnectSignals(self);
-    end
+    opvp.GenericPartyMemberProvider._disconnectSignals(self);
 
-    if self._cc_updates == true then
-        opvp.event.ARENA_COOLDOWNS_UPDATE:connect(
+    if self._arena_cd_updates == true then
+        opvp.event.ARENA_COOLDOWNS_UPDATE:disconnect(
             self,
             self._onArenaCooldownsUpdate
         );
@@ -107,13 +104,6 @@ function opvp.PvpPartyMemberProvider:_disconnectSignals()
             self._onArenaCrowdControlSpellUpdate
         );
     end
-
-    local monitor = opvp.PvpTrinketMonitor:instance();
-
-    monitor.trinketUsed:disconnect(
-        self,
-        self._onTrinketUsed
-    );
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:disconnect(self, self._onScoreUpdate);
 end
@@ -125,20 +115,30 @@ function opvp.PvpPartyMemberProvider:_onArenaCooldownsUpdate(unitId)
         return;
     end
 
-    local trinket_state = member:trinketState();
+    local trinket_state = member:pvpTrinketState();
 
     local spell_id, start_time, duration = C_PvP.GetArenaCrowdControlInfo(unitId);
 
-    if spell_id == nil or start_time == nil or duration == nil then
-        if trinket_state:hasTrinket() == false then
-            self:_memberInspect(member);
-        end
-    elseif trinket_state:_onUpdate(
+    if spell_id == nil then
+        return;
+    end
+
+    if start_time == nil then
+        start_time = 0;
+    end
+
+    if duration == nil then
+        duration = 0;
+    end
+
+    local mask = trinket_state:_onUpdate(
         spell_id,
         start_time / 1000,
         duration / 1000
-    ) == true then
-        self.memberTrinketUpdate:emit(member);
+    );
+
+    if mask ~= 0 then
+        self:_onMemberPvpTrinketUpdate(member, mask);
     end
 end
 
@@ -149,43 +149,22 @@ function opvp.PvpPartyMemberProvider:_onArenaCrowdControlSpellUpdate(unitId, spe
         return;
     end
 
-    local trinket_state = member:trinketState();
+    local trinket_state = member:pvpTrinketState();
 
     if opvp.spell.isPvpTrinket(spellId) == true then
         if trinket_state:_setTrinket(spellId) == true then
-            self.memberTrinketUpdate:emit(member);
+            self:_onMemberPvpTrinketUpdate(member, opvp.PvpTrinketUpdate.TRINKET_CHANGED);
         end
     elseif opvp.spell.isPvpRacialTrinket(spellId) == true then
         if trinket_state:_setRacial(spellId) == true then
-            self.memberTrinketUpdate:emit(member);
+            self:_onMemberPvpTrinketUpdate(member, opvp.PvpTrinketUpdate.RACIAL_CHANGED);
         end
     end
 end
 
-function opvp.PvpPartyMemberProvider:_onCombatLogEventFriendly(event)
-    --~ opvp.printDebug(
-        --~ "opvp.PvpPartyMemberProvider:_onCombatLogEventFriendly, %s",
-        --~ event.subevent
-    --~ );
-end
-
-function opvp.PvpPartyMemberProvider:_onCombatLogEventHostile(event)
-    --~ opvp.printDebug(
-        --~ "opvp.PvpPartyMemberProvider:_onCombatLogEventHostile, %s",
-        --~ event.subevent
-    --~ );
-end
-
-function opvp.PvpPartyMemberProvider:_onCombatLogEventOther(event)
-    --~ opvp.printDebug(
-        --~ "opvp.PvpPartyMemberProvider:_onCombatLogEventOther, %s",
-        --~ event.subevent
-    --~ );
-end
-
 function opvp.PvpPartyMemberProvider:_onConnected()
     self._match = opvp.match.current();
-    self._cc_updates = (
+    self._arena_cd_updates = (
         self:isArena() == true or
         self:isRated() == true or
         self:isHostile() == false
@@ -204,53 +183,15 @@ function opvp.PvpPartyMemberProvider:_onMemberInspect(member, mask)
     opvp.GenericPartyMemberProvider._onMemberInspect(self, member, mask);
 
     if member:isFriendly() == true then
-        local trinket_state = member:trinketState();
+        local trinket_state = member:pvpTrinketState();
+        local result = trinket_state:_setTrinketFromInspect(member:id());
 
-        if (
-            trinket_state:_setTrinketFromInspect(member:id()) < 0 and
-            self._match:isRoundWarmup() == true
-        ) then
+        if result == 1 then
+            self:_onMemberPvpTrinketUpdate(member, opvp.PvpTrinketUpdate.TRINKET_CHANGED);
+        elseif result < 0 and self._match:isRoundWarmup() == true then
             self:_memberInspect(member);
         end
     end
-end
-
-function opvp.PvpPartyMemberProvider:_onMemberTrinketUsed(member, spellId, timestamp)
-    local duration;
-
-    if opvp.spell.isPvpRacialTrinket(spellId) == true then
-        if spellId == 7744 then
-            duration = 120;
-        else
-            duration = 180;
-        end
-
-        timestamp = timestamp - opvp.system.bootTime();
-    elseif self:isArena() == false and self:isRated() == false then
-        local role = member:role();
-
-        if role:isValid() == false then
-            role = opvp.unit.role(member:id());
-        end
-
-        if role:isHealer() == true then
-            duration = 90;
-        else
-            duration = 120;
-        end
-
-        timestamp = timestamp - opvp.system.bootTime();
-    end
-
-    if duration ~= nil then
-        local trinket_state = member:trinketState();
-
-        if trinket_state:_onUpdate(spellId, timestamp, duration) == true then
-            self.memberTrinketUpdate:emit(member);
-        end
-    end
-
-    self.memberTrinketUsed:emit(member, spellId, timestamp);
 end
 
 function opvp.PvpPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembers, removedMembers)
@@ -260,15 +201,15 @@ function opvp.PvpPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembe
         member = newMembers[n];
 
         if member:race() == opvp.HUMAN then
-            valid = member:trinketState():_setRacial(59752);
+            valid = member:pvpTrinketState():_setRacial(59752);
         elseif member:race() == opvp.UNDEAD then
-            valid = member:trinketState():_setRacial(7744);
+            valid = member:pvpTrinketState():_setRacial(7744);
         else
             valid = false;
         end
 
         if valid == true then
-            self.memberTrinketUpdate:emit(member);
+            self:_onMemberPvpTrinketUpdate(member, opvp.PvpTrinketUpdate.RACIAL_CHANGED);
         end
     end
 
@@ -277,15 +218,15 @@ function opvp.PvpPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMembe
 
         if bit.band(mask, opvp.PartyMember.RACE_FLAG) ~= 0 then
             if member:race() == opvp.HUMAN then
-                valid = member:trinketState():_setRacial(59752);
+                valid = member:pvpTrinketState():_setRacial(59752);
             elseif member:race() == opvp.UNDEAD then
-                valid = member:trinketState():_setRacial(7744);
+                valid = member:pvpTrinketState():_setRacial(7744);
             else
                 valid = false;
             end
 
             if valid == true then
-                self.memberTrinketUpdate:emit(member);
+                self:_onMemberPvpTrinketUpdate(member, opvp.PvpTrinketUpdate.RACIAL_CHANGED);
             end
         end
     end
@@ -305,29 +246,11 @@ function opvp.PvpPartyMemberProvider:_onScoreUpdate()
     self.scoreUpdate:emit();
 end
 
-function opvp.PvpPartyMemberProvider:_onTrinketUsed(
-    timestamp,
-    guid,
-    name,
-    spellId,
-    hostile
-)
-    if hostile ~= self:isHostile() then
-        return;
-    end
-
-    local member = self:findMemberByGuid(guid);
-
-    if member ~= nil then
-        self:_onMemberTrinketUsed(member, spellId, timestamp);
-    end
-end
-
 function opvp.PvpPartyMemberProvider:_updateMember(unitId, member, created)
     if created == true then
         member:_setStats(self._match:map():stats());
 
-        if self._cc_updates == true and self:isHostile() == true then
+        if self._arena_cd_updates == true then
             C_PvP.RequestCrowdControlSpell(member:id());
         end
     end

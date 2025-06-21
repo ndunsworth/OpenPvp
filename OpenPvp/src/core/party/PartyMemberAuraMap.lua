@@ -30,6 +30,10 @@ local opvp = OpenPvp;
 
 opvp.PartyMemberAuraMap = opvp.CreateClass(opvp.AuraMap);
 
+function opvp.PartyMemberAuraMap.__iter__(self)
+    return next, self._auras, nil;
+end
+
 function opvp.PartyMemberAuraMap:init()
     opvp.AuraMap.init(self);
 end
@@ -47,14 +51,19 @@ function opvp.PartyMemberAuraMap:remove(aura)
 end
 
 function opvp.PartyMemberAuraMap:update(unitId)
-    self:clear();
+    self:_clear();
 
     local callback = function(info)
-        local aura = opvp.Aura:acquire();
+        if self._auras[info.auraInstanceID] == nil then
+            local aura = opvp.Aura:acquire();
 
-        aura:set(info);
+            aura:set(info);
 
-        self._auras[aura:id()] = aura;
+            assert(aura:id() > 0);
+
+            self._auras[aura:id()] = aura;
+            self._size = self._size + 1;
+        end
     end
 
     AuraUtil.ForEachAura(unitId, "HARMFUL", nil, callback, true);
@@ -69,12 +78,23 @@ function opvp.PartyMemberAuraMap:updateFromEvent(
     aurasModified,
     aurasRemoved
 )
-    local index, aura, tmp;
+    assert (
+        aurasNew:isEmpty() == true and
+        aurasModified:isEmpty() == true and
+        aurasRemoved:isEmpty() == true
+    )
+
+    local aura, aura_info, id;
 
     if info.isFullUpdate == true then
-        auras = {};
+        local auras = {};
+        local size = 0;
 
         local callback = function(data)
+            if auras[data.auraInstanceID] ~= nil then
+                return;
+            end
+
             aura = self._auras[data.auraInstanceID];
 
             if aura ~= nil then
@@ -83,10 +103,9 @@ function opvp.PartyMemberAuraMap:updateFromEvent(
                 aurasModified:add(aura);
 
                 self._auras[data.auraInstanceID] = nil;
+                self._size = self._size - 1;
             else
-                local aura = opvp.Aura:acquire();
-
-                assert(aura ~= nil);
+                aura = opvp.Aura:acquire();
 
                 aura:set(data);
 
@@ -94,6 +113,8 @@ function opvp.PartyMemberAuraMap:updateFromEvent(
             end
 
             auras[data.auraInstanceID] = aura;
+
+            size = size + 1;
         end
 
         AuraUtil.ForEachAura(unitId, "HARMFUL", nil, callback, true);
@@ -103,52 +124,70 @@ function opvp.PartyMemberAuraMap:updateFromEvent(
         aurasRemoved:swap(self);
 
         self._auras = auras;
+        self._size = size;
     else
+        --~ Why we are recieving duplicates from UNIT_AURA I have no idea
+
         if info.removedAuraInstanceIDs then
             for n=1, #info.removedAuraInstanceIDs do
                 aura = self._auras[info.removedAuraInstanceIDs[n]];
 
                 if aura ~= nil then
                     self._auras[aura:id()] = nil;
+                    self._size = self._size - 1;
 
-                    aurasRemoved:add(aura);
+                    assert(aurasRemoved:add(aura));
                 end
             end
         end
 
         if info.addedAuras then
             for n=1, #info.addedAuras do
-                aura = opvp.Aura:acquire();
+                aura_info = info.addedAuras[n];
 
-                aura:set(info.addedAuras[n]);
+                aura = self._auras[aura_info.auraInstanceID];
 
-                self._auras[aura:id()] = aura;
+                if aura == nil then
+                    aura = opvp.Aura:acquire();
 
-                aurasNew:add(aura);
+                    aura:set(aura_info);
+
+                    self._auras[aura_info.auraInstanceID] = aura;
+                    self._size = self._size + 1;
+
+                    assert(aurasNew:add(aura));
+                elseif aurasModified:contains(aura_info.auraInstanceID) == false then
+                    aura:update(aura_info);
+
+                    assert(aurasModified:add(aura));
+                end
             end
         end
 
         if info.updatedAuraInstanceIDs then
             for n=1, #info.updatedAuraInstanceIDs do
-                tmp = C_UnitAuras.GetAuraDataByAuraInstanceID(unitId, info.updatedAuraInstanceIDs[n]);
+                id = info.updatedAuraInstanceIDs[n];
 
-                if tmp ~= nil then
-                    aura = self._auras[tmp.auraInstanceID];
+                if aurasModified:contains(id) == false then
+                    aura_info = C_UnitAuras.GetAuraDataByAuraInstanceID(unitId, info.updatedAuraInstanceIDs[n]);
 
-                    if aura ~= nil then
-                        aura:update(tmp);
+                    if aura_info ~= nil then
+                        aura = self._auras[aura_info.auraInstanceID];
 
-                        aurasModified:add(aura);
-                    else
-                        aura = opvp.Aura:acquire();
+                        if aura ~= nil then
+                            aura:update(aura_info);
 
-                        assert(aura ~= nil);
+                            assert(aurasModified:add(aura));
+                        else
+                            aura = opvp.Aura:acquire();
 
-                        aura:set(tmp);
+                            aura:set(aura_info);
 
-                        self._auras[aura:id()] = aura;
+                            self._auras[aura_info.auraInstanceID] = aura;
+                            self._size = self._size + 1;
 
-                        aurasNew:add(aura);
+                            assert(aurasNew:add(aura));
+                        end
                     end
                 end
             end
@@ -159,9 +198,11 @@ function opvp.PartyMemberAuraMap:updateFromEvent(
 end
 
 function opvp.PartyMemberAuraMap:_clear()
-    for id, aura in pairs(self._auras) do
-        opvp.Aura:release(aura);
-    end
+    if self:isEmpty() == false then
+        opvp.Aura:release(self);
 
-    self._auras = {};
+        table.wipe(self._auras);
+
+        self._size = 0;
+    end
 end

@@ -31,10 +31,33 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.DRUID,
     id     = opvp.ClassSpecId.FERAL_DRUID,
+    index  = 2,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 143720,
-    icon   = "Interface/Icons/ability_druid_catform"
+    icon   = "Interface/Icons/ability_druid_catform",
+    spells = {
+        harmful = {
+            talent = {
+                {391888, opvp.SpellProperty.OFFENSIVE_MEDIUM, 0, 12},      -- Adaptive Swarm
+                {106951, opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 15},   -- Berserk
+                {102543, opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 20},   -- Incarnation: Avatar of Ashamane
+                {5217,   opvp.SpellProperty.OFFENSIVE_MEDIUM_AURA, 0, 20}, -- Tigers Fury
+            }
+        },
+        helpful = {
+            talent = {
+                {61336,  opvp.SpellProperty.DEFENSIVE_HIGH_AURA, 0, 6},    -- Survival Instincts
+            }
+        }
+    },
+    auras = {
+        harmful = {
+            talent = {
+                {391889, opvp.SpellProperty.OFFENSIVE_MEDIUM},             -- Adaptive Swarm
+            }
+        }
+    }
 };
 
 opvp.ClassSpec.FERAL_DRUID = opvp.ClassSpec(spec_info);

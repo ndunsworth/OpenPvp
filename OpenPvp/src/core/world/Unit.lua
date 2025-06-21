@@ -80,7 +80,7 @@ function opvp.Unit:createFromUnitGuid(guid)
     if unit._name == nil or unit._name == "" then
         --~ C_PlayerInfo.GetName can fail to return a name at times when
         --~ Other methods would succeed. Try a fallback.
-        name = GetNameAndServerNameFromGUID(unit._guid);
+        unit._name = GetNameAndServerNameFromGUID(unit._guid);
 
         if unit._name == nil or unit._name == "" then
             unit:_initNull();
@@ -124,7 +124,7 @@ function opvp.Unit:createFromUnitId(unitId)
         return unit;
     end
 
-    unit._name = UnitName(unitId);
+    unit._name = opvp.unit.name(unitId);
 
     if UnitExists(unitId) == false then
         unit:_initNull();
@@ -198,49 +198,14 @@ function opvp.Unit:findBuff(spellId)
         self._name,
         "HELPFUL",
         nil,
-        function(
-            name,
-            icon,
-            count,
-            dispelType,
-            duration,
-            expirationTime,
-            source,
-            isStealable,
-            canApplyAura,
-            nameplateShowPersonal,
-            id,
-            canApplyAura,
-            isBossDebuff,
-            castByPlayer,
-            nameplateShowAll,
-            timeMod,
-            shouldConsolidate,
-            ...
-        )
-            if spellId == id then
-                result = {
-                    name=name,
-                    icon=icon,
-                    count=count,
-                    dispel_type=dispelType,
-                    duration=duration,
-                    expiration_time=expirationTime,
-                    source=source,
-                    is_stealable=isStealable,
-                    spell_id=spellId,
-                    can_apply_aura=canApplyAura,
-                    cast_by_player=castByPlayer
-                };
-
-                DevTools_Dump(result)
+        function(info)
+            if info.spellId == spellId then
+                result = info;
 
                 return true;
             end
         end
     );
-
-    DevTools_Dump(result)
 
     return result;
 end
@@ -252,49 +217,14 @@ function opvp.Unit:findDebuff(spellId)
         self._name,
         "HARMFUL",
         nil,
-        function(
-            name,
-            icon,
-            count,
-            dispelType,
-            duration,
-            expirationTime,
-            source,
-            isStealable,
-            canApplyAura,
-            nameplateShowPersonal,
-            id,
-            canApplyAura,
-            isBossDebuff,
-            castByPlayer,
-            nameplateShowAll,
-            timeMod,
-            shouldConsolidate,
-            ...
-        )
-            if spellId == id then
-                result = {
-                    name=name,
-                    icon=icon,
-                    count=count,
-                    dispel_type=dispelType,
-                    duration=duration,
-                    expiration_time=expirationTime,
-                    source=source,
-                    is_stealable=isStealable,
-                    spell_id=spellId,
-                    can_apply_aura=canApplyAura,
-                    cast_by_player=castByPlayer
-                };
-
-                DevTools_Dump(result)
+        function(info)
+            if info.spellId == spellId then
+                result = info;
 
                 return true;
             end
         end
     );
-
-    DevTools_Dump(result)
 
     return result;
 end
@@ -316,7 +246,7 @@ function opvp.Unit:health(spellId)
 end
 
 function opvp.Unit:id()
-    return opvp.party.utils.findUnitTokenForGuid(self._guid);
+    return opvp.unit.tokenForGuid(self._guid);
 end
 
 function opvp.Unit:isAlliance()
@@ -343,12 +273,20 @@ function opvp.Unit:isHorde()
     return self._faction:isHorde();
 end
 
+function opvp.Unit:isMaxLevel()
+    return opvp.unit.isMaxLevel(self:id());
+end
+
 function opvp.Unit:isNeutral()
     return self._faction:isNeutral();
 end
 
 function opvp.Unit:isNull()
     return self._race:isValid() == false;
+end
+
+function opvp.Unit:isPlayer()
+    return opvp.unit.isPlayer(self:id());
 end
 
 function opvp.Unit:isRace(race)
@@ -374,7 +312,7 @@ end
 function opvp.Unit:sendMessage(msg)
     SendChatMessage(
         msg,
-        "WHISPER",
+        opvp.ChatType.WHISPER,
         nil,
         self._name
     );
@@ -385,6 +323,87 @@ function opvp.Unit:sex()
 end
 
 opvp.unit = {};
+
+function opvp.unit.channelInfo(unitId)
+    local
+    name,
+    displayName,
+    textureID,
+    startTimeMs,
+    endTimeMs,
+    isTradeskill,
+    notInterruptible,
+    spellID,
+    isEmpowered,
+    numEmpowerStages = UnitChannelInfo(unitId);
+
+    if spellID ~= nil then
+        return {
+            empowered_stages = numEmpowerStages,
+            end_time         = endTimeMs / 1000,
+            is_empowered     = isEmpowered,
+            is_interruptible = notInterruptible,
+            is_tradeskill    = isTradeskill,
+            label            = displayName,
+            name             = name,
+            spell_id         = spellID,
+            start_time       = startTimeMs / 1000,
+            texture          = textureID
+        };
+    else
+        return {
+            empowered_stages = 0,
+            end_time         = 0,
+            is_empowered     = false,
+            is_interruptible = false,
+            is_tradeskill    = false,
+            label            = "",
+            name             = "",
+            spell_id         = 0,
+            start_time       = 0,
+            texture          = 0
+        };
+    end
+end
+
+function opvp.unit.castInfo(unitId)
+    local
+    name,
+    text,
+    texture,
+    startTimeMS,
+    endTimeMS,
+    isTradeskill,
+    castID,
+    notInterruptible,
+    spellID = UnitCastingInfo(unitId);
+
+    if spellID ~= nil then
+        return {
+            cast_id          = castID,
+            end_time         = endTimeMS / 1000,
+            is_interruptible = notInterruptible,
+            is_tradeskill    = isTradeSkill,
+            label            = text,
+            name             = name,
+            spell_id         = spellID,
+            start_time       = startTimeMS / 1000,
+            texture          = texture
+        };
+    else
+        return {
+            cast_id          = "",
+            end_time         = 0,
+            is_interruptible = false,
+            is_tradeskill    = false,
+            label            = "",
+            name             = "",
+            spell_id         = 0,
+            start_time       = 0,
+            texture          = 0
+        };
+    end
+end
 
 function opvp.unit.class(unitId)
     local class_filename, class_id = UnitClassBase(unitId);
@@ -446,9 +465,20 @@ function opvp.unit.isInspectable(unitId)
     return CanInspect(unitId);
 end
 
+function opvp.unit.isMaxLevel(unitId)
+    return (
+        opvp.unit.isPlayer(unitId) == true and
+        opvp.unit.level(unitId) == GetMaxLevelForPlayerExpansion()
+    );
+end
+
+function opvp.unit.isPlayer(unitId)
+    return UnitIsPlayer(unitId);
+end
+
 function opvp.unit.isSameFaction(unitId)
     local a1, a2 = UnitFactionGroup(unitId)
-    local b1, b2 = UnitFactionGroup("player");
+    local b1, b2 = UnitFactionGroup(opvp.unitid.PLAYER);
 
     return a1 == b1;
 end
@@ -466,9 +496,9 @@ function opvp.unit.level(unitId)
 end
 
 function opvp.unit.name(unitId)
-    local name = UnitName(unitId);
+    local name = GetUnitName(unitId, true);
 
-    if name ~= nil and name ~= "Unknown" then
+    if name ~= nil and name ~= "" and name ~= "Unknown" then
         return name;
     else
         return "";
@@ -476,22 +506,25 @@ function opvp.unit.name(unitId)
 end
 
 function opvp.unit.nameAndServer(unitId)
-    local guid = opvp.unit.guid(unitId);
+    local name, server = UnitName(unitId);
 
-    if guid ~= "" then
-        return opvp.unit.nameAndServerFromGuid(guid);
-    else
-        return "", "";
+    if name == nil or name == "" or name == "Unknown" then
+        name   = "";
+        server = "";
+    elseif server == nil or server == "" then
+        server = GetRealmName();
     end
+
+    return name, server;
 end
 
 function opvp.unit.nameAndServerFromGuid(guid)
     local name, server = GetNameAndServerNameFromGUID(guid);
 
-    if name == nil or name == "Unknown" then
+    if name == nil or name == "" or name == "Unknown" then
         name   = "";
         server = "";
-    elseif server == "" then
+    elseif server == nil or server == "" then
         server = GetRealmName();
     end
 
@@ -527,7 +560,7 @@ function opvp.unit.race(unitId)
 end
 
 function opvp.unit.role(unitId)
-    return opvp.Role:fromRoleString(UnitGroupRolesAssigned(unitId));
+    return opvp.Role:fromRoleToken(UnitGroupRolesAssigned(unitId));
 end
 
 function opvp.unit.server(unitId)
@@ -536,14 +569,11 @@ function opvp.unit.server(unitId)
     return server;
 end
 
-function opvp.unit.nameAndServer(unitId)
-    local guid = opvp.unit.guid(unitId);
-
-    if guid ~= "" then
-        return opvp.unit.nameAndServerFromGuid(guid);
-    else
-        return "", "";
-    end
+function opvp.unit.serverRelationship(unitId)
+    return opvp.number_else(
+        UnitRealmRelationship(unitId),
+        opvp.ServerRelationship.NONE
+    );
 end
 
 function opvp.unit.sex(unitId)
@@ -559,12 +589,22 @@ function opvp.unit.sex(unitId)
 end
 
 function opvp.unit.splitNameAndServer(characterName)
-    local server, name = strsplit("-", strrev(characterName), 2);
+    local name, server = strsplit("-", characterName, 2);
 
-    if name ~= nil then
-        return strrev(name), strrev(server)
+    if server ~= nil then
+        return name, server;
     else
-        return characterName, nil
+        return characterName, ""
+    end
+end
+
+function opvp.unit.tokenForGuid(guid)
+    local token = UnitTokenFromGUID(guid);
+
+    if token ~= nil then
+        return token;
+    else
+        return "";
     end
 end
 

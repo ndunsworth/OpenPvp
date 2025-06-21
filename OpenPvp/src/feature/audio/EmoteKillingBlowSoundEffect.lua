@@ -211,14 +211,14 @@ function opvp.private.EmoteKillingBlowSoundEffect:_onFeatureEnabled()
 end
 
 function opvp.private.EmoteKillingBlowSoundEffect:_onKillingBlow(info)
-    local targeting = opvp.unit.guid("target") == info.destGUID;
+    local targeting = opvp.unit.guid(opvp.unitid.TARGET) == info.destGUID;
 
     DoEmote(
         self:randomEmote(
             targeting,
             opvp.options.audio.soundeffect.general.killingBlowEmotesLevel:index()
         ),
-        targeting and "target" or "none"
+        targeting and opvp.unitid.TARGET or opvp.unitid.NONE
     );
 end
 

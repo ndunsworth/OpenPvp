@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.PRIEST,
     id     = opvp.ClassSpecId.HOLY_PRIEST,
+    index  = 2,
     role   = opvp.Role.HEALER,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 89332,

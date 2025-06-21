@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.WARRIOR,
     id     = opvp.ClassSpecId.FURY_WARRIOR,
+    index  = 2,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 49435,
@@ -39,7 +40,7 @@ local spec_info = {
         harmful = {
             talent = {
                 {227847, opvp.SpellProperty.OFFENSIVE_HIGH_IMMUNITY_AURA, opvp.CrowdControlSpellProperty.IMMUNITY_CC, 6}, -- Bladestorm
-                {385060,   opvp.SpellProperty.OFFENSIVE_LOW_AURA, opvp.CrowdControlSpellProperty.OFFENSIVE_LOW, 3},       -- Odyn's Fury (Dancing Blades)
+                {385060, opvp.SpellProperty.OFFENSIVE_LOW_AURA, 0, 4},                                                    -- Odyn's Fury (Dancing Blades)
                 {228920, opvp.SpellProperty.OFFENSIVE_LOW_AURA, 0, 3},                                                    -- Ravager
                 {1719,   opvp.SpellProperty.OFFENSIVE_HIGH_AURA, 0, 3},                                                   -- Recklessness
             }

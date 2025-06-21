@@ -63,8 +63,8 @@ end
 
 function opvp.private.TeammateBurstingSoundEffect:_onPlayerOffensiveLevelUpdate(member, newLevel, oldLevel)
     if (
+        member:isHostile() == true or
         newLevel ~= opvp.SpellProperty.OFFENSIVE_HIGH or
-        --~ member:isFriendly() == false or
         member:isRaceKnown() == false or
         member:isSexKnown() == false
     ) then

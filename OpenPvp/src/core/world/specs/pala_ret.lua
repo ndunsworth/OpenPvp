@@ -30,6 +30,7 @@ local opvp = OpenPvp;
 
 local spec_info = {
     class  = opvp.PALADIN,
+    index  = 3,
     id     = opvp.ClassSpecId.RETRIBUTION_PALADIN,
     role   = opvp.Role.DPS,
     traits = opvp.ClassSpecTrait.RETRIBUTION_PALADIN,

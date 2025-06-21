@@ -25,10 +25,11 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
-local opvp_role_name_lookup;
+local opvp_role_id_lookup;
+local opvp_role_token_lookup;
 
 opvp.RoleType = {
     NONE   = 0,
@@ -38,17 +39,10 @@ opvp.RoleType = {
     ALL    = 7
 };
 
-local opvp_role_icon_lookup = {
-    [opvp.RoleType.NONE]    = "",
-    [opvp.RoleType.DPS]     = opvp.utils.textureAtlastMarkup("UI-Frame-DpsIcon"),
-    [opvp.RoleType.HEALER]  = opvp.utils.textureAtlastMarkup("UI-Frame-HealerIcon"),
-    [opvp.RoleType.TANK]    = opvp.utils.textureAtlastMarkup("UI-Frame-TankIcon")
-};
-
 opvp.Role = opvp.CreateClass();
 
-function opvp.Role:fromRoleString(name)
-    local role = opvp_role_name_lookup[name];
+function opvp.Role:fromRoleId(id)
+    local role = opvp_role_id_lookup[id];
 
     if role ~= nil then
         return role;
@@ -57,11 +51,22 @@ function opvp.Role:fromRoleString(name)
     end
 end
 
-function opvp.Role:init(id, name)
+function opvp.Role:fromRoleToken(name)
+    local role = opvp_role_token_lookup[name];
+
+    if role ~= nil then
+        return role;
+    else
+        return opvp.Role.NONE;
+    end
+end
+
+function opvp.Role:init(id, name, token, icon)
     self._id          = id;
     self._name        = name;
-    self._icon        = opvp_role_icon_lookup[self._id];
-    self._icon_markup = opvp_role_icon_lookup[self._id];
+    self._token       = token;
+    self._icon        = icon;
+    self._icon_markup = icon;
 end
 
 function opvp.Role:icon()
@@ -74,6 +79,10 @@ end
 
 function opvp.Role:id()
     return self._id;
+end
+
+function opvp.Role:isAny(mask)
+    return bit.band(mask, self._id) ~= 0;
 end
 
 function opvp.Role:isDps()
@@ -100,10 +109,18 @@ function opvp.Role:name()
     return self._name;
 end
 
-opvp.Role.NONE    = opvp.Role(opvp.RoleType.NONE, "");
-opvp.Role.DPS     = opvp.Role(opvp.RoleType.DPS, DAMAGER);
-opvp.Role.HEALER  = opvp.Role(opvp.RoleType.HEALER, HEALER);
-opvp.Role.TANK    = opvp.Role(opvp.RoleType.TANK, TANK);
+function opvp.Role:token()
+    return self._token;
+end
+
+function opvp.Role:setUnit(unitId)
+    return UnitSetRole(unitId, self._token);
+end
+
+opvp.Role.NONE    = opvp.Role(opvp.RoleType.NONE, "", "NONE", "");
+opvp.Role.DPS     = opvp.Role(opvp.RoleType.DPS, DAMAGER, "DAMAGER", opvp.utils.textureAtlastMarkup("UI-Frame-DpsIcon"));
+opvp.Role.HEALER  = opvp.Role(opvp.RoleType.HEALER, HEALER, "HEALER", opvp.utils.textureAtlastMarkup("UI-Frame-HealerIcon"));
+opvp.Role.TANK    = opvp.Role(opvp.RoleType.TANK, TANK, "TANK", opvp.utils.textureAtlastMarkup("UI-Frame-TankIcon"));
 
 opvp.Role.ROLES = {
     opvp.Role.NONE,
@@ -112,9 +129,16 @@ opvp.Role.ROLES = {
     opvp.Role.TANK
 };
 
-opvp_role_name_lookup = {
+opvp_role_id_lookup = {
+    [opvp.RoleType.NONE]   = opvp.Role.DPS,
+    [opvp.RoleType.DPS]    = opvp.Role.DPS,
+    [opvp.RoleType.HEALER] = opvp.Role.HEALER,
+    [opvp.RoleType.TANK]   = opvp.Role.TANK
+};
+
+opvp_role_token_lookup = {
+    ["NONE"]    = opvp.Role.DPS,
     ["DAMAGER"] = opvp.Role.DPS,
     ["HEALER"]  = opvp.Role.HEALER,
     ["TANK"]    = opvp.Role.TANK,
-    ["NONE"]    = opvp.Role.DPS
 };

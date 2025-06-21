@@ -31,6 +31,7 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.DRUID,
     id     = opvp.ClassSpecId.GUARDIAN_DRUID,
+    index  = 3,
     role   = opvp.Role.TANK,
     traits = opvp.ClassSpecTrait.MELEE_PHYSICAL,
     sound  = 12121,

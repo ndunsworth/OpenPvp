@@ -42,10 +42,35 @@ function opvp.QueueManager:init()
     self._active_index   = 0;
     self._entering_match = false;
 
-    opvp.event.LFG_UPDATE:connect(
-        self,
-        self._updateLFGStatus
-    );
+    --~ opvp.event.LFG_UPDATE:connect(
+        --~ self,
+        --~ self._updateLFGStatus
+    --~ );
+
+    --~ opvp.event.LFG_PROPOSAL_DONE:connect(
+        --~ self,
+        --~ self._onLfgRoleProposalDone
+    --~ );
+
+    --~ opvp.event.LFG_PROPOSAL_FAILED:connect(
+        --~ self,
+        --~ self._onLfgRoleProposalFailed
+    --~ );
+
+    --~ opvp.event.LFG_PROPOSAL_SHOW:connect(
+        --~ self,
+        --~ self._onLfgRoleProposalShow
+    --~ );
+
+    --~ opvp.event.LFG_PROPOSAL_SUCCEEDED:connect(
+        --~ self,
+        --~ self._onLfgRoleProposalSucceeded
+    --~ );
+
+    --~ opvp.event.LFG_PROPOSAL_UPDATE:connect(
+        --~ self,
+        --~ self._onLfgRoleProposalUpdate
+    --~ );
 
     opvp.event.PLAYER_ENTERING_BATTLEGROUND:connect(
         self,
@@ -129,16 +154,20 @@ function opvp.QueueManager:_convertBattlefieldStatus(status, suspended)
     return opvp.QueueStatus.NOT_QUEUED;
 end
 
-function opvp.QueueManager:_convertLFGStatus(status)
-    if status == "queued" then
+function opvp.QueueManager:_convertLFGStatus(mode, submode)
+    if mode == "queued" then
         return opvp.QueueStatus.QUEUED;
-    elseif status == "proposal" then
-        return opvp.QueueStatus.READY;
-    elseif status == "suspended" then
+    elseif mode == "proposal" then
+        if submode == "accepted" then
+            return opvp.QueueStatus.ACTIVE;
+        else
+            return opvp.QueueStatus.READY;
+        end
+    elseif mode == "suspended" then
         return opvp.QueueStatus.SUSPENDED;
-    elseif status == "lfgparty" then
+    elseif mode == "lfgparty" then
         return opvp.QueueStatus.ACTIVE;
-    elseif status == "abandonedInDungeon" then
+    elseif mode == "abandonedInDungeon" then
         return opvp.QueueStatus.ACTIVE;
     end
 
@@ -306,6 +335,8 @@ function opvp.QueueManager:_initializeQueues()
     for n=1,GetMaxBattlefieldID() do
         self:_updateBattlefieldStatus(n)
     end
+
+    --~ self:_updateLFGStatus();
 end
 
 function opvp.QueueManager:_onLoad()
@@ -317,18 +348,22 @@ end
 function opvp.QueueManager:_onMatchEntered()
     if self._active == nil then
         self:_initializeQueues();
-    end
 
-    assert(self._active ~= nil);
+        if self._active == nil then
+            return;
+        end
+    end
 
     opvp.printDebug(
         "opvp.QueueManager:_onMatchEntered(\"%s\"), begin",
         self._active:name()
     );
 
+    local cur_status = self._active:status();
+
     self._active:_onStatusChanged(self._active_index, opvp.QueueStatus.ACTIVE);
 
-    opvp.queue.statusChanged:emit(self._active, opvp.QueueStatus.ACTIVE, opvp.QueueStatus.READY);
+    opvp.queue.statusChanged:emit(self._active, opvp.QueueStatus.ACTIVE, cur_status);
 
     opvp.queue.activeChanged:emit(self._active);
 
@@ -342,6 +377,44 @@ end
 
 function opvp.QueueManager:_onReload()
     self:_onLoad();
+end
+
+function opvp.QueueManager:_onLfgRoleProposalDone()
+    if self._active ~= nil then
+        self._active:_onLfgRoleProposalDone();
+    end
+end
+
+function opvp.QueueManager:_onLfgRoleProposalFailed()
+    if self._active ~= nil then
+        self._active:_onLfgRoleProposalFailed();
+    end
+end
+
+ function opvp.QueueManager:_onLfgRoleProposalShow()
+    local queue = opvp.Queue.BRAWL;
+
+    if queue:isLFG() == false or queue:isSuspended() == false then
+        return;
+    end
+
+    self:_setActive(queue, 4);
+
+    queue:_onStatusChanged(4, opvp.QueueStatus.READY);
+
+    self._active:_onLfgRoleProposalShow();
+end
+
+function opvp.QueueManager:_onLfgRoleProposalSucceeded()
+    if self._active ~= nil then
+        self._active:_onLfgRoleProposalSucceeded()
+    end
+end
+
+function opvp.QueueManager:_onLfgRoleProposalUpdate()
+    if self._active ~= nil then
+        self._active:_onLfgRoleProposalShow()
+    end
 end
 
 function opvp.QueueManager:_onPvpRolePopupHide(info)
@@ -358,6 +431,19 @@ end
 
 function opvp.QueueManager:_removeQueue(queue)
     self._queues:removeItem(queue);
+end
+
+function opvp.QueueManager:_setActive(queue, index, emit)
+    if queue == self._active then
+        return;
+    end
+
+    self._active = queue;
+    self._active_index = index;
+
+    if emit ~= false then
+        opvp.queue.activeChanged:emit(self._active);
+    end
 end
 
 function opvp.QueueManager:_updateBattlefieldStatus(index)
@@ -406,31 +492,28 @@ function opvp.QueueManager:_updateBattlefieldStatus(index)
         queue_status == opvp.QueueStatus.ACTIVE or
         queue_status == opvp.QueueStatus.READY
     ) then
-        self._active = queue;
-        self._active_index = index;
+        self:_setActive(queue, index, false);
 
         --~ We let PLAYER_ENTERING_BATTLEGROUND handle this status
         --~ through opvp.QueueManager:_onMatchEntered()
         if queue_status == opvp.QueueStatus.ACTIVE then
             return;
         end
-    elseif is_active == true then
-        self._active = queue;
-        self._active_index = 0;
-
-        opvp.queue.activeChanged:emit(nil);
     end
 
     queue:_onStatusChanged(index, queue_status);
 
-    opvp.queue.statusChanged:emit(queue, queue_status, old_status);
+    if queue_status == opvp.QueueStatus.NOT_QUEUED then
+        if opvp.IsInstance(queue, opvp.BattlegroundQueue) == true then
+            queue:_setInfo(opvp.BattlegroundInfo:null());
+        end
 
-    if (
-        queue_status == opvp.QueueStatus.NOT_QUEUED and
-        opvp.IsInstance(queue, opvp.BattlegroundQueue) == true
-    ) then
-        queue:_setInfo(opvp.BattlegroundInfo:null());
+        if is_active == true then
+            self:_setActive(nil, 0);
+        end
     end
+
+    opvp.queue.statusChanged:emit(queue, queue_status, old_status);
 end
 
 function opvp.QueueManager:_updateLFGStatus()
@@ -441,7 +524,8 @@ function opvp.QueueManager:_updateLFGStatus()
     end
 
     local mode, submode = GetLFGMode(LE_LFG_CATEGORY_BATTLEFIELD);
-    local queue_status = self:_convertLFGStatus(mode);
+
+    local queue_status = self:_convertLFGStatus(mode, submode);
 
     opvp.printDebug(
         "opvp.QueueManager:_updateLFGStatus, name=%s, new_status=%d, current_status=%d",
@@ -468,26 +552,29 @@ function opvp.QueueManager:_updateLFGStatus()
 
     self._entering_match = queue_status == opvp.QueueStatus.ACTIVE;
 
-    if (
-        queue_status == opvp.QueueStatus.ACTIVE or
-        queue_status == opvp.QueueStatus.READY
-    ) then
-        self._active = queue;
-        self._active_index = 4;
+    if queue_status == opvp.QueueStatus.ACTIVE then
+        self:_setActive(queue, 4, false);
 
-        --~ We let PLAYER_ENTERING_BATTLEGROUND handle this status
-        --~ through opvp.QueueManager:_onMatchEntered()
-        if queue_status == opvp.QueueStatus.ACTIVE then
-            return;
-        end
-    elseif is_active == true then
-        self._active = queue;
-        self._active_index = 0;
+        return;
+        --~ local cur_status = queue:status();
 
-        opvp.queue.activeChanged:emit(nil);
+        --~ queue:_onStatusChanged(4, opvp.QueueStatus.ACTIVE);
+
+        --~ opvp.queue.statusChanged:emit(self._active, opvp.QueueStatus.ACTIVE, cur_status);
+
+        --~ self:_setActive(queue, 4);
+
+        --~ self:_onMatchEntered();
+    else
+        queue:_onStatusChanged(4, queue_status);
     end
 
-    queue:_onStatusChanged(4, queue_status);
+    if (
+        queue_status == opvp.QueueStatus.NOT_QUEUED and
+        is_active == true
+    ) then
+        self:_setActive(nil, 0);
+    end
 
     opvp.queue.statusChanged:emit(queue, queue_status, old_status);
 end

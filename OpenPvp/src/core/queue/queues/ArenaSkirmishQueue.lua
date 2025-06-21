@@ -53,7 +53,7 @@ function opvp.ArenaSkirmishQueue:bonusRoles()
 
     if bonus ~= nil then
         for n=1, #bonus.validRoles do
-            role = opvp.Role:fromRoleString(bonus.validRoles[n]);
+            role = opvp.Role:fromRoleToken(bonus.validRoles[n]);
 
             if role:isValid() == true then
                 table.insert(roles, role);

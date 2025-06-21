@@ -44,7 +44,6 @@ function opvp.PvpPartyMember:init()
     self._mmr_gain      = 0;
     self._team          = nil;
     self._stats         = opvp.List();
-    self._trinket_state = opvp.PvpTrinketState();
 end
 
 function opvp.PvpPartyMember:cr()
@@ -113,6 +112,10 @@ function opvp.PvpPartyMember:kills()
     return self._kills;
 end
 
+function opvp.PvpPartyMember:isPvp()
+    return true;
+end
+
 function opvp.PvpPartyMember:isRatingKnown()
     return bit.band(self._mask, opvp.PartyMember.RATING_CURRENT_FLAG) ~= 0;
 end
@@ -131,10 +134,6 @@ end
 
 function opvp.PvpPartyMember:team()
     return self._team;
-end
-
-function opvp.PvpPartyMember:trinketState()
-    return self._trinket_state;
 end
 
 function opvp.PvpPartyMember:_reset(mask)
@@ -157,10 +156,6 @@ function opvp.PvpPartyMember:_reset(mask)
         self._healing   = 0;
 
         self._stats:clear();
-    end
-
-    if bit.band(mask, opvp.PartyMember.PVP_TRINKET_FLAG) then
-        self._trinket_state:_reset();
     end
 
     if bit.band(mask, opvp.PartyMember.TEAM_FLAG) then
@@ -220,12 +215,11 @@ function opvp.PvpPartyMember:_setTeam(team)
 end
 
 function opvp.PvpPartyMember:_updateScore(rated)
-    local old_mask = self._mask;
-
     if self:isGuidKnown() == false then
         return 0;
     end
 
+    local old_mask = self._mask;
     local info = C_PvP.GetScoreInfoByPlayerGuid(self:guid());
 
     if info == nil then

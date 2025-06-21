@@ -28,6 +28,14 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+opvp.PvpTrinketUpdate = {
+    NONE             = 0,
+    RACIAL_CHANGED   = bit.lshift(1, 0),
+    RACIAL_COOLDOWN  = bit.lshift(1, 1),
+    TRINKET_CHANGED  = bit.lshift(1, 2),
+    TRINKET_COOLDOWN = bit.lshift(1, 3),
+};
+
 local opvp_pvp_trinket_state_null;
 
 local function opvp_is_slot_pending(unitId, slot)
@@ -192,67 +200,105 @@ function opvp.PvpTrinketState:_clear()
 end
 
 function opvp.PvpTrinketState:_onUpdate(spellId, startTime, duration)
+    local mask = 0;
+
     if (
         self:hasAny() == false or
         self:isAnySpellId(spellId) == false
     ) then
         if opvp.spell.isPvpTrinket(spellId) == true then
             self._trinket_spell_id = spellId;
+            self._trinket_used     = 0;
+            self._trinket_duration = 0;
+
+            mask = opvp.PvpTrinketUpdate.TRINKET_CHANGED;
         elseif opvp.spell.isPvpRacialTrinket(spellId) == true then
             self._racial_spell_id = spellId;
+            self._racial_used     = 0;
+            self._racial_duration = 0;
+
+            mask = opvp.PvpTrinketUpdate.RACIAL_CHANGED;
         else
-            return false;
+            return mask;
         end
     end
 
     if spellId == self._trinket_spell_id then
-        local old_used         = self._trinket_used;
+        if math.abs(self._trinket_used - startTime) > 2 then
+            local old_used         = self._trinket_used;
 
-        self._trinket_used     = startTime;
-        self._trinket_duration = duration;
+            self._trinket_used     = startTime;
+            self._trinket_duration = duration;
 
-        self:_onTrinketUsed();
-
-        if old_used ~= self._trinket_used then
-            self:_onTrinketUsed();
-
-            return true;
+            if old_used ~= self._trinket_used then
+                if self._trinket_used > 0 then
+                    mask = bit.bor(
+                        mask,
+                        opvp.PvpTrinketUpdate.TRINKET_COOLDOWN,
+                        self:_onTrinketUsed()
+                    );
+                else
+                    mask = bit.bor(
+                        mask,
+                        opvp.PvpTrinketUpdate.TRINKET_COOLDOWN
+                    );
+                end
+            end
         end
     elseif spellId == self._racial_spell_id then
-        local old_used        = self._racial_used;
+        if math.abs(self._racial_used - startTime) > 2 then
+            local old_used        = self._racial_used;
 
-        self._racial_used     = startTime;
-        self._racial_duration = duration;
+            self._racial_used     = startTime;
+            self._racial_duration = duration;
 
-        if old_used ~= self._racial_used then
-            self:_onRacialUsed();
-
-            return true;
+            if old_used ~= self._racial_used then
+                if self._racial_used > 0 then
+                    mask = bit.bor(
+                        mask,
+                        opvp.PvpTrinketUpdate.RACIAL_COOLDOWN,
+                        self:_onRacialUsed()
+                    );
+                else
+                    mask = bit.bor(
+                        mask,
+                        opvp.PvpTrinketUpdate.RACIAL_COOLDOWN
+                    );
+                end
+            end
         end
     end
 
-    return false;
+    return mask;
 end
 
 function opvp.PvpTrinketState:_onRacialUsed()
     if self._trinket_spell_id == 0 then
-        return;
+        return 0;
     end
 
     if self._racial_used - self._trinket_used <= self._dual_timeout then
         self._trinket_used     = self._racial_used;
         self._trinket_duration = self._dual_timeout;
+
+        return opvp.PvpTrinketUpdate.TRINKET_COOLDOWN;
+    else
+        return 0;
     end
 end
 
 function opvp.PvpTrinketState:_onTrinketUsed()
     if self._racial_spell_id == 0 then
-        return;
+        return 0;
     end
 
     if self._trinket_used - self._racial_used <= self._dual_timeout then
         self._racial_used     = self._trinket_used;
         self._racial_duration = self._dual_timeout;
+
+        return opvp.PvpTrinketUpdate.RACIAL_COOLDOWN;
+    else
+        return 0;
     end
 end
 

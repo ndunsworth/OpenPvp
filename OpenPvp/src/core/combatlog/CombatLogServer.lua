@@ -32,6 +32,7 @@ local opvp_combat_log_connection_sig_singleton;
 local opvp_combat_log_server_singleton;
 
 local null_connection = opvp.CombatLogConnection();
+local null_provider;
 
 opvp.private.CombatLogSignal = opvp.CreateClass(opvp.Signal);
 
@@ -64,18 +65,26 @@ function opvp.CombatLogServer:instance()
 end
 
 function opvp.CombatLogServer:init()
-    self._connections    = opvp.List();
-    self._exec           = false;
-    self._needs_cleanup  = false;
-    self._event          = opvp.CombatLogEvent();
+    self._connections      = opvp.List();
+    self._providers        = opvp.List();
+    self._exec             = false;
+    self._needs_cleanup    = false;
+    self._signal_connected = false;
+    self._event            = opvp.CombatLogEvent();
 end
 
 function opvp.CombatLogServer:isEmpty()
-    return self._connections:isEmpty();
+    return (
+        self._connections:isEmpty() and
+        self._providers:isEmpty()
+    );
 end
 
 function opvp.CombatLogServer:size()
-    return self._connections:size();
+    return (
+        self._connections:size() +
+        self._providers:size()
+    );
 end
 
 function opvp.CombatLogServer:_cleanup()
@@ -91,18 +100,28 @@ function opvp.CombatLogServer:_cleanup()
         index = self._connections:index(null_connection);
     end
 
+    index = self._providers:index(null_provider);
+
+    while index > 0 do
+        self._providers:removeIndex(index);
+
+        index = self._providers:index(null_provider);
+    end
+
     self._needs_cleanup = false;
 
-    if self._connections:isEmpty() == true then
+    if self:isEmpty() == true then
         opvp.event.COMBAT_LOG_EVENT_UNFILTERED:disconnect(
             self,
             self._onEvent
         );
+
+        self._signal_connected = false;
     end
 
     opvp.printDebug(
         "opvp.CombatLogServer:_cleanup, size=%d",
-        self._connections:size()
+        self:size()
     );
 end
 
@@ -116,19 +135,39 @@ function opvp.CombatLogServer:_addConnection(connection)
 
     self._connections:append(connection);
 
-    if self._connections:size() == 1 then
+    if self._signal_connected == false then
         opvp.event.COMBAT_LOG_EVENT_UNFILTERED:connect(
             self,
             self._onEvent
         );
+
+        self._signal_connected = true;
     end
 
     opvp.printDebug(
         "opvp.CombatLogServer:_addConnection, size=%d",
-        self._connections:size()
+        self:size()
     );
 
     return true;
+end
+
+function opvp.CombatLogServer:_addPartyMemberProvider(provider)
+    self._providers:append(provider);
+
+    if self._signal_connected == false then
+        opvp.event.COMBAT_LOG_EVENT_UNFILTERED:connect(
+            self,
+            self._onEvent
+        );
+
+        self._signal_connected = true;
+    end
+
+    opvp.printDebug(
+        "opvp.CombatLogServer:_addPartyMemberProvider, size=%d",
+        self:size()
+    );
 end
 
 function opvp.CombatLogServer:_removeConnection(connection)
@@ -148,17 +187,52 @@ function opvp.CombatLogServer:_removeConnection(connection)
 
     if (
         self._connections:removeItem(connection) == true and
-        self._connections:isEmpty() == true
+        self:isEmpty() == true
     ) then
         opvp.event.COMBAT_LOG_EVENT_UNFILTERED:disconnect(
             self,
             self._onEvent
         );
+
+        self._signal_connected = false;
     end
 
     opvp.printDebug(
         "opvp.CombatLogServer:_removeConnection, size=%d",
-        self._connections:size()
+        self:size()
+    );
+end
+
+function opvp.CombatLogServer:_removePartyMemberProvider(provider)
+    if self._exec == true then
+        local index = self._providers:index(provider);
+
+        if index < 1 then
+            return;
+        end
+
+        self._providers:replaceIndex(index, null_provider);
+
+        self._needs_cleanup = true;
+
+        return;
+    end
+
+    if (
+        self._providers:removeItem(provider) == true and
+        self:isEmpty() == true
+    ) then
+        opvp.event.COMBAT_LOG_EVENT_UNFILTERED:disconnect(
+            self,
+            self._onEvent
+        );
+
+        self._signal_connected = false;
+    end
+
+    opvp.printDebug(
+        "opvp.CombatLogServer:_removePartyMemberProvider, size=%d",
+        self:size()
     );
 end
 
@@ -183,17 +257,32 @@ function opvp.CombatLogServer:_onEvent()
     for n=1, self._connections:size() do
         connection = self._connections:item(n);
 
-        local status, result = pcall(connection.event, connection, self._event);
+        local status, err = pcall(connection.event, connection, self._event);
 
         if status == false then
             opvp.printWarning(result);
         end
     end
 
-    self._exec = true;
+    local provider;
+
+    for n=1, self._providers:size() do
+        provider = self._providers:item(n);
+
+        provider:_onCombatLogEvent(self._event);
+
+        --~ local status, err = pcall(provider._onCombatLogEvent, provider, self._event);
+
+        --~ if status == false then
+            --~ opvp.printWarning(result);
+        --~ end
+    end
+
+    self._exec = false;
 end
 
 local function opvp_combat_log_server_singleton_ctor()
+    null_provider                            = opvp.PartyMemberProvider();
     opvp_combat_log_connection_sig_singleton = opvp.private.CombatLogConnectionPriv();
     opvp_combat_log_server_singleton         = opvp.CombatLogServer();
 

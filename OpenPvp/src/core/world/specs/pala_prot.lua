@@ -30,6 +30,7 @@ local opvp = OpenPvp;
 
 local spec_info = {
     class  = opvp.PALADIN,
+    index  = 2,
     id     = opvp.ClassSpecId.PROTECTION_PALADIN,
     role   = opvp.Role.TANK,
     traits = opvp.ClassSpecTrait.MELEE_MAGIC,

@@ -47,20 +47,20 @@ opvp.Player = opvp.CreateClass(opvp.Unit);
 function opvp.Player:init()
     opvp.Unit.init(self);
 
-    self._guid         = opvp.unit.guid("player");
-    self._name         = opvp.unit.name("player");
-    self._faction      = opvp.unit.faction("player");
-    self._race         = opvp.unit.race("player");
-    self._class        = opvp.unit.class("player");
-    self._sex          = opvp.unit.sex("player");
-    self._spec         = opvp.ClassSpec.UNKNOWN;
-    self._combat       = false;
-    self._warmode      = false;
-    self._in_sanctuary = false;
-    self._in_ffa       = false;
-    self._played_total = 0;
-    self._played_level = 0;
-    self._parties      = opvp.List();
+    self._guid                = opvp.unit.guid(opvp.unitid.PLAYER);
+    self._name                = opvp.unit.name(opvp.unitid.PLAYER);
+    self._faction             = opvp.unit.faction(opvp.unitid.PLAYER);
+    self._race                = opvp.unit.race(opvp.unitid.PLAYER);
+    self._class               = opvp.unit.class(opvp.unitid.PLAYER);
+    self._sex                 = opvp.unit.sex(opvp.unitid.PLAYER);
+    self._spec                = opvp.ClassSpec.UNKNOWN;
+    self._combat              = false;
+    self._warmode             = false;
+    self._in_sanctuary        = false;
+    self._in_ffa              = false;
+    self._played_total        = 0;
+    self._played_level        = 0;
+    self._parties             = opvp.List();
 
     self._pvp_trinket_slot           = -1;
     self._pvp_trinket_item_id        = 0;
@@ -93,6 +93,7 @@ function opvp.Player:init()
     self.inCombatChanged        = opvp.Signal("opvp.Player.inCombatChanged");
     self.inFFAChanged           = opvp.Signal("opvp.Player.inFFAChanged");
     self.inSanctuaryChanged     = opvp.Signal("opvp.Player.inSanctuaryChanged");
+    self.levelUp                = opvp.Signal("opvp.Player.levelUp");
     self.pvpTalentsChanged      = opvp.Signal("opvp.Player.pvpTalentsChanged");
     self.pvpTrinketUpdate       = opvp.Signal("opvp.Player.pvpTrinketUpdate");
     self.pvpTrinketRacialUpdate = opvp.Signal("opvp.Player.pvpTrinketRacialUpdate");
@@ -136,6 +137,11 @@ function opvp.Player:init()
         opvp.Player._onHonorLevelChanged
     );
 
+    opvp.event.PLAYER_LEVEL_UP:connect(
+        self,
+        opvp.Player._onLevelUp
+    );
+
     opvp.event.PLAYER_ALIVE:connect(
         self,
         opvp.Player._onAlive
@@ -158,7 +164,7 @@ function opvp.Player:init()
 
     opvp.event.PLAYER_PVP_KILLS_CHANGED:connect(
         function(unitTarget)
-            if unitTarget == "player" then
+            if unitTarget == opvp.unitid.PLAYER then
                 self:_onHonorKillsUpdate();
             end
         end
@@ -183,7 +189,7 @@ function opvp.Player:init()
 
     opvp.event.PLAYER_SPECIALIZATION_CHANGED:connect(
         function(unitTarget)
-            if unitTarget == "player" then
+            if unitTarget == opvp.unitid.PLAYER then
                 self:_onSpecChanged();
             end
         end
@@ -191,7 +197,7 @@ function opvp.Player:init()
 
     opvp.event.PLAYER_FLAGS_CHANGED:connect(
         function(unitTarget)
-            if unitTarget == "player" then
+            if unitTarget == opvp.unitid.PLAYER then
                 self:_onFlagsChanged();
             end
         end
@@ -243,7 +249,7 @@ end
 function opvp.Player:findDebuff(spellId)
     local aura = C_UnitAuras.GetPlayerAuraBySpellID(spellId);
 
-    if aura ~= nil and aura.isHelpful == true then
+    if aura ~= nil and aura.isHelpful == false then
         return aura;
     else
         return nil;
@@ -254,21 +260,23 @@ function opvp.Player:glidingInfo()
     return C_PlayerInfo.GetGlidingInfo();
 end
 
+function opvp.Player:hasBuff(spellId)
+    local aura = C_UnitAuras.GetPlayerAuraBySpellID(spellId);
+
+    return aura ~= nil and aura.isHelpful == true;
+end
+
+function opvp.Player:hasDebuff(spellId)
+    local aura = C_UnitAuras.GetPlayerAuraBySpellID(spellId);
+
+    return aura ~= nil and aura.isHelpful == false;
+end
+
 function opvp.Player:hasDeserter()
-    local spell_ids = {
-        26013,
-        405692
-    };
-
-    for n = 1, #spell_ids do
-        local aura = C_UnitAuras.GetPlayerAuraBySpellID(spell_ids[n]);
-
-        if aura ~= nil then
-            return true;
-        end
-    end
-
-    return false;
+    return (
+        C_UnitAuras.GetPlayerAuraBySpellID(26013) ~= nil or
+        C_UnitAuras.GetPlayerAuraBySpellID(405692) ~= nil
+    );
 end
 
 function opvp.Player:hasPvpRacialTrinket()
@@ -302,18 +310,18 @@ function opvp.Player:honorKillsToday()
 end
 
 function opvp.Player:honorLevel()
-    return UnitHonorLevel("player");
+    return UnitHonorLevel(opvp.unitid.PLAYER);
 end
 
 function opvp.Player:honorLevelXP()
     return {
-        xp=UnitHonor("player"),
-        xp_max=UnitHonorMax("player")
+        xp=UnitHonor(opvp.unitid.PLAYER),
+        xp_max=UnitHonorMax(opvp.unitid.PLAYER)
     };
 end
 
 function opvp.Player:id()
-    return "player";
+    return opvp.unitid.PLAYER;
 end
 
 function opvp.Player:inChromieTime()
@@ -345,11 +353,11 @@ function opvp.Player:inSanctuary()
 end
 
 function opvp.Player:isGroupAssistant(category)
-    return opvp.party.utils.isGroupAssistant("player", category);
+    return opvp.party.utils.isGroupAssistant(opvp.unitid.PLAYER, category);
 end
 
 function opvp.Player:isGroupLeader(category)
-    return opvp.party.utils.isGroupLeader("player", category);
+    return opvp.party.utils.isGroupLeader(opvp.unitid.PLAYER, category);
 end
 
 function opvp.Player:isItemUsable(itemId)
@@ -381,18 +389,18 @@ function opvp.Player:logHonorStats()
 end
 
 function opvp.Player:mapId()
-    return C_Map.GetBestMapForUnit("player");
+    return C_Map.GetBestMapForUnit(opvp.unitid.PLAYER);
 end
 
 function opvp.Player:mapPosition()
     return C_Map.GetPlayerMapPosition(
-        C_Map.GetBestMapForUnit("player"),
-        "player"
+        C_Map.GetBestMapForUnit(opvp.unitid.PLAYER),
+        opvp.unitid.PLAYER
     );
 end
 
 function opvp.Player:mapId()
-    return C_Map.GetBestMapForUnit("player");
+    return C_Map.GetBestMapForUnit(opvp.unitid.PLAYER);
 end
 
 function opvp.Player:parties()
@@ -420,8 +428,12 @@ function opvp.Player:setWarModeEnabled(state)
     end
 end
 
+function opvp.Player:server()
+    return GetRealmName();
+end
+
 function opvp.Player:spec()
-    return self._spec():id();
+    return self._spec:id();
 end
 
 function opvp.Player:specInfo()
@@ -457,13 +469,13 @@ function opvp.Player:toggleWarMode()
 end
 
 function opvp.Player:_onAlive()
-    if UnitIsDeadOrGhost("player") == false then
+    if UnitIsDeadOrGhost(opvp.unitid.PLAYER) == false then
         self.aliveChanged:emit(true);
     end
 end
 
 function opvp.Player:_onBarberUpdate()
-    self._sex = opvp.unit.sex("player");
+    self._sex = opvp.unit.sex(opvp.unitid.PLAYER);
 end
 
 function opvp.Player:_onCombatChanged(state)
@@ -498,6 +510,38 @@ end
 
 function opvp.Player:_onHonorLevelChanged(isHigherLevel)
     self.honorLevelChanged:emit(isHigherLevel);
+end
+
+function opvp.Player:_onLevelUp(
+    level,
+    healthDelta,
+    powerDelta,
+    numNewTalents,
+    numNewPvpTalentSlots,
+    strengthDelta,
+    agilityDelta,
+    staminaDelta,
+    intellectDelta
+)
+    self.levelUp:emit(
+        level,
+        healthDelta,
+        powerDelta,
+        numNewTalents,
+        numNewPvpTalentSlots,
+        strengthDelta,
+        agilityDelta,
+        staminaDelta,
+        intellectDelta
+    );
+end
+
+function opvp.Player:_onLossOfControlAdded(index)
+
+end
+
+function opvp.Player:_onLossOfControlUpdate()
+
 end
 
 function opvp.Player:_onMatchRoundWarmup()
@@ -619,7 +663,7 @@ function opvp.Player:_onTrinketChanged(equipmentSlot)
         end
     end
 
-    local item_id = GetInventoryItemID("player", equipmentSlot);
+    local item_id = GetInventoryItemID(opvp.unitid.PLAYER, equipmentSlot);
 
     if item_id ~= nil then
         local spell_name, spell_id = GetItemSpell(item_id);
@@ -672,7 +716,7 @@ function opvp.Player:_pvpTrinketCheck()
     end
 
     local start, duration, enable = GetInventoryItemCooldown(
-        "player",
+        opvp.unitid.PLAYER,
         self._pvp_trinket_slot
     );
 
@@ -916,6 +960,10 @@ function opvp.player.isItemUsable(itemId)
     return opvp_user_player_singleton:isItemUsable(itemId);
 end
 
+function opvp.player.isMaxLevel()
+    return opvp_user_player_singleton:isMaxLevel();
+end
+
 function opvp.player.isNeutral()
     return opvp_user_player_singleton:isNeutral();
 end
@@ -976,6 +1024,14 @@ function opvp.player.raceInfo()
     return opvp_user_player_singleton:raceInfo();
 end
 
+function opvp.player.server()
+    return opvp_user_player_singleton:server();
+end
+
+function opvp.player.sex()
+    return opvp_user_player_singleton:sex();
+end
+
 function opvp.player.spec()
     return opvp_user_player_singleton:spec();
 end
@@ -990,10 +1046,6 @@ end
 
 function opvp.player.specInfo()
     return opvp_user_player_singleton:specInfo();
-end
-
-function opvp.player.sex()
-    return opvp_user_player_singleton:sex();
 end
 
 function opvp.player.timePlayed()
@@ -1013,7 +1065,7 @@ local function opvp_player_singleton_ctor()
 
     if opvp_user_player_singleton:class() == opvp.HUNTER then
         opvp.unit.isFeignDeath = function(unitId)
-            if opvp.unit.isSameUnit(unitId, "player") == true then
+            if opvp.unit.isSameUnit(unitId, opvp.unitid.PLAYER) == true then
                 return opvp.player.findBuff(5384);
             else
                 return UnitIsFeignDeath(unitId);

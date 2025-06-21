@@ -31,10 +31,47 @@ local opvp = OpenPvp;
 local spec_info = {
     class  = opvp.DRUID,
     id     = opvp.ClassSpecId.RESTORATION_DRUID,
+    index  = 4,
     role   = opvp.Role.HEALER,
     traits = opvp.ClassSpecTrait.RANGED_MAGIC,
     sound  = 5737,
-    icon   = "Interface/Icons/spell_nature_healingtouch"
+    icon   = "Interface/Icons/spell_nature_healingtouch",
+    spells = {
+        helpful = {
+            talent = {
+                {102351, opvp.SpellProperty.AURA, 0, 30},                                                                -- Cenarion Ward
+                {391528, opvp.SpellProperty.DEFENSIVE_HIGH_AURA, 0, 3},                                                  -- Convoke the Spirits
+                {33891,  opvp.SpellProperty.DEFENSIVE_HIGH, 0, 30},                                                      -- Incarnation: Tree of Life
+                {102342, opvp.SpellProperty.DEFENSIVE_HIGH_AURA, 0, 12},                                                 -- Ironbark
+                {188550, opvp.SpellProperty.AURA, 0, 12},                                                                -- Lifebloom
+                {132158, opvp.SpellProperty.DEFENSIVE_LOW_AURA, 0, 8},                                                   -- Natures Swiftness
+                {15577,  opvp.SpellProperty.AURA, 0, 12},                                                                -- Rejuvenation (Germination)
+                {8936,   opvp.SpellProperty.AURA, 0, 0},                                                                 -- Regrowth
+                {740,    opvp.SpellProperty.DEFENSIVE_MEDIUM, 0, 8},                                                     -- Tranquility
+                {48438,  opvp.SpellProperty.AURA, 0, 12},                                                                -- Wild Growth
+            },
+            pvp = {
+                {473909, opvp.SpellProperty.DEFENSIVE_HIGH_IMMUNITY_AURA, opvp.CrowdControlSpellProperty.IMMUNITY_CC},  -- Ancient of Lore
+            }
+        }
+    },
+    auras = {
+        harmful = {
+            base = {
+            },
+            talent = {
+            },
+            pvp = {
+                {339,    opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.ROOT, 6},                -- Natures Grasp (Entangling Bark)
+            }
+        },
+        helpful = {
+            talent = {
+                {117679, opvp.SpellProperty.DEFENSIVE_HIGH, 0, 30},                                                     -- Incarnation
+                {157982, opvp.SpellProperty.DEFENSIVE_MEDIUM, 0, 8},                                                    -- Tranquility
+            }
+        }
+    }
 };
 
 opvp.ClassSpec.RESTORATION_DRUID = opvp.ClassSpec(spec_info);

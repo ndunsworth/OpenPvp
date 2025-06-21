@@ -89,9 +89,9 @@ function opvp.AuraServerConnection:disconnect()
 
     self.disconnecting:emit();
 
-    self:_onDisconnected();
-
     self._server:_removeConnection(self);
+
+    self:_onDisconnected();
 
     self._server = nil;
 

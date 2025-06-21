@@ -129,6 +129,20 @@ function opvp.AuraServer:shutdown()
     self._initialized = -1;
 end
 
+function opvp.AuraServer:_addConnection(connection)
+    assert(connection:isConnected() == false);
+
+    if self:isInitialized() == false then
+        return false;
+    end
+
+    self._connections:append(connection);
+
+    self:_onConnectionAdded(connection);
+
+    return true;
+end
+
 function opvp.AuraServer:_addPartyAuras(party)
     local members = party:members();
 
@@ -145,20 +159,6 @@ function opvp.AuraServer:_addPartyMemberAuras(member)
         self._auras_null,
         false
     );
-end
-
-function opvp.AuraServer:_addConnection(connection)
-    assert(connection:isConnected() == false);
-
-    if self:isInitialized() == false then
-        return false;
-    end
-
-    self._connections:append(connection);
-
-    self:_onConnectionAdded(connection);
-
-    return true;
 end
 
 function opvp.AuraServer:_initialize()
@@ -278,16 +278,13 @@ function opvp.AuraServer:_onShutdown()
 end
 
 function opvp.AuraServer:_removeConnection(connection)
-    assert(
-        connection:isConnected() == true and
-        connection:server() == self
-    );
+    assert(connection:server() == self);
 
-    local index = self._parties:index(party);
+    local index = self._connections:index(connection);
 
     assert(index > 0);
 
-    self._connections:removeIndex(connection);
+    self._connections:removeIndex(index);
 
     self:_onConnectionRemoved(connection);
 end

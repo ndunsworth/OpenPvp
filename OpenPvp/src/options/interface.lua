@@ -67,6 +67,14 @@ local function opvp_options_interface_init()
         true
     );
 
+    opvp.options.interface.frames.orderHallCommandBarHide = opvp.options.interface.frames.category:createOption(
+        opvp.Option.BOOL,
+        "HideOrderHallCommandBar",
+        "Hide Order Hall Command Bar",
+        "Hides Command Bar located at the top of the screen when in your class Order Hall",
+        false
+    );
+
     opvp.options.interface.frames.prestigeBadgesHide = opvp.options.interface.frames.category:createOption(
         opvp.Option.BOOL,
         "HidePrestigeBadges",
@@ -93,11 +101,6 @@ local function opvp_options_interface_init()
     opvp.options.interface.frames.moveLossOfControlNotificationTest:setFlags(
         opvp.Option.NEW_LINE_FLAG,
         false
-    );
-
-    opvp.options.interface.frames.prestigeBadgesHide:setFlags(
-        opvp.Option.LOCKED_DURING_COMBAT,
-        true
     );
 
     opvp.options.interface.minimap = {};

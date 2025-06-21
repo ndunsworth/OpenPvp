@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.Class.MONK = opvp.Class(
     {
@@ -72,6 +72,15 @@ opvp.Class.MONK = opvp.Class(
             opvp.ClassSpec.BREWMASTER_MONK,
             opvp.ClassSpec.MISTWEAVER_MONK,
             opvp.ClassSpec.WINDWALKER_MONK
+        },
+        spells = {
+            harmful = {
+                talent = {
+                    {119381, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.STUN, 4},               -- Leg Sweap
+                    {115078, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.DISORIENT, 3},          -- Paralysis
+                    {198909, opvp.SpellProperty.CROWD_CONTROL_AURA, opvp.CrowdControlSpellProperty.INCAPACITATE, 6},       -- Song of Chi-Ji
+                }
+            }
         }
     }
 );

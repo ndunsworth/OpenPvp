@@ -30,4 +30,8 @@ local opvp = OpenPvpLib;
 
 _G["OpenPvp"] = opvp;
 
+if _G["opvp"] == nil then
+    _G["opvp"] = opvp;
+end
+
 opvp.plugin = {};
