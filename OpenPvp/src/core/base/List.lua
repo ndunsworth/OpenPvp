@@ -25,8 +25,8 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.List = opvp.CreateClass();
 
@@ -64,7 +64,7 @@ function opvp.List.__metatable__.__eq(self, other)
             return true;
         end
     elseif opvp.is_table(other) then
-        return self._items == other;
+        return opvp.utils.compareTable(self._items, other);
     else
         return false;
     end
@@ -309,7 +309,6 @@ end
 function opvp.List:swap(other)
     if (
         other == nil or
-        other == self or
         opvp.IsInstance(other, opvp.List) == false
     ) then
         return;
