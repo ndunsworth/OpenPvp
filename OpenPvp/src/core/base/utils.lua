@@ -166,7 +166,7 @@ function opvp.utils.compareTable(a, b, ignore_mt)
 end
 
 function opvp.utils.debugstack(start)
-    return debugstack(nil, start);
+    return debugstack(start);
 end
 
 function opvp.utils.decompress(source, method)
