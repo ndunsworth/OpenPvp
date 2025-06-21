@@ -57,7 +57,7 @@ function opvp.RatedQueue:bracket()
 end
 
 function opvp.RatedQueue:canQueue()
-    return self._bracket:isEnabled() and opvp.player.isMaxLevel();
+    return self._bracket:isEnabled();
 end
 
 function opvp.RatedQueue:hasDailyWin()
