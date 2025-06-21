@@ -29,19 +29,23 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 opvp.private = {
-    state = {}
+    hyperlink = {},
+    state     = {}
 };
 
-opvp.MAJOR_VERSION   = 1;
-opvp.MINOR_VERSION   = 0;
-opvp.RELEASE_VERSION = 9;
+opvp.LIB_MAJOR_VERSION    = 1;
+opvp.LIB_MINOR_VERSION    = 0;
+opvp.LIB_RELEASE_VERSION  = 9;
 
-opvp.VERSION         = string.format(
+opvp.LIB_VERSION          = string.format(
     "%d.%dv%d",
-    opvp.MAJOR_VERSION,
-    opvp.MINOR_VERSION,
-    opvp.RELEASE_VERSION
+    opvp.LIB_MAJOR_VERSION,
+    opvp.LIB_MINOR_VERSION,
+    opvp.LIB_RELEASE_VERSION
 );
+
+opvp.LIB_NAME             = "OpenPvp";
+opvp.LIB_NAME_AND_VERSION = opvp.LIB_NAME .. " " .. opvp.LIB_VERSION;
 
 opvp.unitid = {
     FOCUS            = "focus",
@@ -243,7 +247,7 @@ opvp.PvpFlag = {
 };
 
 opvp.PvpStatId = {
-    NONE                  = 0,
+    NONE                  =  0,
     AZERITE_COLLECTED     =  1,
     BASES_ASSAULTED       =  2,
     BASES_DEFENDED        =  3,
@@ -262,6 +266,13 @@ opvp.PvpStatId = {
     TOWERS_DEFENDED       = 16,
     VICTORY_POINTS        = 17,
     WALLS_DESTROYED       = 18
+};
+
+opvp.ServerRelationship = {
+    NONE      = 0,
+    COALESCED = LE_REALM_RELATION_COALESCED,
+    SAME      = LE_REALM_RELATION_SAME,
+    VIRTUAL   = LE_REALM_RELATION_VIRTUAL
 };
 
 opvp.Sex = {
