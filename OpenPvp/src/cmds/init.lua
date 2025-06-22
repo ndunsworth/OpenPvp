@@ -331,6 +331,12 @@ local function opvp_init_test_slash_cmds()
 
                 if opvp.utils.array.contains(args, "skirmish") == true then
                     mask = opvp.PvpFlag.SKIRMISH;
+                elseif opvp.utils.array.contains(args, "shuffle") == true then
+                    mask = bit.bor(
+                        opvp.PvpFlag.RATED,
+                        opvp.PvpFlag.ROUND,
+                        opvp.PvpFlag.SHUFFLE
+                    )
                 end
 
                 mgr:beginTest(
@@ -348,6 +354,8 @@ local function opvp_init_test_slash_cmds()
     test_cmd:addCommand(
         opvp.FuncAddonCommand(
             function(editbox, args)
+                args = opvp.AddonCommand:splitArgs(args, true);
+
                 local mgr = opvp.match.manager();
 
                 if mgr:isTesting() == true then
@@ -361,72 +369,31 @@ local function opvp_init_test_slash_cmds()
                 end
 
                 local map = bg_maps[math.random(1, #bg_maps)];
-                local simulate = string.lower(args) == "simulate";
+                local simulate = opvp.utils.array.contains(args, "simulate");
+
+                local mask = 0;
+
+                if opvp.utils.array.contains(args, "blitz") then
+                    mask = bit.bor(
+                        opvp.PvpFlag.RATED,
+                        opvp.PvpFlag.BLITZ
+                    );
+                elseif opvp.utils.array.contains(args, "rbg") then
+                    mask = bit.bor(
+                        opvp.PvpFlag.RATED,
+                        opvp.PvpFlag.RBG
+                    );
+                end
 
                 mgr:beginTest(
                     opvp.PvpType.BATTLEGROUND,
                     map,
-                    0,
+                    mask,
                     simulate
                 );
             end,
             "battleground",
             "Test Battleground"
-        )
-    );
-
-    test_cmd:addCommand(
-        opvp.FuncAddonCommand(
-            function(editbox, args)
-                local mgr = opvp.match.manager();
-
-                if mgr:isTesting() == true then
-                    local is_arena = mgr:match():isArena();
-
-                    mgr:endTest();
-
-                    if is_arena == true then
-                        return;
-                    end
-                end
-
-                local map = arena_maps[math.random(1, #arena_maps)];
-                local simulate = string.lower(args) == "simulate";
-
-                mgr:beginTest(
-                    opvp.PvpType.ARENA,
-                    map,
-                    bit.bor(
-                        opvp.PvpFlag.RATED,
-                        opvp.PvpFlag.ROUND,
-                        opvp.PvpFlag.SHUFFLE
-                    ),
-                    simulate
-                );
-            end,
-            "shuffle",
-            "Test Shuffle"
-        )
-    );
-
-    test_cmd:addCommand(
-        opvp.FuncAddonCommand(
-            function()
-                local party = opvp.party.home();
-
-                party:sendAddonMessage(
-[[
-test
-]],
-                    "RAID",
-                    nil,
-                    opvp.SocketPriority.NORMAL
---~ function opvp.Socket:write(data, channel, target, priority)
---~ function ChatThrottleLib:SendAddonMessage(prio, prefix, text, chattype, target, queueName, callbackFn, callbackArg)
-                );
-            end,
-            "msg",
-            "Test MSG"
         )
     );
 
