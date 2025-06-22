@@ -279,6 +279,14 @@ function opvp.Player:hasDeserter()
     );
 end
 
+function opvp.Player:hasHomeParty()
+    return opvp.party.utils.hasHomeParty();
+end
+
+function opvp.Player:hasInstanceParty()
+    return opvp.party.utils.hasInstanceParty();
+end
+
 function opvp.Player:hasPvpRacialTrinket()
     return self._pvp_trinket_racial_spellid ~= 0;
 end
@@ -338,14 +346,6 @@ end
 
 function opvp.Player:inParty(category)
     return opvp.party.utils.hasParty(category);
-end
-
-function opvp.Player:hasHomeParty()
-    return opvp.party.utils.hasHomeParty();
-end
-
-function opvp.Player:hasInstanceParty()
-    return opvp.party.utils.hasInstanceParty();
 end
 
 function opvp.Player:inSanctuary()
