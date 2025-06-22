@@ -28,10 +28,6 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.NEUTRAL  = 0;
-opvp.ALLIANCE = 1;
-opvp.HORDE    = 2;
-
 local opvp_faction_pvp_warn;
 local opvp_faction_sound_bg_loss;
 local opvp_faction_sound_bg_win;
