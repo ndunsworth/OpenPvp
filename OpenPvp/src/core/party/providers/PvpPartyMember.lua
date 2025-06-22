@@ -220,7 +220,7 @@ function opvp.PvpPartyMember:_updateScore(rated)
     end
 
     local old_mask = self._mask;
-    local info = C_PvP.GetScoreInfoByPlayerGuid(self:guid());
+    local info = C_PvP.GetScoreInfoByPlayerGuid(self._guid);
 
     if info == nil then
         return 0;
