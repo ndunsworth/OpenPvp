@@ -28,16 +28,71 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+opvp.ExpansionId = {
+    CURRENT                = LE_EXPANSION_LEVEL_CURRENT,
+    CLASSIC                = LE_EXPANSION_CLASSIC,
+    BURNING_CRUSADE        = LE_EXPANSION_BURNING_CRUSADE,
+    WRATH_OF_THE_LICH_KING = LE_EXPANSION_WRATH_OF_THE_LICH_KING,
+    CATACLYSM              = LE_EXPANSION_CATACLYSM,
+    MISTS_OF_PANDARIA      = LE_EXPANSION_MISTS_OF_PANDARIA,
+    WARLORDS_OF_DRAENOR    = LE_EXPANSION_WARLORDS_OF_DRAENOR,
+    LEGION                 = LE_EXPANSION_LEGION,
+    BATTLE_FOR_AZEROTH     = LE_EXPANSION_BATTLE_FOR_AZEROTH,
+    SHADOWLANDS            = LE_EXPANSION_SHADOWLANDS,
+    DRAGONFLIGHT           = LE_EXPANSION_DRAGONFLIGHT,
+    WAR_WITHIN             = LE_EXPANSION_WAR_WITHIN
+};
+
 opvp.expansion = {};
+
+function opvp.expansion.forLevel(level)
+    return GetExpansionForLevel(level);
+end
+
+function opvp.expansion.id()
+    return GetExpansionLevel();
+end
+
+function opvp.expansion.info(id)
+    if id == nil then
+        id = opvp.ExpansionId.CURRENT;
+    end
+
+    return GetExpansionDisplayInfo(id);
+end
+
+function opvp.expansion.isDemonHunterAvailable()
+    return IsDemonHunterAvailable();
+end
+
+function opvp.expansion.isLatest()
+    return GetMaximumExpansionLevel() == GetExpansionLevel();
+end
+
+function opvp.expansion.isTrial()
+    return IsExpansionTrial();
+end
+
+function opvp.expansion.isUpgradable()
+    return CanUpgradeExpansion();
+end
 
 function opvp.expansion.name(id)
     if id == nil then
-        id = GetExpansionLevel();
+        id = opvp.ExpansionId.CURRENT;
     end
 
     return GetExpansionName(id);
 end
 
-function opvp.expansion.id()
-    return GetExpansionLevel();
+function opvp.expansion.maxLevel(id)
+    if id == nil then
+        id = opvp.ExpansionId.CURRENT;
+    end
+
+    return GetMaxLevelForExpansionLevel(id);
+end
+
+function opvp.expansion.server()
+    return GetServerExpansionLevel();
 end
