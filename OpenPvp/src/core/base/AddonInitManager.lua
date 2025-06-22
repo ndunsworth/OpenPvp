@@ -38,20 +38,6 @@ function opvp.AddonInitManager:activated(addon)
     return addon == self:name();
 end
 
-function opvp.LoadingScreenBeginInitManager(name)
-    return opvp.SignalInitManager(
-        name,
-        opvp.event.LOADING_SCREEN_ENABLED
-    );
-end
-
-function opvp.LoadingScreenEndInitManager(name)
-    return opvp.SignalInitManager(
-        name,
-        opvp.event.LOADING_SCREEN_DISABLED
-    );
-end
-
 function opvp.LoginInitManager(name)
     return opvp.SignalInitManager(
         name,
