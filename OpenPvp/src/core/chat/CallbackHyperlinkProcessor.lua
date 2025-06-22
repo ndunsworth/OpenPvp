@@ -62,8 +62,6 @@ function opvp.CallbackHyperlinkProcessor:register(id, func)
     if opvp.is_func(func) or func == nil then
         self._funcs[id] = func;
     end
-
-    opvp.utils.dump(self._funcs);
 end
 
 function opvp.CallbackHyperlinkProcessor:unregister(id)
@@ -72,9 +70,6 @@ end
 
 function opvp.CallbackHyperlinkProcessor:_onEvent(id, data, chatFrame, button)
     local cb = self._funcs[id];
-
-    opvp.utils.dump(self._funcs);
-    opvp.utils.dump(data);
 
     if cb == nil then
         return;
