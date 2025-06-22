@@ -468,7 +468,7 @@ end
 function opvp.unit.isMaxLevel(unitId)
     return (
         opvp.unit.isPlayer(unitId) == true and
-        opvp.unit.level(unitId) == GetMaxLevelForPlayerExpansion()
+        opvp.unit.level(unitId) == GetMaxLevelForLatestExpansion()
     );
 end
 
