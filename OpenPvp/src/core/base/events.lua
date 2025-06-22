@@ -124,6 +124,34 @@ opvp.event.PLAYER_LOGIN                            = opvp.EventRegistrySignal("P
 opvp.event.PLAYER_LOGOUT                           = opvp.EventRegistrySignal("PLAYER_LOGOUT");
 opvp.event.PLAYER_QUITING                          = opvp.EventRegistrySignal("PLAYER_QUITING");
 
+--~ Mail events
+opvp.event.CLOSE_INBOX_ITEM                        = opvp.EventRegistrySignal("CLOSE_INBOX_ITEM");
+opvp.event.MAIL_CLOSED                             = opvp.EventRegistrySignal("MAIL_CLOSED");
+opvp.event.MAIL_FAILED                             = opvp.EventRegistrySignal("MAIL_FAILED");
+opvp.event.MAIL_INBOX_UPDATE                       = opvp.EventRegistrySignal("MAIL_INBOX_UPDATE");
+opvp.event.MAIL_LOCK_SEND_ITEMS                    = opvp.EventRegistrySignal("MAIL_LOCK_SEND_ITEMS");
+opvp.event.MAIL_SEND_INFO_UPDATE                   = opvp.EventRegistrySignal("MAIL_SEND_INFO_UPDATE");
+opvp.event.MAIL_SEND_SUCCESS                       = opvp.EventRegistrySignal("MAIL_SEND_SUCCESS");
+opvp.event.MAIL_SHOW                               = opvp.EventRegistrySignal("MAIL_SHOW");
+opvp.event.MAIL_SUCCESS                            = opvp.EventRegistrySignal("MAIL_SUCCESS");
+opvp.event.MAIL_UNLOCK_SEND_ITEMS                  = opvp.EventRegistrySignal("MAIL_UNLOCK_SEND_ITEMS");
+opvp.event.SEND_MAIL_COD_CHANGED                   = opvp.EventRegistrySignal("SEND_MAIL_COD_CHANGED");
+opvp.event.SEND_MAIL_MONEY_CHANGED                 = opvp.EventRegistrySignal("SEND_MAIL_MONEY_CHANGED");
+opvp.event.UPDATE_PENDING_MAIL                     = opvp.EventRegistrySignal("UPDATE_PENDING_MAIL");
+
+--~ Map events
+opvp.event.MAP_EXPLORATION_UPDATED                 = opvp.EventRegistrySignal("MAP_EXPLORATION_UPDATED");
+opvp.event.MINIMAP_PING                            = opvp.EventRegistrySignal("MINIMAP_PING");
+opvp.event.MINIMAP_UPDATE_TRACKING                 = opvp.EventRegistrySignal("MINIMAP_UPDATE_TRACKING");
+opvp.event.MINIMAP_UPDATE_ZOOM                     = opvp.EventRegistrySignal("MINIMAP_UPDATE_ZOOM");
+opvp.event.PLAYER_MAP_CHANGED                      = opvp.EventRegistrySignal("PLAYER_MAP_CHANGED");
+opvp.event.USER_WAYPOINT_UPDATED                   = opvp.EventRegistrySignal("USER_WAYPOINT_UPDATED");
+opvp.event.WORLD_MAP_CLOSE                         = opvp.EventRegistrySignal("WORLD_MAP_CLOSE");
+opvp.event.WORLD_MAP_OPEN                          = opvp.EventRegistrySignal("WORLD_MAP_OPEN");
+opvp.event.ZONE_CHANGED                            = opvp.EventRegistrySignal("ZONE_CHANGED");
+opvp.event.ZONE_CHANGED_INDOORS                    = opvp.EventRegistrySignal("ZONE_CHANGED_INDOORS");
+opvp.event.ZONE_CHANGED_NEW_AREA                   = opvp.EventRegistrySignal("ZONE_CHANGED_NEW_AREA");
+
 --~ Nameplate events
 opvp.event.FORBIDDEN_NAME_PLATE_CREATED            = opvp.EventRegistrySignal("FORBIDDEN_NAME_PLATE_CREATED");
 opvp.event.FORBIDDEN_NAME_PLATE_UNIT_ADDED         = opvp.EventRegistrySignal("FORBIDDEN_NAME_PLATE_UNIT_ADDED");
@@ -152,6 +180,23 @@ opvp.event.PLAYER_TARGET_CHANGED                   = opvp.EventRegistrySignal("P
 opvp.event.PLAYER_UNGHOST                          = opvp.EventRegistrySignal("PLAYER_UNGHOST");
 opvp.event.PLAYER_UPDATE_RESTING                   = opvp.EventRegistrySignal("PLAYER_UPDATE_RESTING");
 opvp.event.TIME_PLAYED_MSG                         = opvp.EventRegistrySignal("TIME_PLAYED_MSG");
+
+--~ Quest events
+opvp.event.QUEST_ACCEPTED                          = opvp.EventRegistrySignal("QUEST_ACCEPTED");
+opvp.event.QUEST_AUTOCOMPLETE                      = opvp.EventRegistrySignal("QUEST_AUTOCOMPLETE");
+opvp.event.QUEST_COMPLETE                          = opvp.EventRegistrySignal("QUEST_COMPLETE");
+opvp.event.QUEST_DATA_LOAD_RESULT                  = opvp.EventRegistrySignal("QUEST_DATA_LOAD_RESULT");
+opvp.event.QUEST_DETAIL                            = opvp.EventRegistrySignal("QUEST_DETAIL");
+opvp.event.QUEST_LOG_CRITERIA_UPDATE               = opvp.EventRegistrySignal("QUEST_LOG_CRITERIA_UPDATE");
+opvp.event.QUEST_LOG_UPDATE                        = opvp.EventRegistrySignal("QUEST_LOG_UPDATE");
+opvp.event.QUEST_POI_UPDATE                        = opvp.EventRegistrySignal("QUEST_POI_UPDATE");
+opvp.event.QUEST_REMOVED                           = opvp.EventRegistrySignal("QUEST_REMOVED");
+opvp.event.QUEST_TURNED_IN                         = opvp.EventRegistrySignal("QUEST_TURNED_IN");
+opvp.event.QUEST_WATCH_LIST_CHANGED                = opvp.EventRegistrySignal("QUEST_WATCH_LIST_CHANGED");
+opvp.event.QUESTLINE_UPDATE                        = opvp.EventRegistrySignal("QUESTLINE_UPDATE");
+opvp.event.TASK_PROGRESS_UPDATE                    = opvp.EventRegistrySignal("TASK_PROGRESS_UPDATE");
+opvp.event.TREASURE_PICKER_CACHE_FLUSH             = opvp.EventRegistrySignal("TREASURE_PICKER_CACHE_FLUSH");
+opvp.event.WORLD_QUEST_COMPLETED_BY_SPELL          = opvp.EventRegistrySignal("WORLD_QUEST_COMPLETED_BY_SPELL");
 
 --~ Spell events
 opvp.event.SPELL_PUSHED_TO_ACTIONBAR               = opvp.EventRegistrySignal("SPELL_PUSHED_TO_ACTIONBAR");
@@ -226,6 +271,11 @@ opvp.event.WORLD_PVP_QUEUE                         = opvp.EventRegistrySignal("W
 --~ Timer events
 opvp.event.START_TIMER                             = opvp.EventRegistrySignal("START_TIMER");
 opvp.event.STOP_TIMER_OF_TYPE                      = opvp.EventRegistrySignal("STOP_TIMER_OF_TYPE");
+
+--~ UI Events
+opvp.event.SCREENSHOT_FAILED                       = opvp.EventRegistrySignal("SCREENSHOT_FAILED");
+opvp.event.SCREENSHOT_STARTED                      = opvp.EventRegistrySignal("SCREENSHOT_STARTED");
+opvp.event.SCREENSHOT_SUCCEEDED                    = opvp.EventRegistrySignal("SCREENSHOT_SUCCEEDED");
 
 --~ Unit events
 opvp.event.INSPECT_READY                           = opvp.EventRegistrySignal("INSPECT_READY");
@@ -305,8 +355,6 @@ opvp.event.LOADING_SCREEN_DISABLED                 = opvp.EventRegistrySignal("L
 opvp.event.PLAYER_ENTERING_WORLD                   = opvp.EventRegistrySignal("PLAYER_ENTERING_WORLD");
 opvp.event.PLAYER_LEAVING_WORLD                    = opvp.EventRegistrySignal("PLAYER_LEAVING_WORLD");
 opvp.event.SETTINGS_LOADED                         = opvp.EventRegistrySignal("SETTINGS_LOADED");
-opvp.event.ZONE_CHANGED                            = opvp.EventRegistrySignal("ZONE_CHANGED");
-opvp.event.ZONE_CHANGED_NEW_AREA                   = opvp.EventRegistrySignal("ZONE_CHANGED_NEW_AREA");
 
 opvp.event.PLAYER_ENTERING_WORLD_LOGIN             = opvp.Signal("PLAYER_ENTERING_WORLD_LOGIN");
 opvp.event.PLAYER_ENTERING_WORLD_LOGIN_RELOAD      = opvp.Signal("PLAYER_ENTERING_WORLD_LOGIN_RELOAD");
