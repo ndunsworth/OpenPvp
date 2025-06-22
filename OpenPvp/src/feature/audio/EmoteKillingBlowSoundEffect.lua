@@ -45,14 +45,17 @@ local opvp_killing_blow_nice_emotes = opvp.List:createFromArray(
 
 local opvp_killing_blow_mean_emotes = opvp.List:createFromArray(
     {
+        "CACKLE",
         "FACEPALM",
         "GIGGLE",
         "GLOAT",
         "LAUGH",
         "PITY",
+        "ROFL",
         "RUDE",
         "SALUTE",
         "SHUDDER",
+        "VIOLIN",
         "YAWN"
     }
 );
@@ -70,7 +73,6 @@ local opvp_killing_blow_target_nice_emotes = opvp.List:createFromArray(
         "PRAY",
         "RUFFLE",
         "SOOTHE",
-        "VICTORY",
         "WHISTLE",
         "WINCE"
     }
