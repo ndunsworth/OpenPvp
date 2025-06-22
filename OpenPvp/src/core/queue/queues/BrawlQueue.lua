@@ -156,8 +156,8 @@ function opvp.BrawlQueue:updateInfo()
     end
 end
 
-function opvp.BrawlQueue:_createMatchDescription(map)
-    return opvp.BattlegroundMatchDescription(map);
+function opvp.BrawlQueue:_createMatchDescription(map, mask)
+    return opvp.BattlegroundMatchDescription(map, mask);
 end
 
 function opvp.BrawlQueue:_info()

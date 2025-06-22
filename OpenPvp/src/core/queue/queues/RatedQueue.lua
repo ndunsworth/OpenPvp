@@ -87,19 +87,19 @@ function opvp.RatedQueue:teamSizeMaximum()
     return self._bracket:teamSize();
 end
 
-function opvp.RatedQueue:_createMatchDescription(map)
+function opvp.RatedQueue:_createMatchDescription(map, mask)
     if self:isArena() == true then
         if self:isShuffle() == true then
-            return opvp.ShuffleMatchDescription(map);
+            return opvp.ShuffleMatchDescription(map, mask);
         elseif self == opvp.RatedQueue.ARENA_2v2 then
-            return opvp.ArenaMatchDescription(map, 2, self:mask());
+            return opvp.ArenaMatchDescription(map, 2, mask);
         else
-            return opvp.ArenaMatchDescription(map, 3, self:mask());
+            return opvp.ArenaMatchDescription(map, 3, mask);
         end
     elseif self:isBlitz() == true then
-        return opvp.BlitzMatchDescription(map);
+        return opvp.BlitzMatchDescription(map, mask);
     elseif self:isRBG() == true then
-        return opvp.RBGMatchDescription(map);
+        return opvp.RBGMatchDescription(map, mask);
     end
 
     return nil;

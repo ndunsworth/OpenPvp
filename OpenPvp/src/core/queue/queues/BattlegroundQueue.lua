@@ -224,8 +224,8 @@ function opvp.BattlegroundQueue:teamSizeMaximum()
     return self._info:teamSize();
 end
 
-function opvp.BattlegroundQueue:_createMatchDescription(map)
-    return opvp.BattlegroundMatchDescription(map);
+function opvp.BattlegroundQueue:_createMatchDescription(map, mask)
+    return opvp.BattlegroundMatchDescription(map, mask);
 end
 
 function opvp.BattlegroundQueue:_setInfo(info)

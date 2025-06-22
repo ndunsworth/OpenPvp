@@ -91,8 +91,8 @@ function opvp.ArenaSkirmishQueue:updateInfo()
     self._player_level_max = GetMaxLevelForPlayerExpansion();
 end
 
-function opvp.ArenaSkirmishQueue:_createMatchDescription(map)
-    return opvp.ArenaMatchDescription(map, 3);
+function opvp.ArenaSkirmishQueue:_createMatchDescription(map, mask)
+    return opvp.ArenaMatchDescription(map, 3, mask);
 end
 
 local function opvp_arena_skirm_queue_ctor()
