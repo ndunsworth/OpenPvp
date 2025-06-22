@@ -1,4 +1,4 @@
-## Interface: 110100, 110105
+## Interface: 110100, 110105, 110107
 ## Title: OpenPvp
 ## Version: 1.0.9
 ## IconTexture: Interface/Icons/achievement_pvp_legion08
@@ -14,6 +14,8 @@
 libs/ChatThrottleLib/ChatThrottleLib.lua
 libs/LibStub/LibStub.lua
 libs/LibSharedMedia-3.0/lib.xml
+
+src/core/world/expansion.lua
 
 src/core/base/constants.lua
 src/core/base/LuaClass.lua
@@ -85,6 +87,7 @@ src/core/chat/emotes/flee.lua
 src/core/chat/emotes/followme.lua
 src/core/chat/emotes/forthealliance.lua
 src/core/chat/emotes/forthehorde.lua
+src/core/chat/emotes/forthefaction.lua
 src/core/chat/emotes/goodbye.lua
 src/core/chat/emotes/help.lua
 src/core/chat/emotes/hello.lua
@@ -124,7 +127,11 @@ src/core/spell/CrowdControlCategoryState.lua
 src/core/spell/CrowdControlState.lua
 src/core/spell/PvpTrinketState.lua
 
-src/core/world/expansion.lua
+src/core/quest/Quest.lua
+src/core/quest/QuestLog.lua
+src/core/quest/QuestObjective.lua
+src/core/quest/namespace.lua
+
 src/core/world/season.lua
 src/core/world/Currency.lua
 src/core/world/Role.lua
@@ -233,6 +240,7 @@ src/core/world/RatingBracket.lua
 
 src/core/map/instance.lua
 src/core/map/Map.lua
+src/core/map/Waypoint.lua
 
 src/core/map/maps/unknown.lua
 src/core/map/maps/arenas/ashamesfall.lua
@@ -384,8 +392,8 @@ src/core/match/HideFrameMatchFeature.lua
 
 src/core/match/descriptions/GenericMatchDescription.lua
 src/core/match/descriptions/ArenaMatchDescription.lua
-src/core/match/descriptions/BlitzMatchDescription.lua
 src/core/match/descriptions/BattlegroundMatchDescription.lua
+src/core/match/descriptions/BlitzMatchDescription.lua
 src/core/match/descriptions/RBGMatchDescription.lua
 src/core/match/descriptions/ShuffleMatchDescription.lua
 
