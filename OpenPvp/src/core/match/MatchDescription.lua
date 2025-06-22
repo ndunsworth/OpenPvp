@@ -75,7 +75,7 @@ function opvp.MatchDescription:init(map)
     self._map = map;
 end
 
-function opvp.MatchDescription:createMatch(queue, testType)
+function opvp.MatchDescription:createMatch(queue)
     return nil;
 end
 
@@ -129,8 +129,16 @@ function opvp.MatchDescription:isShuffle()
     return bit.band(self:mask(), opvp.PvpFlag.SHUFFLE) ~= 0;
 end
 
+function opvp.MatchDescription:isSimulation()
+    return bit.band(self:mask(), opvp.PvpFlag.SIMULATION) ~= 0;
+end
+
 function opvp.MatchDescription:isSkirmish()
     return bit.band(self:mask(), opvp.PvpFlag.SKIRMISH) ~= 0;
+end
+
+function opvp.MatchDescription:isTest()
+    return bit.band(self:mask(), opvp.PvpFlag.TEST) ~= 0;
 end
 
 function opvp.MatchDescription:map()
@@ -147,6 +155,18 @@ end
 
 function opvp.MatchDescription:teamSize()
     return 1;
+end
+
+function opvp.MatchDescription:testType()
+    if self:isTest() == true then
+        if self:isSimulation() == true then
+            return opvp.MatchTestType.SIMULATION;
+        else
+            return opvp.MatchTestType.FEATURE;
+        end
+    else
+        return opvp.MatchTestType.NONE;
+    end
 end
 
 function opvp.MatchDescription:type()

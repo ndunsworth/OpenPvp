@@ -77,18 +77,24 @@ local opvp_bg_map_mask_lookup = {
 opvp.BattlegroundMatchDescription = opvp.CreateClass(opvp.GenericMatchDescription);
 
 function opvp.BattlegroundMatchDescription:init(map, mask)
-    local team_size;
-
-    team_size = opvp_bg_map_team_size_lookup[map:id()];
-
-    if team_size == nil then
-        team_size = 15;
+    if mask == nil then
+        mask = 0;
     end
 
-    local map_mask = opvp_bg_map_mask_lookup[map:id()];
+    local team_size;
 
-    if map_mask == nil then
-        map_mask = opvp.PvpFlag.RESOURCE;
+    if bit.band(mask, opvp.PvpFlag.RATED) ~= 0 then
+        if bit.band(mask, opvp.PvpFlag.BLITZ) ~= 0 then
+            team_size = 8;
+        else
+            team_size = 10;
+        end
+    else
+        team_size = opvp_bg_map_team_size_lookup[map:id()];
+
+        if team_size == nil then
+            team_size = 15;
+        end
     end
 
     opvp.GenericMatchDescription.init(
@@ -96,10 +102,10 @@ function opvp.BattlegroundMatchDescription:init(map, mask)
         opvp.PvpType.BATTLEGROUND,
         map,
         team_size,
-        map_mask
+        mask
     );
 end
 
-function opvp.BattlegroundMatchDescription:createMatch(queue, testType)
-    return opvp.BattlegroundMatch(queue, self, testType);
+function opvp.BattlegroundMatchDescription:createMatch(queue)
+    return opvp.BattlegroundMatch(queue, self);
 end

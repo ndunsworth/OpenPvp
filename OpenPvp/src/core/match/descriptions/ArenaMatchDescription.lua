@@ -37,22 +37,18 @@ function opvp.ArenaMatchDescription:init(map, teamSize, mask)
         team_size = teamSize;
     end
 
-    if mask == nil then
-        mask = 0;
-    end
-
     opvp.GenericMatchDescription.init(
         self,
         opvp.PvpType.ARENA,
         map,
         team_size,
         bit.bor(
-            mask,
+            opvp.number_else(mask),
             opvp.PvpFlag.DAMPENING
         )
     );
 end
 
-function opvp.ArenaMatchDescription:createMatch(queue, testType)
-    return opvp.ArenaMatch(queue, self, testType);
+function opvp.ArenaMatchDescription:createMatch(queue)
+    return opvp.ArenaMatch(queue, self);
 end

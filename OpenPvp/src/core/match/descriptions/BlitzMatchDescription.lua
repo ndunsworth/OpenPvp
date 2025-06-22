@@ -25,15 +25,23 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.BlitzMatchDescription = opvp.CreateClass(opvp.BattlegroundMatchDescription);
 
-function opvp.BlitzMatchDescription:init(map)
+function opvp.BlitzMatchDescription:init(map, mask)
     opvp.BattlegroundMatchDescription.init(
         self,
         map,
-        bit.bor(opvp.PvpFlag.RATED, opvp.PvpFlag.BLITZ)
+        bit.bor(
+            opvp.number_else(mask),
+            opvp.PvpFlag.RATED,
+            opvp.PvpFlag.BLITZ
+        )
     );
 end
+
+--~ function opvp.BlitzMatchDescription:createMatch(queue)
+    --~ return opvp.ArenaMatch(queue, self);
+--~ end

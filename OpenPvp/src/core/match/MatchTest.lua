@@ -113,24 +113,34 @@ function opvp.MatchTest:initialize(pvpType, map, pvpFlags, simulate)
             queue = opvp.Queue.ARENA_3V3;
         end
     else
-        local info = opvp.queue.manager():_findBattlegroundInfo(map:name());
+        if bit.band(pvpFlags, opvp.PvpFlag.BLITZ) ~= 0 then
+            queue = opvp.Queue.BLITZ;
+        else
+            local info = opvp.queue.manager():_findBattlegroundInfo(map:name());
 
-        if info == nil then
-            return;
+            if info == nil then
+                return;
+            end
+
+            queue = opvp.Queue.BATTLEGROUND_TEST;
+
+            queue:_setInfo(info);
         end
-
-        queue = opvp.Queue.BATTLEGROUND_TEST;
-
-        queue:_setInfo(info);
     end
+
+    local mask;
 
     if simulate == true then
         self._test_type = opvp.MatchTestType.SIMULATION;
+
+        mask = bit.bor(opvp.PvpFlag.TEST, opvp.PvpFlag.SIMULATION);
     else
         self._test_type = opvp.MatchTestType.FEATURE;
+
+        mask = opvp.PvpFlag.TEST;
     end
 
-    self._match = queue:_createMatch(map, self._test_type);
+    self._match = queue:_createMatch(map, mask);
 
     if self._match == nil then
         return;
@@ -157,6 +167,10 @@ end
 
 function opvp.MatchTest:match()
     return self._match;
+end
+
+function opvp.MatchTest:mode()
+    return self._test_type;
 end
 
 function opvp.MatchTest:outcome()
@@ -260,8 +274,14 @@ end
 function opvp.MatchTest:_onMatchEntered()
     if self:isSimulation() == true then
         opvp.notify.pvp(
-            opvp.strs.MATCH_TEST_BEGIN_HEADER,
-            opvp.strs.MATCH_TEST_BEGIN_FOOTER,
+            string.format(
+                opvp.strs.MATCH_TEST_BEGIN_HEADER,
+                self._match:queue():name()
+            ),
+            string.format(
+                opvp.strs.MATCH_TEST_BEGIN_FOOTER,
+                self._match:map():name()
+            ),
             true
         );
 
@@ -296,16 +316,19 @@ function opvp.MatchTest:_onMatchExit()
         self._match:statusNext()
     );
 
-    self._match:_close();
-    self._match = nil;
-
     if self:isSimulation() == true then
         opvp.notify.pvp(
-            opvp.strs.MATCH_TEST_END_HEADER,
+            string.format(
+                opvp.strs.MATCH_TEST_END_HEADER,
+                self._match:queue():name()
+            ),
             opvp.strs.MATCH_TEST_END_FOOTER,
             true
         );
     end
+
+    self._match:_close();
+    self._match = nil;
 end
 
 function opvp.MatchTest:_onMatchJoined()

@@ -124,6 +124,10 @@ opvp.Affiliation = {
     HOSTILE  = bit.lshift(1, 2)
 };
 
+opvp.NEUTRAL  = 0;
+opvp.ALLIANCE = 1;
+opvp.HORDE    = 2;
+
 opvp.CompressionLevel = {
     NONE    = -1,
     DEFAULT = Enum.CompressionLevel.Default,
@@ -225,25 +229,27 @@ opvp.PvpType = {
 };
 
 opvp.PvpFlag = {
-    BLITZ      = bit.lshift(1,  0),
-    BRAWL      = bit.lshift(1,  1),
-    CTF        = bit.lshift(1,  2),
-    DAMPENING  = bit.lshift(1,  3),
-    EPIC       = bit.lshift(1,  4),
-    ESCORT     = bit.lshift(1,  5),
-    EVENT      = bit.lshift(1,  6),
-    NODE       = bit.lshift(1,  7),
-    RANDOM     = bit.lshift(1,  8),
-    RANDOM_MAP = bit.lshift(1,  9),
-    RATED      = bit.lshift(1, 10),
-    RBG        = bit.lshift(1, 11),
-    RESOURCE   = bit.lshift(1, 12),
-    ROUND      = bit.lshift(1, 13),
-    SCENARIO   = bit.lshift(1, 14),
-    SHUFFLE    = bit.lshift(1, 15),
-    SKIRMISH   = bit.lshift(1, 16),
-    VEHICLE    = bit.lshift(1, 17),
-    ZONE       = bit.lshift(1, 18)
+    BLITZ           = bit.lshift(1,  0),
+    BRAWL           = bit.lshift(1,  1),
+    CTF             = bit.lshift(1,  2),
+    DAMPENING       = bit.lshift(1,  3),
+    EPIC            = bit.lshift(1,  4),
+    ESCORT          = bit.lshift(1,  5),
+    EVENT           = bit.lshift(1,  6),
+    NODE            = bit.lshift(1,  7),
+    RANDOM          = bit.lshift(1,  8),
+    RANDOM_MAP      = bit.lshift(1,  9),
+    RATED           = bit.lshift(1, 10),
+    RBG             = bit.lshift(1, 11),
+    RESOURCE        = bit.lshift(1, 12),
+    ROUND           = bit.lshift(1, 13),
+    SCENARIO        = bit.lshift(1, 14),
+    SHUFFLE         = bit.lshift(1, 15),
+    SIMULATION      = bit.lshift(1, 16),
+    SKIRMISH        = bit.lshift(1, 17),
+    TEST            = bit.lshift(1, 18),
+    VEHICLE         = bit.lshift(1, 19),
+    ZONE            = bit.lshift(1, 20)
 };
 
 opvp.PvpStatId = {

@@ -30,18 +30,20 @@ local opvp = OpenPvp;
 
 opvp.BattlegroundMatch = opvp.CreateClass(opvp.GenericMatch);
 
-function opvp.BattlegroundMatch:init(queue, description, testType)
-    opvp.GenericMatch.init(self, queue, description, testType);
+function opvp.BattlegroundMatch:init(queue, description)
+    opvp.GenericMatch.init(self, queue, description);
 
-    if testType == opvp.MatchTestType.NONE then
+    if description:isTest() == false then
         local cache_size = description:teamSize() * 2;
 
-        if queue:isRated() == true then
-            self._enemy_provider = opvp.ArenaPartyMemberProvider();
+        self._enemy_provider = opvp.BattlegroundPartyMemberProvider();
 
-            self._enemy_provider:_setTeamSize(description:teamSize());
+        if queue:isRated() == true then
+            --~ self._enemy_provider = opvp.ArenaPartyMemberProvider();
+
+            --~ self._enemy_provider:_setTeamSize(description:teamSize());
         else
-            self._enemy_provider = opvp.BattlegroundPartyMemberProvider();
+            --~ self._enemy_provider = opvp.BattlegroundPartyMemberProvider();
 
             cache_size = cache_size + 10;
         end
@@ -139,16 +141,5 @@ function opvp.BattlegroundMatch:_onOutcomeReady(outcomeType)
                 )
             );
         end
-    end
-end
-
-function opvp.BattlegroundMatch:_onScoreUpdate()
-    opvp.printDebug("opvp.BattlegroundMatch._onScoreUpdate");
-
-    if (
-        self:isOutcomeValid() == false and
-        self._status == opvp.MatchStatus.COMPLETE
-    ) then
-        self:_updateOutcome();
     end
 end

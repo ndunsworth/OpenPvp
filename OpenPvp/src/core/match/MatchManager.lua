@@ -279,7 +279,7 @@ function opvp.MatchManager:_onQueueStart(queue)
         return;
     end
 
-    self._match = queue:_createMatch(map, opvp.MatchTestType.NONE);
+    self._match = queue:_createMatch(map);
 
     if self._match == nil then
         opvp.printWarning("opvp.MatchManager:_onQueueStart(), opvp.Queue._createMatch returned null");

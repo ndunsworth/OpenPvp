@@ -30,10 +30,10 @@ local opvp = OpenPvp;
 
 opvp.ShuffleMatch = opvp.CreateClass(opvp.GenericMatch);
 
-function opvp.ShuffleMatch:init(queue, description, testType)
-    opvp.GenericMatch.init(self, queue, description, testType);
+function opvp.ShuffleMatch:init(queue, description)
+    opvp.GenericMatch.init(self, queue, description);
 
-    if testType == opvp.MatchTestType.NONE then
+    if description:isTest() == false then
         self._enemy_provider = opvp.ArenaPartyMemberProvider(nil, true);
 
         self._enemy_provider:_setTeamSize(description:teamSize());
@@ -329,16 +329,6 @@ function opvp.ShuffleMatch:_onOutcomeReady(outcomeType)
                 0.25
             )
         );
-    end
-end
-
-function opvp.ShuffleMatch:_onScoreUpdate()
-    opvp.printDebug("opvp.ShuffleMatch._onScoreUpdate");
-
-    opvp.GenericMatch._onScoreUpdate(self);
-
-    if self:isComplete() == true and self:isOutcomeFinal() == false then
-        self:_updateMatchOutcome();
     end
 end
 

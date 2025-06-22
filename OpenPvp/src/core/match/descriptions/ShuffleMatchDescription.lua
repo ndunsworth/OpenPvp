@@ -30,12 +30,13 @@ local opvp = OpenPvp;
 
 opvp.ShuffleMatchDescription = opvp.CreateClass(opvp.ArenaMatchDescription);
 
-function opvp.ShuffleMatchDescription:init(map)
+function opvp.ShuffleMatchDescription:init(map, mask)
     opvp.ArenaMatchDescription.init(
         self,
         map,
         3,
         bit.bor(
+            opvp.number_else(mask),
             opvp.PvpFlag.RATED,
             opvp.PvpFlag.ROUND,
             opvp.PvpFlag.SHUFFLE
@@ -43,8 +44,8 @@ function opvp.ShuffleMatchDescription:init(map)
     );
 end
 
-function opvp.ShuffleMatchDescription:createMatch(queue, testType)
-    return opvp.ShuffleMatch(queue, self, testType);
+function opvp.ShuffleMatchDescription:createMatch(queue)
+    return opvp.ShuffleMatch(queue, self);
 end
 
 function opvp.ShuffleMatchDescription:rounds()

@@ -150,13 +150,12 @@ function opvp.Match:statusFromActiveMatchState()
     return opvp.match.utils.state();
 end
 
-function opvp.Match:init(queue, description, testType)
+function opvp.Match:init(queue, description)
     self._queue             = queue;
     self._desc              = description;
     self._status            = opvp.MatchStatus.INACTIVE;
     self._enter_in_prog     = false;
     self._surrendered       = false;
-    self._testing           = testType;
     self._dampening         = 0;
     self._countdown         = false;
     self._countdown_time    = 0;
@@ -320,7 +319,7 @@ function opvp.Match:isShuffle()
 end
 
 function opvp.Match:isSimulation()
-    return self._testing == opvp.MatchTestType.SIMULATION;
+    return self._desc:isSimulation();
 end
 
 function opvp.Match:isSkirmish()
@@ -328,7 +327,7 @@ function opvp.Match:isSkirmish()
 end
 
 function opvp.Match:isTest()
-    return self._testing ~= opvp.MatchTestType.NONE;
+    return self._desc:isTest();
 end
 
 function opvp.Match:isWarmup()
@@ -486,7 +485,7 @@ function opvp.Match:teammatesSize()
 end
 
 function opvp.Match:testType()
-    return self._testing;
+    return self._desc:testType();
 end
 
 function opvp.Match:timeElapsed()
@@ -891,6 +890,20 @@ end
 
 function opvp.Match:_onScoreUpdate()
     opvp.printDebug("opvp.Match._onScoreUpdate");
+
+    if (
+        (
+            --~ self:isOutcomeValid() == false and
+            self:isRoundBased() == true and
+            self:isRoundComplete() == true
+        ) or
+        (
+            self:isComplete() == true and
+            self:isOutcomeFinal() == false
+        )
+    ) then
+        self:_updateOutcome();
+    end
 end
 
 function opvp.Match:_onStartTimer(timerType, timeSeconds, totalTime)
@@ -924,6 +937,13 @@ function opvp.Match:_setDampening(value)
 end
 
 function opvp.Match:_setOutcome(outcome, team, outcomeType)
+    opvp.printDebug(
+        "opvp.Match._setOutcome(%d, %s, %d)",
+        outcome,
+        tostring(team),
+        outcomeType
+    );
+
     if self._outcome_team ~= nil and self._outcome_team ~= team then
         self._outcome_team:_setWinner(false);
     end

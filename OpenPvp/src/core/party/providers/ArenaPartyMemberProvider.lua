@@ -256,10 +256,6 @@ function opvp.ArenaPartyMemberProvider:_onRosterEndUpdate(newMembers, updatedMem
     opvp.PvpPartyMemberProvider._onRosterEndUpdate(self, newMembers, updatedMembers, removedMembers)
 end
 
-function opvp.ArenaPartyMemberProvider:_onScoreUpdate()
-    opvp.PvpPartyMemberProvider._onScoreUpdate(self);
-end
-
 function opvp.ArenaPartyMemberProvider:_setTeamSize(size)
     self._match_size = max(0, size);
 end

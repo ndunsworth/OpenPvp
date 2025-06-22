@@ -30,8 +30,8 @@ local opvp = OpenPvp;
 
 opvp.GenericMatch = opvp.CreateClass(opvp.Match);
 
-function opvp.GenericMatch:init(queue, description, testType)
-    opvp.Match.init(self, queue, description, testType);
+function opvp.GenericMatch:init(queue, description)
+    opvp.Match.init(self, queue, description);
 
     self._friendly_team = opvp.MatchTeam(self);
     self._enemy_team    = opvp.MatchTeam(self);
@@ -40,7 +40,7 @@ function opvp.GenericMatch:init(queue, description, testType)
         self._enemy_team
     };
 
-    if testType == opvp.MatchTestType.NONE then
+    if description:isTest() == false then
         self._friendly_provider = opvp.PvpPartyMemberProvider(opvp.PvpPartyMemberFactory());
     else
         self._friendly_provider = nil;
@@ -290,4 +290,31 @@ function opvp.GenericMatch:_onPartyAboutToJoin(category, guid)
             );
         end
     end
+end
+
+function opvp.GenericMatch:_updateOutcome()
+    local winning_status;
+    local winning_team;
+
+    if self:isTest() == true then
+        winning_status, winning_team = opvp.match.manager():tester():outcome();
+    else
+        winning_status = opvp.match.utils.winner();
+
+        if winning_status == opvp.MatchWinner.WON then
+            winning_team = self:playerTeam();
+        else
+            winning_team = self:opponentTeam();
+        end
+    end
+
+    local outcome_type;
+
+    if self:isRoundBased() == true then
+        outcome_type = opvp.MatchOutcomeType.ROUND;
+    else
+        outcome_type = opvp.MatchOutcomeType.MATCH;
+    end
+
+    self:_setOutcome(winning_status, winning_team, outcome_type);
 end

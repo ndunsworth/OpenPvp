@@ -25,20 +25,16 @@
 -- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-local _, OpenPvpLib = ...
-local opvp = OpenPvpLib;
+local _, OpenPvp = ...
+local opvp = OpenPvp;
 
 opvp.GenericMatchDescription = opvp.CreateClass(opvp.MatchDescription);
 
 function opvp.GenericMatchDescription:init(pvpType, map, teamSize, mask)
     opvp.MatchDescription.init(self, map);
 
-    if mask == nil then
-        mask = 0;
-    end
-
     self._type = pvpType;
-    self._mask = mask;
+    self._mask = opvp.number_else(mask);
     self._team_size = teamSize;
 end
 
