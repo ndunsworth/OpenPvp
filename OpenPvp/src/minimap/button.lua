@@ -288,18 +288,26 @@ function opvp.private.OpenPvpMiniMapButton:addRatingTooltip(tooltip)
     local rating_info;
     local text;
     local icon;
+    local avg;
 
     for n=1, #brackets do
         bracket = brackets[n];
         info = bracket:ratingInfo();
 
         if info.rating ~= 0 then
+            if info.season_played > 0 and info.season_wins > 0 then
+                avg = info.season_wins / info.season_played;
+            else
+                avg = 0;
+            end
+
             tooltip:AddDoubleLine(
                 "    " .. bracket:name(),
                 string.format(
-                    "%s %s",
+                    "%s %s (%d%%)",
                     opvp.utils.textureIdMarkup(bracket:tierIcon(), 16, 16),
-                    info.rating
+                    info.rating,
+                    100 * avg
                 ),
                 1, 1, 1
             );
@@ -406,6 +414,40 @@ function opvp.private.OpenPvpMiniMapButton:addSeasonRewardTooltip(tooltip)
     --~ GameTooltip_ShowProgressBar(tooltip, 0, req, prog, FormatPercentage(prog / req));
 end
 
+function opvp.private.OpenPvpMiniMapButton:addQuestsTooltip(tooltip)
+    local pvp_quests = {};
+
+    for _, quest in pairs(opvp.questlog.quests()) do
+        if quest:isPvp() == true then
+            table.insert(pvp_quests, quest);
+        end
+    end
+
+    if #pvp_quests == 0 then
+        return;
+    end
+
+    tooltip:AddLine(opvp.strs.QUESTS);
+
+    local extra;
+
+    for _, quest in pairs(pvp_quests) do
+        if quest:isDaily() == true then
+            extra = " " .. opvp.time.formatSeconds(C_DateAndTime.GetSecondsUntilDailyReset());
+        elseif quest:isWeekly() == true or quest:classification() == opvp.QuestClassification.RECURRING then
+            extra = " " .. opvp.time.formatSeconds(C_DateAndTime.GetSecondsUntilWeeklyReset());
+        else
+            extra = "";
+        end
+
+        tooltip:AddDoubleLine(
+            "    " .. quest:name(),
+            opvp.utils.textureAtlastMarkup(quest:icon(), 14, 14) .. extra,
+            1, 1, 1
+        );
+    end
+end
+
 function opvp.private.OpenPvpMiniMapButton:addQueueBonusTooltip(tooltip)
 
     local queues = {
@@ -494,8 +536,13 @@ function opvp.private.OpenPvpMiniMapButton:_onEnter(frame)
     if opvp.options.interface.minimap.tooltip.seasonReward:value() == true then
         self:addSeasonRewardTooltip(GameTooltip);
     end
+
     if opvp.options.interface.minimap.tooltip.events:value() == true then
         self:addEventsTooltip(GameTooltip);
+    end;
+
+    if opvp.options.interface.minimap.tooltip.quests:value() == true then
+        self:addQuestsTooltip(GameTooltip);
     end;
 
     if opvp.options.interface.minimap.tooltip.queueInfo:value() == true then

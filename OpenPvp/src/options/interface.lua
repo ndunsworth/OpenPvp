@@ -175,6 +175,14 @@ local function opvp_options_interface_init()
         true
     );
 
+    opvp.options.interface.minimap.tooltip.quests = opvp.options.interface.minimap.tooltip.category:createOption(
+        opvp.Option.BOOL,
+        "Quests",
+        "Quests",
+        "",
+        true
+    );
+
     opvp.options.interface.minimap.tooltip.queueInfo = opvp.options.interface.minimap.tooltip.category:createOption(
         opvp.Option.BOOL,
         "QueueInfo",

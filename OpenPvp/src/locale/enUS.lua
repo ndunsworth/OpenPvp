@@ -64,6 +64,7 @@ opvp.locale.enUS = {
     PARTY                                    = PARTY,
     PROFILE_CREATE                           = "Create Profile",
     PROFILE_DELETE                           = "Delete Profile",
+    QUESTS                                   = "Quests",
     QUEUES                                   = "Queues",
     RAID                                     = RAID,
     SEASON                                   = "Season",
@@ -211,9 +212,9 @@ opvp.locale.enUS = {
     MATCH_TRINKET_OFF_CD                     = "Match | %s Trinket Avail - %s",
     MATCH_TRINKET_RACIAL_OFF_CD              = "Match | %s Trinket Racial Avail - %s",
 
-    MATCH_TEST_BEGIN_HEADER                  = "Match Test",
-    MATCH_TEST_BEGIN_FOOTER                  = "Simulation Starting",
-    MATCH_TEST_END_HEADER                    = "Match Test",
+    MATCH_TEST_BEGIN_HEADER                  = "Match Test - %s",
+    MATCH_TEST_BEGIN_FOOTER                  = "Simulation Starting (%s)",
+    MATCH_TEST_END_HEADER                    = "Match Test - %s",
     MATCH_TEST_END_FOOTER                    = "Simulation Complete",
 
     NUMERIC_BILLION                          = "b",
