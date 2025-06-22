@@ -228,9 +228,9 @@ end
 
 local function opvp_opt_db_ctor()
     opvp_opt_db_singleton = opvp.OptionDatabase(
-        "OpenPvp",
-        "OpenPvp",
-        opvp.VERSION
+        opvp.LIB_NAME,
+        "",
+        opvp.LIB_VERSION
     );
 
     opvp.event.PLAYER_LOGIN:connect(opvp_opt_db_on_login);

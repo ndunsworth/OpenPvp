@@ -70,7 +70,6 @@ end
 local function opvp_state_db_ctor()
     opvp_state_db_singleton = opvp.RootOption(
         opvp.LIB_NAME,
-        opvp.LIB_NAME,
         "",
         opvp.LIB_VERSION
     );
