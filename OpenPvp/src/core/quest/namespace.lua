@@ -52,6 +52,10 @@ function opvp.questlog.poiMapId()
     return opvp_questlog_singleton:poiMapId();
 end
 
+function opvp.questlog.pvpQuests()
+    return opvp_questlog_singleton:pvpQuests();
+end
+
 function opvp.questlog.quest(index)
     return opvp_questlog_singleton:quest(index);
 end

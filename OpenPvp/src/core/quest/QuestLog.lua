@@ -61,6 +61,18 @@ function opvp.QuestLog:poiMapId()
     return C_QuestLog.GetMapForQuestPOIs();
 end
 
+function opvp.QuestLog:pvpQuests()
+    local result = {};
+
+    for id, quest in pairs(self._quest_map) do
+        if quest:isPvp() == true then
+            table.insert(result, quest);
+        end
+    end
+
+    return result;
+end
+
 function opvp.QuestLog:quest(index)
     return self._quest_list:item(index);
 end
