@@ -202,8 +202,8 @@ function opvp.Quest:hyperlink()
     return opvp.str_else(GetQuestLink(self._id));
 end
 
-function opvp.Quest:icon()
-    local complete = self:isComplete();
+function opvp.Quest:icon(ignoreComplete)
+    local complete = ignoreComplete ~= true and self:isComplete() or false;
     local repeateable = self:isRepeatable();
 
     if self:isCampaign() == true then
