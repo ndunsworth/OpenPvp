@@ -106,16 +106,23 @@ function opvp.MatchManager:hasDampening()
     end
 end
 
+function opvp.MatchManager:inMatch()
+    return self._match ~= nil;
+end
+
+function opvp.MatchManager:isRated()
+    return (
+        self._match ~= nil and
+        self._match:isRated() == true
+    );
+end
+
 function opvp.MatchManager:isSimulation()
     return self._match_test:isSimulation();
 end
 
 function opvp.MatchManager:isTesting()
     return self._match_testing;
-end
-
-function opvp.MatchManager:inMatch()
-    return self._match ~= nil;
 end
 
 function opvp.MatchManager:match()

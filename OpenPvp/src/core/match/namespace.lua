@@ -86,6 +86,10 @@ function opvp.match.inMatch()
     return opvp_match_mgr_singleton:inMatch();
 end
 
+function opvp.match.isRated()
+    return opvp_match_mgr_singleton:isRated();
+end
+
 function opvp.match.isSimulation()
     return opvp_match_mgr_singleton:isSimulation();
 end
