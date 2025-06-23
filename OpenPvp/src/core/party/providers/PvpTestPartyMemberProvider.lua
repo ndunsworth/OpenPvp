@@ -33,8 +33,9 @@ opvp.PvpTestPartyMemberProvider = opvp.CreateClass(opvp.TestPartyMemberProvider)
 function opvp.PvpTestPartyMemberProvider:init(hasPlayer)
     opvp.TestPartyMemberProvider.init(self, hasPlayer);
 
-    self._match = nil;
+    self._match  = nil;
     self._tester = nil;
+    self._rating = 0;
 
     self.scoreUpdate = opvp.Signal("opvp.PvpTestPartyMemberProvider.scoreUpdate");
 end
@@ -85,8 +86,17 @@ function opvp.PvpTestPartyMemberProvider:_disconnectSignals()
 end
 
 function opvp.PvpTestPartyMemberProvider:_onConnected()
-    self._match = opvp.match.current();
+    self._match  = opvp.match.current();
     self._tester = opvp.match.manager():tester();
+    self._rating = 2400;
+
+    if self._match:isRated() == true then
+        local rating = self._match:bracket():rating();
+
+        if rating > 0 then
+            self._rating = rating;
+        end
+    end
 
     if self._match:isArena() == true then
         self._healers_max = 1;
@@ -133,8 +143,8 @@ end
 function opvp.PvpTestPartyMemberProvider:_updateMemberScore(member, rated)
     if rated == true then
         if member:isRatingKnown() == false then
-            local cr = math.random(2375, 2475);
-            local mmr = max(cr, math.random(2400, 2495));
+            local cr = math.random(max(0, self._rating - 100), self._rating + 75);
+            local mmr = max(cr, math.random(max(0, self._rating - 75), self._rating + 100));
 
             member:_setRating(cr, mmr);
         elseif self._match:isComplete() == true then
