@@ -543,6 +543,8 @@ end
 
 local opvp_seconds_fmt_lower = CreateFromMixins(SecondsFormatterMixin);
 local opvp_seconds_fmt_upper = CreateFromMixins(SecondsFormatterMixin);
+local opvp_days_fmt_lower = CreateFromMixins(SecondsFormatterMixin);
+local opvp_days_fmt_upper = CreateFromMixins(SecondsFormatterMixin);
 
 function opvp_seconds_fmt_lower:FormatZero(abbreviation, toLower)
     local minInterval = self:GetMinInterval(seconds);
@@ -554,6 +556,12 @@ end
 opvp_seconds_fmt_lower:Init(1, SecondsFormatter.Abbreviation.Truncate, false, true, true);
 opvp_seconds_fmt_upper:Init(1, SecondsFormatter.Abbreviation.Truncate, false, true, false);
 
+opvp_days_fmt_lower:Init(1, SecondsFormatter.Abbreviation.Truncate, false, true, true);
+opvp_days_fmt_upper:Init(1, SecondsFormatter.Abbreviation.Truncate, false, true, false);
+
+opvp_days_fmt_lower:SetMinInterval(SecondsFormatter.Interval.Days);
+opvp_days_fmt_upper:SetMinInterval(SecondsFormatter.Interval.Days);
+
 opvp.time = {};
 
 function opvp.time.formatSeconds(seconds, uppercase)
@@ -561,6 +569,14 @@ function opvp.time.formatSeconds(seconds, uppercase)
         return opvp_seconds_fmt_lower:Format(seconds);
     else
         return opvp_seconds_fmt_upper:Format(seconds);
+    end
+end
+
+function opvp.time.formatDays(seconds, uppercase)
+    if uppercase == true then
+        return opvp_days_fmt_lower:Format(seconds);
+    else
+        return opvp_days_fmt_upper:Format(seconds);
     end
 end
 
