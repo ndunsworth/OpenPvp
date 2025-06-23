@@ -35,6 +35,7 @@ src/core/base/AddonInitManager.lua
 src/core/base/CombatExitCallbackManager.lua
 src/core/base/Feature.lua
 src/core/base/state.lua
+src/core/base/calendar.lua
 
 src/locale/namespace.lua
 src/locale/deDE.lua
@@ -292,6 +293,7 @@ src/core/option/IntOption.lua
 src/core/option/LabelOption.lua
 src/core/option/LayoutOption.lua
 src/core/option/MatchTypeOption.lua
+src/core/option/StringMaskOption.lua
 src/core/option/RoleMaskOption.lua
 src/core/option/OptionCategory.lua
 src/core/option/RootOption.lua
