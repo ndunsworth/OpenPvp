@@ -91,6 +91,7 @@ function opvp.BitMaskOption:createWidget(name, parent)
     local checkbox;
     local width = 0;
     local height = 0;
+    local max_widths = {};
     local total_width = 0;
     local total_height = 0;
     local enabled = self:isEnabled();
@@ -118,6 +119,8 @@ function opvp.BitMaskOption:createWidget(name, parent)
 
         checkbox.text = frame:CreateFontString(nil, "OVERLAY", "OptionsFontHighlight");
 
+        checkbox.text:SetJustifyH("LEFT");
+
         checkbox.text:SetPoint("LEFT", checkbox, "RIGHT", 0);
 
         checkbox.text:SetText(self:labelForIndex(index));
@@ -129,6 +132,11 @@ function opvp.BitMaskOption:createWidget(name, parent)
             function(checkbox)
                 self:_setBits(flag, checkbox:GetChecked())
             end
+        );
+
+        max_widths[column] = max(
+            opvp.number_else(max_widths[column]),
+            checkbox.text:GetWidth()
         );
 
         width = width + checkbox:GetWidth() + checkbox.text:GetWidth();
@@ -155,6 +163,23 @@ function opvp.BitMaskOption:createWidget(name, parent)
                 column_frame:SetPoint("TOP", last_column_frame, "BOTTOM", 0, 0);
             end
 
+            column = 1;
+        else
+            column = column + 1;
+        end
+
+        index = index + 1;
+    end
+
+    index  = 1;
+    column = 1;
+
+    while index <= self._size do
+        checkbox = frame.checkboxes[index];
+
+        checkbox.text:SetWidth(max_widths[column]);
+
+        if column == self._columns or index == self._size then
             column = 1;
         else
             column = column + 1;
