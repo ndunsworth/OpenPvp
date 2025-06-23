@@ -41,6 +41,7 @@ opvp.Option.LAYOUT     =  8;
 opvp.Option.MATCH_TYPE =  9;
 opvp.Option.ROLEMASK   = 10;
 opvp.Option.STRING     = 11;
+opvp.Option.STRINGMASK = 12;
 
 opvp.Option.DISABLED               = bit.lshift(1, 0);
 opvp.Option.DONT_SAVE_FLAG         = bit.lshift(1, 1);

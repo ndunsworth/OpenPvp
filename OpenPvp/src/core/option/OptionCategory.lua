@@ -39,7 +39,8 @@ local OPT_TYPES = {
     [opvp.Option.LAYOUT]     = opvp.LayoutOption,
     [opvp.Option.MATCH_TYPE] = opvp.MatchTypeOption,
     [opvp.Option.ROLEMASK]   = opvp.RoleMaskOption,
-    [opvp.Option.STRING]     = opvp.StringOption
+    [opvp.Option.STRING]     = opvp.StringOption,
+    [opvp.Option.STRINGMASK] = opvp.StringMaskOption
 };
 
 opvp.OptionCategory = opvp.CreateClass(opvp.Option);
