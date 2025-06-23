@@ -282,6 +282,27 @@ function opvp.party.utils.size(category)
     return GetNumGroupMembers(category);
 end
 
+function opvp.party.utils.sortMembersByName(members)
+    local result;
+
+    if opvp.IsInstance(members, opvp.List) == true then
+        result = opvp.List:createFromArray(members:items());
+    elseif opvp.is_table(members) == true then
+        result = opvp.List:createCopyFromArray(members);
+    else
+        --~ ERROR!
+        return {};
+    end
+
+    result:sort(
+        function(a, b)
+            return a:nameOrId() < b:nameOrId();
+        end
+    );
+
+    return result:release();
+end
+
 function opvp.party.utils.sortMembersByRole(members, lookup)
     local result;
 
