@@ -67,6 +67,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.ENIGMA_CRUCIBLE);
     table.insert(opvp.Map.MAPS, opvp.Map.ENIGMA_CRUCIBLE);
 end
 

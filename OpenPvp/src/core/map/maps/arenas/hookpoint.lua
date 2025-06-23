@@ -64,6 +64,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.HOOK_POINT);
     table.insert(opvp.Map.MAPS, opvp.Map.HOOK_POINT);
 end
 

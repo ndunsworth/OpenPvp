@@ -62,6 +62,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.EMPYREAN_DOMAIN);
     table.insert(opvp.Map.MAPS, opvp.Map.EMPYREAN_DOMAIN);
 end
 

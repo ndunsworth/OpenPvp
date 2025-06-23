@@ -65,6 +65,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.RUINS_OF_LORDAERON);
     table.insert(opvp.Map.MAPS, opvp.Map.RUINS_OF_LORDAERON);
 end
 

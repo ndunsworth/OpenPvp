@@ -57,6 +57,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.ASHAMANES_FALL);
     table.insert(opvp.Map.MAPS, opvp.Map.ASHAMANES_FALL);
 end
 

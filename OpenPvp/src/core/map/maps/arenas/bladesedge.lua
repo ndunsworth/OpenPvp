@@ -59,6 +59,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.BLADES_EDGE_ARENA);
     table.insert(opvp.Map.MAPS, opvp.Map.BLADES_EDGE_ARENA);
 end
 

@@ -61,6 +61,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.TOL_VIRON_ARENA);
     table.insert(opvp.Map.MAPS, opvp.Map.TOL_VIRON_ARENA);
 end
 

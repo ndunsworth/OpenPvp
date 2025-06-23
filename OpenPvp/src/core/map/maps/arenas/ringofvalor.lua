@@ -56,6 +56,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.THE_RING_OF_VALOR);
     table.insert(opvp.Map.MAPS, opvp.Map.THE_RING_OF_VALOR);
 end
 

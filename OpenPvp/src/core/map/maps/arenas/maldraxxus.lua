@@ -61,6 +61,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.MALDRAXXUS_ARENA);
     table.insert(opvp.Map.MAPS, opvp.Map.MALDRAXXUS_ARENA);
 end
 

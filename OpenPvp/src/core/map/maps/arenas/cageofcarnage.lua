@@ -66,6 +66,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.CAGE_OF_CARNAGE);
     table.insert(opvp.Map.MAPS, opvp.Map.CAGE_OF_CARNAGE);
 end
 

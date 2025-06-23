@@ -30,7 +30,9 @@ local opvp = OpenPvp;
 
 opvp.Map = opvp.CreateClass();
 
-opvp.Map.MAPS = {};
+opvp.Map.ARENA_MAPS        = {};
+opvp.Map.BATTLEGROUND_MAPS = {};
+opvp.Map.MAPS              = {};
 
 function opvp.Map:createFromCurrentInstance()
     if IsInInstance() == true then

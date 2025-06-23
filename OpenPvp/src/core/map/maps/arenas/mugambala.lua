@@ -67,6 +67,7 @@ local function init_map()
         }
     );
 
+    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.MUGAMBALA_ARENA);
     table.insert(opvp.Map.MAPS, opvp.Map.MUGAMBALA_ARENA);
 end
 
