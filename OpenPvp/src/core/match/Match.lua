@@ -374,6 +374,15 @@ function opvp.Match:outcome()
     return self._outcome;
 end
 
+function opvp.Match:players()
+    local result = opvp.List();
+
+    result:merge(self:teammates());
+    result:merge(self:opponents());
+
+    return result:release();
+end
+
 function opvp.Match:playerTeam()
     return nil;
 end
