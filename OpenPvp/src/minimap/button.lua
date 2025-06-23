@@ -28,27 +28,6 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local opvp_calendar_pvp_event_ids = opvp.List:createFromArray(
-    {
-         561, -- Arena Skirmish Bonus Event
-         563, -- Battleground Bonus Event
-         666, -- PvP Brawl: Arathi Blizzard
-        1452, -- PvP Brawl: Battleground Blitz
-        1120, -- PvP Brawl: Classic Ashran
-        1235, -- PvP Brawl: Comp Stomp
-        1047, -- PvP Brawl: Cooking Impossible
-         702, -- PvP Brawl: Deep Six
-        1240, -- PvP Brawl: Deepwind Dunk
-         663, -- PvP Brawl: Gravity Lapse
-         667, -- PvP Brawl: Packed House
-        1233, -- PvP Brawl: Shado-Pan Showdown
-        1311, -- PvP Brawl: Solo Shuffle
-         662, -- PvP Brawl: Southshore vs. Tarren Mill
-        1170, -- PvP Brawl: Temple of Hotmogu
-         664  -- PvP Brawl: Warsong Scramble
-    }
-);
-
 local opvp_role_markup_lookup = {
     [opvp.RoleType.NONE]   = opvp.utils.textureAtlastMarkup("UI-LFG-RoleIcon-Leader", 16, 16),
     [opvp.RoleType.DPS]    = opvp.utils.textureAtlastMarkup("UI-LFG-RoleIcon-DPS", 16, 16),
@@ -115,44 +94,6 @@ function opvp.private.OpenPvpMiniMapButton:init()
     );
 
     self:setVisible(opvp.options.interface.minimap.enabled:value());
-end
-
-function opvp.private.OpenPvpMiniMapButton:addEventsTooltip(tooltip)
-    local timespec = C_DateAndTime.GetCurrentCalendarTime();
-
-    local events_size = C_Calendar.GetNumDayEvents(0, timespec.monthDay);
-
-    if events_size == 0 then
-        return;
-    end
-
-    tooltip:AddLine(opvp.strs.EVENTS);
-
-    timespec.day = timespec.monthDay;
-
-    local cur_time = time(timespec);
-    local event_info;
-
-    for n=1, events_size do
-        event_info = C_Calendar.GetDayEvent(0, timespec.monthDay, n);
-
-        if (
-            event_info.eventType == Enum.CalendarEventType.PvP or
-            opvp_calendar_pvp_event_ids:contains(event_info.eventID) == true
-        ) then
-            event_info.endTime.day = event_info.endTime.monthDay;
-
-            local expires = time(event_info.endTime) - cur_time;
-
-            if expires > 0 then
-                tooltip:AddDoubleLine(
-                    "    " .. event_info.title,
-                    opvp.time.formatSeconds(expires),
-                    1, 1, 1
-                );
-            end
-        end
-    end
 end
 
 function opvp.private.OpenPvpMiniMapButton:addCurrencyTooltip(tooltip)
@@ -263,6 +204,362 @@ function opvp.private.OpenPvpMiniMapButton:addHonorableKillsTooltip(tooltip)
     );
 end
 
+function opvp.private.OpenPvpMiniMapButton:addEventsTooltip(tooltip)
+    local epoch    = GetServerTime();
+    local timespec = C_DateAndTime.GetCalendarTimeFromEpoch(epoch * 1000000);
+    local events   = opvp.calendar.findPvpEvents(timespec);
+
+    if #events == 0 then
+        return;
+    end
+
+    tooltip:AddLine(opvp.strs.EVENTS);
+
+    for n, event in ipairs(events) do
+        tooltip:AddDoubleLine(
+            "    " .. event.title,
+            opvp.time.formatSeconds(time(event.endTime) - epoch),
+            1, 1, 1
+        );
+    end
+end
+
+function opvp.private.OpenPvpMiniMapButton:addMatchTooltip(tooltip)
+    local match = opvp.match.current();
+
+    if match == nil then
+        return;
+    end
+
+    self:addMatchInfoTooltip(match, tooltip);
+
+    if match:isBattleground() == true then
+        self:addMatchBattlegroundTooltip(match, tooltip);
+    elseif match:isShuffle() == true then
+        self:addMatchShuffleTooltip(match, tooltip);
+    end
+end
+
+function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, tooltip)
+    local players = opvp.party.utils.sortMembersByRole(match:teammates());
+    local cls, spec;
+
+    if #players > 0 then
+        tooltip:AddLine(
+            string.format(
+                "%s (cr=%d | mmr=%d)",
+                opvp.strs.MATCH_FRIENDLY_TEAM,
+                match:playerTeam():cr(),
+                match:playerTeam():mmr()
+            )
+        );
+
+        for i, member in pairs(players) do
+            cls = member:classInfo();
+            spec = member:specInfo();
+
+            if match:isActive() == true then
+                tooltip:AddDoubleLine(
+                    string.format(
+                        "    %s %s",
+                        spec:role():icon(),
+                        member:nameOrId(true)
+                    ),
+                    string.format(
+                        "kb=%d | deaths=%d | dmg=%s | healing=%s",
+                        member:kills(),
+                        member:deaths(),
+                        opvp.utils.numberToStringShort(member:damage(), 1),
+                        opvp.utils.numberToStringShort(member:healing(), 1)
+                    ),
+                    1, 1, 1
+                );
+            else
+                tooltip:AddDoubleLine(
+                    string.format(
+                        "    %s %s",
+                        spec:role():icon(),
+                        member:nameOrId(true)
+                    ),
+                    string.format(
+                        "cr=%d | mmr=%d",
+                        member:cr(),
+                        member:mmr()
+                    ),
+                    1, 1, 1
+                );
+            end
+        end
+    end
+
+    players = opvp.party.utils.sortMembersByRole(match:opponents());
+
+    if #players > 0 then
+        tooltip:AddLine(
+            string.format(
+                "%s (cr=%d | mmr=%d)",
+                opvp.strs.MATCH_HOSTILE_TEAM,
+                match:opponentTeam():cr(),
+                match:opponentTeam():mmr()
+            )
+        );
+
+        for i, member in pairs(players) do
+            cls = member:classInfo();
+            spec = member:specInfo();
+
+            if match:isActive() == true then
+                tooltip:AddDoubleLine(
+                    string.format(
+                        "    %s %s",
+                        spec:role():icon(),
+                        member:nameOrId(true)
+                    ),
+                    string.format(
+                        "kb=%d | deaths=%d | dmg=%s | healing=%s",
+                        member:kills(),
+                        member:deaths(),
+                        opvp.utils.numberToStringShort(member:damage(), 1),
+                        opvp.utils.numberToStringShort(member:healing(), 1)
+                    ),
+                    1, 1, 1
+                );
+            else
+                tooltip:AddDoubleLine(
+                    string.format(
+                        "    %s %s",
+                        spec:role():icon(),
+                        member:nameOrId(true)
+                    ),
+                    string.format(
+                        "cr=%d | mmr=%d",
+                        member:cr(),
+                        member:mmr()
+                    ),
+                    1, 1, 1
+                );
+            end
+        end
+    end
+end
+
+function opvp.private.OpenPvpMiniMapButton:addMatchInfoTooltip(match, tooltip)
+    tooltip:AddLine(match:name());
+
+    tooltip:AddDoubleLine(
+        "    Map",
+        match:mapName(),
+        1,1,1
+    );
+
+    tooltip:AddDoubleLine(
+        "    Elapsed",
+        opvp.time.formatSeconds(match:timeElapsed()),
+        1,1,1
+    );
+end
+
+function opvp.private.OpenPvpMiniMapButton:addMatchShuffleTooltip(match, tooltip)
+    local players = opvp.party.utils.sortMembersByRole(match:players());
+
+    if #players == 0 then
+        return;
+    end
+
+    tooltip:AddLine(opvp.strs.PLAYERS);
+
+    local cls, spec, stat, wins;
+
+    for i, member in pairs(players) do
+        cls = member:classInfo();
+        spec = member:specInfo();
+        stat = member:findStatById(opvp.PvpStatId.ROUNDS_WON);
+
+        if stat ~= nil then
+            wins = stat:value();
+        else
+            wins = 0;
+        end
+
+        tooltip:AddDoubleLine(
+            string.format(
+                "    %s %s",
+                spec:role():icon(),
+                member:nameOrId(true)
+            ),
+            string.format(
+                "wins=%d | cr=%d | mmr=%d",
+                wins,
+                member:cr(),
+                member:mmr()
+            ),
+            1, 1, 1
+        );
+    end
+end
+
+function opvp.private.OpenPvpMiniMapButton:addEventsUpcomingTooltip(tooltip)
+    local events    = opvp.List();
+    local epoch     = GetServerTime();
+    local timespec  = C_DateAndTime.AdjustTimeByDays(
+        C_DateAndTime.GetCalendarTimeFromEpoch(
+            C_DateAndTime.GetWeeklyResetStartTime() * 1000000
+        ),
+        7
+    );
+
+    for i=1, 3 do
+        events:merge(opvp.calendar.findPvpEvents(timespec));
+
+        timespec = C_DateAndTime.AdjustTimeByDays(timespec, 7);
+    end
+
+    tooltip:AddLine(opvp.strs.EVENTS_UPCOMING);
+
+    local event;
+    local start_time;
+
+    for n=1, events:size() do
+        event = events:item(n);
+
+        start_time = time(event.startTime);
+
+        if start_time - epoch < 86400 then
+            tooltip:AddDoubleLine(
+                "    " .. event.title,
+                opvp.time.formatSeconds(start_time - epoch),
+                1, 1, 1
+            );
+        else
+            tooltip:AddDoubleLine(
+                "    " .. event.title,
+                opvp.time.formatDays(start_time - epoch),
+                1, 1, 1
+            );
+        end
+    end
+end
+
+function opvp.private.OpenPvpMiniMapButton:addQueueInfoTooltip(tooltip)
+    --~ tooltip:AddLine(" ");
+    tooltip:AddLine(opvp.strs.QUEUES);
+
+    local queues = {
+        opvp.Queue.RANDOM_BATTLEGROUND,
+        opvp.Queue.RANDOM_EPIC_BATTLEGROUND,
+        opvp.Queue.ARENA_SKIRMISH,
+        opvp.Queue.BRAWL,
+        opvp.Queue.EVENT,
+        opvp.Queue.SHUFFLE,
+        opvp.Queue.BLITZ,
+        opvp.Queue.ARENA_2V2,
+        opvp.Queue.ARENA_3V3,
+        opvp.Queue.RATED_BATTLEGROUND
+    };
+
+    local queue;
+
+    local check_yes = opvp.utils.textureAtlastMarkup("common-icon-checkmark", 14, 14);
+    local check_no = opvp.utils.textureAtlastMarkup("common-icon-redx", 14, 14);
+
+    for n=1, #queues do
+        queue = queues[n];
+
+        if queue:canQueue() == true then
+            local bonuses = opvp_role_markups(queue);
+
+            tooltip:AddDoubleLine(
+                "    " .. queue:name(),
+                string.format(
+                    "%s%s",
+                    bonuses,
+                    queue:hasDailyWin() and check_yes or check_no
+                ),
+                1, 1, 1
+            );
+        end
+    end
+end
+
+function opvp.private.OpenPvpMiniMapButton:addQuestsTooltip(tooltip)
+    local quests = opvp.questlog.pvpQuests();
+
+    if #quests == 0 then
+        return;
+    end
+
+    tooltip:AddLine(opvp.strs.QUESTS);
+
+    local extra;
+
+    for _, quest in pairs(quests) do
+        if quest:isDaily() == true then
+            extra = " | " .. opvp.time.formatSeconds(C_DateAndTime.GetSecondsUntilDailyReset());
+        elseif quest:isWeekly() == true or quest:classification() == opvp.QuestClassification.RECURRING then
+            extra = " | " .. opvp.time.formatSeconds(C_DateAndTime.GetSecondsUntilWeeklyReset());
+        else
+            extra = "";
+        end
+
+        tooltip:AddDoubleLine(
+            string.format(
+                "    %s %s",
+                opvp.utils.textureAtlastMarkup(quest:icon(true), 14, 14),
+                quest:name()
+            ),
+            string.format(
+                "%s%s",
+                quest:isComplete() == true and opvp.strs.QUEST_READY_FOR_TURN_IN or opvp.strs.IN_PROGRESS,
+                extra
+            ),
+            1, 1, 1
+        );
+    end
+end
+
+function opvp.private.OpenPvpMiniMapButton:addQueueBonusTooltip(tooltip)
+
+    local queues = {
+        opvp.Queue.RANDOM_BATTLEGROUND,
+        opvp.Queue.RANDOM_EPIC_BATTLEGROUND,
+        opvp.Queue.ARENA_SKIRMISH,
+        opvp.Queue.BRAWL,
+        opvp.Queue.EVENT,
+        opvp.Queue.SHUFFLE,
+        opvp.Queue.BLITZ
+    };
+
+    local queue;
+
+    local has_line = false;
+
+    local check_yes = opvp.utils.textureAtlastMarkup("common-icon-checkmark", 14, 14);
+    local check_no = opvp.utils.textureAtlastMarkup("common-icon-redx", 14, 14);
+
+    for n=1, #queues do
+        queue = queues[n];
+
+        if queue:canQueue() == true then
+            local roles = opvp_role_markups(queue);
+
+            if roles ~= "" then
+                if has_line == false then
+                    --~ tooltip:AddLine(" ");
+                    tooltip:AddLine(opvp.strs.QUEUE_BONUSES);
+
+                    has_line = true;
+                end
+
+                tooltip:AddDoubleLine(
+                    "    " .. queue:name(),
+                    roles,
+                    1, 1, 1
+                );
+            end
+        end
+    end
+end
+
 function opvp.private.OpenPvpMiniMapButton:addRatingTooltip(tooltip)
     --~ local season_active = opvp.season.isActive();
 
@@ -308,47 +605,6 @@ function opvp.private.OpenPvpMiniMapButton:addRatingTooltip(tooltip)
                     opvp.utils.textureIdMarkup(bracket:tierIcon(), 16, 16),
                     info.rating,
                     100 * avg
-                ),
-                1, 1, 1
-            );
-        end
-    end
-end
-
-function opvp.private.OpenPvpMiniMapButton:addQueueInfoTooltip(tooltip)
-    --~ tooltip:AddLine(" ");
-    tooltip:AddLine(opvp.strs.QUEUES);
-
-    local queues = {
-        opvp.Queue.RANDOM_BATTLEGROUND,
-        opvp.Queue.RANDOM_EPIC_BATTLEGROUND,
-        opvp.Queue.ARENA_SKIRMISH,
-        opvp.Queue.BRAWL,
-        opvp.Queue.EVENT,
-        opvp.Queue.SHUFFLE,
-        opvp.Queue.BLITZ,
-        opvp.Queue.ARENA_2V2,
-        opvp.Queue.ARENA_3V3,
-        opvp.Queue.RATED_BATTLEGROUND
-    };
-
-    local queue;
-
-    local check_yes = opvp.utils.textureAtlastMarkup("common-icon-checkmark", 14, 14);
-    local check_no = opvp.utils.textureAtlastMarkup("common-icon-redx", 14, 14);
-
-    for n=1, #queues do
-        queue = queues[n];
-
-        if queue:canQueue() == true then
-            local bonuses = opvp_role_markups(queue);
-
-            tooltip:AddDoubleLine(
-                "    " .. queue:name(),
-                string.format(
-                    "%s%s",
-                    bonuses,
-                    queue:hasDailyWin() and check_yes or check_no
                 ),
                 1, 1, 1
             );
@@ -414,81 +670,52 @@ function opvp.private.OpenPvpMiniMapButton:addSeasonRewardTooltip(tooltip)
     --~ GameTooltip_ShowProgressBar(tooltip, 0, req, prog, FormatPercentage(prog / req));
 end
 
-function opvp.private.OpenPvpMiniMapButton:addQuestsTooltip(tooltip)
-    local pvp_quests = {};
+function opvp.private.OpenPvpMiniMapButton:findPvpCalendarEvents(refTime)
+    local cal_state = C_Calendar.GetMonthInfo();
 
-    for _, quest in pairs(opvp.questlog.quests()) do
-        if quest:isPvp() == true then
-            table.insert(pvp_quests, quest);
-        end
+    C_Calendar.SetAbsMonth(refTime.month, refTime.year);
+
+    local events       = {};
+    local events_size  = C_Calendar.GetNumDayEvents(0, refTime.monthDay);
+
+    if events_size == 0 then
+        C_Calendar.SetAbsMonth(cal_state.month, cal_state.year);
+
+        return events;
     end
 
-    if #pvp_quests == 0 then
-        return;
-    end
+    refTime.day = refTime.monthDay;
 
-    tooltip:AddLine(opvp.strs.QUESTS);
+    local event_info;
 
-    local extra;
+    for n=1, events_size do
+        event_info = C_Calendar.GetDayEvent(0, refTime.monthDay, n);
 
-    for _, quest in pairs(pvp_quests) do
-        if quest:isDaily() == true then
-            extra = " " .. opvp.time.formatSeconds(C_DateAndTime.GetSecondsUntilDailyReset());
-        elseif quest:isWeekly() == true or quest:classification() == opvp.QuestClassification.RECURRING then
-            extra = " " .. opvp.time.formatSeconds(C_DateAndTime.GetSecondsUntilWeeklyReset());
-        else
-            extra = "";
-        end
+        if (
+            event_info ~= nil and (
+                event_info.eventType == Enum.CalendarEventType.PvP or
+                opvp_calendar_pvp_event_ids:contains(event_info.eventID) == true
+            )
+        ) then
+            event_info.startTime.day = event_info.startTime.monthDay;
+            event_info.endTime.day   = event_info.endTime.monthDay;
 
-        tooltip:AddDoubleLine(
-            "    " .. quest:name(),
-            opvp.utils.textureAtlastMarkup(quest:icon(), 14, 14) .. extra,
-            1, 1, 1
-        );
-    end
-end
-
-function opvp.private.OpenPvpMiniMapButton:addQueueBonusTooltip(tooltip)
-
-    local queues = {
-        opvp.Queue.RANDOM_BATTLEGROUND,
-        opvp.Queue.RANDOM_EPIC_BATTLEGROUND,
-        opvp.Queue.ARENA_SKIRMISH,
-        opvp.Queue.BRAWL,
-        opvp.Queue.EVENT,
-        opvp.Queue.SHUFFLE,
-        opvp.Queue.BLITZ
-    };
-
-    local queue;
-
-    local has_line = false;
-
-    local check_yes = opvp.utils.textureAtlastMarkup("common-icon-checkmark", 14, 14);
-    local check_no = opvp.utils.textureAtlastMarkup("common-icon-redx", 14, 14);
-
-    for n=1, #queues do
-        queue = queues[n];
-
-        if queue:canQueue() == true then
-            local roles = opvp_role_markups(queue);
-
-            if roles ~= "" then
-                if has_line == false then
-                    --~ tooltip:AddLine(" ");
-                    tooltip:AddLine(opvp.strs.QUEUE_BONUSES);
-
-                    has_line = true;
-                end
-
-                tooltip:AddDoubleLine(
-                    "    " .. queue:name(),
-                    roles,
-                    1, 1, 1
+            if time(event_info.endTime) > time(refTime) then
+                table.insert(
+                    events,
+                    {
+                        event_info.title,
+                        time(event_info.startTime),
+                        time(event_info.endTime)
+                    }
                 );
             end
         end
     end
+
+    C_Calendar.SetAbsMonth(cal_state.month, cal_state.year);
+
+    return events;
 end
 
 function opvp.private.OpenPvpMiniMapButton:_onEnter(frame)
@@ -529,32 +756,45 @@ function opvp.private.OpenPvpMiniMapButton:_onEnter(frame)
         )
     );
 
-    if opvp.options.interface.minimap.tooltip.rating:value() == true then
-        self:addRatingTooltip(GameTooltip);
-    end
+    if (
+        opvp.options.interface.minimap.tooltip.scoreboard:value() == true and
+        opvp.match.inMatch() == true and
+        --~ opvp.match.isTesting() == false and
+        opvp.match.isRated() == true
+    ) then
+        self:addMatchTooltip(GameTooltip);
+    else
+        if opvp.options.interface.minimap.tooltip.rating:value() == true then
+            self:addRatingTooltip(GameTooltip);
+        end
 
-    if opvp.options.interface.minimap.tooltip.seasonReward:value() == true then
-        self:addSeasonRewardTooltip(GameTooltip);
-    end
+        if opvp.options.interface.minimap.tooltip.seasonReward:value() == true then
+            self:addSeasonRewardTooltip(GameTooltip);
+        end
 
-    if opvp.options.interface.minimap.tooltip.events:value() == true then
-        self:addEventsTooltip(GameTooltip);
-    end;
+        if opvp.options.interface.minimap.tooltip.events:value() == true then
+            self:addEventsTooltip(GameTooltip);
+        end;
 
-    if opvp.options.interface.minimap.tooltip.quests:value() == true then
-        self:addQuestsTooltip(GameTooltip);
-    end;
+        if opvp.options.interface.minimap.tooltip.eventsUpcoming:value() == true then
+            self:addEventsUpcomingTooltip(GameTooltip);
+        end;
 
-    if opvp.options.interface.minimap.tooltip.queueInfo:value() == true then
-        self:addQueueInfoTooltip(GameTooltip);
-    end
+        if opvp.options.interface.minimap.tooltip.quests:value() == true then
+            self:addQuestsTooltip(GameTooltip);
+        end;
 
-    if opvp.options.interface.minimap.tooltip.hks:value() == true then
-        self:addHonorableKillsTooltip(GameTooltip);
-    end
+        if opvp.options.interface.minimap.tooltip.queueInfo:value() == true then
+            self:addQueueInfoTooltip(GameTooltip);
+        end
 
-    if opvp.options.interface.minimap.tooltip.currency:value() == true then
-        self:addCurrencyTooltip(GameTooltip);
+        if opvp.options.interface.minimap.tooltip.hks:value() == true then
+            self:addHonorableKillsTooltip(GameTooltip);
+        end
+
+        if opvp.options.interface.minimap.tooltip.currency:value() == true then
+            self:addCurrencyTooltip(GameTooltip);
+        end
     end
 
     GameTooltip:Show();

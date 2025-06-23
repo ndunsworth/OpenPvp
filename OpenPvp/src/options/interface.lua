@@ -175,6 +175,22 @@ local function opvp_options_interface_init()
         true
     );
 
+    opvp.options.interface.minimap.tooltip.eventsUpcoming = opvp.options.interface.minimap.tooltip.category:createOption(
+        opvp.Option.BOOL,
+        "EventsUpcoming",
+        "Events Upcoming",
+        "",
+        true
+    );
+
+    opvp.options.interface.minimap.tooltip.scoreboard = opvp.options.interface.minimap.tooltip.category:createOption(
+        opvp.Option.BOOL,
+        "Scoreboard",
+        "Match Scoreboard",
+        "During a rated pvp match the tooltip will display scoreboard information.\n\nInformation displayed will change depending on match type and state.",
+        true
+    );
+
     opvp.options.interface.minimap.tooltip.quests = opvp.options.interface.minimap.tooltip.category:createOption(
         opvp.Option.BOOL,
         "Quests",
