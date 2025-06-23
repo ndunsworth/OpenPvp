@@ -29,6 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local DIALOG_SOUNDKIT_IDS = {
+    [opvp.InstanceId.CAGE_OF_CARNAGE] = {},
     [opvp.InstanceId.ENIGMA_ARENA] = {
         188954,
         188955,
@@ -81,6 +82,22 @@ local DIALOG_SOUNDKIT_IDS = {
 };
 
 local DIALOG_FILEDATA_IDS = {
+    [opvp.InstanceId.CAGE_OF_CARNAGE] = {
+        6177849,
+        6177850,
+        6177851,
+        6177852,
+        6177853,
+        6177854,
+        6177855,
+        6177857,
+        6177858,
+        6177859,
+        6177860,
+        6177861,
+        6177862,
+        6177863
+    },
     [opvp.InstanceId.ENIGMA_ARENA] = {
         4291841,
         4291842,
@@ -142,7 +159,7 @@ function opvp.private.MuteNPCDialogMatchFeature:init(option)
     self._map_ids     = opvp.List:createFromArray(
         {
             opvp.InstanceId.CAGE_OF_CARNAGE,
-            opvp.InstanceId.ENIGMA_ARENA,
+            --~ opvp.InstanceId.ENIGMA_ARENA,
             opvp.InstanceId.ENIGMA_CRUCIBLE,
             opvp.InstanceId.HOOK_POINT,
             opvp.InstanceId.MUGAMBALA_ARENA,
@@ -167,7 +184,10 @@ function opvp.private.MuteNPCDialogMatchFeature:isValidMap(map)
     return (
         map ~= nil and
         opvp.IsInstance(map, opvp.Map) == true and
-        self._map_ids:contains(map:instanceId()) == true
+        self._map_ids:contains(map:instanceId()) == true and
+        self:option():isBitEnabled(
+            self._map_ids:index(map:instanceId())
+        ) == true
     );
 end
 
@@ -181,7 +201,7 @@ function opvp.private.MuteNPCDialogMatchFeature:isValidMatch(match)
 end
 
 function opvp.private.MuteNPCDialogMatchFeature:isFeatureEnabled()
-    return self:option():value();
+    return self:option():isZero();
 end
 
 function opvp.private.MuteNPCDialogMatchFeature:_onFeatureActivated()
@@ -221,7 +241,7 @@ local opvp_mute_npc_dialog_match_feature;
 
 local function opvp_mute_npc_dialog_match_feature_ctor()
     opvp_mute_npc_dialog_match_feature = opvp.private.MuteNPCDialogMatchFeature(
-        opvp.options.match.general.muteNPCDialog
+        opvp.options.match.muteNPCDialog.maps
     );
 end
 

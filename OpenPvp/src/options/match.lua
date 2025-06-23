@@ -85,34 +85,35 @@ Setting the message to an empty string will disable the auto reply.
         true
     );
 
-    opvp.options.match.general.muteNPCDialog = opvp.options.match.general.category:createOption(
-        opvp.Option.BOOL,
-        "MuteNPCDialog",
-        "Mute NPC Dialog",
-[[
-Adds NPC dialog for select Arenas to the games MuteSoundFile list and filters chat messages.
+    --~ opvp.options.match.general.muteNPCDialog = opvp.options.match.general.category:createOption(
+        --~ opvp.Option.BOOL,
+        --~ "MuteNPCDialog",
+        --~ "Mute NPC Dialog",
+--~ [[
+--~ Adds NPC dialog for select Arenas to the games MuteSoundFile list and filters chat messages.
 
-Does not alter the volume of any sound channels.
+--~ Does not alter the volume of any sound channels.
 
-Arenas:
-    - Enigma Crucible
-    - Hook Point
-    - Mugambala Arena
-    - Nokhudon Proving Grounds
+--~ Arenas:
+    --~ - Cage of Carnage
+    --~ - Enigma Crucible
+    --~ - Hook Point
+    --~ - Mugambala Arena
+    --~ - Nokhudon Proving Grounds
 
-Chat Messages Filtered:
-    - CHAT_MSG_RAID_BOSS_EMOTE
-    - CHAT_MSG_MONSTER_EMOTE
-    - CHAT_MSG_MONSTER_PARTY
-    - CHAT_MSG_MONSTER_SAY
-    - CHAT_MSG_MONSTER_WHISPER
-    - CHAT_MSG_MONSTER_YELL
-    - CHAT_MSG_RAID_BOSS_EMOTE
-    - CHAT_MSG_RAID_BOSS_WHISPER
-]]
-    ,
-        true
-    );
+--~ Chat Messages Filtered:
+    --~ - CHAT_MSG_RAID_BOSS_EMOTE
+    --~ - CHAT_MSG_MONSTER_EMOTE
+    --~ - CHAT_MSG_MONSTER_PARTY
+    --~ - CHAT_MSG_MONSTER_SAY
+    --~ - CHAT_MSG_MONSTER_WHISPER
+    --~ - CHAT_MSG_MONSTER_YELL
+    --~ - CHAT_MSG_RAID_BOSS_EMOTE
+    --~ - CHAT_MSG_RAID_BOSS_WHISPER
+--~ ]]
+    --~ ,
+        --~ true
+    --~ );
 
     opvp.options.match.general.screenshotShuffleRound = opvp.options.match.general.category:createOption(
         opvp.Option.BOOL,
@@ -490,6 +491,29 @@ Selecting "- none -" will disable this feature for Battlegrounds.
     opvp.options.match.frames.hideFocusFrame:setFlags(
         opvp.Option.LOCKED_DURING_COMBAT,
         true
+    );
+
+    opvp.options.match.muteNPCDialog = {};
+
+    opvp.options.match.muteNPCDialog.category = opvp.options.match.category:createCategory(
+        "MuteNPCDialog",
+        "Mute NPC Dialog"
+    );
+
+    opvp.options.match.muteNPCDialog.maps = opvp.options.match.muteNPCDialog.category:createOption(
+        opvp.Option.STRINGMASK,
+        "Maps",
+        "",
+        "",
+        {
+            opvp.Map.CAGE_OF_CARNAGE:name(),
+            opvp.Map.ENIGMA_CRUCIBLE:name(),
+            opvp.Map.HOOK_POINT:name(),
+            opvp.Map.MUGAMBALA_ARENA:name(),
+            opvp.Map.NOKHUDON_PROVING_GROUNDS:name()
+        },
+        3,
+        0
     );
 end
 
