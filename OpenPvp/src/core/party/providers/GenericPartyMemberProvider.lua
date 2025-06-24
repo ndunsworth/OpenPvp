@@ -112,6 +112,10 @@ function opvp.GenericPartyMemberProvider:findMembersWithAura(spell)
     return members;
 end
 
+function opvp.GenericPartyMemberProvider:ignoreRosterUpdates()
+    return false;
+end
+
 function opvp.GenericPartyMemberProvider:isCombatLogEnabled()
     return true;
 end
@@ -964,6 +968,10 @@ function opvp.GenericPartyMemberProvider:_onUnitSpellCastSucceeded(unitId, castI
 end
 
 function opvp.GenericPartyMemberProvider:_scanMembers()
+    if self:ignoreRosterUpdates() == true then
+        return;
+    end
+
     self:_onRosterBeginUpdate();
 
     local party_count     = self:_categorySize();
