@@ -90,7 +90,7 @@ function opvp.BattlegroundMatchDescription:init(map, mask)
             team_size = 10;
         end
     else
-        team_size = opvp_bg_map_team_size_lookup[map:id()];
+        team_size = opvp_bg_map_team_size_lookup[map:instanceId()];
 
         if team_size == nil then
             team_size = 15;
