@@ -293,8 +293,10 @@ local function opvp_init_test_slash_cmds()
     test_cmd:setDefaultCommad("arena");
 
     local arena_maps = {
-        opvp.Map.DALARAN_SEWERS,
+        opvp.Map.CAGE_OF_CARNAGE,
         opvp.Map.ENIGMA_CRUCIBLE,
+        opvp.Map.MALDRAXXUS_ARENA,
+        opvp.Map.MUGAMBALA_ARENA,
         opvp.Map.NAGRAND_ARENA,
         opvp.Map.NOKHUDON_PROVING_GROUNDS,
         opvp.Map.RUINS_OF_LORDAERON,
