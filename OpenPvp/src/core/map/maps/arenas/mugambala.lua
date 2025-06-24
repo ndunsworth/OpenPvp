@@ -33,8 +33,25 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.MUGAMBALA_ARENA,
             map_id       = 0,
-            music        = 117041,
-            music_intro  = 117042,
+            --~ music    = 117041, Some patch turned this into a noop
+            --~ music_intro  = 117042, Some patch turned this into a noop
+            music        = {
+                sound_type=opvp.SoundType.Synthetic,
+                data={
+                    {data=2146244, sound_type=opvp.SoundType.FileData},
+                    {data=2146245, sound_type=opvp.SoundType.FileData},
+                    {data=2146247, sound_type=opvp.SoundType.FileData},
+                    {data=2146251, sound_type=opvp.SoundType.FileData},
+                    {data=2146252, sound_type=opvp.SoundType.FileData}
+                }
+            },
+            music_intro  = {
+                sound_type=opvp.SoundType.Synthetic,
+                data={
+                    {data=2146245, sound_type=opvp.SoundType.FileData},
+                    {data=2146246, sound_type=opvp.SoundType.FileData}
+                }
+            },
             stats        = {
                 [opvp.PvpStatId.ROUNDS_WON] = 1013
             },

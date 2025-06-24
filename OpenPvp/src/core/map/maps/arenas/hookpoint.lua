@@ -33,8 +33,25 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.HOOK_POINT,
             map_id       = 0,
-            music        = 114680,
-            music_intro  = 117039,
+            --~ music        = 114680, Some patch turned this into a noop
+            --~ music_intro  = 117039, Some patch turned this into a noop
+            music        = {
+                sound_type=opvp.SoundType.Synthetic,
+                data={
+                    {data=2143491, sound_type=opvp.SoundType.FileData},
+                    {data=2143492, sound_type=opvp.SoundType.FileData},
+                    {data=2143493, sound_type=opvp.SoundType.FileData},
+                    {data=2143494, sound_type=opvp.SoundType.FileData},
+                    {data=2146593, sound_type=opvp.SoundType.FileData}
+                }
+            },
+            music_intro  = {
+                sound_type=opvp.SoundType.Synthetic,
+                data={
+                    {data=2143489, sound_type=opvp.SoundType.FileData},
+                    {data=2143495, sound_type=opvp.SoundType.FileData}
+                }
+            },
             widgets      = {
                 {
                     widget_set  = 1,
