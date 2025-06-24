@@ -159,7 +159,6 @@ function opvp.private.MuteNPCDialogMatchFeature:init(option)
     self._map_ids     = opvp.List:createFromArray(
         {
             opvp.InstanceId.CAGE_OF_CARNAGE,
-            --~ opvp.InstanceId.ENIGMA_ARENA,
             opvp.InstanceId.ENIGMA_CRUCIBLE,
             opvp.InstanceId.HOOK_POINT,
             opvp.InstanceId.MUGAMBALA_ARENA,
@@ -201,7 +200,7 @@ function opvp.private.MuteNPCDialogMatchFeature:isValidMatch(match)
 end
 
 function opvp.private.MuteNPCDialogMatchFeature:isFeatureEnabled()
-    return self:option():isZero();
+    return self:option():isZero() == false;
 end
 
 function opvp.private.MuteNPCDialogMatchFeature:_onFeatureActivated()
