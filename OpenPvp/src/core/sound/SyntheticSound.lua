@@ -36,7 +36,7 @@ function opvp.SyntheticSound:createFromData(data)
     for n=1, #data do
         table.insert(
             sounds,
-            opvp.Sound:createFromData(data[n].id, data[n].sound_type)
+            opvp.Sound:createFromData(data[n].data, data[n].sound_type)
         );
     end
 
