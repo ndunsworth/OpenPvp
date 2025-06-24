@@ -163,6 +163,14 @@ function opvp.PvpPartyMember:_reset(mask)
     end
 end
 
+function opvp.PvpPartyMember:_setDamage(value)
+    self._damage = opvp.number_else(value);
+end
+
+function opvp.PvpPartyMember:_setHealing(value)
+    self._healing = opvp.number_else(value);
+end
+
 function opvp.PvpPartyMember:_setRating(cr, mmr)
     self:_setFlags(
         opvp.PartyMember.RATING_CURRENT_FLAG,
