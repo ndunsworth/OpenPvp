@@ -34,6 +34,7 @@ function opvp.private.EnemyTrinketUsedSoundEffect:init()
     opvp.OptionFeature.init(self, opvp.options.audio.soundeffect.pvp.enemyTrinket);
 
     self._monitor_connected = false;
+    self._ignore_range      = opvp.player.isRace(opvp.DRACTHYR);
 end
 
 function opvp.private.EnemyTrinketUsedSoundEffect:isFeatureEnabled()
@@ -79,7 +80,10 @@ end
 function opvp.private.EnemyTrinketUsedSoundEffect:_onMatchTrinketUsed(member, spellId, timestamp)
     if (
         member:isHostile() == true and
-        --~ member:inRange() == true and
+        (
+            self._ignore_range == true or
+            member:inRange() == true
+        ) and
         member:isRaceKnown() == true and
         member:isSexKnown() == true
     ) then
