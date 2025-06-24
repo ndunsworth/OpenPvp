@@ -30,32 +30,70 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local opvp_gate_open_mapid_lookup = {
-    [opvp.InstanceId.ALTERAC_VALLEY]            = 25521,
-    [opvp.InstanceId.ARATHI_BASIN]              = 25528,
-    [opvp.InstanceId.ARATHI_BASIN_CLASSIC]      = 25528,
-    [opvp.InstanceId.ARATHI_BASIN_COMP_STOMP]   = 25528,
-    [opvp.InstanceId.ARATHI_BASIN_WINTER]       = 25528,
-    [opvp.InstanceId.DALARAN_SEWERS]            = 15196,
-    [opvp.InstanceId.NAGRAND_ARENA]             = 79311,
-    [opvp.InstanceId.RUINS_OF_LORDAERON]        = 11735,
-    [opvp.InstanceId.THE_ROBODROME]             = 134872,
-    [opvp.InstanceId.TIGERS_PEAK]               = 28727,
-    [opvp.InstanceId.TWIN_PEAKS]                = 20559, --~ Alliance 20557
-    [opvp.InstanceId.WARSONG_GULCH]             = 43158,
-    [opvp.InstanceId.WARSONG_GULCH_CLASSIC]     = 43158
+    [opvp.InstanceId.ALTERAC_VALLEY]            = opvp.SoundKitSound(25521),
+    [opvp.InstanceId.ARATHI_BASIN]              = opvp.SoundKitSound(25528),
+    [opvp.InstanceId.ARATHI_BASIN_CLASSIC]      = opvp.SoundKitSound(25528),
+    [opvp.InstanceId.ARATHI_BASIN_COMP_STOMP]   = opvp.SoundKitSound(25528),
+    [opvp.InstanceId.ARATHI_BASIN_WINTER]       = opvp.SoundKitSound(25528),
+    [opvp.InstanceId.CAGE_OF_CARNAGE]           = opvp.SyntheticSound(
+                                                    {
+                                                        opvp.FileDataSound(6324470),
+                                                        opvp.FileDataSound(6324472),
+                                                        opvp.FileDataSound(6324474),
+                                                        opvp.FileDataSound(6324476),
+                                                        opvp.FileDataSound(6324478),
+                                                        opvp.FileDataSound(6324480),
+                                                        opvp.FileDataSound(6324482),
+                                                        opvp.FileDataSound(6324484),
+                                                        opvp.FileDataSound(6324486),
+                                                        opvp.FileDataSound(6324488),
+                                                        opvp.FileDataSound(6324490),
+                                                        opvp.FileDataSound(6324492),
+                                                        opvp.FileDataSound(6324494)
+                                                    }
+                                                ),
+    [opvp.InstanceId.DALARAN_SEWERS]            = opvp.SoundKitSound(15196),
+    [opvp.InstanceId.NAGRAND_ARENA]             = opvp.SoundKitSound(79311),
+    [opvp.InstanceId.RUINS_OF_LORDAERON]        = opvp.SoundKitSound(11735),
+    [opvp.InstanceId.THE_ROBODROME]             = opvp.SoundKitSound(134872),
+    [opvp.InstanceId.TIGERS_PEAK]               = opvp.SoundKitSound(28727),
+    [opvp.InstanceId.TWIN_PEAKS]                = opvp.SoundKitSound(20559), --~ Alliance 20557
+    [opvp.InstanceId.WARSONG_GULCH]             = opvp.SoundKitSound(43158),
+    [opvp.InstanceId.WARSONG_GULCH_CLASSIC]     = opvp.SoundKitSound(43158)
+};
+
+local opvp_gate_close_lose_sfx_mapid_lookup = {
+    [opvp.InstanceId.CAGE_OF_CARNAGE]           = opvp.SyntheticSound(
+                                                    {
+                                                        opvp.FileDataSound(6390491),
+                                                        opvp.FileDataSound(6390493),
+                                                        opvp.FileDataSound(6390495),
+                                                        opvp.FileDataSound(6390497),
+                                                        opvp.FileDataSound(6390499)
+                                                    }
+                                                )
+};
+
+local opvp_gate_close_win_sfx_mapid_lookup = {
+    [opvp.InstanceId.CAGE_OF_CARNAGE]           = opvp.SyntheticSound(
+                                                    {
+                                                        opvp.FileDataSound(6390463),
+                                                        opvp.FileDataSound(6390465),
+                                                        opvp.FileDataSound(6390467),
+                                                        opvp.FileDataSound(6390469),
+                                                        opvp.FileDataSound(6390471)
+                                                    }
+                                                )
 };
 
 local opvp_gate_close_mapid_lookup = {
-    [opvp.InstanceId.RUINS_OF_LORDAERON]        = 11736
-};
-
-local opvp_gate_close_mapid_lookup = {
-    [opvp.InstanceId.NAGRAND_ARENA]             = 79310,
-    [opvp.InstanceId.THE_ROBODROME]             = 134874,
-    [opvp.InstanceId.TIGERS_PEAK]               = 28726,
-    [opvp.InstanceId.TWIN_PEAKS]                = 20558, --~ Alliance 20556
-    [opvp.InstanceId.WARSONG_GULCH]             = 43159,
-    [opvp.InstanceId.WARSONG_GULCH_CLASSIC]     = 43159
+    [opvp.InstanceId.NAGRAND_ARENA]             = opvp.SoundKitSound(79310),
+    [opvp.InstanceId.RUINS_OF_LORDAERON]        = opvp.SoundKitSound(11736),
+    [opvp.InstanceId.THE_ROBODROME]             = opvp.SoundKitSound(134874),
+    [opvp.InstanceId.TIGERS_PEAK]               = opvp.SoundKitSound(28726),
+    [opvp.InstanceId.TWIN_PEAKS]                = opvp.SoundKitSound(20558), --~ Alliance 20556
+    [opvp.InstanceId.WARSONG_GULCH]             = opvp.SoundKitSound(43159),
+    [opvp.InstanceId.WARSONG_GULCH_CLASSIC]     = opvp.SoundKitSound(43159)
 };
 
 opvp.MatchTestType = {
@@ -353,6 +391,8 @@ function opvp.MatchTest:_onMatchRoundActive()
         self._match:statusNext()
     );
 
+    opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();
+
     self:_startMusic();
 end
 
@@ -451,10 +491,25 @@ function opvp.MatchTest:_onMatchRoundComplete()
 
     if (
         is_sim == true and
-        self._match:isShuffle() == true and
         self:isSimulationFxEnabled() == true
     ) then
-        PlaySound(888, opvp.SoundChannel.SFX);
+        local sfx_sound;
+
+        if losing_team ~= nil then
+            if losing_team:hasPlayer() == true then
+                 sfx_sound = opvp_gate_close_lose_sfx_mapid_lookup[self._match:map():id()];
+            else
+                 sfx_sound = opvp_gate_close_win_sfx_mapid_lookup[self._match:map():id()];
+            end
+        end
+
+        if sfx_sound ~= nil then
+            sfx_sound:play(opvp.SoundChannel.SFX);
+        end
+
+        if self._match:isShuffle() == true then
+            PlaySound(888, opvp.SoundChannel.SFX);
+        end
     end
 end
 
@@ -515,7 +570,7 @@ function opvp.MatchTest:_onMatchRoundWarmupTimer()
             local sound = opvp_gate_open_mapid_lookup[self._match:map():instanceId()];
 
             if sound ~= nil then
-                PlaySound(sound, opvp.SoundChannel.SFX);
+                sound:play(opvp.SoundChannel.SFX);
             end
         end
 
