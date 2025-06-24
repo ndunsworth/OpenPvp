@@ -290,11 +290,29 @@ function opvp.Unit:isPlayer()
 end
 
 function opvp.Unit:isRace(race)
-    return self._race:id() == race;
+    if opvp.is_number(race) == true then
+        return self._race:id() == race;
+    elseif opvp.IsInstance(race, opvp.Race) then
+        return self._race == race;
+    else
+        return false;
+    end
+end
+
+function opvp.Unit:isSex(sex)
+    return self._sex == sex;
 end
 
 function opvp.Unit:level()
     return opvp.unit.level(self:id());
+end
+
+function opvp.Unit:mapId()
+    return opvp.unit.mapId(self:id());
+end
+
+function opvp.Unit:mapPosition()
+    return opvp.unit.mapPosition(self:id());
 end
 
 function opvp.Unit:name()
@@ -493,6 +511,17 @@ end
 
 function opvp.unit.level(unitId)
     return UnitLevel(unitId);
+end
+
+function opvp.unit.mapId(unitId)
+    return C_Map.GetBestMapForUnit(unitId);
+end
+
+function opvp.unit.mapPosition(unitId)
+    return C_Map.GetPlayerMapPosition(
+        opvp.unit.mapId(unitId),
+        unitId
+    );
 end
 
 function opvp.unit.name(unitId)
