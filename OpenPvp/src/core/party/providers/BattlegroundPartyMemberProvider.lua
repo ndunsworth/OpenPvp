@@ -115,7 +115,7 @@ function opvp.BattlegroundPartyMemberProvider:_onConnected()
 end
 
 function opvp.BattlegroundPartyMemberProvider:_onDisconnected()
-    opvp.PvpPartyMemberProvider._onConnected(self);
+    opvp.PvpPartyMemberProvider._onDisconnected(self);
 
     --~ self._timer:stop();
 
