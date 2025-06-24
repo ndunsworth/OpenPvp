@@ -197,7 +197,7 @@ function opvp.private.PartyPriv:_onMemberPvpTrinketUpdate(member, mask)
 end
 
 function opvp.private.PartyPriv:_onMemberPvpTrinketUsed(member, spellId, timestamp)
-    oopvp.party.memberTrinket:emit(member, spellId, timestamp);
+    opvp.party.memberTrinket:emit(member, spellId, timestamp);
 end
 
 function opvp.private.PartyPriv:_onPartyTypeChanged(newPartyType, oldPartyType)
