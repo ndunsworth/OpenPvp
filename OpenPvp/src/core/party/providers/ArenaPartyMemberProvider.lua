@@ -183,7 +183,7 @@ function opvp.ArenaPartyMemberProvider:_onOpponentSpecUpdate()
 end
 
 function opvp.ArenaPartyMemberProvider:_onOpponentUpdate(unitId, reason)
-    if reason ~= "seen" then
+    if reason ~= opvp.ArenaUnitUpdateReason.SEEN then
         return;
     end
 

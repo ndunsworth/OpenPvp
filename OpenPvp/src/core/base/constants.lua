@@ -124,6 +124,13 @@ opvp.Affiliation = {
     HOSTILE  = bit.lshift(1, 2)
 };
 
+opvp.ArenaUnitUpdateReason = {
+    CLEARED   = "cleared",
+    DESTROYED = "destroyed",
+    SEEN      = "seen",
+    UNSEEN    = "unseen"
+};
+
 opvp.NEUTRAL  = 0;
 opvp.ALLIANCE = 1;
 opvp.HORDE    = 2;
