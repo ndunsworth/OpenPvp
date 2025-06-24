@@ -64,7 +64,7 @@ end
 
 function opvp.SoundKitSound:play(channel, noDupes)
     if self._id == 0 then
-        return;
+        return false, nil;
     end
 
     if channel == nil then
