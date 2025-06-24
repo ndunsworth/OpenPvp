@@ -94,6 +94,8 @@ function opvp.Player:init()
     self.inFFAChanged           = opvp.Signal("opvp.Player.inFFAChanged");
     self.inSanctuaryChanged     = opvp.Signal("opvp.Player.inSanctuaryChanged");
     self.levelUp                = opvp.Signal("opvp.Player.levelUp");
+    self.mapAreaChanged         = opvp.Signal("opvp.Player.mapAreaChanged");
+    self.mapZoneChanged         = opvp.Signal("opvp.Player.mapZoneChanged");
     self.pvpTalentsChanged      = opvp.Signal("opvp.Player.pvpTalentsChanged");
     self.pvpTrinketUpdate       = opvp.Signal("opvp.Player.pvpTrinketUpdate");
     self.pvpTrinketRacialUpdate = opvp.Signal("opvp.Player.pvpTrinketRacialUpdate");
@@ -221,6 +223,11 @@ function opvp.Player:init()
     opvp.event.ZONE_CHANGED_NEW_AREA:connect(
         self,
         opvp.Player._onZoneChangedNewArea
+    );
+
+    opvp.event.ZONE_CHANGED_INDOORS:connect(
+        self,
+        opvp.Player._onZoneChangedIndoors
     );
 end
 
@@ -386,21 +393,6 @@ function opvp.Player:logHonorStats()
         opvp.currency.honor(),
         opvp.currency.honorMax()
     );
-end
-
-function opvp.Player:mapId()
-    return C_Map.GetBestMapForUnit(opvp.unitid.PLAYER);
-end
-
-function opvp.Player:mapPosition()
-    return C_Map.GetPlayerMapPosition(
-        C_Map.GetBestMapForUnit(opvp.unitid.PLAYER),
-        opvp.unitid.PLAYER
-    );
-end
-
-function opvp.Player:mapId()
-    return C_Map.GetBestMapForUnit(opvp.unitid.PLAYER);
 end
 
 function opvp.Player:parties()
@@ -703,12 +695,19 @@ function opvp.Player:_onZoneChanged()
     if old_ffa ~= self._in_ffa then
         self.inFFAChanged:emit(self._in_ffa);
     end
+
+    self.mapAreaChanged:emit(GetSubZoneText());
+end
+
+function opvp.Player:_onZoneChangedIndoors()
+    self.mapAreaChanged:emit(GetSubZoneText());
 end
 
 function opvp.Player:_onZoneChangedNewArea()
+    self.mapZoneChanged:emit(GetZoneText());
+
     self:_onZoneChanged();
 end
-
 
 function opvp.Player:_pvpTrinketCheck()
     if self._pvp_trinket_slot == -1 then
@@ -974,6 +973,10 @@ end
 
 function opvp.player.isResting(race)
     return opvp_user_player_singleton:isResting(race);
+end
+
+function opvp.player.isSex(sex)
+    return opvp_user_player_singleton:isSex(sex);
 end
 
 function opvp.player.isWarModeEnabled()
