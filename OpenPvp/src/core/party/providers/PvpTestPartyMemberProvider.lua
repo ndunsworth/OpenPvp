@@ -147,6 +147,14 @@ function opvp.PvpTestPartyMemberProvider:_updateMemberScore(member, rated)
             local mmr = max(cr, math.random(max(0, self._rating - 75), self._rating + 100));
 
             member:_setRating(cr, mmr);
+        elseif self._match:isActive() == true then
+            if member:role():isDps() == true then
+                member:_setDamage(math.random(35, 120) * 1000000);
+                member:_setHealing(math.random(5, 25) * 1000000);
+            else
+                member:_setDamage(math.random(10, 28) * 1000000);
+                member:_setHealing(math.random(80, 320) * 1000000);
+            end
         elseif self._match:isComplete() == true then
             if member:team() == self._tester:outcomeTeam() then
                 local gain = math.random(10, 40);
