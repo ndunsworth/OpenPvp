@@ -77,6 +77,10 @@ function opvp.BitMaskOption:init(key, name, description, size, columns, value)
     self.changed = opvp.Signal(key);
 end
 
+function opvp.BitMaskOption:columns()
+    return self._columns;
+end
+
 function opvp.BitMaskOption:createWidget(name, parent)
     local frame = CreateFrame("Frame", name, parent);
 
@@ -202,7 +206,7 @@ function opvp.BitMaskOption:fromScript(data)
         --~ opvp.to_string(data)
     --~ );
 
-    self:setBits(data);
+    self:set(data);
 end
 
 function opvp.BitMaskOption:index(mask)
@@ -239,6 +243,12 @@ end
 
 function opvp.BitMaskOption:maskAll()
     return self._mask_all;
+end
+
+function opvp.BitMaskOption:set(mask)
+    self._mask = 0;
+
+    self:setBits(mask, true);
 end
 
 function opvp.BitMaskOption:setBits(mask, state)
