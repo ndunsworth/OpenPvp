@@ -79,15 +79,15 @@ opvp.Emote.DEFEAT = opvp.Emote(
             },
             { --~ LIGHTFORGED_DRAENEI
                 female_id = {
-                    {id=1835545, sound_type=opvp.SoundType.FileData},
-                    {id=1835546, sound_type=opvp.SoundType.FileData},
-                    {id=1835547, sound_type=opvp.SoundType.FileData}
+                    {data=1835545, sound_type=opvp.SoundType.FileData},
+                    {data=1835546, sound_type=opvp.SoundType.FileData},
+                    {data=1835547, sound_type=opvp.SoundType.FileData}
                 },
                 female_id_type = opvp.SoundType.Synthetic,
                 male_id = {
-                    {id=1835640, sound_type=opvp.SoundType.FileData},
-                    {id=1835642, sound_type=opvp.SoundType.FileData},
-                    {id=1835643, sound_type=opvp.SoundType.FileData}
+                    {data=1835640, sound_type=opvp.SoundType.FileData},
+                    {data=1835642, sound_type=opvp.SoundType.FileData},
+                    {data=1835643, sound_type=opvp.SoundType.FileData}
                 },
                 male_id_type = opvp.SoundType.Synthetic
             },
@@ -129,15 +129,15 @@ opvp.Emote.DEFEAT = opvp.Emote(
             },
             { --~ VOID_ELF
                 female_id = {
-                    {id=1835947, sound_type=opvp.SoundType.FileData},
-                    {id=1835948, sound_type=opvp.SoundType.FileData},
-                    {id=1835949, sound_type=opvp.SoundType.FileData}
+                    {data=1835947, sound_type=opvp.SoundType.FileData},
+                    {data=1835948, sound_type=opvp.SoundType.FileData},
+                    {data=1835949, sound_type=opvp.SoundType.FileData}
                 },
                 female_id_type = opvp.SoundType.Synthetic,
                 male_id = {
-                    {id=1836049, sound_type=opvp.SoundType.FileData},
-                    {id=1836050, sound_type=opvp.SoundType.FileData},
-                    {id=1836051, sound_type=opvp.SoundType.FileData}
+                    {data=1836049, sound_type=opvp.SoundType.FileData},
+                    {data=1836050, sound_type=opvp.SoundType.FileData},
+                    {data=1836051, sound_type=opvp.SoundType.FileData}
                 },
                 male_id_type = opvp.SoundType.Synthetic
             },

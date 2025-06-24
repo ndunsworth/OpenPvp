@@ -91,9 +91,9 @@ opvp.Emote.CHARGE = opvp.Emote(
             },
             { --~ NIGHT_ELF
                 female_id = {
-                    {id=541023, sound_type=opvp.SoundType.FileData},
-                    {id=541025, sound_type=opvp.SoundType.FileData},
-                    {id=541026, sound_type=opvp.SoundType.FileData}
+                    {data=541023, sound_type=opvp.SoundType.FileData},
+                    {data=541025, sound_type=opvp.SoundType.FileData},
+                    {data=541026, sound_type=opvp.SoundType.FileData}
                 },
                 female_id_type = opvp.SoundType.Synthetic,
                 male_id     = 2742
@@ -116,8 +116,8 @@ opvp.Emote.CHARGE = opvp.Emote(
             },
             { --~ TROLL
                 female_id = {
-                    {id=543254, sound_type=opvp.SoundType.FileData},
-                    {id=543266, sound_type=opvp.SoundType.FileData}
+                    {data=543254, sound_type=opvp.SoundType.FileData},
+                    {data=543266, sound_type=opvp.SoundType.FileData}
                 },
                 female_id_type = opvp.SoundType.Synthetic,
                 male_id     = 2852
