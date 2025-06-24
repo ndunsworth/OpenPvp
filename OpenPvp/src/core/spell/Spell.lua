@@ -307,6 +307,10 @@ function opvp.Spell:description()
     return C_Spell.GetSpellDescription(self._id);
 end
 
+function opvp.Spell:exist()
+    return C_Spell.DoesSpellExist(self._id);
+end
+
 function opvp.Spell:hasRange()
     return C_Spell.SpellHasRange(self._id);
 end
