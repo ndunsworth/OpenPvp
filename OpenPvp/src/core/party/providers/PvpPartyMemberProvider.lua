@@ -57,6 +57,19 @@ function opvp.PvpPartyMemberProvider:isArena()
     );
 end
 
+function opvp.PvpPartyMemberProvider:ignoreRosterUpdates()
+    return (
+        self._match ~= nil and
+        (
+            self._match:isComplete() or
+            (
+                self._match:isRoundBased() == true and
+                self._match:isRoundComplete() == true
+            )
+        )
+    );
+end
+
 function opvp.PvpPartyMemberProvider:isRated()
     return (
         self._match ~= nil and
