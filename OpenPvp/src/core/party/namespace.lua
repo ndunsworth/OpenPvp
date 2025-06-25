@@ -441,6 +441,20 @@ local function opvp_party_mgr_singleton_ctor()
 
     opvp_party_mgr_singleton:setAuraServerEnabled(true);
 
+    local aura_server = opvp_party_mgr_singleton:auraServer();
+
+    aura_server.started:connect(
+        function()
+            opvp.printDebug("AuraServer - Initialized");
+        end
+    );
+
+    aura_server.stopped:connect(
+        function()
+            opvp.printDebug("AuraServer - Shutdown");
+        end
+    );
+
     opvp.printDebug("PartyManager - Initialized");
 end
 
