@@ -124,6 +124,10 @@ opvp.Affiliation = {
     HOSTILE  = bit.lshift(1, 2)
 };
 
+opvp.Affiliation.FRIENDLY_AND_HOSTILE = bit.bor(opvp.Affiliation.FRIENDLY, opvp.Affiliation.HOSTILE);
+opvp.Affiliation.FRIENDLY_AND_NEUTRAL = bit.bor(opvp.Affiliation.FRIENDLY, opvp.Affiliation.NEUTRAL);
+opvp.Affiliation.HOSTILE_AND_NEUTRAL  = bit.bor(opvp.Affiliation.HOSTILE, opvp.Affiliation.NEUTRAL);
+
 opvp.ArenaUnitUpdateReason = {
     CLEARED   = "cleared",
     DESTROYED = "destroyed",
