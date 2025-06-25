@@ -28,4 +28,8 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.Faction.ALLIANCE = opvp.Faction(opvp.ALLIANCE, PLAYER_FACTION_GROUP[PLAYER_FACTION_GROUP.Alliance]);
+opvp.Faction.ALLIANCE = opvp.Faction(
+    opvp.ALLIANCE,
+    PLAYER_FACTION_GROUP[PLAYER_FACTION_GROUP.Alliance],
+    PLAYER_FACTION_COLORS[PLAYER_FACTION_GROUP.Alliance]
+);

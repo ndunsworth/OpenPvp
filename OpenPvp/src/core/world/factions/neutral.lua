@@ -28,4 +28,8 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.Faction.NEUTRAL = opvp.Faction(opvp.NEUTRAL, C_CreatureInfo.GetFactionInfo(24).name);
+opvp.Faction.NEUTRAL = opvp.Faction(
+    opvp.NEUTRAL,
+    C_CreatureInfo.GetFactionInfo(24).name,
+    NEUTRAL_STATUS_COLOR
+);

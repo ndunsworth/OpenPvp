@@ -28,4 +28,8 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.Faction.HORDE = opvp.Faction(opvp.HORDE, PLAYER_FACTION_GROUP[PLAYER_FACTION_GROUP.Horde]);
+opvp.Faction.HORDE = opvp.Faction(
+    opvp.HORDE,
+    PLAYER_FACTION_GROUP[PLAYER_FACTION_GROUP.Horde],
+    PLAYER_FACTION_COLORS[PLAYER_FACTION_GROUP.Horde]
+);
