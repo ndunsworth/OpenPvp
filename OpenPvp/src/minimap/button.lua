@@ -241,14 +241,40 @@ function opvp.private.OpenPvpMiniMapButton:addMatchTooltip(tooltip)
 end
 
 function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, tooltip)
-    local players = opvp.party.utils.sortMembersByRole(match:teammates());
-    local cls, spec;
+    local players, cls, spec;
+
+    if match:isActive() == true then
+        players = opvp.party.utils.sortMembersByRoleStat(match:teammates());
+    else
+        players = opvp.party.utils.sortMembersByRole(match:teammates());
+    end
+
+    local active = match:isActive();
+    local complete = match:isComplete();
+
+    local player_team_name;
+    local enemy_team_name;
+
+    --~ talenttree-horde-cornerlogo
+    --~ talenttree-alliance-cornerlogo
+    --~ QuestPortraitIcon-Horde
+    --~ QuestPortraitIcon-Alliance
+    --~ charcreatetest-logo-alliance
+    --~ charcreatetest-logo-horde
+
+    if opvp.match.faction() == opvp.ALLIANCE or (match:isTest() == true and opvp.player.isAlliance()) then
+        player_team_name = opvp.Faction.ALLIANCE:colorString(opvp.Faction.ALLIANCE:name());
+        enemy_team_name  = opvp.Faction.HORDE:colorString(opvp.Faction.HORDE:name());
+    else
+        player_team_name = opvp.Faction.HORDE:colorString(opvp.Faction.HORDE:name());
+        enemy_team_name  = opvp.Faction.ALLIANCE:colorString(opvp.Faction.ALLIANCE:name());
+    end
 
     if #players > 0 then
         tooltip:AddLine(
             string.format(
                 "%s (cr=%d | mmr=%d)",
-                opvp.strs.MATCH_FRIENDLY_TEAM,
+                player_team_name,
                 match:playerTeam():cr(),
                 match:playerTeam():mmr()
             )
@@ -258,7 +284,7 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
             cls = member:classInfo();
             spec = member:specInfo();
 
-            if match:isActive() == true then
+            if active == true then
                 tooltip:AddDoubleLine(
                     string.format(
                         "    %s %s",
@@ -274,6 +300,40 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
                     ),
                     1, 1, 1
                 );
+            elseif complete == true then
+                tooltip:AddDoubleLine(
+                    string.format(
+                        "    %s %s",
+                        spec:role():icon(),
+                        member:nameOrId(true)
+                    ),
+                    string.format(
+                        "cr=%d/%d/%s | mmr=%d/%d/%s",
+                        member:cr(),
+                        member:cr() + member:crGain(),
+                        opvp.utils.colorNumberPosNeg(
+                            member:crGain(),
+                            0.25,
+                            1,
+                            0.25,
+                            1,
+                            0.25,
+                            0.25
+                        ),
+                        member:mmr(),
+                        member:mmr() + member:mmrGain(),
+                        opvp.utils.colorNumberPosNeg(
+                            member:mmrGain(),
+                            0.25,
+                            1,
+                            0.25,
+                            1,
+                            0.25,
+                            0.25
+                        )
+                    ),
+                    1, 1, 1
+                );
             else
                 tooltip:AddDoubleLine(
                     string.format(
@@ -282,9 +342,8 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
                         member:nameOrId(true)
                     ),
                     string.format(
-                        "cr=%d | mmr=%d",
-                        member:cr(),
-                        member:mmr()
+                        "cr=%d",
+                        member:cr()
                     ),
                     1, 1, 1
                 );
@@ -292,13 +351,17 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
         end
     end
 
-    players = opvp.party.utils.sortMembersByRole(match:opponents());
+    if match:isActive() == true then
+        players = opvp.party.utils.sortMembersByRoleStat(match:opponents());
+    else
+        players = opvp.party.utils.sortMembersByRole(match:opponents());
+    end
 
     if #players > 0 then
         tooltip:AddLine(
             string.format(
                 "%s (cr=%d | mmr=%d)",
-                opvp.strs.MATCH_HOSTILE_TEAM,
+                enemy_team_name,
                 match:opponentTeam():cr(),
                 match:opponentTeam():mmr()
             )
@@ -308,7 +371,7 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
             cls = member:classInfo();
             spec = member:specInfo();
 
-            if match:isActive() == true then
+            if active == true then
                 tooltip:AddDoubleLine(
                     string.format(
                         "    %s %s",
@@ -324,6 +387,40 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
                     ),
                     1, 1, 1
                 );
+            elseif complete == true then
+                tooltip:AddDoubleLine(
+                    string.format(
+                        "    %s %s",
+                        spec:role():icon(),
+                        member:nameOrId(true)
+                    ),
+                    string.format(
+                        "cr=%d/%d/%s | mmr=%d/%d/%s",
+                        member:cr(),
+                        member:cr() + member:crGain(),
+                        opvp.utils.colorNumberPosNeg(
+                            member:crGain(),
+                            0.25,
+                            1,
+                            0.25,
+                            1,
+                            0.25,
+                            0.25
+                        ),
+                        member:mmr(),
+                        member:mmr() + member:mmrGain(),
+                        opvp.utils.colorNumberPosNeg(
+                            member:mmrGain(),
+                            0.25,
+                            1,
+                            0.25,
+                            1,
+                            0.25,
+                            0.25
+                        )
+                    ),
+                    1, 1, 1
+                );
             else
                 tooltip:AddDoubleLine(
                     string.format(
@@ -332,9 +429,8 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
                         member:nameOrId(true)
                     ),
                     string.format(
-                        "cr=%d | mmr=%d",
-                        member:cr(),
-                        member:mmr()
+                        "cr=%d",
+                        member:cr()
                     ),
                     1, 1, 1
                 );
@@ -344,19 +440,24 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
 end
 
 function opvp.private.OpenPvpMiniMapButton:addMatchInfoTooltip(match, tooltip)
-    tooltip:AddLine(match:name());
-
-    tooltip:AddDoubleLine(
-        "    Map",
-        match:mapName(),
-        1,1,1
+    tooltip:AddLine(
+        string.format(
+            "%s (%s)",
+            match:name(),
+            match:mapName()
+        )
     );
 
-    tooltip:AddDoubleLine(
-        "    Elapsed",
-        opvp.time.formatSeconds(match:timeElapsed()),
-        1,1,1
-    );
+    if match:isBattleground() == true then
+        tooltip:AddLine(
+            string.gsub(
+                match:map():descriptionPvpLong(),
+                "-",
+                "    -"
+            ),
+            1, 1, 1
+        );
+    end
 end
 
 function opvp.private.OpenPvpMiniMapButton:addMatchShuffleTooltip(match, tooltip)
@@ -408,7 +509,15 @@ function opvp.private.OpenPvpMiniMapButton:addEventsUpcomingTooltip(tooltip)
         7
     );
 
-    for i=1, 3 do
+    local max_index;
+
+    if (C_DateAndTime.GetWeeklyResetStartTime() + (86400 * 7)) - epoch < (86400 * 2) then
+        max_index = 3;
+    else
+        max_index = 2;
+    end
+
+    for i=1, max_index do
         events:merge(opvp.calendar.findPvpEvents(timespec));
 
         timespec = C_DateAndTime.AdjustTimeByDays(timespec, 7);
