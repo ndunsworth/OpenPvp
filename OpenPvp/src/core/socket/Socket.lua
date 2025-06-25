@@ -78,7 +78,7 @@ local opvp_addon_send_msg_status_lookup = {
     [Enum.SendAddonMessageResult.GeneralError + 1]              = opvp.SocketError.GENERAL_ERROR
 };
 
-opvp.Socket = opvp.CreateClass();
+opvp.Socket = opvp.CreateClass(opvp.Object);
 
 function opvp.Socket:encodeFrom(data)
     return C_EncodingUtil:DecodeBase64(data);
@@ -88,7 +88,13 @@ function opvp.Socket:encodeTo(data)
     return C_EncodingUtil:EncodeBase64(data);
 end
 
+function opvp.Socket:__del__()
+    self:disconnect();
+end
+
 function opvp.Socket:init(prefix)
+    opvp.Object.init(self);
+
     self._prefix    = ""
     self._connected = false;
     self._compress  = true;

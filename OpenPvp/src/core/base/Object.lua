@@ -28,38 +28,25 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.CombatLogConnection = opvp.CreateClass(opvp.Object);
+opvp.Object = opvp.CreateClass();
 
-function opvp.CombatLogConnection:__del__()
-    self:disconnect();
-end
-
-function opvp.CombatLogConnection:init()
-    opvp.Object.init(self);
-
-    self._connected = false;
-end
-
-function opvp.CombatLogConnection:connect()
-    if self._connected == false then
-        self._connected = opvp.CombatLogServer:instance():_addConnection(self);
-    end
-
-    return self._connected;
-end
-
-function opvp.CombatLogConnection:disconnect()
-    if self._connected == true then
-        opvp.CombatLogServer:instance():_removeConnection(self);
-
-        self._connected = false;
-    end
-end
-
-function opvp.CombatLogConnection:event(event)
+function opvp.Object:__del__()
 
 end
 
-function opvp.CombatLogConnection:isConnected()
-    return self._connected;
+function opvp.Object:init(name)
+    self.__dtor = newproxy(true);
+
+    --~ This will corrupt wows memory if run on a reload.
+    --~ The UI will go all nuts with graphical glitches lol
+
+    --~ At first opvp.EventRegistrySignal doing a full disconnect during
+    --~ logout would hard crash the client. Disabling full signal
+    --~ disconnects resolved the issue however as __del__ was rolled out
+    --~ the graphical glitch issue popped up.
+    getmetatable(self.__dtor).__gc = function()
+                                        if opvp.system.isLogout() == false then
+                                            self:__del__()
+                                        end
+                                      end
 end

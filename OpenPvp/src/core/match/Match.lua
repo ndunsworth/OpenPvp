@@ -114,7 +114,7 @@ local opvp_round_warmup_countdown_msg_lookup = {
     [15]  = opvp.strs.MATCH_ROUND_STARTS_COUNTDOWN_15
 };
 
-opvp.Match = opvp.CreateClass();
+opvp.Match = opvp.CreateClass(opvp.Object);
 
 function opvp.Match:nameForStatus(status)
     local name = opvp_match_status_name_lookup[status];
@@ -150,7 +150,14 @@ function opvp.Match:statusFromActiveMatchState()
     return opvp.match.utils.state();
 end
 
+function opvp.Match:__del__()
+    self._queue = nil;
+    self._desc  = nil;
+end
+
 function opvp.Match:init(queue, description)
+    opvp.Object.init(self);
+
     self._queue             = queue;
     self._desc              = description;
     self._status            = opvp.MatchStatus.INACTIVE;
@@ -525,10 +532,9 @@ function opvp.Match:_close()
     end
 
     self._countdown_timer:stop();
+    self._countdown_timer.timeout:disconnect(self, self._countdownUpdate);
 
-    self._queue           = nil;
-    self._desc            = nil;
-    self._outcome_team    = nil;
+    self._outcome_team = nil;
 end
 
 function opvp.Match:_countdownCancel()
@@ -697,6 +703,8 @@ function opvp.Match:_onMatchJoinedInProgress(status)
 end
 
 function opvp.Match:_onMatchRoundActive()
+    opvp.printDebug("opvp.Match._onMatchRoundActive");
+
     if self:isRoundBased() == true then
         opvp.printMessageOrDebug(
             opvp.options.announcements.match.roundActive:value(),
@@ -720,28 +728,22 @@ function opvp.Match:_onMatchRoundActive()
 end
 
 function opvp.Match:_onMatchRoundComplete()
+    opvp.printDebug("opvp.Match._onMatchRoundComplete");
+
     self._countdown_timer:stop();
 
-    if self._cc_tracker ~= nil then
-        self._cc_tracker:disconnect();
-    end
-
     self:_setStatus(opvp.MatchStatus.ROUND_COMPLETE);
+
+    self._aura_cfg:removeTeams(self:teams());
 end
 
 function opvp.Match:_onMatchRoundWarmup()
+    opvp.printDebug("opvp.Match._onMatchRoundWarmup");
+
     opvp.printMessageOrDebug(
         opvp.options.announcements.match.roundWarmup:value(),
         opvp.strs.MATCH_ROUND_WARMUP
     );
-
-    if self._cc_tracker ~= nil then
-        if self:isArena() == true then
-            self._cc_tracker:connect(self, bit.bor(opvp.Affiliation.FRIENDLY, opvp.Affiliation.HOSTILE))
-        else
-            self._cc_tracker:connect(self, opvp.Affiliation.FRIENDLY)
-        end
-    end
 
     self._round_results = true;
 
@@ -750,6 +752,8 @@ function opvp.Match:_onMatchRoundWarmup()
     self:_setDampening(0);
 
     self:_setStatus(opvp.MatchStatus.ROUND_WARMUP);
+
+    self._aura_cfg:addTeams(self:teams());
 end
 
 function opvp.Match:_onMatchStateChanged(status, expected)

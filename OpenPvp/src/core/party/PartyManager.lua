@@ -28,7 +28,14 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.PartyManager = opvp.CreateClass();
+opvp.PartyManager = opvp.CreateClass(opvp.Object);
+
+function opvp.PartyManager:__del__()
+    self._party_home:_setSocket(self._socket);
+    self._party_inst:_setSocket(self._socket);
+
+    self._socket:disconnect();
+end
 
 function opvp.PartyManager:init(guid)
     self._party           = {opvp.private.PartyPriv(), opvp.private.PartyPriv()};

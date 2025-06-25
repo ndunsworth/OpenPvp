@@ -28,9 +28,15 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.PartyMemberProvider = opvp.CreateClass();
+opvp.PartyMemberProvider = opvp.CreateClass(opvp.Object);
+
+function opvp.PartyMemberProvider:__del__()
+    self:disconnect();
+end
 
 function opvp.PartyMemberProvider:init()
+    opvp.Object.init(self);
+
     self._category             = opvp.PartyCategory.HOME;
     self._guid                 = "";
     self._type                 = opvp.PartyType.PARTY;

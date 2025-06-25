@@ -58,13 +58,21 @@ function opvp.private.CombatLogConnectionPriv:event(event)
     opvp.combatlog.event:emit(event);
 end
 
-opvp.CombatLogServer = opvp.CreateClass();
+opvp.CombatLogServer = opvp.CreateClass(opvp.Object);
 
 function opvp.CombatLogServer:instance()
     return opvp_combat_log_server_singleton;
 end
 
+function opvp.CombatLogServer:__del__()
+    while self._connections:isEmpty() == false do
+        self._connections:item(1):disconnect();
+    end
+end
+
 function opvp.CombatLogServer:init()
+    opvp.Object.init(self);
+
     self._connections      = opvp.List();
     self._providers        = opvp.List();
     self._exec             = false;

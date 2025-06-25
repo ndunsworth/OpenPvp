@@ -30,6 +30,10 @@ local opvp = OpenPvp;
 
 opvp.PartyMemberAuraMap = opvp.CreateClass(opvp.AuraMap);
 
+function opvp.PartyMemberAuraMap:__del__()
+    self:_clear();
+end
+
 function opvp.PartyMemberAuraMap.__iter__(self)
     return next, self._auras, nil;
 end

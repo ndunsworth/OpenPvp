@@ -38,9 +38,11 @@ opvp.QueueStatus = {
    ACTIVE     = 5,
 };
 
-opvp.Queue = opvp.CreateClass();
+opvp.Queue = opvp.CreateClass(opvp.Object);
 
 function opvp.Queue:init(id, mask)
+    opvp.Object.init(self);
+
     self._id                   = id;
     self._mask                 = mask;
     self._queue_index          = 0;

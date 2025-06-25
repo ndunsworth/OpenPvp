@@ -28,9 +28,11 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.AuraMap = opvp.CreateClass();
+opvp.AuraMap = opvp.CreateClass(opvp.Object);
 
 function opvp.AuraMap:init()
+    opvp.Object.init(self);
+
     self._auras = {};
     self._size = 0;
 end

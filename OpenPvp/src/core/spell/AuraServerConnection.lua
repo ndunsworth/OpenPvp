@@ -28,9 +28,15 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.AuraServerConnection = opvp.CreateClass();
+opvp.AuraServerConnection = opvp.CreateClass(opvp.Object);
+
+function opvp.AuraServerConnection:__del__()
+    self:disconnect();
+end
 
 function opvp.AuraServerConnection:init()
+    opvp.Object.init(self);
+
     self._server           = nil;
     self._auras            = opvp.SpellRefMap();
 

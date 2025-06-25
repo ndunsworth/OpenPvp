@@ -45,9 +45,15 @@ opvp.PartyType = {
     RAID  = 2
 };
 
-opvp.Party = opvp.CreateClass();
+opvp.Party = opvp.CreateClass(opvp.Object);
+
+function opvp.Party:__del__()
+    self:shutdown();
+end
 
 function opvp.Party:init()
+    opvp.Object.init(self);
+
     self._category         = opvp.PartyCategory.HOME;
     self._guid             = "";
     self._provider         = nil;

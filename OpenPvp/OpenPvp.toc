@@ -22,6 +22,7 @@ src/core/base/LuaClass.lua
 src/core/base/math.lua
 src/core/base/utils.lua
 src/core/base/List.lua
+src/core/base/Object.lua
 src/core/base/Pool.lua
 src/core/base/Signal.lua
 src/core/base/SingleShotSignal.lua
