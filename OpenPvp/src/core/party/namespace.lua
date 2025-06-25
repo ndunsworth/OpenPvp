@@ -50,6 +50,38 @@ local function opvp_party_member_cmp_by_role(a, b, lookup)
     end
 end
 
+local function opvp_party_member_cmp_by_role_stat(a, b, lookup)
+    local a_role1 = a:role();
+    local b_role1 = b:role();
+    local a_role2 = lookup[a_role1:id() + 1];
+    local b_role2 = lookup[b_role1:id() + 1];
+
+    if a_role2 > b_role2 then
+        return false;
+    elseif a_role2 < b_role2 then
+        return true;
+    else
+        local a_stat;
+        local b_stat;
+
+        if a_role1:isHealer() == true then
+            a_stat = a:healing();
+            b_stat = b:healing();
+        else
+            a_stat = a:damage();
+            b_stat = b:damage();
+        end
+
+        if a_stat > b_stat then
+            return true;
+        elseif a_stat < b_stat then
+            return false;
+        else
+            return a:nameOrId() < b:nameOrId();
+        end
+    end
+end
+
 local function opvp_party_member_cmp_by_stat_ascend(a, b, id)
     local a_stat = a:findStatById(id);
     local b_stat = b:findStatById(id);
@@ -322,6 +354,31 @@ function opvp.party.utils.sortMembersByRole(members, lookup)
     result:sort(
         function(a, b)
             return opvp_party_member_cmp_by_role(a, b, lookup)
+        end
+    );
+
+    return result:release();
+end
+
+function opvp.party.utils.sortMembersByRoleStat(members, lookup)
+    local result;
+
+    if opvp.IsInstance(members, opvp.List) == true then
+        result = opvp.List:createFromArray(members:items());
+    elseif opvp.is_table(members) == true then
+        result = opvp.List:createCopyFromArray(members);
+    else
+        --~ ERROR!
+        return {};
+    end
+
+    if lookup == nil or opvp.is_func(lookup) == false then
+        lookup = opvp_party_members_cmp_lookup_default;
+    end
+
+    result:sort(
+        function(a, b)
+            return opvp_party_member_cmp_by_role_stat(a, b, lookup)
         end
     );
 
