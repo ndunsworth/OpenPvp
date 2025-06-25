@@ -28,9 +28,16 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.AuraServer = opvp.CreateClass();
+opvp.AuraServer = opvp.CreateClass(opvp.Object);
+
+function opvp.AuraServer:__del__()
+    self:shutdown();
+end
+
 
 function opvp.AuraServer:init()
+    opvp.Object.init(self);
+
     self._initialized = -1;
     self._parties     = opvp.List();
     self._connections = opvp.List();
@@ -89,6 +96,10 @@ end
 
 function opvp.AuraServer:isInitializing()
     return self._initialized == 0;
+end
+
+function opvp.AuraServer:isShutdown()
+    return self._initialized == -1;
 end
 
 function opvp.AuraServer:isPartySupported(party)

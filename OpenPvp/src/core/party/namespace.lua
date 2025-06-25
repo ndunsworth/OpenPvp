@@ -439,6 +439,8 @@ end
 local function opvp_party_mgr_singleton_ctor()
     opvp_party_mgr_singleton = opvp.PartyManager();
 
+    opvp_party_mgr_singleton:setAuraServerEnabled(true);
+
     opvp.printDebug("PartyManager - Initialized");
 end
 

@@ -31,13 +31,15 @@ local opvp = OpenPvp;
 opvp.PartyManager = opvp.CreateClass(opvp.Object);
 
 function opvp.PartyManager:__del__()
+    self._socket:disconnect();
+
     self._party_home:_setSocket(self._socket);
     self._party_inst:_setSocket(self._socket);
 
-    self._socket:disconnect();
+    self:setAuraServerEnabled(false);
 end
 
-function opvp.PartyManager:init(guid)
+function opvp.PartyManager:init()
     self._party           = {opvp.private.PartyPriv(), opvp.private.PartyPriv()};
     self._party_home      = nil;
     self._party_inst      = nil;
@@ -53,11 +55,6 @@ function opvp.PartyManager:init(guid)
     self._aura_server     = opvp.AuraServer();
     self._cc_tracker      = opvp.CrowdControlTracker();
     self._cbt_lvl_tracker = opvp.CombatLevelTracker();
-
-    self._aura_server:initialize();
-
-    self._cc_tracker:connect(self._aura_server);
-    self._cbt_lvl_tracker:connect(self._aura_server);
 
     self._socket:connect();
 
@@ -145,6 +142,10 @@ function opvp.PartyManager:instance()
     return self._party_inst;
 end
 
+function opvp.PartyManager:isAuraServerEnabled()
+    return self._aura_server:isShutdown() ~= false;
+end
+
 function opvp.PartyManager:isReloading(category)
     if category == nil then
         return self._is_reloading ~= 0;
@@ -190,6 +191,21 @@ function opvp.PartyManager:party(category)
         return self._party_inst;
     else
         return self._party_cur;
+    end
+end
+
+function opvp.PartyManager:setAuraServerEnabled(state)
+    if state == true then
+        if self._aura_server:isShutdown() == false then
+            return;
+        end
+
+        self._aura_server:initialize();
+
+        self._cc_tracker:connect(self._aura_server);
+        self._cbt_lvl_tracker:connect(self._aura_server);
+    else
+        self._aura_server:shutdown();
     end
 end
 
