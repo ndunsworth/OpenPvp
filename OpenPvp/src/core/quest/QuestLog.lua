@@ -81,6 +81,72 @@ function opvp.QuestLog:quests()
     return self._quest_list:items();
 end
 
+function opvp.QuestLog:questsActiveOnMap(mapId)
+    if mapId == nil then
+        mapId = opvp.player.mapId();
+    end
+
+    local result = {};
+    local quest;
+
+    for _, id in ipairs(C_QuestLog.GetQuestsOnMap(mapId)) do
+        quest = self._quest_map[id];
+
+        if quest == nil then
+            quest = opvp.Quest(id);
+        end
+
+        table.insert(result, quest);
+    end
+
+    return result;
+end
+
+function opvp.QuestLog:questsAvailableOnMap(mapId)
+    if mapId == nil then
+        mapId = opvp.player.mapId();
+    end
+
+    local result = {};
+    local quest;
+
+    for _, task in ipairs(C_TaskQuest.GetQuestsOnMap(mapId)) do
+        quest = self._quest_map[task.questID];
+
+        if quest == nil then
+            quest = opvp.Quest(task.questID);
+        end
+
+        result[task.questID] = quest;
+    end
+
+    for _, qline in ipairs(C_QuestLine.GetAvailableQuestLines(mapId)) do
+        if result[qline.questID] == nile then
+            quest = self._quest_map[qline.questID];
+
+            if quest == nil then
+                quest = opvp.Quest(qline.questID);
+            end
+
+            result[qline.questID] = quest;
+        end
+    end
+
+    for _, id in ipairs(C_QuestLine.GetForceVisibleQuests(mapId)) do
+        if result[id] == nile then
+            quest = self._quest_map[id];
+
+            if quest == nil then
+                quest = opvp.Quest(id);
+            end
+
+            result[id] = quest;
+        end
+    end
+
+    return result;
+end
+
 function opvp.QuestLog:size(onlyVisible)
     if onlyVisible == false then
         return self._size_vis;

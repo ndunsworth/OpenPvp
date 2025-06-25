@@ -64,6 +64,14 @@ function opvp.questlog.quests()
     return opvp_questlog_singleton:quests();
 end
 
+function opvp.questlog.questsActiveOnMap()
+    return opvp_questlog_singleton:questsActiveOnMap();
+end
+
+function opvp.questlog.questsAvailableOnMap()
+    return opvp_questlog_singleton:questsAvailableOnMap();
+end
+
 function opvp.questlog.size(onlyVisible)
     return opvp_questlog_singleton:size(onlyVisible);
 end
