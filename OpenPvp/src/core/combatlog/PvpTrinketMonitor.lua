@@ -87,8 +87,41 @@ end
 function opvp.PvpTrinketMonitor:triggered(event)
     local spell_id = self._spell_id_op:lastSpellId();
 
+    local hostile = bit.band(event.sourceFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) ~= 0;
+    local racial  = opvp.spell.isPvpRacialTrinket(spell_id);
+
     if opvp.player.guid() == event.sourceGUID then
         opvp.player.instance():_onPvpTrinketUsed(spell_id);
+    elseif opvp.match.inMatch(true) == false then
+        local info = opvp.guid.playerInfo(event.sourceGUID);
+
+        local do_msg;
+        local msg;
+
+        if hostile == true then
+            do_msg = opvp.options.announcements.hostileParty.memberTrinket:value();
+
+            if racial == true then
+                msg = opvp.strs.TRINKET_RACIAL_HOSTILE_USED;
+            else
+                msg = opvp.strs.TRINKET_HOSTILE_USED;
+            end
+        else
+            do_msg = opvp.options.announcements.friendlyParty.memberTrinket:value();
+
+            if racial == true then
+                msg = opvp.strs.TRINKET_RACIAL_FRIENDLY_USED;
+            else
+                msg = opvp.strs.TRINKET_FRIENDLY_USED;
+            end
+        end
+
+        opvp.printMessageOrDebug(
+            do_msg,
+            msg,
+            event.sourceName,
+            info.class:colorString(info.race:name() .. " " .. info.class:name())
+        );
     end
 
     self.trinketUsed:emit(
@@ -96,7 +129,7 @@ function opvp.PvpTrinketMonitor:triggered(event)
         event.sourceGUID,
         event.sourceName,
         spell_id,
-        bit.band(event.sourceFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) ~= 0
+        hostile
     );
 end
 

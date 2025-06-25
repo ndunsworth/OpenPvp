@@ -109,20 +109,9 @@ function opvp.private.FriendlyTrinketUsedSoundEffect:_onTrinketUsed(
 
     local unit = opvp.Unit:createFromUnitGuid(guid);
 
-    if unit:isNull() == true then
-        return;
+    if unit:isNull() == false then
+        opvp.effect.friendlyTrinketEmote(unit:race(), unit:sex());
     end
-
-    local cls = unit:classInfo();
-
-    opvp.printMessageOrDebug(
-        opvp.options.announcements.hostileParty.memberTrinket:value(),
-        opvp.strs.TRINKET_FRIENDLY_USED,
-        name,
-        cls:colorString(unit:raceInfo():name() .. " " .. cls:name())
-    );
-
-    opvp.effect.friendlyTrinketEmote(unit:race(), unit:sex());
 end
 
 function opvp.private.FriendlyTrinketUsedSoundEffect:_setMonitorConnected(state)

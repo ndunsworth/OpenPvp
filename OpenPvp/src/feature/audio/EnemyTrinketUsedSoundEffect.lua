@@ -104,20 +104,9 @@ function opvp.private.EnemyTrinketUsedSoundEffect:_onTrinketUsed(
 
     local unit = opvp.Unit:createFromUnitGuid(guid);
 
-    if unit:isNull() == true then
-        return;
+    if unit:isNull() == false then
+        opvp.effect.enemyTrinketEmote(unit:race(), unit:sex());
     end
-
-    local cls = unit:classInfo();
-
-    opvp.printMessageOrDebug(
-        opvp.options.announcements.hostileParty.memberTrinket:value(),
-        opvp.strs.TRINKET_HOSTILE_USED,
-        name,
-        cls:colorString(unit:raceInfo():name() .. " " .. cls:name())
-    );
-
-    opvp.effect.enemyTrinketEmote(unit:race(), unit:sex());
 end
 
 function opvp.private.EnemyTrinketUsedSoundEffect:_setMonitorConnected(state)
