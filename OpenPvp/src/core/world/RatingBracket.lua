@@ -30,6 +30,23 @@ local opvp = OpenPvp;
 
 local opvp_rating_brackets_known = false;
 
+local opvp_classic_bg_ranking_lookup = {
+    {1100, PVP_RANK_5_0,  PVP_RANK_5_1},
+    {1200, PVP_RANK_6_0,  PVP_RANK_6_1},
+    {1300, PVP_RANK_7_0,  PVP_RANK_7_1},
+    {1400, PVP_RANK_8_0,  PVP_RANK_8_1},
+    {1500, PVP_RANK_9_0,  PVP_RANK_9_1},
+    {1600, PVP_RANK_10_0, PVP_RANK_10_1},
+    {1700, PVP_RANK_11_0, PVP_RANK_11_1},
+    {1800, PVP_RANK_12_0, PVP_RANK_12_1},
+    {1900, PVP_RANK_13_0, PVP_RANK_13_1},
+    {2000, PVP_RANK_14_0, PVP_RANK_14_1},
+    {2100, PVP_RANK_15_0, PVP_RANK_15_1},
+    {2200, PVP_RANK_16_0, PVP_RANK_16_1},
+    {2300, PVP_RANK_17_0, PVP_RANK_17_1},
+    {2400, PVP_RANK_18_0, PVP_RANK_18_1}
+};
+
 opvp.BracketId = {
     NONE        = 0;
     ARENA_2V2   = 1;
@@ -414,11 +431,9 @@ function opvp.RatingBracket:tier()
     local result;
 
     if self._type ~= opvp.PvpType.NONE then
-        result = select(10, GetPersonalRatedInfo(self._index));
-    end
-
-    if result ~= nil then
-        return result;
+        return opvp.number_else(
+            select(10, GetPersonalRatedInfo(self._index))
+        );
     else
         return 0;
     end
@@ -618,6 +633,30 @@ end
 opvp.bracket = {};
 
 opvp.bracket.stateChanged = opvp.Signal("opvp.bracket.stateChanged")
+
+function opvp.bracket.classicTitleForRating(rating, faction)
+    if faction == nil then
+        faction = opvp.player.faction();
+    end
+
+    faction = (faction % 2) + 2;
+
+    local title = "";
+
+    for n=1, #opvp_classic_bg_ranking_lookup do
+        if rating > opvp_classic_bg_ranking_lookup[n][1] then
+            title = opvp_classic_bg_ranking_lookup[n][faction];
+        else
+            if rating == opvp_classic_bg_ranking_lookup[n][1] then
+                title = opvp_classic_bg_ranking_lookup[n][faction];
+            end
+
+            return title;
+        end
+    end
+
+    return title;
+end
 
 function opvp.bracket.hasMinimumItemLevel(id)
     return opvp.RatingBracket:fromInternalId(id):hasMinimumItemLevel();
