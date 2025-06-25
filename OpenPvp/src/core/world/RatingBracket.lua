@@ -80,6 +80,7 @@ function opvp.RatingBracket:init(
     queueSize,
     teamSize,
     name,
+    description,
     ilvlMin,
     mask
 )
@@ -89,9 +90,14 @@ function opvp.RatingBracket:init(
     self._queue_size  = queueSize;
     self._team_size   = teamSize;
     self._name        = name;
+    self._desc        = description;
     self._ilvl        = ilvlMin;
     self._mask        = bit.bor(mask, opvp.PvpFlag.RATED, opvp.PvpFlag.RANDOM_MAP);
     self._enabled     = false;
+
+    if self._desc == "" then
+        self._desc = self._name;
+    end
 
     self.stateChanged = opvp.Signal("opvp.RatingBracket.stateChanged")
 end
@@ -119,6 +125,10 @@ function opvp.RatingBracket:bonusRoles()
     end
 
     return roles;
+end
+
+function opvp.RatingBracket:description()
+    return self._desc;
 end
 
 function opvp.RatingBracket:hasDailyWin()
@@ -727,6 +737,7 @@ opvp.RatingBracket.UNKNOWN = opvp.RatingBracket(
     0,
     0,
     "",
+    "",
     0,
     0
 );
@@ -738,6 +749,7 @@ opvp.RatingBracket.ARENA_2V2 = opvp.RatingBracket(
     2,
     2,
     CONQUEST_BRACKET_NAME_2V2,
+    "",
     0,
     opvp.PvpFlag.DAMPENING
 );
@@ -749,6 +761,7 @@ opvp.RatingBracket.ARENA_3V3 = opvp.RatingBracket(
     3,
     3,
     CONQUEST_BRACKET_NAME_3V3,
+    "",
     0,
     opvp.PvpFlag.DAMPENING
 );
@@ -760,6 +773,7 @@ opvp.RatingBracket.BLITZ = opvp.RatingBracket(
     1,
     8,
     CONQUEST_BRACKET_NAME_BATTLEGROUND_BLITZ,
+    RATED_BG_BLITZ_MODE_DESCRIPTION,
     C_PvP.GetRatedSoloRBGMinItemLevel(),
     opvp.PvpFlag.BLITZ
 );
@@ -771,6 +785,7 @@ opvp.RatingBracket.RBG = opvp.RatingBracket(
     10,
     10,
     CONQUEST_BRACKET_NAME_RBG,
+    "",
     0,
     opvp.PvpFlag.RBG
 );
@@ -782,6 +797,7 @@ opvp.RatingBracket.SHUFFLE = opvp.RatingBracket(
     1,
     3,
     CONQUEST_BRACKET_NAME_SOLO_SHUFFLE,
+    RATED_SOLO_SHUFFLE_MODE_DESCRIPTION,
     C_PvP.GetRatedSoloShuffleMinItemLevel(),
     bit.bor(
         opvp.PvpFlag.DAMPENING,
