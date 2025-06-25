@@ -149,7 +149,14 @@ function opvp.BattlegroundInfo:update()
 
     self._name      = localizedName;
     self._desc      = mapDescription;
-    self._map       = opvp.Map:createFromInstanceId(bgInstanceID);
+
+    if self._map:isNull() == true then
+        self._map = opvp.Map:createFromInstanceId(bgInstanceID);
+
+        self._map._desc           = opvp.str_else(mapDescription);
+        self._map._pvp_short_desc = opvp.str_else(shortDescription);
+        self._map._pvp_long_desc  = opvp.str_else(longDescription);
+    end
 
     self._team_size = maxPlayers;
 
