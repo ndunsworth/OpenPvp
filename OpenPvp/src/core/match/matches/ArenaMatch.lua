@@ -40,6 +40,12 @@ function opvp.ArenaMatch:init(queue, description)
     end
 end
 
+function opvp.ArenaMatch:_onMatchEntered()
+    self._aura_cfg:setAffiliation(opvp.Affiliation.FRIENDLY_AND_HOSTILE);
+
+    opvp.GenericMatch._onMatchEntered(self);
+end
+
 function opvp.ArenaMatch:_onMatchComplete()
     opvp.GenericMatch._onMatchComplete(self);
 end
