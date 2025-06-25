@@ -31,6 +31,8 @@ local opvp = OpenPvp;
 opvp.AuraServer = opvp.CreateClass(opvp.Object);
 
 function opvp.AuraServer:__del__()
+    self:clearParties();
+    self:closeConnections();
     self:shutdown();
 end
 
@@ -48,11 +50,12 @@ function opvp.AuraServer:init()
     self.partyRemoved      = opvp.Signal("opvp.AuraServer.partyRemoved");
     self.rosterBeginUpdate = opvp.Signal("opvp.AuraServer.rosterBeginUpdate");
     self.rosterEndUpdate   = opvp.Signal("opvp.AuraServer.rosterEndUpdate");
+    self.started            = opvp.Signal("opvp.AuraServer.started");
+    self.stopped            = opvp.Signal("opvp.AuraServer.stopped");
 end
 
 function opvp.AuraServer:addParty(party)
     if (
-        self:isInitialized() == false or
         self:isPartySupported(party) == false or
         self._parties:contains(party) == true
     ) then
@@ -64,6 +67,18 @@ function opvp.AuraServer:addParty(party)
     self.partyAdded:emit(party);
 
     self:_onPartyAdded(party);
+end
+
+function opvp.AuraServer:clearParties()
+    while self._parties:isEmpty() == false do
+        self:removeParty(self._parties:last());
+    end
+end
+
+function opvp.AuraServer:closeConnections()
+    while self._connections:isEmpty() == false do
+        self._connections:last():disconnect();
+    end
 end
 
 function opvp.AuraServer:connections()
@@ -79,11 +94,15 @@ function opvp.AuraServer:initialize()
         return;
     end
 
+    opvp.printDebug("opvp.AuraServer:initialize");
+
     self:_initialize();
 
     self._initialized = 1;
 
     self:_onInitialized();
+
+    self.started:emit();
 end
 
 function opvp.AuraServer:isConnectionSupported(connection)
@@ -129,23 +148,23 @@ function opvp.AuraServer:removeParty(party)
 end
 
 function opvp.AuraServer:shutdown()
-    if self._initialized == false then
+    if self._initialized == -1 then
         return;
     end
+
+    opvp.printDebug("opvp.AuraServer:shutdown");
 
     self:_onShutdown();
 
     self:_shutdown();
 
     self._initialized = -1;
+
+    self.stopped:emit();
 end
 
 function opvp.AuraServer:_addConnection(connection)
     assert(connection:isConnected() == false);
-
-    if self:isInitialized() == false then
-        return false;
-    end
 
     self._connections:append(connection);
 
@@ -195,6 +214,20 @@ function opvp.AuraServer:_onInitialized()
         "opvp.AuraServerConnection:_onInitialized, server=%s",
         tostring(self)
     );
+
+    local party;
+
+    for n=1, self._parties:size() do
+        party = self._parties:item(n);
+
+        if party:isInitialized() == true then
+            self:_addPartyAuras(party);
+        end
+
+        party.closing:connect(self, self._onPartyClosing);
+        party.memberAuraUpdate:connect(self, self._onMemberAuraUpdate);
+        party.rosterEndUpdate:connect(self, self._onRosterEndUpdate);
+    end
 end
 
 function opvp.AuraServer:_onMemberAuraUpdate(member, aurasAdded, aurasUpdated, aurasRemoved, fullUpdate)
@@ -220,13 +253,15 @@ function opvp.AuraServer:_onPartyAdded(party)
         tostring(party:isInitialized())
     );
 
-    if party:isInitialized() == true then
-        self:_addPartyAuras(party);
-    end
+    if self:isShutdown() == false then
+        if party:isInitialized() == true then
+            self:_addPartyAuras(party);
+        end
 
-    party.closing:connect(self, self._onPartyClosing);
-    party.memberAuraUpdate:connect(self, self._onMemberAuraUpdate);
-    party.rosterEndUpdate:connect(self, self._onRosterEndUpdate);
+        party.closing:connect(self, self._onPartyClosing);
+        party.memberAuraUpdate:connect(self, self._onMemberAuraUpdate);
+        party.rosterEndUpdate:connect(self, self._onRosterEndUpdate);
+    end
 end
 
 function opvp.AuraServer:_onPartyClosing(party)
@@ -246,13 +281,17 @@ function opvp.AuraServer:_onPartyRemoved(party)
         tostring(party:isInitialized())
     );
 
-    if party:isInitialized() == true then
-        self:_removePartyAuras(party);
-    end
+    if self:isShutdown() == false then
+        if party:isInitialized() == true then
+            self:_removePartyAuras(party);
+        end
 
-    party.closing:disconnect(self, self._onPartyClosing);
-    party.memberAuraUpdate:disconnect(self, self._onMemberAuraUpdate);
-    party.rosterEndUpdate:disconnect(self, self._onRosterEndUpdate);
+        self:_removePartyAuras(party);
+
+        party.closing:disconnect(self, self._onPartyClosing);
+        party.memberAuraUpdate:disconnect(self, self._onMemberAuraUpdate);
+        party.rosterEndUpdate:disconnect(self, self._onRosterEndUpdate);
+    end
 end
 
 function opvp.AuraServer:_onRosterBeginUpdate(party)
@@ -273,18 +312,22 @@ end
 
 function opvp.AuraServer:_onShutdown()
     opvp.printDebug(
-        "opvp.AuraServerConnection:_onShutdown, server=%s",
+        "opvp.AuraServer:_onShutdown, server=%s",
         tostring(self)
     );
 
     local party;
 
-    while self._parties:isEmpty() == false do
-        self:_removeParty(self._parties:last());
-    end
+    for n=1, self._parties:size() do
+        party = self._parties:item(n);
 
-    while self._connections:isEmpty() == false do
-        self._connections:last():disconnect();
+        if party:isInitialized() == true then
+            self:_removePartyAuras(party);
+        end
+
+        party.closing:disconnect(self, self._onPartyClosing);
+        party.memberAuraUpdate:disconnect(self, self._onMemberAuraUpdate);
+        party.rosterEndUpdate:disconnect(self, self._onRosterEndUpdate);
     end
 end
 
@@ -316,4 +359,8 @@ function opvp.AuraServer:_removePartyMemberAuras(member)
         member:auras(),
         false
     );
+end
+
+function opvp.AuraServer:_shutdown()
+
 end
