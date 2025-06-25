@@ -31,9 +31,10 @@ local opvp = OpenPvp;
 opvp.Feature = opvp.CreateClass();
 
 function opvp.Feature:init()
-    self._active    = false;
-    self._lock_wait = 0;
-    self._enabled   = false;
+    self._active           = false;
+    self._lock_wait        = 0;
+    self._enabled          = false;
+    self._activation_state = 0;
 
     opvp.event.PLAYER_ENTERING_WORLD_LOGIN:connect(self, self._onLogin);
     opvp.event.PLAYER_ENTERING_WORLD_RELOAD:connect(self, self._onReload);
@@ -54,6 +55,14 @@ end
 
 function opvp.Feature:isActive()
     return self._active;
+end
+
+function opvp.Feature:isActivating()
+    return self._activation_state == 1;
+end
+
+function opvp.Feature:isDeactivating()
+    return self._activation_state == -1;
 end
 
 function opvp.Feature:isEditableDuringCombat()
@@ -230,14 +239,19 @@ function opvp.Feature:_setActive(state)
         if state == true then
             self:_lockdownDeactivateClear();
 
+            self._activation_state = 1;
+
             self:_onFeatureActivated();
         else
             self:_lockdownActivateClear();
 
+            self._activation_state = -1;
+
             self:_onFeatureDeactivated();
         end
 
-        self._active    = state;
-        self._lock_wait = 0;
+        self._active           = state;
+        self._lock_wait        = 0;
+        self._activation_state = 0;
     end
 end
