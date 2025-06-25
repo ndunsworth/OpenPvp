@@ -121,6 +121,10 @@ function opvp.BoolOption:setValue(value)
     end
 end
 
+function opvp.BoolOption:toggle()
+    self:setValue(not self._value);
+end
+
 function opvp.BoolOption:toScript()
     return self._value;
 end
