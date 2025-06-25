@@ -54,11 +54,9 @@ function opvp.expansion.id()
 end
 
 function opvp.expansion.info(id)
-    if id == nil then
-        id = opvp.ExpansionId.CURRENT;
-    end
-
-    return GetExpansionDisplayInfo(id);
+    return GetExpansionDisplayInfo(
+        opvp.number_else(id, opvp.ExpansionId.CURRENT)
+    );
 end
 
 function opvp.expansion.isDemonHunterAvailable()
@@ -78,19 +76,15 @@ function opvp.expansion.isUpgradable()
 end
 
 function opvp.expansion.name(id)
-    if id == nil then
-        id = opvp.ExpansionId.CURRENT;
-    end
-
-    return GetExpansionName(id);
+    return GetExpansionName(
+        opvp.number_else(id, opvp.ExpansionId.CURRENT)
+    );
 end
 
 function opvp.expansion.maxLevel(id)
-    if id == nil then
-        id = opvp.ExpansionId.CURRENT;
-    end
-
-    return GetMaxLevelForExpansionLevel(id);
+    return GetMaxLevelForExpansionLevel(
+        opvp.number_else(id, opvp.ExpansionId.CURRENT)
+    );
 end
 
 function opvp.expansion.server()
