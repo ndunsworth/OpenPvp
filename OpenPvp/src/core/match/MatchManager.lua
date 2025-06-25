@@ -260,7 +260,10 @@ function opvp.MatchManager:_onQueueEnd(queue)
         );
     end
 
-    self._match:_onMatchExit();
+    self._match:_onMatchStateChanged(
+        opvp.MatchStatus.EXIT,
+        self._match:statusNext()
+    );
 
     self._match:_close();
 
