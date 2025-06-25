@@ -65,7 +65,7 @@ function opvp.GroupAddonCommand:eval(editbox, args)
         args = self._cmd_default;
     end
 
-    local cmd_name, cmd_args = strsplit(" ", args, 2);
+    local cmd_name, cmd_args = strsplit(" ", opvp.string.stripTrailingSpace(args), 2);
 
     if cmd_name == "help" then
         self:help();
