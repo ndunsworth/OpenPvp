@@ -30,7 +30,22 @@ local opvp = OpenPvp;
 
 opvp.locale = {};
 
+opvp.Locale = {
+    deDE = "deDE",
+    enUS = "enUS",
+    esES = "esES",
+    esMX = "esMX",
+    frFR = "frFR",
+    itIT = "itIT",
+    koKR = "koKR",
+    ptBR = "ptBR",
+    ruRU = "ruRU",
+    zhCN = "zhCN",
+    zhTW = "zhTW"
+};
+
 opvp.locales = {
+    "deDE",
     "enUS",
     "esES",
     "esMX",
