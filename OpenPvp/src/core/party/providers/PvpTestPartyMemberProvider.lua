@@ -114,7 +114,7 @@ end
 function opvp.PvpTestPartyMemberProvider:_onDisconnected()
     opvp.TestPartyMemberProvider._onDisconnected(self);
 
-    self._match = nil;
+    self._match  = nil;
     self._tester = nil;
 end
 
