@@ -75,7 +75,7 @@ function opvp.PvpNotification:_initWidget()
 
     self._frame:SetScript("OnClick", function(frame, button) self:hide(); end);
 
-    self._frame:SetSize(467, 141);
+    self._frame:SetSize(572, 173);
 
     self._frame:Hide();
 
