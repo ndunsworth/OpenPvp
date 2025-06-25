@@ -74,9 +74,10 @@ function opvp.Faction:fromRaceId(id)
     return opvp.Faction.NEUTRAL;
 end
 
-function opvp.Faction:init(id, name)
-   self._id = id;
-   self._name = name;
+function opvp.Faction:init(id, name, color)
+   self._id    = id;
+   self._name  = name;
+   self._color = color;
 end
 
 function opvp.Faction:battlegroundLostSound()
@@ -85,6 +86,19 @@ end
 
 function opvp.Faction:battlegroundWinSound()
     return opvp_faction_sound_bg_win:sound(self._id);
+end
+
+function opvp.Faction:color()
+    return CreateColor(
+        self._color.r,
+        self._color.g,
+        self._color.b,
+        self._color.a
+    );
+end
+
+function opvp.Faction:colorString(str)
+    return self._color:WrapTextInColorCode(str);
 end
 
 function opvp.Faction:pvpWarningSound()
