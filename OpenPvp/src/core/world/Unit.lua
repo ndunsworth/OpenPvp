@@ -646,3 +646,31 @@ end
 function opvp.guid.isSameGuild(guid)
     return IsGuildMember(guid);
 end
+
+function opvp.guid.playerInfo(guid)
+    local
+    cls_loc,
+    cls_name,
+    race_loc,
+    race_name,
+    sex,
+    name,
+    realm = GetPlayerInfoByGUID(guid);
+
+    if sex == 2 then
+        sex = opvp.Sex.MALE;
+    elseif sex == 3 then
+        sex = opvp.Sex.FEMALE;
+    else
+        sex = opvp.Sex.NEUTRAL;
+    end
+
+    return {
+        guid  = guid,
+        name  = name,
+        realm = realm,
+        class = opvp.Class:fromFileId(cls_name),
+        race  = opvp.Race:fromRaceName(race_loc),
+        sex   = sex,
+    };
+end
