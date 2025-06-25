@@ -131,6 +131,8 @@ function opvp.MatchTest:init()
     self._timer_tracker.StartTimerOfType = TimerTracker_StartTimerOfType;
 
     self._timer_tracker:SetScript("OnEvent", TimerTracker_OnEvent);
+
+    opvp.OnLogout:connect(self, self._onLogout);
 end
 
 function opvp.MatchTest:initialize(pvpType, map, pvpFlags, simulate)
@@ -278,6 +280,10 @@ end
 
 function opvp.MatchTest:timeStarted()
     return self._time_started;
+end
+
+function opvp.MatchTest:_onLogout()
+    self:stop();
 end
 
 function opvp.MatchTest:_onMatchComplete()
