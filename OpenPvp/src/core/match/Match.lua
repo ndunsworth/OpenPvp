@@ -671,6 +671,8 @@ function opvp.Match:_onMatchEntered()
 end
 
 function opvp.Match:_onMatchExit()
+    opvp.printDebug("opvp.Match._onMatchExit");
+
     self:_setStatus(opvp.MatchStatus.EXIT);
 
     self._aura_cfg:shutdown();
