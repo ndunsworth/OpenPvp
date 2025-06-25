@@ -171,7 +171,33 @@ local function opvp_init_dbg_slash_cmds()
         )
     );
 
+    dbg_cmd:addCommand(
+        opvp.FuncAddonCommand(
+            function(editbox, args)
+                opvp.options.debug:toggle();
+            end,
+            "toggle",
+            "Toggle Debug mode"
+        )
+    );
+
     opvp.cmds:addCommand(dbg_cmd);
+end
+
+local function opvp_init_auraserver_slash_cmds()
+    opvp.cmds:addCommand(
+        opvp.FuncAddonCommand(
+            function(editbox, args)
+                local state, valid = opvp.string.toBool(args);
+
+                if valid == true then
+                    opvp.party.manager():setAuraServerEnabled(state);
+                end
+            end,
+            "auraserver",
+            "Enable/Disable the PartyManager AuraServer"
+        )
+    );
 end
 
 local function opvp_init_party_slash_cmds()
@@ -404,6 +430,8 @@ end
 
 local function opvp_init_slash_cmds()
     opvp_init_dbg_slash_cmds();
+
+    opvp_init_auraserver_slash_cmds();
 
     opvp.cmds:addCommand(
         opvp.FuncAddonCommand(
