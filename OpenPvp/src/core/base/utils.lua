@@ -530,6 +530,47 @@ function opvp.printWarning(msg, ...)
     end
 end
 
+local opvp_str_to_bool_lookup = {
+    ["1"]     = true,
+    ["true"]  = true,
+    ["yes"]   = true,
+
+    ["0"]     = false,
+    ["false"] = false,
+    ["no"]    = false
+};
+
+opvp.string = {};
+
+function opvp.string.toBool(str)
+    local result = opvp_str_to_bool_lookup[
+        opvp.string.stripSpace(string.lower(str))
+    ];
+
+    if result ~= nil then
+        return result, true;
+    else
+        return false, false;
+    end
+end
+
+function opvp.string.stripTrailingSpace(str)
+    local result =  string.gsub(str, "^(.-)%s*$", "%1");
+
+    return result;
+end
+
+function opvp.string.stripSpace(str)
+    local result = string.gsub(str, "^%s*(.-)%s*$", "%1");
+
+    return result;
+end
+
+function opvp.string.stripLeadingSpace(str)
+    local result = string.gsub(str, "^%s*(.-)$", "%1");
+
+    return result;
+end
 
     --~ UIParentLoadAddOn("Blizzard_EventTrace")
     --~ EventTrace:Show();
