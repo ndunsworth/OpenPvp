@@ -82,8 +82,8 @@ function opvp.match.hasDampening()
     return opvp_match_mgr_singleton:hasDampening();
 end
 
-function opvp.match.inMatch()
-    return opvp_match_mgr_singleton:inMatch();
+function opvp.match.inMatch(ignoreTest)
+    return opvp_match_mgr_singleton:inMatch(ignoreTest);
 end
 
 function opvp.match.isRated()
