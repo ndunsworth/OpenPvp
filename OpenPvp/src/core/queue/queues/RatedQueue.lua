@@ -48,6 +48,10 @@ function opvp.RatedQueue:init(id, bracket)
     self._bracket = bracket;
 end
 
+function opvp.RatedQueue:description()
+    return self._bracket:description();
+end
+
 function opvp.RatedQueue:bonusRoles()
     return self._bracket:bonusRoles();
 end
