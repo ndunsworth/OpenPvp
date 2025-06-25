@@ -108,6 +108,10 @@ function opvp.hyperlink.createPlayer(name, lineId, text)
     end
 end
 
+function opvp.hyperlink.createPvpRating()
+    return GetPvpRatingLink(opvp.player.name());
+end
+
 function opvp.hyperlink.createTradeSkill(guid, spellId, skillLineId, text)
     return string.format(
         "|Htrade:%s:%d:%d|h[%s]|h",
