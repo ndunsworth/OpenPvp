@@ -73,17 +73,8 @@ function opvp.Map:createFromName(name)
 end
 
 function opvp.Map:init(cfg)
-    if cfg.instance_id ~= nil then
-        self._inst_id = cfg.instance_id;
-    else
-        self._inst_id = 0;
-    end
-
-    if cfg.map_id ~= nil then
-        self._map_id = cfg.map_id;
-    else
-        self._map_id = 0;
-    end
+    self._inst_id = opvp.number_else(cfg.instance_id, opvp.InstanceId.UNKNOWN);
+    self._map_id = opvp.number_else(cfg.map_id);
 
     if self._inst_id ~= opvp.InstanceId.UNKNOWN then
         self._name = GetRealZoneText(self._inst_id);
@@ -105,11 +96,7 @@ function opvp.Map:init(cfg)
         end
     end
 
-    if cfg.stats ~= nil then
-        self._stats = cfg.stats;
-    else
-        self._stats = {};
-    end
+    self._stats = opvp.table_else(cfg.stats);
 
     if cfg.music ~= nil then
         self._music = opvp.Sound:createFromCfgData(cfg.music);
@@ -122,6 +109,22 @@ function opvp.Map:init(cfg)
     else
         self._music_intro = opvp.Sound:null();
     end
+
+    self._desc           = "";
+    self._pvp_short_desc = "";
+    self._pvp_long_desc  = "";
+end
+
+function opvp.Map:description()
+    return self._desc;
+end
+
+function opvp.Map:descriptionPvpShort()
+    return self._pvp_short_desc;
+end
+
+function opvp.Map:descriptionPvpLong()
+    return self._pvp_long_desc;
 end
 
 function opvp.Map:hasMapId()
@@ -172,8 +175,12 @@ function opvp.Map:instanceId()
     return self._inst_id;
 end
 
+function opvp.Map:isNull()
+    return self._inst_id == opvp.InstanceId.UNKNOWN;
+end
+
 function opvp.Map:isValid()
-    return self._inst_id ~= opvp.UNKNOWN_MAP;
+    return self._inst_id ~= opvp.InstanceId.UNKNOWN;
 end
 
 function opvp.Map:map()
