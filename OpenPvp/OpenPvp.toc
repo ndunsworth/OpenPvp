@@ -240,6 +240,8 @@ src/core/world/NotifyInspectQueue.lua
 src/core/world/RatingBracket.lua
 
 src/core/map/instance.lua
+src/core/map/AreaPOI.lua
+src/core/map/AreaPOIManager.lua
 src/core/map/Map.lua
 src/core/map/Waypoint.lua
 
