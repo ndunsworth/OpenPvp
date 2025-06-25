@@ -418,6 +418,16 @@ function opvp.str_else(var, default)
     end
 end
 
+function opvp.table_else(var, default)
+    if opvp.is_table(var) then
+        return var;
+    elseif default ~= nil then
+        return default;
+    else
+        return {};
+    end
+end
+
 function opvp.to_string(var)
     if var ~= nil then
         return tostring(var);
