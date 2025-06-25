@@ -248,15 +248,16 @@ function opvp.MatchTest:stop()
     if self._match:isWarmup() == true then
         self._warmup_timer:stop();
 
+        self:_onMatchRoundActive();
         self:_onMatchRoundComplete();
     elseif self._match:isActive() == true then
         self:_onMatchRoundComplete();
     end
 
     self:_onMatchComplete();
-
     self:_onMatchExit();
 
+    self._match            = nil;
     self._active           = false;
     self._outcome_status   = opvp.MatchWinner.WON;
     self._outcome_team     = nil;
@@ -372,7 +373,6 @@ function opvp.MatchTest:_onMatchExit()
     end
 
     self._match:_close();
-    self._match = nil;
 end
 
 function opvp.MatchTest:_onMatchJoined()
@@ -522,11 +522,6 @@ end
 function opvp.MatchTest:_onMatchRoundWarmup()
     self._time_started = GetTime();
 
-    self._match:_onMatchStateChanged(
-        opvp.MatchStatus.ROUND_WARMUP,
-        self._match:statusNext()
-    );
-
     self._match:_onPartyAboutToJoin(
         opvp.PartyCategory.INSTANCE,
         string.format(
@@ -534,6 +529,11 @@ function opvp.MatchTest:_onMatchRoundWarmup()
             GetRealmID(),
             self._party_index
         )
+    );
+
+    self._match:_onMatchStateChanged(
+        opvp.MatchStatus.ROUND_WARMUP,
+        self._match:statusNext()
     );
 
     opvp.event.UPDATE_BATTLEFIELD_SCORE:emit();
