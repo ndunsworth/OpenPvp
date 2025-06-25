@@ -35,12 +35,23 @@ function opvp.MatchAuraServerConfig:init(match)
     self._affiliation  = opvp.Affiliation.FRIENDLY;
 end
 
+function opvp.MatchAuraServerConfig:addTeams(teams)
+    opvp.printDebug("opvp.MatchAuraServerConfig.addTeams");
+
+    local server = opvp.party.auraServer();
+
+    for n=1, #teams do
+        if self:isPartySupported(teams[n]) == true then
+            server:addParty(teams[n]);
+        end
+    end
+end
+
 function opvp.MatchAuraServerConfig:initialize()
     if self._match == nil then
         return;
     end
 
-    local server          = opvp.party.auraServer();
     local cc_tracker      = opvp.party.ccTracker();
     local cbt_lvl_tracker = opvp.party.combatLevelTracker();
 
@@ -54,12 +65,16 @@ function opvp.MatchAuraServerConfig:initialize()
     cbt_lvl_tracker.memberOffensiveAdded:connect(opvp.match.playerOffensiveAdded);
     cbt_lvl_tracker.memberOffensiveLevelUpdate:connect(opvp.match.playerOffensiveLevelUpdate);
     cbt_lvl_tracker.memberOffensiveRemoved:connect(opvp.match.playerOffensiveRemoved);
+end
 
-    local teams = self._match:teams();
+function opvp.MatchAuraServerConfig:removeTeams(teams)
+    opvp.printDebug("opvp.MatchAuraServerConfig.removeTeams");
+
+    local server = opvp.party.auraServer();
 
     for n=1, #teams do
         if self:isPartySupported(teams[n]) == true then
-            server:addParty(teams[n]);
+            server:removeParty(teams[n]);
         end
     end
 end
@@ -69,17 +84,8 @@ function opvp.MatchAuraServerConfig:shutdown()
         return;
     end
 
-    local server          = opvp.party.auraServer();
     local cc_tracker      = opvp.party.ccTracker();
     local cbt_lvl_tracker = opvp.party.combatLevelTracker();
-
-    local teams = self._match:teams();
-
-    for n=1, #teams do
-        if self:isPartySupported(teams[n]) == true then
-            server:removeParty(teams[n]);
-        end
-    end
 
     cc_tracker.memberCrowdControlAdded:disconnect(opvp.match.playerCrowdControlAdded);
     cc_tracker.memberCrowdControlRemoved:disconnect(opvp.match.playerCrowdControlRemoved);
