@@ -50,7 +50,7 @@ function opvp.Class:fromFileId(id)
     for n=1, #opvp.Class.CLASSES do
         cls = opvp.Class.CLASSES[n];
 
-        if cls:fileId() == name then
+        if cls:fileId() == id then
             return cls;
         end
     end
