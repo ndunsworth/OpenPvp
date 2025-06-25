@@ -38,6 +38,10 @@ local function cmp_connection(a, b)
     return a[1] == b[1] and a[2] == b[2];
 end
 
+local function signal_stack_trace()
+    return opvp.utils.debugstack(2);
+end
+
 local function signal_emit_dbg(name, connection, ...)
     if connection[1] ~= 0 then
         connection[2](connection[1], ...);
@@ -50,8 +54,10 @@ local function signal_emit_safe(name, connection, ...)
     local status, err;
 
     if connection[1] ~= 0 then
+        --~ status, err = xpcall(connection[2], signal_stack_trace, connection[1], ...);
         status, err = pcall(connection[2], connection[1], ...);
     else
+        --~ status, err = xpcall(connection[2], signal_stack_trace, ...);
         status, err = pcall(connection[2], ...);
     end
 
