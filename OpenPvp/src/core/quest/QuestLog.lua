@@ -195,6 +195,11 @@ function opvp.QuestLog:_addQuest(questId)
     return quest;
 end
 
+function opvp.QuestLog:_clear()
+    self._quest_map = {};
+    self._quest_list:clear();
+end
+
 function opvp.QuestLog:_createQuest(questId)
     return opvp.Quest(questId);
 end
