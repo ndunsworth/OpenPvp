@@ -28,6 +28,8 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+local opvp_areapoi_manager_singleton;
+
 opvp.AreaPOIManager = opvp.CreateClass();
 
 function opvp.AreaPOIManager:init(info)

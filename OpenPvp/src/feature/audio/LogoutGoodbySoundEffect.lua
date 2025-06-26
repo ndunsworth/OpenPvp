@@ -91,6 +91,8 @@ local function opvp_logout_goodbye_sound_sample(button, state)
     end
 end
 
+local opvp_logout_goodbye_sound_effect;
+
 local function opvp_logout_goodbye_sound_effect_ctor()
     opvp_logout_goodbye_sound_effect = opvp.private.LogoutGoodbySoundEffect();
 
