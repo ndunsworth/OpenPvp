@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ARATHI_BASIN,
             map_id       = 93,
+            music        = 22292,
+            music_intro  = 129818,
             stats        = {
                 [opvp.PvpStatId.BASES_ASSAULTED] = 926,
                 [opvp.PvpStatId.BASES_DEFENDED]  = 927
@@ -45,6 +47,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ARATHI_BASIN_CLASSIC,
             map_id       = 1461,
+            music        = 22292,
+            music_intro  = 129818,
             stats        = {
                 [opvp.PvpStatId.BASES_ASSAULTED] = 122,
                 [opvp.PvpStatId.BASES_DEFENDED]  = 123
@@ -57,6 +61,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ARATHI_BASIN_COMP_STOMP,
             map_id       = 1383,
+            music        = 22292,
+            music_intro  = 129818,
             stats        = {
                 [opvp.PvpStatId.BASES_ASSAULTED] = 688,
                 [opvp.PvpStatId.BASES_DEFENDED]  = 690
@@ -69,6 +75,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.ARATHI_BASIN_WINTER,
             map_id       = 837,
+            music        = 22292,
+            music_intro  = 129818,
             stats        = {
                 [opvp.PvpStatId.BASES_ASSAULTED] = 679,
                 [opvp.PvpStatId.BASES_DEFENDED]  = 680
