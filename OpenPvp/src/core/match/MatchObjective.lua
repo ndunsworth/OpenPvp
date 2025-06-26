@@ -30,10 +30,11 @@ local opvp = OpenPvpLib;
 
 opvp.MatchObjectiveStatus = {
     NOT_CONTESTED       = 1,
-    ALLIANCE_CONTESTED  = 2,
-    ALLIANCE_CONTROLLED = 3,
-    HORDE_CONTESTED     = 4,
-    HORDE_CONTROLLED    = 5
+    DISABLED            = 2,
+    ALLIANCE_CONTESTED  = 3,
+    ALLIANCE_CONTROLLED = 4,
+    HORDE_CONTESTED     = 5,
+    HORDE_CONTROLLED    = 6
 };
 
 opvp.MatchObjective = opvp.CreateClass();
