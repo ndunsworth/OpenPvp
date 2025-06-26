@@ -391,14 +391,6 @@ end
 
 opvp.spell = {};
 
-function opvp.spell.info(spellId)
-    return C_Spell.GetSpellInfo(spellId);
-end
-
-function opvp.spell.link(spellId, glyphId)
-    return opvp.hyperlink.createDeathRecap(spellId, glyphId);
-end
-
 function opvp.spell.dispellName(dispellType)
     local result = opvp_dispell_type_name_lookup[dispellType];
 
@@ -407,6 +399,14 @@ function opvp.spell.dispellName(dispellType)
     else
         return "";
     end
+end
+
+function opvp.spell.info(spellId)
+    return C_Spell.GetSpellInfo(spellId);
+end
+
+function opvp.spell.link(spellId, glyphId)
+    return opvp.hyperlink.createDeathRecap(spellId, glyphId);
 end
 
 function opvp.spell.isPvpRacialTrinket(spellId)
