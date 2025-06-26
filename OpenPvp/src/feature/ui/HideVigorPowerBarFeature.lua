@@ -28,42 +28,49 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.options = {};
+opvp.private.HideVigorPowerBarFeature = opvp.CreateClass(opvp.OptionFeature);
 
-function opvp.options.db()
-    return opvp.OptionDatabase:instance();
-end
+function opvp.private.HideVigorPowerBarFeature:init(option, mask, affiliation)
+    opvp.OptionFeature.init(self, option);
 
-opvp.options.loaded = opvp.Signal("opvp.options.loaded");
-
-local function opvp_options_general_init()
-    opvp.options.general = {};
-
-    opvp.options.general.category = opvp.options.category:createCategory(
-        "General",
-        "General",
-        "",
-        opvp.OptionCategory.CHILD_CATEGORY
-    );
-
-    opvp.options.general.social = {};
-
-    opvp.options.general.social.category = opvp.options.general.category:createCategory(
-        "Social",
-        "Social"
-    );
-
-    opvp.options.general.social.blockDuels = opvp.options.general.social.category:createOption(
-        opvp.Option.BOOL,
-        "BlockPVPDuels",
-        "Block PVP Duels",
-    [[
-Auto declines duels from other players.
-
-Duels from players on your friends list are allowed.
-]],
-        false
+    self._handler = opvp.HideFrameHandler(
+        UIWidgetPowerBarContainerFrame,
+        opvp.HideFrameHandler.PARENT
     );
 end
 
-opvp.OnAddonLoad:register(opvp_options_general_init);
+function opvp.private.HideVigorPowerBarFeature:isFeatureEnabled()
+    return self:option():value();
+end
+
+function opvp.private.HideVigorPowerBarFeature:_onFeatureActivated()
+    opvp.OptionFeature._onFeatureActivated(self);
+
+    opvp.player.instance().skyRidingChanged:connect(
+        self._handler,
+        self._handler.setEnabled
+    );
+
+    self._handler:setEnabled(opvp.player.isSkyRiding());
+end
+
+function opvp.private.HideVigorPowerBarFeature:_onFeatureDeactivated()
+    opvp.OptionFeature._onFeatureDeactivated(self);
+
+    opvp.player.instance().skyRidingChanged:disconnect(
+        self._handler,
+        self._handler.setEnabled
+    );
+
+    self._handler:setEnabled(false);
+end
+
+local hide_vigor_power_bar_singleton;
+
+local function hide_vigor_power_bar_singleton_ctor()
+    hide_vigor_power_bar_singleton = opvp.private.HideVigorPowerBarFeature(
+        opvp.options.interface.frames.vigorPowerBarHide
+    );
+end
+
+opvp.OnAddonLoad:register(hide_vigor_power_bar_singleton_ctor);

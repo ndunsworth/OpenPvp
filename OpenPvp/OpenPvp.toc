@@ -321,6 +321,9 @@ src/core/combatlog/CombatLogServer.lua
 src/core/combatlog/CallbackCombatLogFilter.lua
 src/core/combatlog/PvpTrinketMonitor.lua
 
+src/core/ui/Cursor.lua
+src/core/ui/HideFrameHandler.lua
+
 src/core/ui/bar/Bar.lua
 src/core/ui/bar/BarDriver.lua
 src/core/ui/bar/BagBar.lua
@@ -349,8 +352,10 @@ src/core/ui/minimap/MiniMapButton.lua
 src/core/ui/notifications/namespace.lua
 
 src/core/ui/widgets/UiWidget.lua
+src/core/ui/widgets/UiWidgetServer.lua
 src/core/ui/widgets/DoubleStateIconRowUiWidget.lua
 src/core/ui/widgets/DoubleStatusBarUiWidget.lua
+src/core/ui/widgets/FillUpFramesUiWidget.lua
 src/core/ui/widgets/IconAndTextUiWidget.lua
 src/core/ui/widgets/StatusBarUiWidget.lua
 
@@ -418,10 +423,11 @@ src/core/party/namespace.lua
 
 src/core/socket/Socket.lua
 
-src/options/general.lua
+src/options/main.lua
 src/options/announcements.lua
 src/options/audio.lua
 src/options/interface.lua
+src/options/general.lua
 src/options/match.lua
 
 src/feature/announcement/PartyMemberCrowdControlled.lua
@@ -452,9 +458,12 @@ src/feature/audio/TeammateGreetingsSoundEffect.lua
 src/feature/audio/TrinketReadySoundEffect.lua
 src/feature/audio/TrinketRacialReadySoundEffect.lua
 
+src/feature/general/AutoDeclineDuelFeature.lua
+
 src/feature/ui/DisablePlayerCastBar.lua
 src/feature/ui/HideOrderHallCommandBar.lua
 src/feature/ui/HidePrestigeBadges.lua
+src/feature/ui/HideVigorPowerBarFeature.lua
 src/feature/ui/MoveLossOfControlNotification.lua
 
 src/feature/match/AutoDeclineInviteMatchFeature.lua
@@ -475,6 +484,7 @@ src/feature/match/LayoutMatchFeature.lua
 src/feature/match/MuteNPCDialogMatchFeature.lua
 src/feature/match/ScreenshotMatchFeature.lua
 src/feature/match/ScreenshotMatchRoundFeature.lua
+src/feature/match/ShowBattlefieldMapMatchFeature.lua
 
 ## src/bindings/Focus.lua
 

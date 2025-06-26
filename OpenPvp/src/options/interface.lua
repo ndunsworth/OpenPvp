@@ -83,6 +83,14 @@ local function opvp_options_interface_init()
         false
     );
 
+    opvp.options.interface.frames.vigorPowerBarHide = opvp.options.interface.frames.category:createOption(
+        opvp.Option.BOOL,
+        "HideVigorPowerBar",
+        "Hide Vigor (Skyriding Power Bar)",
+        "",
+        false
+    );
+
     opvp.options.interface.frames.moveLossOfControlNotification = opvp.options.interface.frames.category:createOption(
         opvp.Option.BOOL,
         "MoveLossOfControlNotification",

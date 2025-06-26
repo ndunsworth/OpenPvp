@@ -173,6 +173,11 @@ Chat Messages Filtered:
         false
     );
 
+    opvp.options.match.chat.mute:setFlags(
+        opvp.Option.NEW_LINE_FLAG,
+        false
+    );
+
     opvp.options.match.chat.filterAddonSpam = opvp.options.match.chat.category:createOption(
         opvp.Option.BOOL,
         "FilterAddonChatSpam",
@@ -483,7 +488,7 @@ Selecting "- none -" will disable this feature for Battlegrounds.
     opvp.options.match.frames.hideFocusFrame = opvp.options.match.frames.category:createOption(
         opvp.Option.MATCH_TYPE,
         "HideFocusFrame",
-        "Hide Focus Frame ",
+        "Hide Focus Frame",
         "Hides the Focus Frame during a pvp match.",
         "never"
     );
@@ -491,6 +496,14 @@ Selecting "- none -" will disable this feature for Battlegrounds.
     opvp.options.match.frames.hideFocusFrame:setFlags(
         opvp.Option.LOCKED_DURING_COMBAT,
         true
+    );
+
+    opvp.options.match.frames.showBattlefieldMap = opvp.options.match.frames.category:createOption(
+        opvp.Option.MATCH_TYPE,
+        "ShowBattlefieldMap",
+        "Show Battlefield Map",
+        "Show the Battlefield Map during a pvp match.",
+        "battleground"
     );
 
     opvp.options.match.muteNPCDialog = {};

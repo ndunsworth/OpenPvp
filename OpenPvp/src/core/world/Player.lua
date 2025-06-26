@@ -61,6 +61,7 @@ function opvp.Player:init()
     self._played_total        = 0;
     self._played_level        = 0;
     self._parties             = opvp.List();
+    self._sky_riding          = UnitPowerBarID(opvp.unitid.PLAYER) == 631;
 
     self._pvp_trinket_slot           = -1;
     self._pvp_trinket_item_id        = 0;
@@ -86,6 +87,8 @@ function opvp.Player:init()
         self._pvpTrinketRacialCheck
     );
 
+    self._vigor_widget = opvp.FillUpFramesUiWidget(283, 4460, "SkyRidingVigor");
+
     self.aliveChanged           = opvp.Signal("opvp.Player.aliveChanged");
     self.equipmentChanged       = opvp.Signal("opvp.Player.equipmentChanged");
     self.honorKillsChanged      = opvp.Signal("opvp.Player.honorKillsChanged");
@@ -100,8 +103,10 @@ function opvp.Player:init()
     self.pvpTrinketUpdate       = opvp.Signal("opvp.Player.pvpTrinketUpdate");
     self.pvpTrinketRacialUpdate = opvp.Signal("opvp.Player.pvpTrinketRacialUpdate");
     self.restingChanged         = opvp.Signal("opvp.Player.restingChanged");
+    self.skyRidingChanged       = opvp.Signal("opvp.Player.skyRidingChanged");
     self.specChanged            = opvp.Signal("opvp.Player.specChanged");
     self.timePlayedChanged      = opvp.Signal("opvp.Player.timePlayedChanged");
+    self.vigorChanged           = opvp.Signal("opvp.Player.vigorChanged");
     self.warmodeChanged         = opvp.Signal("opvp.Player.warmodeChanged");
 
     local spec_id = GetSpecialization();
@@ -208,6 +213,16 @@ function opvp.Player:init()
     opvp.event.PLAYER_UPDATE_RESTING:connect(
         self,
         opvp.Player._onRestingChanged
+    );
+
+    opvp.event.UNIT_POWER_BAR_HIDE:connect(
+        self,
+        opvp.Player._onPowerBarHide
+    );
+
+    opvp.event.UNIT_POWER_BAR_SHOW:connect(
+        self,
+        opvp.Player._onPowerBarShow
     );
 
     opvp.event.TIME_PLAYED_MSG:connect(
@@ -371,8 +386,16 @@ function opvp.Player:isItemUsable(itemId)
     return C_PlayerInfo.CanUseItem(itemId);
 end
 
+function opvp.Player:isMounted()
+    return IsMounted();
+end
+
 function opvp.Player:isResting()
     return IsResting();
+end
+
+function opvp.Player:isSkyRiding()
+    return self._sky_riding;
 end
 
 function opvp.Player:isWarModeEnabled()
@@ -460,6 +483,10 @@ function opvp.Player:toggleWarMode()
     return C_PvP.IsWarModeDesired();
 end
 
+function opvp.Player:vigor()
+    return self._vigor_widget:totalValue();
+end
+
 function opvp.Player:_onAlive()
     if UnitIsDeadOrGhost(opvp.unitid.PLAYER) == false then
         self.aliveChanged:emit(true);
@@ -471,11 +498,13 @@ function opvp.Player:_onBarberUpdate()
 end
 
 function opvp.Player:_onCombatChanged(state)
-    if self._combat ~= state then
-        self._combat = state;
-
-        self.inCombatChanged:emit(state);
+    if self._combat == state then
+        return;
     end
+
+    self._combat = state;
+
+    self.inCombatChanged:emit(state);
 end
 
 function opvp.Player:_onDead()
@@ -586,6 +615,42 @@ end
 
 function opvp.Player:_onRestingChanged()
     self.restingChanged:emit(self:isResting());
+end
+
+function opvp.Player:_onPowerBarHide(unitId)
+    if unitId ~= opvp.unitid.PLAYER then
+        return;
+    end
+
+    if (
+        UnitPowerBarID(opvp.unitid.PLAYER) ~= 631 and
+        self._sky_riding == true
+    ) then
+        print("vigor: no");
+        self._sky_riding = false;
+
+        self._vigor_widget:disconnect();
+
+        self.skyRidingChanged:emit(self._sky_riding);
+    end
+end
+
+function opvp.Player:_onPowerBarShow(unitId)
+    if unitId ~= opvp.unitid.PLAYER then
+        return;
+    end
+
+    if (
+        UnitPowerBarID(opvp.unitid.PLAYER) == 631 and
+        self._sky_riding == false
+    ) then
+        print("vigor: yes");
+        self._sky_riding = true;
+
+        self._vigor_widget:connect();
+
+        self.skyRidingChanged:emit(self._sky_riding);
+    end
 end
 
 function opvp.Player:_onSpecChanged()
@@ -943,6 +1008,10 @@ function opvp.player.isAlliance()
     return opvp_user_player_singleton:isAlliance();
 end
 
+function opvp.player.isSkyRiding()
+    return opvp_user_player_singleton:isSkyRiding();
+end
+
 function opvp.player.isGroupAssistant(category)
     return opvp_user_player_singleton:isGroupAssistant(category);
 end
@@ -961,6 +1030,10 @@ end
 
 function opvp.player.isMaxLevel()
     return opvp_user_player_singleton:isMaxLevel();
+end
+
+function opvp.player.isMounted()
+    return opvp_user_player_singleton:isMounted();
 end
 
 function opvp.player.isNeutral()
@@ -1063,6 +1136,10 @@ function opvp.player.timePlayedUpdate()
     opvp_user_player_singleton:timePlayedUpdate();
 end
 
+function opvp.player.vigor()
+    return opvp_user_player_singleton:vigor();
+end
+
 local function opvp_player_singleton_ctor()
     opvp_user_player_singleton = opvp.Player();
 
@@ -1075,11 +1152,9 @@ local function opvp_player_singleton_ctor()
             end
         end
     end
-
-    opvp.printDebug("Player - Initialized");
 end
 
-local function opvp_player_set_spec_init()
+local function opvp_player_login_init()
     opvp_user_player_singleton:_onSpecChanged();
 
     opvp_user_player_singleton:_onTrinketChanged(INVSLOT_TRINKET1);
@@ -1091,7 +1166,15 @@ local function opvp_player_set_spec_init()
     if opvp_user_player_singleton:hasPvpRacialTrinket() == true then
         opvp_user_player_singleton:_pvpTrinketRacialCheck();
     end
+
+    if opvp_user_player_singleton._sky_riding == true then
+        opvp_user_player_singleton._vigor_widget:connect();
+    end
+
+    opvp_user_player_singleton._vigor_widget.updated:connect(opvp_user_player_singleton.vigorChanged);
+
+    opvp.printDebug("Player - Initialized");
 end
 
 opvp.OnAddonLoad:register(opvp_player_singleton_ctor);
-opvp.OnLoginReload:register(opvp_player_set_spec_init);
+opvp.OnLoginReload:register(opvp_player_login_init);

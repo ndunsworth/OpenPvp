@@ -37,6 +37,9 @@ opvpplugin.PARTY_ROSTER_END_UPDATE             = "OPVP_PARTY_ROSTER_END_UPDATE";
 opvpplugin.PARTY_MEMBER_INFO_UPDATE_WA_EVENT   = "OPVP_PARTY_MEMBER_INFO_UPDATE";
 opvpplugin.PARTY_MEMBER_SPELL_INTERRUPTED      = "OPVP_PARTY_MEMBER_SPELL_INTERRUPTED";
 
+opvpplugin.PLAYER_SKYRIDING_CHANGED            = "OPVP_PLAYER_SKYRIDING_CHANGED";
+opvpplugin.PLAYER_VIGOR_CHANGED                = "OPVP_PLAYER_VIGOR_CHANGED";
+
 opvpplugin.QUEUE_ACTIVE_WA_EVENT               = "OPVP_QUEUE_ACTIVE";
 opvpplugin.QUEUE_READY_CHECK_BEGIN_WA_EVENT    = "OPVP_QUEUE_READY_CHECK_BEGIN";
 opvpplugin.QUEUE_READY_CHECK_END_WA_EVENT      = "OPVP_QUEUE_READY_CHECK_END";
@@ -110,18 +113,21 @@ local function opvp_weakaura_init()
     local user = opvp.Player:instance();
     local party_mgr = opvp.party.manager();
 
-    opvp_connect_signal_to_wa_event(opvp.queue.activeChanged,          opvpplugin.QUEUE_ACTIVE_WA_EVENT);
-    opvp_connect_signal_to_wa_event(opvp.queue.statusChanged,          opvpplugin.QUEUE_STATUS_CHANGED_WA_EVENT);
+    opvp_connect_signal_to_wa_event(opvp.player.instance().skyRidingChanged, opvpplugin.PLAYER_SKYRIDING_CHANGED);
+    opvp_connect_signal_to_wa_event(opvp.player.instance().vigorChanged,     opvpplugin.PLAYER_VIGOR_CHANGED);
 
-    opvp_connect_signal_to_wa_event(opvp.party.countdown,              opvpplugin.COUNTDOWN_WA_EVENT);
+    opvp_connect_signal_to_wa_event(opvp.queue.activeChanged, opvpplugin.QUEUE_ACTIVE_WA_EVENT);
+    opvp_connect_signal_to_wa_event(opvp.queue.statusChanged, opvpplugin.QUEUE_STATUS_CHANGED_WA_EVENT);
 
-    opvp_connect_signal_to_wa_event(user.inCombatChanged,              opvpplugin.USER_IN_COMBAT_CHANGED_WA_EVENT);
-    opvp_connect_signal_to_wa_event(user.specChanged,                  opvpplugin.USER_SPEC_CHANGED_WA_EVENT);
-    opvp_connect_signal_to_wa_event(user.warmodeChanged,               opvpplugin.USER_WARMODE_CHANGED_WA_EVENT);
+    opvp_connect_signal_to_wa_event(opvp.party.countdown, opvpplugin.COUNTDOWN_WA_EVENT);
 
-    opvp_connect_signal_to_wa_event(opvp.queue.readyCheckBegin,        opvpplugin.QUEUE_READY_CHECK_BEGIN_WA_EVENT);
-    opvp_connect_signal_to_wa_event(opvp.queue.readyCheckUpdate,       opvpplugin.QUEUE_READY_CHECK_END_WA_EVENT);
-    opvp_connect_signal_to_wa_event(opvp.queue.readyCheckEnd,          opvpplugin.QUEUE_READY_CHECK_UPDATE_WA_EVENT);
+    opvp_connect_signal_to_wa_event(user.inCombatChanged, opvpplugin.USER_IN_COMBAT_CHANGED_WA_EVENT);
+    opvp_connect_signal_to_wa_event(user.specChanged,     opvpplugin.USER_SPEC_CHANGED_WA_EVENT);
+    opvp_connect_signal_to_wa_event(user.warmodeChanged,  opvpplugin.USER_WARMODE_CHANGED_WA_EVENT);
+
+    opvp_connect_signal_to_wa_event(opvp.queue.readyCheckBegin,  opvpplugin.QUEUE_READY_CHECK_BEGIN_WA_EVENT);
+    opvp_connect_signal_to_wa_event(opvp.queue.readyCheckUpdate, opvpplugin.QUEUE_READY_CHECK_END_WA_EVENT);
+    opvp_connect_signal_to_wa_event(opvp.queue.readyCheckEnd,    opvpplugin.QUEUE_READY_CHECK_UPDATE_WA_EVENT);
 
     opvp_connect_signal_to_wa_event(opvp.match.playerSpellInterrupted, opvpplugin.MATCH_PLAYER_SPELL_INTERRUPTED);
     opvp_connect_signal_to_wa_event(opvp.party.memberSpellInterrupted, opvpplugin.PARTY_MEMBER_SPELL_INTERRUPTED);

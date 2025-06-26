@@ -28,42 +28,44 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.options = {};
+opvp.private.ShowBattlefieldMapMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
 
-function opvp.options.db()
-    return opvp.OptionDatabase:instance();
+function opvp.private.ShowBattlefieldMapMatchFeature:init(option)
+    opvp.MatchTypeOptionFeature.init(self, option);
 end
 
-opvp.options.loaded = opvp.Signal("opvp.options.loaded");
+function opvp.private.ShowBattlefieldMapMatchFeature:isActiveMatchStatus(status)
+    return status == opvp.MatchStatus.ROUND_ACTIVE;
+end
 
-local function opvp_options_general_init()
-    opvp.options.general = {};
+function opvp.private.ShowBattlefieldMapMatchFeature:_onFeatureActivated()
+    BattlefieldMap_LoadUI();
 
-    opvp.options.general.category = opvp.options.category:createCategory(
-        "General",
-        "General",
-        "",
-        opvp.OptionCategory.CHILD_CATEGORY
-    );
+    if BattlefieldMapFrame:IsShown() == false then
+        ToggleBattlefieldMap();
 
-    opvp.options.general.social = {};
+        self._restore = true;
+    end
 
-    opvp.options.general.social.category = opvp.options.general.category:createCategory(
-        "Social",
-        "Social"
-    );
+    opvp.MatchTypeOptionFeature._onFeatureActivated(self);
+end
 
-    opvp.options.general.social.blockDuels = opvp.options.general.social.category:createOption(
-        opvp.Option.BOOL,
-        "BlockPVPDuels",
-        "Block PVP Duels",
-    [[
-Auto declines duels from other players.
+function opvp.private.ShowBattlefieldMapMatchFeature:_onFeatureDeactivated()
+    if self._restore == true and BattlefieldMapFrame:IsShown() == true then
+        ToggleBattlefieldMap();
+    end
 
-Duels from players on your friends list are allowed.
-]],
-        false
+    self._restore = false;
+
+    opvp.MatchTypeOptionFeature._onFeatureDeactivated(self);
+end
+
+local opvp_show_bg_map_match_feature;
+
+local function opvp_show_bg_map_match_feature_ctor()
+    opvp_show_bg_map_match_feature = opvp.private.ShowBattlefieldMapMatchFeature(
+        opvp.options.match.frames.showBattlefieldMap
     );
 end
 
-opvp.OnAddonLoad:register(opvp_options_general_init);
+opvp.OnAddonLoad:register(opvp_show_bg_map_match_feature_ctor);

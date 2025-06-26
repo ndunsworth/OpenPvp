@@ -36,34 +36,28 @@ end
 
 opvp.options.loaded = opvp.Signal("opvp.options.loaded");
 
-local function opvp_options_general_init()
-    opvp.options.general = {};
+local function opvp_options_main_init()
+    opvp.options.category = opvp.options.db():root("Main", "Main");
 
-    opvp.options.general.category = opvp.options.category:createCategory(
-        "General",
-        "General",
-        "",
-        opvp.OptionCategory.CHILD_CATEGORY
-    );
-
-    opvp.options.general.social = {};
-
-    opvp.options.general.social.category = opvp.options.general.category:createCategory(
-        "Social",
-        "Social"
-    );
-
-    opvp.options.general.social.blockDuels = opvp.options.general.social.category:createOption(
+    opvp.options.debug = opvp.options.category:createOption(
         opvp.Option.BOOL,
-        "BlockPVPDuels",
-        "Block PVP Duels",
-    [[
-Auto declines duels from other players.
-
-Duels from players on your friends list are allowed.
-]],
+        "Debug",
+        "Enable Debugging",
+        "",
         false
+    );
+
+    opvp.options.debug.changed:connect(
+        function(state)
+            opvp.private.state.debug:setValue(state);
+
+            if state == true then
+                opvp.printDebug(opvp.strs.DEBUG_ENABLED);
+            else
+                opvp.printMessage(opvp.strs.DEBUG_DISABLED);
+            end
+        end
     );
 end
 
-opvp.OnAddonLoad:register(opvp_options_general_init);
+opvp.OnAddonLoad:register(opvp_options_main_init);
