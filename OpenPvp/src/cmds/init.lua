@@ -331,7 +331,16 @@ local function opvp_init_test_slash_cmds()
     };
 
     local bg_maps = {
+        opvp.Map.ALTERAC_VALLEY,
         opvp.Map.ARATHI_BASIN,
+        opvp.Map.SILVERSHARD_MINES,
+        opvp.Map.TWIN_PEAKS,
+        opvp.Map.WARSONG_GULCH
+    };
+
+    local bg_maps_rated = {
+        opvp.Map.ARATHI_BASIN,
+        opvp.Map.SILVERSHARD_MINES,
         opvp.Map.TWIN_PEAKS,
         opvp.Map.WARSONG_GULCH
     };
@@ -396,7 +405,7 @@ local function opvp_init_test_slash_cmds()
                     end
                 end
 
-                local map = bg_maps[math.random(1, #bg_maps)];
+                local map;
                 local simulate = opvp.utils.array.contains(args, "simulate");
 
                 local mask = 0;
@@ -406,11 +415,17 @@ local function opvp_init_test_slash_cmds()
                         opvp.PvpFlag.RATED,
                         opvp.PvpFlag.BLITZ
                     );
+
+                    map = bg_maps[math.random(1, #bg_maps_rated)];
                 elseif opvp.utils.array.contains(args, "rbg") then
                     mask = bit.bor(
                         opvp.PvpFlag.RATED,
                         opvp.PvpFlag.RBG
                     );
+
+                    map = bg_maps[math.random(1, #bg_maps_rated)];
+                else
+                    map = bg_maps[math.random(1, #bg_maps)];
                 end
 
                 mgr:beginTest(
