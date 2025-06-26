@@ -28,7 +28,15 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.UiWidget = opvp.CreateClass();
+opvp.UiWidgetType = {
+    DOUBLE_STATE_ICON_ROW = Enum.UIWidgetVisualizationType.DoubleStateIconRow,
+    DOUBLE_STATUS_BAR     = Enum.UIWidgetVisualizationType.DoubleStatusBar,
+    FILL_UP_FRAMES        = Enum.UIWidgetVisualizationType.FillUpFrames,
+    ICON_AND_TEXT         = Enum.UIWidgetVisualizationType.IconAndText,
+    STATUS_BAR            = Enum.UIWidgetVisualizationType.StatusBar
+};
+
+opvp.UiWidget = opvp.CreateClass(opvp.Object);
 
 function opvp.UiWidget:createFromCfg(cfg)
     if cfg.widget_type == Enum.UIWidgetVisualizationType.DoubleStateIconRow then
@@ -44,6 +52,10 @@ function opvp.UiWidget:createFromCfg(cfg)
     return nil;
 end
 
+function opvp.UiWidget:__del__()
+    self:disconnect();
+end
+
 function opvp.UiWidget:init(widgetSet, widgetId, name)
     if name == nil then
         name = "";
@@ -52,6 +64,33 @@ function opvp.UiWidget:init(widgetSet, widgetId, name)
     self._widget_set = widgetSet;
     self._widget_id  = widgetId;
     self._name       = name;
+    self._connected  = false;
+end
+
+function opvp.UiWidget:connect()
+    if self._connected == true then
+        return;
+    end
+
+    opvp.UiWidgetServer:instance():_register(self);
+
+    self:_onConnected();
+
+    self:update();
+end
+
+function opvp.UiWidget:isConnected()
+    return self._connected;
+end
+
+function opvp.UiWidget:disconnect()
+    if self._connected == false then
+        return;
+    end
+
+    opvp.UiWidgetServer:instance():_unregister(self);
+
+    self:_onDisconnected();
 end
 
 function opvp.UiWidget:name()
@@ -66,10 +105,26 @@ function opvp.UiWidget:setWidgetSet(widgetSet)
     self._widget_set = widgetSet;
 end
 
+function opvp.UiWidget:update()
+
+end
+
 function opvp.UiWidget:widgetId()
     return self._widget_id;
 end
 
 function opvp.UiWidget:widgetSet()
     return self._widget_set;
+end
+
+function opvp.UiWidget:_onConnected()
+    self._connected = true;
+end
+
+function opvp.UiWidget:_onDisconnected()
+    self._connected = false;
+end
+
+function opvp.UiWidget:_onWidgetUpdate(info)
+
 end

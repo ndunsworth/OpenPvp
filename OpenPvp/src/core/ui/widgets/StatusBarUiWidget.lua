@@ -48,47 +48,26 @@ function opvp.StatusBarUiWidget:minimumValue()
     return self._value_min;
 end
 
+function opvp.IconAndTextUiWidget:update()
+    local info = C_UIWidgetManager.GetStatusBarWidgetVisualizationInfo(
+        self._widget_id
+    );
+
+    if info ~= nil then
+        self:_onWidgetUpdate(info);
+    end
+end
+
 function opvp.StatusBarUiWidget:value()
     return self._value;
 end
 
-function opvp.StatusBarUiWidget:_initialize()
-    local widget_info = C_UIWidgetManager.GetStatusBarWidgetVisualizationInfo(
-        self._widget_id
-    );
-
-    self._value_max  = widget_info.barMin;
-    self._value_min  = widget_info.barMax;
-    self._value      = widget_info.barValue;
-
-    opvp.event.UPDATE_UI_WIDGET:connect(
-        self,
-        self._onUiWidgetUpdate
-    );
+function opvp.StatusBarUiWidget:widgetType()
+    return opvp.UiWidgetType.STATUS_BAR;
 end
 
-function opvp.StatusBarUiWidget:_shutdown()
-    opvp.event.UPDATE_UI_WIDGET:disconnect(
-        self,
-        self._onUiWidgetUpdate
-    );
-end
+function opvp.StatusBarUiWidget:_onWidgetUpdate(widgetInfo)
+    self._value = widgetInfo.barValue;
 
-function opvp.StatusBarUiWidget:_onUiWidgetUpdate(widgetInfo)
-    if (
-        widgetInfo.widgetSetID ~= self._widget_set or
-        widgetInfo.widgetID ~= self._widget_id
-    ) then
-        return;
-    end
-
-    widgetInfo = C_UIWidgetManager.StatusBarWidgetVisualizationInfo(
-        self._widget_id
-    );
-
-    if widgetInfo.barValue ~= self._value then
-        self._value = widgetInfo.barValue;
-
-        self.valueChanged.emit(self._value);
-    end
+    self.updated:emit();
 end

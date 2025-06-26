@@ -28,27 +28,48 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.DoubleStatusBarUiWidget = opvp.CreateClass(opvp.UiWidget);
+opvp.FillUpFramesUiWidget = opvp.CreateClass(opvp.UiWidget);
 
-function opvp.DoubleStatusBarUiWidget:init(widgetSet, widgetId, name)
+function opvp.FillUpFramesUiWidget:init(widgetSet, widgetId, name)
     opvp.UiWidget.init(self, widgetSet, widgetId, name);
 
-    self._value_max  = {0, 0};
-    self._value_min  = {0, 0};
-    self._value      = {0, 0};
-    self.updated     = opvp.Signal("opvp.DoubleStatusBarUiWidget.updated");
+    self._state        = Enum.IconAndTextWidgetState.Hidden;
+    self._value        = "";
+    self._full_frames  = 0;
+    self._fill_max     = 0;
+    self._fill_min     = 0;
+    self._fill_val     = 0;
+    self._total_frames = 0;
+
+    self.updated     = opvp.Signal("opvp.FillUpFramesUiWidget.updated");
 end
 
-function opvp.DoubleStatusBarUiWidget:maximumValue(index)
-    return self._value_max[index];
+function opvp.FillUpFramesUiWidget:fullFrames()
+    return self._full_frames;
 end
 
-function opvp.DoubleStatusBarUiWidget:minimumValue(index)
-    return self._value_min[index];
+function opvp.FillUpFramesUiWidget:maximumFill()
+    return self._fill_max;
 end
 
-function opvp.DoubleStatusBarUiWidget:update()
-    local info = C_UIWidgetManager.GetDoubleStatusBarWidgetVisualizationInfo(
+function opvp.FillUpFramesUiWidget:minimumFill()
+    return self._fill_min;
+end
+
+function opvp.FillUpFramesUiWidget:totalFrames()
+    return self._total_frames;
+end
+
+function opvp.FillUpFramesUiWidget:fillValue()
+    return self._fill_val;
+end
+
+function opvp.FillUpFramesUiWidget:totalValue()
+    return (self._full_frames * self._fill_max) + self._fill_val;
+end
+
+function opvp.FillUpFramesUiWidget:update()
+    local info = C_UIWidgetManager.GetFillUpFramesWidgetVisualizationInfo(
         self._widget_id
     );
 
@@ -57,23 +78,16 @@ function opvp.DoubleStatusBarUiWidget:update()
     end
 end
 
-function opvp.DoubleStatusBarUiWidget:value(index)
-    return self._value[index];
+function opvp.FillUpFramesUiWidget:widgetType()
+    return opvp.UiWidgetType.FILL_UP_FRAMES;
 end
 
-function opvp.DoubleStatusBarUiWidget:values()
-    return {self._value[1], self._value[2]};
-end
-
-function opvp.DoubleStatusBarUiWidget:widgetType()
-    return opvp.UiWidgetType.DOUBLE_STATUS_BAR;
-end
-
-function opvp.DoubleStatusBarUiWidget:_onWidgetUpdate(widgetInfo)
-    local mask = 0;
-
-    self._value[1] = widgetInfo.leftBarValue;
-    self._value[2] = widgetInfo.rightBarValue;
+function opvp.FillUpFramesUiWidget:_onWidgetUpdate(widgetInfo)
+    self._full_frames  = widgetInfo.numFullFrames;
+    self._fill_max     = widgetInfo.fillMax;
+    self._fill_min     = widgetInfo.fillMin;
+    self._fill_val     = widgetInfo.fillValue;
+    self._total_frames = widgetInfo.numTotalFrames;
 
     self.updated:emit();
 end

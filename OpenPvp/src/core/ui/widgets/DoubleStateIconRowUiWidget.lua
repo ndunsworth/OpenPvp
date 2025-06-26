@@ -35,69 +35,24 @@ function opvp.DoubleStateIconRowUiWidget:init(widgetSet, widgetId, name)
 
     self._left_state  = 0;
     self._right_state = 0;
-
-    self.iconStateChanged = opvp.Signal("opvp.DoubleStateIconRowUiWidget.iconStateChanged");
+    self.updated      = opvp.Signal("opvp.DoubleStateIconRowUiWidget.updated");
 end
 
-function opvp.DoubleStateIconRowUiWidget:widgetId()
-    return self._widget_id;
-end
-
-function opvp.DoubleStateIconRowUiWidget:widgetSet()
-    return self._widget_set;
-end
-
-function opvp.DoubleStateIconRowUiWidget:_initialize()
-    local widget_info = C_UIWidgetManager.GetDoubleStateIconRowVisualizationInfo(
+function opvp.DoubleStateIconRowUiWidget:update()
+    local info = C_UIWidgetManager.GetDoubleStateIconRowVisualizationInfo(
         self._widget_id
     );
 
-    self._left_state  = 0;
-    self._right_state = 0;
-
-    for n=1, #widget_info.leftIcons do
-        if widget_info.leftIcons[n].iconState == 1 then
-            self._left_state = bit.bor(
-                self._left_state,
-                bit.lshift(1, n - 1)
-            );
-        end
+    if info ~= nil then
+        self:_onWidgetUpdate(info);
     end
-
-    for n=1, #widget_info.rightIcons do
-        if widget_info.rightIcons[n].iconState == 1 then
-            self._right_state = bit.bor(
-                self._right_state,
-                bit.lshift(1, n - 1)
-            );
-        end
-    end
-
-    opvp.event.UPDATE_UI_WIDGET:connect(
-        self,
-        self._onUiWidgetUpdate
-    );
 end
 
-function opvp.DoubleStateIconRowUiWidget:_shutdown()
-    opvp.event.UPDATE_UI_WIDGET:disconnect(
-        self,
-        self._onUiWidgetUpdate
-    );
+function opvp.DoubleStateIconRowUiWidget:widgetType()
+    return opvp.UiWidgetType.DOUBLE_STATE_ICON_ROW;
 end
 
-function opvp.DoubleStateIconRowUiWidget:_onUiWidgetUpdate(widgetInfo)
-    if (
-        widgetInfo.widgetSetID ~= self._widget_set or
-        widgetInfo.widgetID ~= self._widget_id
-    ) then
-        return;
-    end
-
-    widgetInfo = C_UIWidgetManager.GetDoubleStateIconRowVisualizationInfo(
-        self._widget_id
-    );
-
+function opvp.DoubleStateIconRowUiWidget:_onWidgetUpdate(widgetInfo)
     local left_state, right_state;
 
     for n=1, #widgetInfo.leftIcons do
@@ -118,20 +73,8 @@ function opvp.DoubleStateIconRowUiWidget:_onUiWidgetUpdate(widgetInfo)
         end
     end
 
-    if self._left_state ~= left_state then
-        self._left_state = left_state;
+    self._left_state = left_state;
+    self._right_state = right_state;
 
-        if self._right_state ~= right_state then
-            self._right_state = right_state;
-
-            self.iconStateChanged:emit(1, self._left_state);
-            self.iconStateChanged:emit(2, self._right_state);
-        else
-            self.iconStateChanged:emit(1, self._left_state);
-        end
-    elseif self._right_state ~= right_state then
-        self._right_state = right_state;
-
-        self.iconStateChanged:emit(2, self._right_state);
-    end
+    self.updated:emit();
 end

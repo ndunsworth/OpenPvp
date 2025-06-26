@@ -35,8 +35,7 @@ function opvp.IconAndTextUiWidget:init(widgetSet, widgetId, name)
 
     self._state      = Enum.IconAndTextWidgetState.Hidden;
     self._value      = "";
-
-    self.valueChanged = opvp.Signal("opvp.IconAndTextUiWidget.valueChanged");
+    self.updated     = opvp.Signal("opvp.IconAndTextUiWidget.updated");
 end
 
 function opvp.IconAndTextUiWidget:maximumValue()
@@ -47,47 +46,27 @@ function opvp.IconAndTextUiWidget:minimumValue()
     return self._value_min;
 end
 
+function opvp.IconAndTextUiWidget:update()
+    local info = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(
+        self._widget_id
+    );
+
+    if info ~= nil then
+        self:_onWidgetUpdate(info);
+    end
+end
+
 function opvp.IconAndTextUiWidget:value()
     return self._value;
 end
 
-function opvp.IconAndTextUiWidget:_initialize()
-    local widget_info = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(
-        self._widget_id
-    );
-
-    self._state = widget_info.state;
-    self._value = widget_info.text;
-
-    opvp.event.UPDATE_UI_WIDGET:connect(
-        self,
-        self._onUiWidgetUpdate
-    );
+function opvp.IconAndTextUiWidget:widgetType()
+    return opvp.UiWidgetType.ICON_AND_TEXT;
 end
 
-function opvp.IconAndTextUiWidget:_shutdown()
-    opvp.event.UPDATE_UI_WIDGET:disconnect(
-        self,
-        self._onUiWidgetUpdate
-    );
-end
+function opvp.IconAndTextUiWidget:_onWidgetUpdate(widgetInfo)
+    self._value = widgetInfo.text;
+    self._state = widgetInfo.state;
 
-function opvp.IconAndTextUiWidget:_onUiWidgetUpdate(widgetInfo)
-    if (
-        widgetInfo.widgetSetID ~= self._widget_set or
-        widgetInfo.widgetID ~= self._widget_id
-    ) then
-        return;
-    end
-
-    widgetInfo = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(
-        self._widget_id
-    );
-
-    if widgetInfo.text ~= self._value or widgetInfo.state ~= self._state then
-        self._value = widgetInfo.text;
-        self._state = widgetInfo.state;
-
-        self.valueChanged.emit(self._value);
-    end
+    self.updated:emit();
 end

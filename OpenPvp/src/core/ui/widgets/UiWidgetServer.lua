@@ -28,52 +28,74 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-opvp.DoubleStatusBarUiWidget = opvp.CreateClass(opvp.UiWidget);
+local opvp_uiwidget_server_singleton;
 
-function opvp.DoubleStatusBarUiWidget:init(widgetSet, widgetId, name)
-    opvp.UiWidget.init(self, widgetSet, widgetId, name);
+opvp.UiWidgetServer = opvp.CreateClass(opvp.Object);
 
-    self._value_max  = {0, 0};
-    self._value_min  = {0, 0};
-    self._value      = {0, 0};
-    self.updated     = opvp.Signal("opvp.DoubleStatusBarUiWidget.updated");
+function opvp.UiWidgetServer:instance()
+    return opvp_uiwidget_server_singleton;
 end
 
-function opvp.DoubleStatusBarUiWidget:maximumValue(index)
-    return self._value_max[index];
-end
-
-function opvp.DoubleStatusBarUiWidget:minimumValue(index)
-    return self._value_min[index];
-end
-
-function opvp.DoubleStatusBarUiWidget:update()
-    local info = C_UIWidgetManager.GetDoubleStatusBarWidgetVisualizationInfo(
-        self._widget_id
-    );
-
-    if info ~= nil then
-        self:_onWidgetUpdate(info);
+function opvp.UiWidgetServer:__del__()
+    for k, widgets in pairs(self._widgets) do
+        for n=1, widgets:size() do
+            widgets:item(n):_onDisconnected();
+        end
     end
 end
 
-function opvp.DoubleStatusBarUiWidget:value(index)
-    return self._value[index];
+function opvp.UiWidgetServer:init()
+    opvp.Object.init(self);
+
+    self._widgets = {};
+
+    opvp.event.UPDATE_UI_WIDGET:connect(self, self._onUpdateWidget);
 end
 
-function opvp.DoubleStatusBarUiWidget:values()
-    return {self._value[1], self._value[2]};
+function opvp.UiWidgetServer:_onUpdateWidget(info)
+    local widgets = self._widgets[info.widgetID];
+
+    if widgets == nil then
+        return;
+    end
+
+    for n=1, widgets:size() do
+        widgets:item(n):update();
+    end
 end
 
-function opvp.DoubleStatusBarUiWidget:widgetType()
-    return opvp.UiWidgetType.DOUBLE_STATUS_BAR;
+function opvp.UiWidgetServer:_register(widget)
+    local widget_id = widget:widgetId();
+
+    local widgets = self._widgets[widget_id];
+
+    if widgets == nil then
+        widgets = opvp.List();
+
+        widgets:append(widget);
+
+        self._widgets[widget_id] = widgets;
+    else
+        widgets:append(widget);
+    end
 end
 
-function opvp.DoubleStatusBarUiWidget:_onWidgetUpdate(widgetInfo)
-    local mask = 0;
+function opvp.UiWidgetServer:_unregister(widget)
+    local widget_id = widget:widgetId();
 
-    self._value[1] = widgetInfo.leftBarValue;
-    self._value[2] = widgetInfo.rightBarValue;
+    local widgets = self._widgets[widget_id];
 
-    self.updated:emit();
+    if widgets == nil then
+        return;
+    end
+
+    widgets:removeItem(widget);
 end
+
+local function opvp_uiwidget_server_singleton_ctor()
+    opvp_uiwidget_server_singleton = opvp.UiWidgetServer();
+
+    opvp.printMessage("UiWidgetServer - Initialized");
+end
+
+opvp.OnAddonLoad:register(opvp_uiwidget_server_singleton_ctor);
