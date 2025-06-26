@@ -34,12 +34,61 @@ function opvp.friends.addIgnore(name)
     return C_FriendList.AddIgnore(name);
 end
 
-function opvp.friends.isBattleNetFriend(guid)
+function opvp.friends.isAnyFriendByGuid(guid)
+    return (
+        opvp.friends.isBattleNetFriendByGuid(guid) or
+        opvp.friends.isFriendByGuid(guid)
+    );
+end
+
+function opvp.friends.isAnyFriendByName(name)
+    return (
+        opvp.friends.isBattleNetFriendByName(name) or
+        opvp.friends.isFriendByName(name)
+    );
+end
+
+function opvp.friends.isAnyFriendByUnitId(unitId)
+    return (
+        opvp.friends.isAnyFriendByGuid(opvp.unit.guid(unitId)) or
+        opvp.friends.isAnyFriendByName(opvp.unit.name(unitId))
+    );
+end
+
+function opvp.friends.isBattleNetFriendByGuid(guid)
     return C_BattleNet.GetAccountInfoByGUID(guid) ~= nil;
 end
 
-function opvp.friends.isFriend(guid)
+function opvp.friends.isBattleNetFriendByName(name)
+    local character, server = opvp.unit.splitNameAndServer(name);
+    local info;
+
+    for n=1, BNGetNumFriends() do
+        info = C_BattleNet.GetFriendAccountInfo(n);
+
+        if (
+            info ~= nil and
+            info.gameAccountInfo ~= nil and
+            info.gameAccountInfo.characterName == character and
+            info.gameAccountInfo.realmName == server
+        ) then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+function opvp.friends.isFriendByUnitId(unitId)
+    return opvp.friends.isGuidFriend(opvp.unit.guid(unitId));
+end
+
+function opvp.friends.isFriendByGuid(guid)
     return C_FriendList.IsFriend(guid);
+end
+
+function opvp.friends.isFriendByName(name)
+    return C_FriendList.GetFriendInfo(name) ~= nil;
 end
 
 function opvp.friends.isIgnored(name)

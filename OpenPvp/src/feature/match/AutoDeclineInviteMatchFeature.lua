@@ -48,8 +48,8 @@ function opvp.private.AutoDeclineInviteMatchFeature:isFriend(guid)
     end
 
     local is_friend = (
-        opvp.friends.isFriend(guid) == true or
-        opvp.friends.isBattleNetFriend(guid) == true
+        opvp.friends.isFriendByGuid(guid) == true or
+        opvp.friends.isBattleNetFriendByGuid(guid) == true
     );
 
     if is_friend == true then
