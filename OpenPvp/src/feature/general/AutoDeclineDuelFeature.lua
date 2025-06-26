@@ -28,14 +28,46 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local opvp_hide_obj_trkr_frame_match_feature;
+opvp.private.AutoDeclineDuelFeature = opvp.CreateClass(opvp.OptionFeature);
 
-local function opvp_hide_obj_trkr_frame_match_feature_ctor()
-    opvp_hide_obj_trkr_frame_match_feature = opvp.HideFrameMatchFeature(
-        opvp.options.match.frames.hideObjTracker,
-        ObjectiveTrackerFrame,
-        opvp.HideFrameHandler.PARENT
+function opvp.private.AutoDeclineDuelFeature:init(option)
+    opvp.OptionFeature.init(self, option);
+end
+
+function opvp.private.AutoDeclineDuelFeature:isFeatureEnabled()
+    return self:option():value();
+end
+
+function opvp.private.AutoDeclineDuelFeature:_onFeatureActivated()
+    opvp.event.DUEL_REQUESTED:connect(
+        self,
+        self._onDuelRequested
+    );
+
+    opvp.MatchOptionFeature._onFeatureActivated(self);
+end
+
+function opvp.private.AutoDeclineDuelFeature:_onFeatureDeactivated()
+    opvp.event.DUEL_REQUESTED:disconnect(
+        self,
+        self._onDuelRequested
+    );
+
+    opvp.MatchOptionFeature._onFeatureDeactivated(self);
+end
+
+function opvp.private.AutoDeclineDuelFeature:_onDuelRequested(name)
+    if opvp.friends.isAnyFriendByName(name) == false then
+        CancelDuel();
+    end
+end
+
+local opvp_auto_decline_duel_feature;
+
+local function opvp_auto_decline_duel_feature_ctor()
+    opvp_auto_decline_duel_feature = opvp.private.AutoDeclineDuelFeature(
+        opvp.options.general.social.blockDuels
     );
 end
 
-opvp.OnAddonLoad:register(opvp_hide_obj_trkr_frame_match_feature_ctor);
+opvp.OnAddonLoad:register(opvp_auto_decline_duel_feature_ctor);

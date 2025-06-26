@@ -36,24 +36,20 @@ local function opvp_hide_unit_frames_match_feature_ctor()
     opvp_hide_player_frame_match_feature = opvp.HideFrameMatchFeature(
         opvp.options.match.frames.hidePlayerFrame,
         PlayerFrame,
-        opvp.HideFrameMatchFeature.ALPHA
+        opvp.HideFrameHandler.ALPHA
     );
 
     opvp_hide_target_frame_match_feature = opvp.HideFrameMatchFeature(
         opvp.options.match.frames.hideTargetFrame,
         TargetFrame,
-        opvp.HideFrameMatchFeature.ALPHA
+        opvp.HideFrameHandler.ALPHA
     );
 
     opvp_hide_focus_frame_match_feature = opvp.HideFrameMatchFeature(
         opvp.options.match.frames.hideFocusFrame,
         FocusFrame,
-        opvp.HideFrameMatchFeature.ALPHA
+        opvp.HideFrameHandler.ALPHA
     );
-
-    --~ opvp_hide_player_frame_match_feature:setEditModeExitApply(true);
-    --~ opvp_hide_target_frame_match_feature:setEditModeExitApply(true);
-    --~ opvp_hide_focus_frame_match_feature:setEditModeExitApply(true);
 end
 
 opvp.OnAddonLoad:register(opvp_hide_unit_frames_match_feature_ctor);

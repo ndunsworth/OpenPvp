@@ -28,40 +28,14 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local opvp_hidden_parent_frame = CreateFrame(
-    "Frame",
-    "OpenPvpHideFrameParent",
-    UIParent,
-    "SecureFrameTemplate"
-);
-
-opvp_hidden_parent_frame:Hide();
-
 opvp.HideFrameMatchFeature = opvp.CreateClass(opvp.MatchTypeOptionFeature);
-
-opvp.HideFrameMatchFeature.ALPHA      = 1;
-opvp.HideFrameMatchFeature.VISIBILITY = 2;
-opvp.HideFrameMatchFeature.PARENT     = 3;
 
 function opvp.HideFrameMatchFeature:init(option, frame, method)
     opvp.MatchTypeOptionFeature.init(self, option);
 
-    self._match_activate   = opvp.MatchStatus.ROUND_ACTIVE;
-    self._match_deactivate = opvp.MatchStatus.ROUND_WARMUP;
-    self._frame            = frame;
-    self._editmode_apply   = false;
-    self._mouse_state      = false;
-    self._restore_parent   = nil;
+    self._handler = opvp.HideFrameHandler(frame, method);
 
-    self.toggled = opvp.Signal("opvp.HideFrameMatchFeature.toggled");
-
-    assert(self._frame ~= nil);
-
-    if method == opvp.HideFrameMatchFeature.ALPHA then
-        self._method = opvp.HideFrameMatchFeature.ALPHA;
-    else
-        self._method = opvp.HideFrameMatchFeature.VISIBILITY;
-    end
+    self._handler:setEditModeToggle(true);
 end
 
 function opvp.HideFrameMatchFeature:isActiveMatchStatus(status)
@@ -72,88 +46,14 @@ function opvp.HideFrameMatchFeature:isActiveMatchStatus(status)
     );
 end
 
-function opvp.HideFrameMatchFeature:setEditModeExitApply(state)
-    if state == self._editmode_apply then
-        return;
-    end
-
-    self._editmode_apply = state;
-
-    if self._editmode_apply == true then
-        opvp.layout.beginEditMode:connect(
-            self,
-            self._onEditModeBegin
-        );
-
-        opvp.layout.endEditMode:connect(
-            self,
-            self._onEditModeEnd
-        );
-    else
-        opvp.layout.beginEditMode:disconnect(
-            self,
-            self._onEditModeBegin
-        );
-
-        opvp.layout.endEditMode:disconnect(
-            self,
-            self._onEditModeEnd
-        );
-    end
-end
-
-function opvp.HideFrameMatchFeature:_onEditModeBegin()
-    self:_setActive(false);
-end
-
-function opvp.HideFrameMatchFeature:_onEditModeEnd()
-    self:_setActive(true);
-end
-
 function opvp.HideFrameMatchFeature:_onFeatureActivated()
-    if self._method == opvp.HideFrameMatchFeature.ALPHA then
-        self._frame:SetAlpha(0);
-
-        self._enable_mouse = self._frame:IsMouseEnabled();
-
-        if self._enable_mouse == true then
-            self._frame:EnableMouse(false);
-        end
-    elseif self._method == opvp.HideFrameMatchFeature.VISIBILITY then
-        self._frame:Hide();
-    else
-        self._restore_parent = self._frame:GetParent();
-
-        securecallfunction(
-            self._frame.SetParent,
-            self._frame,
-            opvp_hidden_parent_frame
-        );
-    end
-
-    self.toggled:emit(false);
+    self._handler:setEnabled(true);
 
     opvp.MatchTypeOptionFeature._onFeatureActivated(self);
 end
 
 function opvp.HideFrameMatchFeature:_onFeatureDeactivated()
-    if self._method == opvp.HideFrameMatchFeature.ALPHA then
-        self._frame:SetAlpha(1);
-
-        if self._enable_mouse == true then
-            self._frame:EnableMouse(true);
-        end
-    elseif self._method == opvp.HideFrameMatchFeature.VISIBILITY then
-        self._frame:Show();
-    else
-        securecallfunction(
-            self._frame.SetParent,
-            self._frame,
-            self._restore_parent
-        );
-    end
-
-    self.toggled:emit(true);
+    self._handler:setEnabled(false);
 
     opvp.MatchTypeOptionFeature._onFeatureDeactivated(self);
 end

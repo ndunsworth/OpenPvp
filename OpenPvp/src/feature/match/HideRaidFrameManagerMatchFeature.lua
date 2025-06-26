@@ -34,10 +34,8 @@ local function opvp_hide_raid_frame_mgr_match_feature_ctor()
     opvp_hide_raid_frame_mgr_match_feature = opvp.HideFrameMatchFeature(
         opvp.options.match.frames.hideRaidFrameManager,
         CompactRaidFrameManager,
-        opvp.HideFrameMatchFeature.ALPHA
+        opvp.HideFrameHandler.STATE_DRIVER
     );
-
-    --~ opvp_hide_raid_frame_mgr_match_feature:setEditModeExitApply(true);
 end
 
 opvp.OnAddonLoad:register(opvp_hide_raid_frame_mgr_match_feature_ctor);
