@@ -207,6 +207,27 @@ Chat Messages Filtered:
         false
     );
 
+    opvp.options.match.social = {};
+
+    opvp.options.match.social.category = opvp.options.match.category:createCategory(
+        "Social",
+        "Social"
+    );
+
+    opvp.options.match.social.battlenetDND = opvp.options.match.social.category:createOption(
+        opvp.Option.MATCH_TYPE,
+        "BattleNetStatusDND",
+        "Battle.net DND",
+        "Sets your Battle.net status to DND when in a pvp match.\n\nReverts to previous status after match completion."
+    );
+
+    opvp.options.match.social.chatStatusDND = opvp.options.match.social.category:createOption(
+        opvp.Option.MATCH_TYPE,
+        "ChatStatusDND",
+        "Chat Status DND",
+        "Sets your in game chat status to DND when in a pvp match.\n\nReverts to previous status after match completion."
+    );
+
     opvp.options.match.layout = {};
 
     opvp.options.match.layout.category = opvp.options.match.category:createCategory(
@@ -430,10 +451,10 @@ Selecting "- none -" will disable this feature for Battlegrounds.
         "Hides the Objective Tracker during a pvp match.\n\nThe Object Tracker is the frame that displays tracked Quest information."
     );
 
-    opvp.options.match.frames.hideObjTracker:setFlags(
-        opvp.Option.LOCKED_DURING_COMBAT,
-        true
-    );
+    --~ opvp.options.match.frames.hideObjTracker:setFlags(
+        --~ opvp.Option.LOCKED_DURING_COMBAT,
+        --~ true
+    --~ );
 
     opvp.options.match.frames.hideRaidFrameManager = opvp.options.match.frames.category:createOption(
         opvp.Option.MATCH_TYPE,
