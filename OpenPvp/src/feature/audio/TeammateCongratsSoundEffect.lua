@@ -65,6 +65,10 @@ function opvp.private.TeammateCongratsSoundEffect:_onOutcomeReady(match, outcome
         (
             outcomeType == opvp.MatchOutcomeType.MATCH and
             match:isRoundBased() == true
+        ) or
+        (
+            match:isSimulation() == true and
+            match:surrendered() == true
         )
     ) then
         return;

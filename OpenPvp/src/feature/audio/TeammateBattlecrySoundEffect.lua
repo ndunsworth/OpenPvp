@@ -49,7 +49,14 @@ function opvp.private.TeammateBattlecrySoundEffect:_onFeatureActivated()
 
     local match = opvp.match.current();
 
-    if match == nil or match:joinedInProgress() == true then
+    if (
+        match == nil or
+        match:joinedInProgress() == true or
+        (
+            match:isSimulation() == true and
+            match:surrendered() == true
+        )
+    ) then
         return;
     end
 
