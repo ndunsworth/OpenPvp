@@ -195,7 +195,7 @@ local function opvp_options_interface_init()
         opvp.Option.BOOL,
         "Scoreboard",
         "Match Scoreboard",
-        "During a rated pvp match the tooltip will display scoreboard information.\n\nInformation displayed will change depending on match type and state.",
+        "During a pvp match the tooltip will display scoreboard information.\n\nInformation displayed will change depending on match type and state.",
         true
     );
 
