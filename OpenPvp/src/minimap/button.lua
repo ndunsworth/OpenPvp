@@ -240,27 +240,109 @@ function opvp.private.OpenPvpMiniMapButton:addMatchTooltip(tooltip)
     end
 end
 
-function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, tooltip)
+function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTeamTooltip(match, team, teamName, tooltip)
+    local active = match:isActive();
+    local rated = match:isRated();
+    local complete = match:isComplete();
+
     local players, cls, spec;
 
     if match:isActive() == true then
-        players = opvp.party.utils.sortMembersByRoleStat(match:teammates());
+        players = opvp.party.utils.sortMembersByRoleStat(team:members());
     else
-        players = opvp.party.utils.sortMembersByRole(match:teammates());
+        players = opvp.party.utils.sortMembersByRole(team:members());
     end
 
+    if #players == 0 then
+        return;
+    end
+
+    tooltip:AddLine(
+        string.format(
+            "%s (cr=%d | mmr=%d)",
+            teamName,
+            team:cr(),
+            team:mmr()
+        )
+    );
+
+    for i, member in pairs(players) do
+        cls = member:classInfo();
+        spec = member:specInfo();
+
+        if active == true or rated == false then
+            tooltip:AddDoubleLine(
+                string.format(
+                    "    %s %s",
+                    spec:role():iconMarkup(),
+                    member:nameOrId(true)
+                ),
+                string.format(
+                    "kb=%d | deaths=%d | dmg=%s | healing=%s",
+                    member:kills(),
+                    member:deaths(),
+                    opvp.utils.numberToStringShort(member:damage(), 1),
+                    opvp.utils.numberToStringShort(member:healing(), 1)
+                ),
+                1, 1, 1
+            );
+        elseif complete == true then
+            tooltip:AddDoubleLine(
+                string.format(
+                    "    %s %s",
+                    spec:role():iconMarkup(),
+                    member:nameOrId(true)
+                ),
+                string.format(
+                    "cr=%d/%d/%s | mmr=%d/%d/%s",
+                    member:cr(),
+                    member:cr() + member:crGain(),
+                    opvp.utils.colorNumberPosNeg(
+                        member:crGain(),
+                        0.25,
+                        1,
+                        0.25,
+                        1,
+                        0.25,
+                        0.25
+                    ),
+                    member:mmr(),
+                    member:mmr() + member:mmrGain(),
+                    opvp.utils.colorNumberPosNeg(
+                        member:mmrGain(),
+                        0.25,
+                        1,
+                        0.25,
+                        1,
+                        0.25,
+                        0.25
+                    )
+                ),
+                1, 1, 1
+            );
+        else
+            tooltip:AddDoubleLine(
+                string.format(
+                    "    %s %s",
+                    spec:role():iconMarkup(),
+                    member:nameOrId(true)
+                ),
+                string.format(
+                    "cr=%d",
+                    member:cr()
+                ),
+                1, 1, 1
+            );
+        end
+    end
+end
+
+function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, tooltip)
     local active = match:isActive();
     local complete = match:isComplete();
 
     local player_team_name;
     local enemy_team_name;
-
-    --~ talenttree-horde-cornerlogo
-    --~ talenttree-alliance-cornerlogo
-    --~ QuestPortraitIcon-Horde
-    --~ QuestPortraitIcon-Alliance
-    --~ charcreatetest-logo-alliance
-    --~ charcreatetest-logo-horde
 
     if opvp.match.faction() == opvp.ALLIANCE or (match:isTest() == true and opvp.player.isAlliance()) then
         player_team_name = opvp.Faction.ALLIANCE:colorString(opvp.Faction.ALLIANCE:name());
@@ -270,173 +352,19 @@ function opvp.private.OpenPvpMiniMapButton:addMatchBattlegroundTooltip(match, to
         enemy_team_name  = opvp.Faction.ALLIANCE:colorString(opvp.Faction.ALLIANCE:name());
     end
 
-    if #players > 0 then
-        tooltip:AddLine(
-            string.format(
-                "%s (cr=%d | mmr=%d)",
-                player_team_name,
-                match:playerTeam():cr(),
-                match:playerTeam():mmr()
-            )
-        );
+    self:addMatchBattlegroundTeamTooltip(
+        match,
+        match:playerTeam(),
+        player_team_name,
+        tooltip
+    );
 
-        for i, member in pairs(players) do
-            cls = member:classInfo();
-            spec = member:specInfo();
-
-            if active == true then
-                tooltip:AddDoubleLine(
-                    string.format(
-                        "    %s %s",
-                        spec:role():icon(),
-                        member:nameOrId(true)
-                    ),
-                    string.format(
-                        "kb=%d | deaths=%d | dmg=%s | healing=%s",
-                        member:kills(),
-                        member:deaths(),
-                        opvp.utils.numberToStringShort(member:damage(), 1),
-                        opvp.utils.numberToStringShort(member:healing(), 1)
-                    ),
-                    1, 1, 1
-                );
-            elseif complete == true then
-                tooltip:AddDoubleLine(
-                    string.format(
-                        "    %s %s",
-                        spec:role():icon(),
-                        member:nameOrId(true)
-                    ),
-                    string.format(
-                        "cr=%d/%d/%s | mmr=%d/%d/%s",
-                        member:cr(),
-                        member:cr() + member:crGain(),
-                        opvp.utils.colorNumberPosNeg(
-                            member:crGain(),
-                            0.25,
-                            1,
-                            0.25,
-                            1,
-                            0.25,
-                            0.25
-                        ),
-                        member:mmr(),
-                        member:mmr() + member:mmrGain(),
-                        opvp.utils.colorNumberPosNeg(
-                            member:mmrGain(),
-                            0.25,
-                            1,
-                            0.25,
-                            1,
-                            0.25,
-                            0.25
-                        )
-                    ),
-                    1, 1, 1
-                );
-            else
-                tooltip:AddDoubleLine(
-                    string.format(
-                        "    %s %s",
-                        spec:role():icon(),
-                        member:nameOrId(true)
-                    ),
-                    string.format(
-                        "cr=%d",
-                        member:cr()
-                    ),
-                    1, 1, 1
-                );
-            end
-        end
-    end
-
-    if match:isActive() == true then
-        players = opvp.party.utils.sortMembersByRoleStat(match:opponents());
-    else
-        players = opvp.party.utils.sortMembersByRole(match:opponents());
-    end
-
-    if #players > 0 then
-        tooltip:AddLine(
-            string.format(
-                "%s (cr=%d | mmr=%d)",
-                enemy_team_name,
-                match:opponentTeam():cr(),
-                match:opponentTeam():mmr()
-            )
-        );
-
-        for i, member in pairs(players) do
-            cls = member:classInfo();
-            spec = member:specInfo();
-
-            if active == true then
-                tooltip:AddDoubleLine(
-                    string.format(
-                        "    %s %s",
-                        spec:role():icon(),
-                        member:nameOrId(true)
-                    ),
-                    string.format(
-                        "kb=%d | deaths=%d | dmg=%s | healing=%s",
-                        member:kills(),
-                        member:deaths(),
-                        opvp.utils.numberToStringShort(member:damage(), 1),
-                        opvp.utils.numberToStringShort(member:healing(), 1)
-                    ),
-                    1, 1, 1
-                );
-            elseif complete == true then
-                tooltip:AddDoubleLine(
-                    string.format(
-                        "    %s %s",
-                        spec:role():icon(),
-                        member:nameOrId(true)
-                    ),
-                    string.format(
-                        "cr=%d/%d/%s | mmr=%d/%d/%s",
-                        member:cr(),
-                        member:cr() + member:crGain(),
-                        opvp.utils.colorNumberPosNeg(
-                            member:crGain(),
-                            0.25,
-                            1,
-                            0.25,
-                            1,
-                            0.25,
-                            0.25
-                        ),
-                        member:mmr(),
-                        member:mmr() + member:mmrGain(),
-                        opvp.utils.colorNumberPosNeg(
-                            member:mmrGain(),
-                            0.25,
-                            1,
-                            0.25,
-                            1,
-                            0.25,
-                            0.25
-                        )
-                    ),
-                    1, 1, 1
-                );
-            else
-                tooltip:AddDoubleLine(
-                    string.format(
-                        "    %s %s",
-                        spec:role():icon(),
-                        member:nameOrId(true)
-                    ),
-                    string.format(
-                        "cr=%d",
-                        member:cr()
-                    ),
-                    1, 1, 1
-                );
-            end
-        end
-    end
+    self:addMatchBattlegroundTeamTooltip(
+        match,
+        match:opponentTeam(),
+        enemy_team_name,
+        tooltip
+    );
 end
 
 function opvp.private.OpenPvpMiniMapButton:addMatchInfoTooltip(match, tooltip)
@@ -485,7 +413,7 @@ function opvp.private.OpenPvpMiniMapButton:addMatchShuffleTooltip(match, tooltip
         tooltip:AddDoubleLine(
             string.format(
                 "    %s %s",
-                spec:role():icon(),
+                spec:role():iconMarkup(),
                 member:nameOrId(true)
             ),
             string.format(
@@ -869,7 +797,10 @@ function opvp.private.OpenPvpMiniMapButton:_onEnter(frame)
         opvp.options.interface.minimap.tooltip.scoreboard:value() == true and
         opvp.match.inMatch() == true and
         --~ opvp.match.isTesting() == false and
-        opvp.match.isRated() == true
+        (
+            opvp.match.isRated() == true or
+            opvp.match.isBattleground() == true
+        )
     ) then
         self:addMatchTooltip(GameTooltip);
     else
