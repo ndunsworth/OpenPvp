@@ -69,7 +69,9 @@ function opvp.private.DBGCombatLogConnection:event(event)
         return;
     end
 
-    opvp.printDebug(
+
+    opvp.printMessageOrDebug(
+        not opvp.DEBUG,
 [[
 COMBAT_LOG_EVENT_UNFILTERED {
     timestamp = %d,
@@ -174,10 +176,220 @@ local function opvp_init_dbg_slash_cmds()
     dbg_cmd:addCommand(
         opvp.FuncAddonCommand(
             function(editbox, args)
+                local mgr = opvp.AreaPOIManager:instance();
+                local poi;
+                local atlas;
+
+                local id = tonumber(args);
+
+                if id ~= nil then
+                    poi = mgr:find(id);
+
+                    if poi ~= nil then
+                        atlas = poi:atlas();
+
+                        if atlas ~= "" then
+                            atlas = string.format(
+                                "\"%s\" %s",
+                                atlas,
+                                opvp.utils.textureAtlasMarkup(atlas)
+                            );
+                        else
+                            atlas = "\"\"";
+                        end
+
+                        opvp.printMessageOrDebug(
+                            not opvp.DEBUG,
+                            "AreaPOI: {\n    id=%d\n    name=\"%s\"\n    description=\"%s\"\n    x=%.2f\n    y=%.2f\n    faction=%d\n    timer1=%s\n    timer2=%s\n    atlas=%s\n    tex=\"%s\"\n    tex_index=%d\n}",
+                            poi:id(),
+                            poi:name(),
+                            poi:description(),
+                            poi:x(),
+                            poi:y(),
+                            poi:faction(),
+                            opvp.time.formatSeconds(poi:timeLeft()),
+                            opvp.time.formatSeconds(C_AreaPoiInfo.GetAreaPOISecondsLeft(poi:id())),
+                            atlas,
+                            poi:texture(),
+                            poi:textureIndex()
+                        );
+                    else
+                        opvp.printMessageOrDebug(
+                            not opvp.DEBUG,
+                            "No AreaPOI with id %d",
+                            id
+                        );
+                    end
+
+                    return;
+                end
+
+                local pois = opvp.AreaPOIManager:instance():pois();
+
+                for id, poi in pairs(pois) do
+                    atlas = poi:atlas();
+
+                    if atlas ~= "" then
+                        atlas = string.format(
+                            "\"%s\" %s",
+                            atlas,
+                            opvp.utils.textureAtlasMarkup(atlas)
+                        );
+                    else
+                        atlas = "\"\"";
+                    end
+
+                    opvp.printMessageOrDebug(
+                        not opvp.DEBUG,
+                        "AreaPOI: {\n    id=%d\n    name=\"%s\"\n    description=\"%s\"\n    x=%.2f\n    y=%.2f\n    faction=%d\n    timer1=%s\n    timer2=%s\n    atlas=%s\n    tex=\"%s\"\n    tex_index=%d\n}",
+                        poi:id(),
+                        poi:name(),
+                        poi:description(),
+                        poi:x(),
+                        poi:y(),
+                        poi:faction(),
+                        opvp.time.formatSeconds(poi:timeLeft()),
+                        opvp.time.formatSeconds(C_AreaPoiInfo.GetAreaPOISecondsLeft(poi:id())),
+                        atlas,
+                        poi:texture(),
+                        poi:textureIndex()
+                    );
+                end
+            end,
+            "pois",
+            "Prints Map AreaPOI information"
+        )
+    );
+
+    dbg_cmd:addCommand(
+        opvp.FuncAddonCommand(
+            function(editbox, args)
                 opvp.options.debug:toggle();
             end,
             "toggle",
             "Toggle Debug mode"
+        )
+    );
+
+    dbg_cmd:addCommand(
+        opvp.FuncAddonCommand(
+            function(editbox, args)
+                local widget_ids = {
+                    C_UIWidgetManager.GetTopCenterWidgetSetID(),
+                    C_UIWidgetManager.GetPowerBarWidgetSetID(),
+                    C_UIWidgetManager.GetObjectiveTrackerWidgetSetID(),
+                    C_UIWidgetManager.GetBelowMinimapWidgetSetID()
+                };
+
+                for n=1, #widget_ids do
+                    local widget_set = widget_ids[n];
+                    local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(widget_set);
+
+                    for _, w in pairs(widgets) do
+                        print("widget:", widget_set, w.widgetType, w.widgetID);
+
+                        if w.widgetType == Enum.UIWidgetVisualizationType.CaptureBar then
+                            local widget_info = C_UIWidgetManager.GetCaptureBarWidgetVisualizationInfow(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("CaptureBar ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.CaptureZone then
+                            local widget_info = C_UIWidgetManager.GetCaptureZoneVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("CaptureZone ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.DiscreteProgressSteps then
+                            local widget_info = C_UIWidgetManager.GetDiscreteProgressStepsVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("DiscreteProgressSteps ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.DoubleStateIconRow then
+                            local widget_info = C_UIWidgetManager.GetDoubleStateIconRowVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("DoubleStateIconRow ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.DoubleStatusBar then
+                            local widget_info = C_UIWidgetManager.GetDoubleStatusBarWidgetVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("DoubleStatusBar ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.FillUpFrames then
+                            local widget_info = C_UIWidgetManager.GetFillUpFramesWidgetVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("FillUpFrames ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.IconAndText then
+                            local widget_info = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("IconAndText ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.IconTextAndCurrencies then
+                            local widget_info = C_UIWidgetManager.GetIconTextAndCurrenciesWidgetVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("IconTextAndCurrencies ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.StatusBar then
+                            local widget_info = C_UIWidgetManager.GetStatusBarWidgetVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("StatusBar ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.TextWithState then
+                            local widget_info = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("TextWithState ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.TugOfWar then
+                            local widget_info = C_UIWidgetManager.GetTugOfWarWidgetVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("TugOfWar ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        elseif w.widgetType == Enum.UIWidgetVisualizationType.ZoneControl then
+                            local widget_info = C_UIWidgetManager.GetZoneControlVisualizationInfo(w.widgetID);
+
+                            if widget_info ~= nil then
+                                print("ZoneControl ----");
+
+                                opvp.utils.dump(widget_info);
+                            end
+                        end
+                    end
+                end
+            end,
+            "uiwidgets",
+            "Prints Map AreaPOI information"
         )
     );
 
