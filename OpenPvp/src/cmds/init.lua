@@ -531,31 +531,31 @@ local function opvp_init_test_slash_cmds()
     test_cmd:setDefaultCommad("arena");
 
     local arena_maps = {
-        opvp.Map.CAGE_OF_CARNAGE,
-        opvp.Map.ENIGMA_CRUCIBLE,
-        opvp.Map.MALDRAXXUS_ARENA,
-        opvp.Map.MUGAMBALA_ARENA,
-        opvp.Map.NAGRAND_ARENA,
-        opvp.Map.NOKHUDON_PROVING_GROUNDS,
-        opvp.Map.RUINS_OF_LORDAERON,
-        opvp.Map.TIGERS_PEAK,
-        opvp.Map.TOL_VIRON_ARENA
+        opvp.PvpMap.CAGE_OF_CARNAGE,
+        opvp.PvpMap.ENIGMA_CRUCIBLE,
+        opvp.PvpMap.MALDRAXXUS_ARENA,
+        opvp.PvpMap.MUGAMBALA_ARENA,
+        opvp.PvpMap.NAGRAND_ARENA,
+        opvp.PvpMap.NOKHUDON_PROVING_GROUNDS,
+        opvp.PvpMap.RUINS_OF_LORDAERON,
+        opvp.PvpMap.TIGERS_PEAK,
+        opvp.PvpMap.TOL_VIRON_ARENA
     };
 
     local bg_maps = {
-        opvp.Map.ALTERAC_VALLEY,
-        opvp.Map.ARATHI_BASIN,
-        opvp.Map.SEETHING_SHORE,
-        opvp.Map.SILVERSHARD_MINES,
-        opvp.Map.TWIN_PEAKS,
-        opvp.Map.WARSONG_GULCH
+        opvp.PvpMap.ALTERAC_VALLEY,
+        opvp.PvpMap.ARATHI_BASIN,
+        opvp.PvpMap.SEETHING_SHORE,
+        opvp.PvpMap.SILVERSHARD_MINES,
+        opvp.PvpMap.TWIN_PEAKS,
+        opvp.PvpMap.WARSONG_GULCH
     };
 
     local bg_maps_rated = {
-        opvp.Map.ARATHI_BASIN,
-        opvp.Map.SILVERSHARD_MINES,
-        opvp.Map.TWIN_PEAKS,
-        opvp.Map.WARSONG_GULCH
+        opvp.PvpMap.ARATHI_BASIN,
+        opvp.PvpMap.SILVERSHARD_MINES,
+        opvp.PvpMap.TWIN_PEAKS,
+        opvp.PvpMap.WARSONG_GULCH
     };
 
     test_cmd:addCommand(

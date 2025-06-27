@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.ISLE_OF_CONQUEST = opvp.Map(
+    opvp.PvpMap.ISLE_OF_CONQUEST = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.ISLE_OF_CONQUEST,
             map_id       = 169,
@@ -41,7 +41,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.ISLE_OF_CONQUEST);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.ISLE_OF_CONQUEST);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.ISLE_OF_CONQUEST);
 end
 
 opvp.OnAddonLoad:register(init_map);

@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.THE_ROBODROME = opvp.Map(
+    opvp.PvpMap.THE_ROBODROME = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.THE_ROBODROME,
             map_id       = 0,
@@ -64,8 +64,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.THE_ROBODROME);
-    table.insert(opvp.Map.MAPS, opvp.Map.THE_ROBODROME);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.THE_ROBODROME);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.THE_ROBODROME);
 end
 
 opvp.OnAddonLoad:register(init_map);

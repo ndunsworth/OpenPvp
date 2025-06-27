@@ -182,7 +182,7 @@ end
 function opvp.private.MuteNPCDialogMatchFeature:isValidMap(map)
     return (
         map ~= nil and
-        opvp.IsInstance(map, opvp.Map) == true and
+        opvp.IsInstance(map, opvp.PvpMap) == true and
         self._map_ids:contains(map:instanceId()) == true and
         self:option():isBitEnabled(
             self._map_ids:index(map:instanceId())
@@ -204,7 +204,7 @@ function opvp.private.MuteNPCDialogMatchFeature:isFeatureEnabled()
 end
 
 function opvp.private.MuteNPCDialogMatchFeature:_onFeatureActivated()
-    local map = opvp.Map:createFromCurrentInstance();
+    local map = opvp.PvpMap:createFromCurrentInstance();
     local sound_ids = DIALOG_FILEDATA_IDS[map:instanceId()];
 
     if sound_ids ~= nil then

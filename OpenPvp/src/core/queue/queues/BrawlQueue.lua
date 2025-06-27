@@ -143,7 +143,7 @@ function opvp.BrawlQueue:updateInfo()
 
     local lfg_maps = opvp.List:createFromArray(
         {
-            opvp.Map.ARATHI_BASIN_COMP_STOMP:name()
+            opvp.PvpMap.ARATHI_BASIN_COMP_STOMP:name()
         }
     );
 

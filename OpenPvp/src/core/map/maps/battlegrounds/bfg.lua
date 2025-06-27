@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.THE_BATTLE_FOR_GILNEAS = opvp.Map(
+    opvp.PvpMap.THE_BATTLE_FOR_GILNEAS = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.THE_BATTLE_FOR_GILNEAS,
             map_id       = 275,
@@ -41,7 +41,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.THE_BATTLE_FOR_GILNEAS);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.THE_BATTLE_FOR_GILNEAS);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.THE_BATTLE_FOR_GILNEAS);
 end
 
 opvp.OnAddonLoad:register(init_map);

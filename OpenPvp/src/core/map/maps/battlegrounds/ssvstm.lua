@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.SOUTHSHORE_VS_TARREN_MILL = opvp.Map(
+    opvp.PvpMap.SOUTHSHORE_VS_TARREN_MILL = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.SOUTHSHORE_VS_TARREN_MILL,
             map_id       = 623,
@@ -37,7 +37,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.SOUTHSHORE_VS_TARREN_MILL);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.SOUTHSHORE_VS_TARREN_MILL);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.SOUTHSHORE_VS_TARREN_MILL);
 end
 
 opvp.OnAddonLoad:register(init_map);

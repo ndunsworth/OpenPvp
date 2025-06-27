@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.RUINS_OF_LORDAERON = opvp.Map(
+    opvp.PvpMap.RUINS_OF_LORDAERON = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.RUINS_OF_LORDAERON,
             map_id       = 0,
@@ -65,8 +65,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.RUINS_OF_LORDAERON);
-    table.insert(opvp.Map.MAPS, opvp.Map.RUINS_OF_LORDAERON);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.RUINS_OF_LORDAERON);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.RUINS_OF_LORDAERON);
 end
 
 opvp.OnAddonLoad:register(init_map);

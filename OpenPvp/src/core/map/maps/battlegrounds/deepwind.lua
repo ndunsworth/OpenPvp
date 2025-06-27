@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.DEEPWIND_GORGE = opvp.Map(
+    opvp.PvpMap.DEEPWIND_GORGE = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.DEEPWIND_GORGE,
             map_id       = 1576,
@@ -42,7 +42,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.DEEPWIND_GORGE);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.DEEPWIND_GORGE);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.DEEPWIND_GORGE);
 end
 
 opvp.OnAddonLoad:register(init_map);

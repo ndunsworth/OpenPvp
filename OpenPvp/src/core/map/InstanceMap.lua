@@ -28,16 +28,53 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
-local function init_map()
-    opvp.Map.UNKNOWN = opvp.Map(
-        {
-            instance_id  = opvp.InstanceId.UNKNOWN,
-            map_id       = 0,
-            widgets      = {}
-        }
-    );
+opvp.InstanceMap = opvp.CreateClass(opvp.Map);
 
-    table.insert(opvp.Map.MAPS, opvp.Map.UNKNOWN);
+function opvp.InstanceMap:createFromCurrentInstance()
+    if IsInInstance() == true then
+        return opvp.InstanceMap(
+            select(8, GetInstanceInfo()),
+            opvp.player.mapId()
+        );
+    else
+        return opvp.InstanceMap.UNKNOWN;
+    end
 end
 
-opvp.OnAddonLoad:register(init_map);
+function opvp.InstanceMap:init(instanceId, mapId)
+    opvp.Map.init(self, mapId);
+
+    self._inst_id = opvp.number_else(instanceId, opvp.InstanceId.UNKNOWN);
+
+    if self._inst_id ~= opvp.InstanceId.UNKNOWN then
+        self._name = GetRealZoneText(self._inst_id);
+    else
+        self._name = "";
+    end;
+end
+
+function opvp.InstanceMap:instanceId()
+    return self._inst_id;
+end
+
+function opvp.InstanceMap:isCity()
+    return false;
+end
+
+function opvp.InstanceMap:isNull()
+    return self._inst_id == opvp.InstanceId.UNKNOWN;
+end
+
+function opvp.Map:name()
+    return self._name;
+end
+
+function opvp.InstanceMap:toStript()
+    local data = opvp.Map:toScript();
+
+    data.instance = self._inst_id;
+
+    return data;
+end
+
+opvp.InstanceMap.UNKNOWN = opvp.InstanceMap();

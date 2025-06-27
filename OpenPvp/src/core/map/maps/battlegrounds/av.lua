@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.ALTERAC_VALLEY = opvp.Map(
+    opvp.PvpMap.ALTERAC_VALLEY = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.ALTERAC_VALLEY,
             map_id       = 91,
@@ -45,7 +45,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.ALTERAC_VALLEY);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.ALTERAC_VALLEY);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.ALTERAC_VALLEY);
 end
 
 opvp.OnAddonLoad:register(init_map);

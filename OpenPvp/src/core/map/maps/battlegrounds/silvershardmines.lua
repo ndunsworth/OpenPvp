@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.SILVERSHARD_MINES = opvp.Map(
+    opvp.PvpMap.SILVERSHARD_MINES = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.SILVERSHARD_MINES,
             map_id       = 423,
@@ -41,7 +41,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.SILVERSHARD_MINES);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.SILVERSHARD_MINES);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.SILVERSHARD_MINES);
 end
 
 opvp.OnAddonLoad:register(init_map);

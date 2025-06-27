@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.NOKHUDON_PROVING_GROUNDS = opvp.Map(
+    opvp.PvpMap.NOKHUDON_PROVING_GROUNDS = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.NOKHUDON_PROVING_GROUNDS,
             map_id       = 0,
@@ -66,8 +66,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.NOKHUDON_PROVING_GROUNDS);
-    table.insert(opvp.Map.MAPS, opvp.Map.NOKHUDON_PROVING_GROUNDS);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.NOKHUDON_PROVING_GROUNDS);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.NOKHUDON_PROVING_GROUNDS);
 end
 
 opvp.OnAddonLoad:register(init_map);

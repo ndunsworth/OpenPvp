@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.EMPYREAN_DOMAIN = opvp.Map(
+    opvp.PvpMap.EMPYREAN_DOMAIN = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.EMPYREAN_DOMAIN,
             map_id       = 0,
@@ -62,8 +62,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.EMPYREAN_DOMAIN);
-    table.insert(opvp.Map.MAPS, opvp.Map.EMPYREAN_DOMAIN);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.EMPYREAN_DOMAIN);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.EMPYREAN_DOMAIN);
 end
 
 opvp.OnAddonLoad:register(init_map);

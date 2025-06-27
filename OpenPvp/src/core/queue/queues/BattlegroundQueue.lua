@@ -69,7 +69,7 @@ function opvp.BattlegroundInfo:init(index)
     self._index            = index;
     self._name             = "";
     self._desc             = "";
-    self._map              = opvp.Map.UNKNOWN;
+    self._map              = opvp.PvpMap.UNKNOWN;
     self._mask             = 0;
     self._enabled          = false;
     self._player_level_min = GetMaxLevelForPlayerExpansion();
@@ -151,7 +151,7 @@ function opvp.BattlegroundInfo:update()
     self._desc      = mapDescription;
 
     if self._map:isNull() == true then
-        self._map = opvp.Map:createFromInstanceId(bgInstanceID);
+        self._map = opvp.PvpMap:createFromInstanceId(bgInstanceID);
 
         self._map._desc           = opvp.str_else(mapDescription);
         self._map._pvp_short_desc = opvp.str_else(shortDescription);

@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.THE_RING_OF_VALOR = opvp.Map(
+    opvp.PvpMap.THE_RING_OF_VALOR = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.THE_RING_OF_VALOR,
             map_id       = 0,
@@ -56,8 +56,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.THE_RING_OF_VALOR);
-    table.insert(opvp.Map.MAPS, opvp.Map.THE_RING_OF_VALOR);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.THE_RING_OF_VALOR);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.THE_RING_OF_VALOR);
 end
 
 opvp.OnAddonLoad:register(init_map);

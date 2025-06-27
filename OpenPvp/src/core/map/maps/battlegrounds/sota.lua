@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.STRAND_OF_THE_ANCIENTS = opvp.Map(
+    opvp.PvpMap.STRAND_OF_THE_ANCIENTS = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.STRAND_OF_THE_ANCIENTS,
             map_id       = 128,
@@ -41,7 +41,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.STRAND_OF_THE_ANCIENTS);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.STRAND_OF_THE_ANCIENTS);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.STRAND_OF_THE_ANCIENTS);
 end
 
 opvp.OnAddonLoad:register(init_map);

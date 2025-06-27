@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.TWIN_PEAKS = opvp.Map(
+    opvp.PvpMap.TWIN_PEAKS = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.TWIN_PEAKS,
             map_id       = 206,
@@ -41,7 +41,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.TWIN_PEAKS);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.TWIN_PEAKS);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.TWIN_PEAKS);
 end
 
 opvp.OnAddonLoad:register(init_map);

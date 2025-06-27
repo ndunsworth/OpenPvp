@@ -35,7 +35,7 @@ function opvp.MatchDescription:createFromCurrentInstance()
         return false;
     end
 
-    local map = opvp.Map:fromCurrentInstance();
+    local map = opvp.PvpMap:fromCurrentInstance();
 
     if map:isValid() == false then
         return false;
@@ -53,7 +53,7 @@ function opvp.MatchDescription:createFromCurrentInstance()
     end
 
     if C_PvP.IsRatedSoloRBG() then
-        local map = opvp.Map:fromCurrentInstance();
+        local map = opvp.PvpMap:fromCurrentInstance();
 
         if map ~= nil then
             return opvp.MatchDescription:createBlitzDescription(map);
@@ -61,7 +61,7 @@ function opvp.MatchDescription:createFromCurrentInstance()
     end
 
     if C_PvP.IsRatedBattleground() then
-        local map = opvp.Map:fromCurrentInstance();
+        local map = opvp.PvpMap:fromCurrentInstance();
 
         if map ~= nil then
             return opvp.MatchDescription:createRBGDescription(map, false);

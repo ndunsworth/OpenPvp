@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.DEEPHAUL_RAVINE = opvp.Map(
+    opvp.PvpMap.DEEPHAUL_RAVINE = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.DEEPHAUL_RAVINE,
             map_id       = 2345,
@@ -41,7 +41,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.DEEPHAUL_RAVINE);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.DEEPHAUL_RAVINE);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.DEEPHAUL_RAVINE);
 end
 
 opvp.OnAddonLoad:register(init_map);

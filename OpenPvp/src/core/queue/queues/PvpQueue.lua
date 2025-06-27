@@ -174,7 +174,7 @@ function opvp.PvpQueue:teamSizeMinimum()
 end
 
 function opvp.PvpQueue:_createMatch(map, mask)
-    if map == nil or map:isValid() == false then
+    if map == nil or map:isNull() == true then
         return nil;
     end
 

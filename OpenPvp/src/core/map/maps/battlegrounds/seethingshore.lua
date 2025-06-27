@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.SEETHING_SHORE = opvp.Map(
+    opvp.PvpMap.SEETHING_SHORE = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.SEETHING_SHORE,
             map_id       = 907,
@@ -42,7 +42,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.SEETHING_SHORE);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.SEETHING_SHORE);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.SEETHING_SHORE);
 end
 
 opvp.OnAddonLoad:register(init_map);

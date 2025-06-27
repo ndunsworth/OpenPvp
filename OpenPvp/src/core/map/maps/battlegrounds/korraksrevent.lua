@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.KORRAKS_REVENGE = opvp.Map(
+    opvp.PvpMap.KORRAKS_REVENGE = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.KORRAKS_REVENGE,
             map_id       = 1537,
@@ -44,7 +44,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.KORRAKS_REVENGE);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.KORRAKS_REVENGE);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.KORRAKS_REVENGE);
 end
 
 opvp.OnAddonLoad:register(init_map);

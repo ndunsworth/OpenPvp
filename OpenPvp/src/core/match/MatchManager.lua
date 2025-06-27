@@ -302,9 +302,9 @@ function opvp.MatchManager:_onQueueStart(queue)
         return;
     end
 
-    local map = opvp.Map:createFromCurrentInstance();
+    local map = opvp.PvpMap:createFromCurrentInstance();
 
-    if map:isValid() == false then
+    if map:isNull() == true then
         opvp.printWarning("opvp.MatchManager:_onQueueStart(), Invalid map");
 
         return;

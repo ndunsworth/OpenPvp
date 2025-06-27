@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.TIGERS_PEAK = opvp.Map(
+    opvp.PvpMap.TIGERS_PEAK = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.TIGERS_PEAK,
             map_id       = 0,
@@ -61,8 +61,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.TIGERS_PEAK);
-    table.insert(opvp.Map.MAPS, opvp.Map.TIGERS_PEAK);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.TIGERS_PEAK);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.TIGERS_PEAK);
 end
 
 opvp.OnAddonLoad:register(init_map);

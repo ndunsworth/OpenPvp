@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.CAGE_OF_CARNAGE = opvp.Map(
+    opvp.PvpMap.CAGE_OF_CARNAGE = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.CAGE_OF_CARNAGE,
             map_id       = 0,
@@ -66,8 +66,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.CAGE_OF_CARNAGE);
-    table.insert(opvp.Map.MAPS, opvp.Map.CAGE_OF_CARNAGE);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.CAGE_OF_CARNAGE);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.CAGE_OF_CARNAGE);
 end
 
 opvp.OnAddonLoad:register(init_map);

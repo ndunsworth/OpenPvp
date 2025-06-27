@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.DALARAN_SEWERS = opvp.Map(
+    opvp.PvpMap.DALARAN_SEWERS = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.DALARAN_SEWERS,
             map_id       = 0,
@@ -57,8 +57,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.DALARAN_SEWERS);
-    table.insert(opvp.Map.MAPS, opvp.Map.DALARAN_SEWERS);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.DALARAN_SEWERS);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.DALARAN_SEWERS);
 end
 
 opvp.OnAddonLoad:register(init_map);

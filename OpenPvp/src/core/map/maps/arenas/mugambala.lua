@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.MUGAMBALA_ARENA = opvp.Map(
+    opvp.PvpMap.MUGAMBALA_ARENA = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.MUGAMBALA_ARENA,
             map_id       = 0,
@@ -84,8 +84,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.MUGAMBALA_ARENA);
-    table.insert(opvp.Map.MAPS, opvp.Map.MUGAMBALA_ARENA);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.MUGAMBALA_ARENA);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.MUGAMBALA_ARENA);
 end
 
 opvp.OnAddonLoad:register(init_map);

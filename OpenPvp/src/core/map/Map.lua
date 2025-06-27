@@ -28,212 +28,138 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+opvp.MapType = {
+    UNKNOWN   = -1,
+    CONTINENT = Enum.UIMapType.Continent,
+    COSMIC    = Enum.UIMapType.Cosmic,
+    DUNGEON   = Enum.UIMapType.Dungeon,
+    MICRO     = Enum.UIMapType.Micro,
+    ORPHAN    = Enum.UIMapType.Orphan,
+    WORLD     = Enum.UIMapType.World,
+    ZONE      = Enum.UIMapType.Zone
+};
+
 opvp.Map = opvp.CreateClass();
 
-opvp.Map.ARENA_MAPS        = {};
-opvp.Map.BATTLEGROUND_MAPS = {};
-opvp.Map.MAPS              = {};
-
-function opvp.Map:createFromCurrentInstance()
-    if IsInInstance() == true then
-        return opvp.Map:createFromInstanceId(select(8, GetInstanceInfo()));
-    else
-        return opvp.Map.UNKNOWN;
-    end
-end
-
-function opvp.Map:createFromInstanceId(id)
-    for n=1, #opvp.Map.MAPS do
-        if opvp.Map.MAPS[n]:id() == id then
-            return opvp.Map.MAPS[n];
-        end
-    end
-
-    return opvp.Map.UNKNOWN;
-end
-
-function opvp.Map:createFromMapId(id)
-    for n=1, #opvp.Map.MAPS do
-        if opvp.Map.MAPS[n]:map() == id then
-            return opvp.Map.MAPS[n];
-        end
-    end
-
-    return opvp.Map.UNKNOWN;
-end
-
-function opvp.Map:createFromName(name)
-    for n=1, #opvp.Map.MAPS do
-        if opvp.Map.MAPS[n]:name() == name then
-            return opvp.Map.MAPS[n];
-        end
-    end
-
-    return opvp.Map.UNKNOWN;
-end
-
-function opvp.Map:init(cfg)
-    self._inst_id = opvp.number_else(cfg.instance_id, opvp.InstanceId.UNKNOWN);
-    self._map_id = opvp.number_else(cfg.map_id);
-
-    if self._inst_id ~= opvp.InstanceId.UNKNOWN then
-        self._name = GetRealZoneText(self._inst_id);
-    else
-        self._name = "";
-    end;
-
-    self._widgets = opvp.List();
-
-    if cfg.widgets ~= nil and #cfg.widgets > 0 then
-        local widget;
-
-        for n=1, #cfg.widgets do
-            widget = opvp.UiWidget:createFromCfg(cfg.widgets[n]);
-
-            if widget ~= nil then
-                self._widgets:append(widget);
-            end
-        end
-    end
-
-    self._stats = opvp.table_else(cfg.stats);
-
-    if cfg.music ~= nil then
-        self._music = opvp.Sound:createFromCfgData(cfg.music);
-    else
-        self._music = opvp.Sound:null();
-    end
-
-    if cfg.music_intro ~= nil then
-        self._music_intro = opvp.Sound:createFromCfgData(cfg.music_intro);
-    else
-        self._music_intro = opvp.Sound:null();
-    end
-
-    self._desc           = "";
-    self._pvp_short_desc = "";
-    self._pvp_long_desc  = "";
+function opvp.Map:init(id)
+    self._id     = opvp.number_else(id);
+    self._name   = "";
+    self._parent = 0;
+    self._flags  = 0;
+    self._type   = opvp.MapType.UNKNOWN;
 end
 
 function opvp.Map:description()
-    return self._desc;
+    return "";
 end
 
-function opvp.Map:descriptionPvpShort()
-    return self._pvp_short_desc;
+function opvp.Map:flags()
+    return self._flags;
 end
 
-function opvp.Map:descriptionPvpLong()
-    return self._pvp_long_desc;
+function opvp.Map:group()
+    return C_Map.GetMapGroupID(self._id);
 end
 
-function opvp.Map:hasMapId()
-    return self._map_id ~= 0;
+function opvp.Map:hasArt()
+    return C_Map.MapHasArt(self._id) == true;
 end
 
-function opvp.Map:hasMusic()
-    return self._music:isNull() == false;
-end
-
-function opvp.Map:hasMusic()
-    return self._music:isNull() == false;
-end
-
-function opvp.Map:hasMusicIntro()
-    return self._music:isNull() == false;
-end
-
-function opvp.Map:hasStatWithId(id)
-    for _id, statId in pairs(self._stats) do
-        if _id == id then
-            return true;
-        end
-    end
-
-    return false;
-end
-
-function opvp.Map:hasStatWithStatId(id)
-    for _id, statId in pairs(self._stats) do
-        if statId == id then
-            return true;
-        end
-    end
-
-    return false;
-end
-
-function opvp.Map:hasWidgets()
-    return self._widgets:isEmpty() == false;
+function opvp.Map:hasParent()
+    return self:parent() ~= 0;
 end
 
 function opvp.Map:id()
-    return self._inst_id;
+    return self._id;
 end
 
-function opvp.Map:instanceId()
-    return self._inst_id;
+function opvp.Map:isCity()
+    return C_Map.IsCityMap(self._id) == true;
 end
 
 function opvp.Map:isNull()
-    return self._inst_id == opvp.InstanceId.UNKNOWN;
-end
-
-function opvp.Map:isValid()
-    return self._inst_id ~= opvp.InstanceId.UNKNOWN;
-end
-
-function opvp.Map:map()
-    return self._map_id;
-end
-
-function opvp.Map:mapId()
-    return self._map_id;
-end
-
-function opvp.Map:music()
-    return self._music;
-end
-
-function opvp.Map:musicIntro()
-    return self._music_intro;
+    return self._id == 0;
 end
 
 function opvp.Map:name()
+    self:_fetchInfo();
+
     return self._name;
 end
 
-function opvp.Map:stats()
-    local stats = {};
+function opvp.Map:parent()
+    self:_fetchInfo();
 
-    for id, statId in pairs(self._stats) do
-        table.insert(
-            stats,
-            opvp.MatchStat(id, statId)
-        );
+    return self._parent;
+end
+
+function opvp.Map:playerLevelInfo()
+    local
+    playerMinLevel,
+    playerMaxLevel,
+    petMinLevel,
+    petMaxLevel = C_Map.GetMapLevels(self._map_id);
+
+    if playerMinLevel ~= nil then
+        return {
+            player_min_level = playerMinLevel,
+            player_max_level = playerMaxLevel,
+            pet_min_level    = petMinLevel,
+            pet_max_level    = petMaxLevel
+        };
+    else
+        return {
+            player_min_level = 0,
+            player_max_level = 0,
+            pet_min_level    = 0,
+            pet_max_level    = 0
+        };
     end
+end
 
-    return stats;
+function opvp.Map:preload()
+    C_Map.RequestPreloadMap(self._id);
+end
+
+function opvp.Map:size()
+    local width, height = C_Map.GetMapWorldSize(self._id);
+
+    return CreateVector2D(
+        opvp.number_else(width),
+        opvp.number_else(height)
+    );
 end
 
 function opvp.Map:toStript()
-    return self._inst_id;
+    return {
+        id = self._id
+    };
 end
 
-function opvp.Map:widget(name)
-    local widget;
+function opvp.Map:type()
+    self:_fetchInfo();
 
-    for n=1, self._widgets:size() do
-        widget = self._widgets:item(n);
+    return self._type;
+end
 
-        if widget:name() == name then
-            return widget;
-        end
+function opvp.Map:_fetchInfo()
+    if self._fetched == true then
+        return;
     end
 
-    return nil;
+    local info = C_Map.GetMapInfo(self._id);
+
+    if info ~= nil then
+        self._flags  = opvp.number_else(info.mapType);
+        self._name   = opvp.str_else(info.name);
+        self._parent = opvp.number_else(info.parentMapID);
+        self._type   = opvp.number_else(info.mapType);
+    else
+        self._flags  = 0;
+        self._name   = "";
+        self._parent = 0;
+        self._type   = opvp.MapType.UNKNOWN;
+    end
 end
 
-function opvp.Map:widgets()
-    return self._widgets:items();
-end
+opvp.Map.UNKNOWN = opvp.Map();

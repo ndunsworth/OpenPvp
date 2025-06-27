@@ -540,11 +540,11 @@ Selecting "- none -" will disable this feature for Battlegrounds.
         "",
         "",
         {
-            opvp.Map.CAGE_OF_CARNAGE:name(),
-            opvp.Map.ENIGMA_CRUCIBLE:name(),
-            opvp.Map.HOOK_POINT:name(),
-            opvp.Map.MUGAMBALA_ARENA:name(),
-            opvp.Map.NOKHUDON_PROVING_GROUNDS:name()
+            opvp.PvpMap.CAGE_OF_CARNAGE:name(),
+            opvp.PvpMap.ENIGMA_CRUCIBLE:name(),
+            opvp.PvpMap.HOOK_POINT:name(),
+            opvp.PvpMap.MUGAMBALA_ARENA:name(),
+            opvp.PvpMap.NOKHUDON_PROVING_GROUNDS:name()
         },
         3,
         0

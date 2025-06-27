@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.HOOK_POINT = opvp.Map(
+    opvp.PvpMap.HOOK_POINT = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.HOOK_POINT,
             map_id       = 0,
@@ -81,8 +81,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.HOOK_POINT);
-    table.insert(opvp.Map.MAPS, opvp.Map.HOOK_POINT);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.HOOK_POINT);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.HOOK_POINT);
 end
 
 opvp.OnAddonLoad:register(init_map);

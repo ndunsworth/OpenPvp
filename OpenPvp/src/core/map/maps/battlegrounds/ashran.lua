@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.ASHRAN = opvp.Map(
+    opvp.PvpMap.ASHRAN = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.ASHRAN,
             map_id       = 1478,
@@ -51,7 +51,9 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.ASHRAN);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.ASHRAN);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.ASHRAN);
 end
 
 opvp.OnAddonLoad:register(init_map);

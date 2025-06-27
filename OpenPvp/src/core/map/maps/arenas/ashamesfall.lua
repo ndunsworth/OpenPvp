@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.ASHAMANES_FALL = opvp.Map(
+    opvp.PvpMap.ASHAMANES_FALL = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.ASHAMANES_FALL,
             map_id       = 0,
@@ -57,8 +57,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.ASHAMANES_FALL);
-    table.insert(opvp.Map.MAPS, opvp.Map.ASHAMANES_FALL);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.ASHAMANES_FALL);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.ASHAMANES_FALL);
 end
 
 opvp.OnAddonLoad:register(init_map);

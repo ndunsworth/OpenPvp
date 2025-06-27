@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.EYE_OF_THE_STORM = opvp.Map(
+    opvp.PvpMap.EYE_OF_THE_STORM = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.EYE_OF_THE_STORM,
             map_id       = 122,
@@ -41,7 +41,7 @@ local function init_map()
         }
     );
 
-    opvp.Map.EYE_OF_THE_STORM_RATED = opvp.Map(
+    opvp.PvpMap.EYE_OF_THE_STORM_RATED = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.EYE_OF_THE_STORM_RATED,
             map_id       = 397,
@@ -56,8 +56,11 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.EYE_OF_THE_STORM);
-    table.insert(opvp.Map.MAPS, opvp.Map.EYE_OF_THE_STORM_RATED);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.EYE_OF_THE_STORM);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.EYE_OF_THE_STORM_RATED);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.EYE_OF_THE_STORM);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.EYE_OF_THE_STORM_RATED);
 end
 
 opvp.OnAddonLoad:register(init_map);

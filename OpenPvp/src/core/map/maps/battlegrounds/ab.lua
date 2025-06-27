@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.ARATHI_BASIN = opvp.Map(
+    opvp.PvpMap.ARATHI_BASIN = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.ARATHI_BASIN,
             map_id       = 93,
@@ -43,7 +43,7 @@ local function init_map()
         }
     );
 
-    opvp.Map.ARATHI_BASIN_CLASSIC = opvp.Map(
+    opvp.PvpMap.ARATHI_BASIN_CLASSIC = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.ARATHI_BASIN_CLASSIC,
             map_id       = 1461,
@@ -57,7 +57,7 @@ local function init_map()
         }
     );
 
-    opvp.Map.ARATHI_BASIN_COMP_STOMP = opvp.Map(
+    opvp.PvpMap.ARATHI_BASIN_COMP_STOMP = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.ARATHI_BASIN_COMP_STOMP,
             map_id       = 1383,
@@ -71,7 +71,7 @@ local function init_map()
         }
     );
 
-    opvp.Map.ARATHI_BASIN_WINTER = opvp.Map(
+    opvp.PvpMap.ARATHI_BASIN_WINTER = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.ARATHI_BASIN_WINTER,
             map_id       = 837,
@@ -85,10 +85,15 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.MAPS, opvp.Map.ARATHI_BASIN);
-    table.insert(opvp.Map.MAPS, opvp.Map.ARATHI_BASIN_CLASSIC);
-    table.insert(opvp.Map.MAPS, opvp.Map.ARATHI_BASIN_COMP_STOMP);
-    table.insert(opvp.Map.MAPS, opvp.Map.ARATHI_BASIN_WINTER);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.ARATHI_BASIN);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.ARATHI_BASIN_CLASSIC);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.ARATHI_BASIN_COMP_STOMP);
+    table.insert(opvp.PvpMap.BATTLEGROUND_MAPS, opvp.PvpMap.ARATHI_BASIN_WINTER);
+
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.ARATHI_BASIN);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.ARATHI_BASIN_CLASSIC);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.ARATHI_BASIN_COMP_STOMP);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.ARATHI_BASIN_WINTER);
 end
 
 opvp.OnAddonLoad:register(init_map);

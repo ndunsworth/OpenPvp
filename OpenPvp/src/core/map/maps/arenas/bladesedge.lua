@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function init_map()
-    opvp.Map.BLADES_EDGE_ARENA = opvp.Map(
+    opvp.PvpMap.BLADES_EDGE_ARENA = opvp.PvpMap(
         {
             instance_id  = opvp.InstanceId.BLADES_EDGE_ARENA,
             map_id       = 0,
@@ -59,8 +59,8 @@ local function init_map()
         }
     );
 
-    table.insert(opvp.Map.ARENA_MAPS, opvp.Map.BLADES_EDGE_ARENA);
-    table.insert(opvp.Map.MAPS, opvp.Map.BLADES_EDGE_ARENA);
+    table.insert(opvp.PvpMap.ARENA_MAPS, opvp.PvpMap.BLADES_EDGE_ARENA);
+    table.insert(opvp.PvpMap.MAPS, opvp.PvpMap.BLADES_EDGE_ARENA);
 end
 
 opvp.OnAddonLoad:register(init_map);
