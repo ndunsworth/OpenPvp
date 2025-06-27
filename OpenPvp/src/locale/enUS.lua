@@ -260,8 +260,8 @@ opvp.locale.enUS = {
     PARTY_SELF_SPELL_INTERRUPTED             = "%s | Player Interrupted - %3$s %4$s",
     PARTY_SELF_SPELL_INTERRUPTED_WITH_TIME   = "%s | Player Interrupted - %3$s (%4$.2f / %5$.2f)",
 
-    PLAYER_SPEC                              = "Player | Spec - |c%s%s|r",
-    PLAYER_SPEC_CHANGED                      = "Player | Spec Changed - |c%s%s|r",
+    PLAYER_SPEC                              = "Player | Spec - %s %s",
+    PLAYER_SPEC_CHANGED                      = "Player | Spec Changed - %s %s",
 
     POI_NOT_CONTESTED                        = "Neutral",
     POI_ALLIANCE_CONTESTED                   = "Alliance Contested",
