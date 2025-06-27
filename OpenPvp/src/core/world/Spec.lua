@@ -94,10 +94,11 @@ opvp.ClassSpecId = {
 };
 
 opvp.ClassSpecTrait = {
-    MAGIC     = bit.lshift(1, 0),
-    MELEE     = bit.lshift(1, 1),
-    PHYSICAL  = bit.lshift(1, 2),
-    RANGED    = bit.lshift(1, 3)
+    CASTER    = bit.lshift(1, 0),
+    MAGIC     = bit.lshift(1, 1),
+    MELEE     = bit.lshift(1, 2),
+    PHYSICAL  = bit.lshift(1, 3),
+    RANGED    = bit.lshift(1, 4)
 };
 
 opvp.ClassSpecTrait.MELEE_MAGIC     = bit.bor(opvp.ClassSpecTrait.MELEE, opvp.ClassSpecTrait.MAGIC);
@@ -179,13 +180,14 @@ function opvp.ClassSpec:instance()
 end
 
 function opvp.ClassSpec:init(cfg)
-    self._cls    = cfg.class;
-    self._id     = cfg.id;
-    self._role   = cfg.role;
-    self._index  = cfg.index;
-    self._icon   = cfg.icon;
-    self._sound  = cfg.sound;
-    self._traits = cfg.traits;
+    self._cls         = cfg.class;
+    self._id          = cfg.id;
+    self._role        = cfg.role;
+    self._index       = cfg.index;
+    self._icon        = cfg.icon;
+    self._icon_markup = opvp.utils.textureIdMarkup(self._icon);
+    self._sound       = cfg.sound;
+    self._traits      = cfg.traits;
 
     self._spells     = opvp.SpellMap();
     self._auras      = opvp.SpellMap();
@@ -238,8 +240,16 @@ function opvp.ClassSpec:icon()
     return self._icon;
 end
 
+function opvp.ClassSpec:iconMarkup()
+    return self._icon_markup;
+end
+
 function opvp.ClassSpec:id()
     return self._id;
+end
+
+function opvp.ClassSpec:isCaster()
+    return self._role:isDps();
 end
 
 function opvp.ClassSpec:isDps()

@@ -61,12 +61,12 @@ function opvp.Role:fromRoleToken(name)
     end
 end
 
-function opvp.Role:init(id, name, token, icon)
+function opvp.Role:init(id, name, token, icon, iconMarkup)
     self._id          = id;
     self._name        = name;
     self._token       = token;
     self._icon        = icon;
-    self._icon_markup = icon;
+    self._icon_markup = iconMarkup;
 end
 
 function opvp.Role:icon()
@@ -117,10 +117,10 @@ function opvp.Role:setUnit(unitId)
     return UnitSetRole(unitId, self._token);
 end
 
-opvp.Role.NONE    = opvp.Role(opvp.RoleType.NONE, "", "NONE", "");
-opvp.Role.DPS     = opvp.Role(opvp.RoleType.DPS, DAMAGER, "DAMAGER", opvp.utils.textureAtlastMarkup("UI-Frame-DpsIcon"));
-opvp.Role.HEALER  = opvp.Role(opvp.RoleType.HEALER, HEALER, "HEALER", opvp.utils.textureAtlastMarkup("UI-Frame-HealerIcon"));
-opvp.Role.TANK    = opvp.Role(opvp.RoleType.TANK, TANK, "TANK", opvp.utils.textureAtlastMarkup("UI-Frame-TankIcon"));
+opvp.Role.NONE    = opvp.Role(opvp.RoleType.NONE, "", "NONE", "", "");
+opvp.Role.DPS     = opvp.Role(opvp.RoleType.DPS, DAMAGER, "DAMAGER", "UI-Frame-DpsIcon", opvp.utils.textureAtlastMarkup("UI-Frame-DpsIcon"));
+opvp.Role.HEALER  = opvp.Role(opvp.RoleType.HEALER, HEALER, "HEALER", "UI-Frame-HealerIcon", opvp.utils.textureAtlastMarkup("UI-Frame-HealerIcon"));
+opvp.Role.TANK    = opvp.Role(opvp.RoleType.TANK, TANK, "TANK", "UI-Frame-TankIcon", opvp.utils.textureAtlastMarkup("UI-Frame-TankIcon"));
 
 opvp.Role.ROLES = {
     opvp.Role.NONE,
