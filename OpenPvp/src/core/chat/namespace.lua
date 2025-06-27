@@ -93,7 +93,99 @@ opvp.ChatType = {
     YELL                  = "YELL"
 };
 
+opvp.ChatStatus = {
+    AVAILABLE = 1,
+    AFK       = 2,
+    DND       = 3
+};
+
+local opvp_cur_chat_status_reason = {
+    [opvp.ChatStatus.AFK] = "";
+    [opvp.ChatStatus.DND] = "";
+};
+
 opvp.chat = {};
+
+function opvp.chat.isAvailable()
+    return (
+        IsChatAFK() == false and
+        IsChatDND() == false
+    );
+end
+
+function opvp.chat.isAFK()
+    return IsChatAFK();
+end
+
+function opvp.chat.isDND()
+    return IsChatDND();
+end
+
+function opvp.chat.status()
+    if opvp.chat.isAFK() then
+        return opvp.ChatStatus.AFK;
+    elseif opvp.chat.isDND() then
+        return opvp.ChatStatus.DND;
+    else
+        return opvp.ChatStatus.AVAILABLE;
+    end
+end
+
+function opvp.chat.reasonAFK()
+    return opvp_cur_chat_status_reason[opvp.ChatStatus.AFK];
+end
+
+function opvp.chat.reasonDND()
+    return opvp_cur_chat_status_reason[opvp.ChatStatus.DND];
+end
+
+function opvp.chat.setAvailable()
+    opvp.chat.setStatus(opvp.ChatStatus.AVAILABLE);
+end
+
+function opvp.chat.setAFK(msg)
+    opvp.chat.setStatus(opvp.ChatStatus.AFK, msg);
+end
+
+function opvp.chat.setStatus(status, msg)
+    print("opvp.chat.setStatus,", status, msg, opvp.chat.status());
+    if msg == nil then
+        if status == opvp.ChatStatus.AFK then
+            msg = DEFAULT_AFK_MESSAGE;
+        elseif status == opvp.ChatStatus.DND then
+            msg = DEFAULT_DND_MESSAGE;
+        else
+            msg = "";
+        end
+    end
+
+    local cur_status = opvp.chat.status();
+
+    if (
+        status == cur_status and (
+            status ~= opvp.ChatStatus.AVAILABLE or
+            msg == ""
+        )
+    ) then
+        return;
+    end
+
+    if status == opvp.ChatStatus.AVAILABLE then
+        status = cur_status;
+    end
+
+    if status == opvp.ChatStatus.AFK then
+        SendChatMessage(msg, opvp.ChatType.AFK);
+    elseif status == opvp.ChatStatus.DND then
+        SendChatMessage(msg, opvp.ChatType.DND);
+    else
+        return;
+    end
+end
+
+function opvp.chat.setDND(msg)
+    opvp.chat.setStatus(opvp.ChatStatus.DND, msg);
+end
 
 function opvp.chat.channelColor(id)
     return C_ChatInfo.GetColorForChatType(id);
@@ -120,3 +212,32 @@ end
 function opvp.chat.setEnabled(state)
     C_SocialRestrictions.SetChatDisabled(not state)
 end
+
+local function opvp_send_chat_msg_hook(msg, chatType, languageID, target)
+    if chatType == opvp.ChatType.AFK then
+        if opvp.chat.isAFK() == true then
+            opvp_cur_chat_status_reason[opvp.ChatStatus.AFK] = opvp.str_else(msg, DEFAULT_AFK_MESSAGE);
+        else
+            opvp_cur_chat_status_reason[opvp.ChatStatus.AFK] = "";
+        end
+    elseif chatType == opvp.ChatType.DND then
+        if opvp.chat.isDND() == true then
+            opvp_cur_chat_status_reason[opvp.ChatStatus.DND] = opvp.str_else(msg, DEFAULT_DND_MESSAGE);
+        else
+            opvp_cur_chat_status_reason[opvp.ChatStatus.DND] = "";
+        end
+    end
+end
+
+local function opvp_chat_status_init()
+    hooksecurefunc("SendChatMessage", opvp_send_chat_msg_hook);
+
+    if opvp.chat.isAFK() == true then
+        opvp_cur_chat_status_reason[opvp.ChatStatus.AFK] = DEFAULT_AFK_MESSAGE;
+    elseif opvp.chat.isDND() == true then
+        opvp_cur_chat_status_reason[opvp.ChatStatus.DND] = DEFAULT_DND_MESSAGE;
+    end
+
+end
+
+opvp.OnLoadingScreenEnd:connect(opvp_chat_status_init)
