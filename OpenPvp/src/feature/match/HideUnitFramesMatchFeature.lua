@@ -36,19 +36,19 @@ local function opvp_hide_unit_frames_match_feature_ctor()
     opvp_hide_player_frame_match_feature = opvp.HideFrameMatchFeature(
         opvp.options.match.frames.hidePlayerFrame,
         PlayerFrame,
-        opvp.HideFrameHandler.ALPHA
+        opvp.HideFrameHandler.PARENT
     );
 
     opvp_hide_target_frame_match_feature = opvp.HideFrameMatchFeature(
         opvp.options.match.frames.hideTargetFrame,
         TargetFrame,
-        opvp.HideFrameHandler.ALPHA
+        opvp.HideFrameHandler.PARENT
     );
 
     opvp_hide_focus_frame_match_feature = opvp.HideFrameMatchFeature(
         opvp.options.match.frames.hideFocusFrame,
         FocusFrame,
-        opvp.HideFrameHandler.ALPHA
+        opvp.HideFrameHandler.PARENT
     );
 end
 
