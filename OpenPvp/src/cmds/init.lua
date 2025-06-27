@@ -333,6 +333,7 @@ local function opvp_init_test_slash_cmds()
     local bg_maps = {
         opvp.Map.ALTERAC_VALLEY,
         opvp.Map.ARATHI_BASIN,
+        opvp.Map.SEETHING_SHORE,
         opvp.Map.SILVERSHARD_MINES,
         opvp.Map.TWIN_PEAKS,
         opvp.Map.WARSONG_GULCH
@@ -416,14 +417,14 @@ local function opvp_init_test_slash_cmds()
                         opvp.PvpFlag.BLITZ
                     );
 
-                    map = bg_maps[math.random(1, #bg_maps_rated)];
+                    map = bg_maps_rated[math.random(1, #bg_maps_rated)];
                 elseif opvp.utils.array.contains(args, "rbg") then
                     mask = bit.bor(
                         opvp.PvpFlag.RATED,
                         opvp.PvpFlag.RBG
                     );
 
-                    map = bg_maps[math.random(1, #bg_maps_rated)];
+                    map = bg_maps_rated[math.random(1, #bg_maps_rated)];
                 else
                     map = bg_maps[math.random(1, #bg_maps)];
                 end
