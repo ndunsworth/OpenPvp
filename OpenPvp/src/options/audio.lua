@@ -558,10 +558,6 @@ This emote is based on the pinging players race/sex.]],
         "",
         true
     );
-
-    local match_tester = opvp.match.tester();
-
-    opvp.options.audio.soundeffect.test.music.changed:connect(match_tester, match_tester.stopMusic);
 end
 
 opvp.OnAddonLoad:register(opvp_options_audio_init);
