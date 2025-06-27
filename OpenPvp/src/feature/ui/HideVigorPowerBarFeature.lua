@@ -35,7 +35,7 @@ function opvp.private.HideVigorPowerBarFeature:init(option, mask, affiliation)
 
     self._handler = opvp.HideFrameHandler(
         UIWidgetPowerBarContainerFrame,
-        opvp.HideFrameHandler.PARENT
+        opvp.HideFrameHandler.VISIBILITY
     );
 end
 
