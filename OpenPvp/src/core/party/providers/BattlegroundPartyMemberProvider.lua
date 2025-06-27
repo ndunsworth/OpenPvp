@@ -47,7 +47,7 @@ function opvp.BattlegroundPartyMemberProvider:hasPlayer()
 end
 
 function opvp.BattlegroundPartyMemberProvider:isCrossFaction()
-    return false;
+    return self:isRated();
 end
 
 function opvp.BattlegroundPartyMemberProvider:tokenExprGroup()
