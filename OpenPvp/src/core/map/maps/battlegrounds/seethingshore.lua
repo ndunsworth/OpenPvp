@@ -33,6 +33,8 @@ local function init_map()
         {
             instance_id  = opvp.InstanceId.SEETHING_SHORE,
             map_id       = 907,
+            music        = 96468,
+            music_intro  = 96467,
             stats        = {
                 [opvp.PvpStatId.AZERITE_COLLECTED] = 744
             },
