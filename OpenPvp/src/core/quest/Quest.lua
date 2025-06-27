@@ -405,6 +405,19 @@ function opvp.Quest:isShareable()
     return C_QuestLog.IsPushableQuest(self._id);
 end
 
+function opvp.Quest:isSuperTracked()
+    return (
+        self._id ~= 0 and
+        C_SuperTrack.GetSuperTrackedQuestID() == self._id
+    );
+end
+
+function opvp.Quest:superTrack()
+    if self:isActive() == true then
+        C_SuperTrack.SetSuperTrackedQuestID(self._id)
+    end
+end
+
 function opvp.Quest:isTask()
     return C_QuestLog.IsQuestTask(self._id);
 end
@@ -456,7 +469,7 @@ end
 function opvp.Quest:nextWaypoint()
     local map, x, y = C_QuestLog.GetNextWaypoint(self._id);
 
-    return opvp.Waypoint(x, y, map);
+    return opvp.Waypoint(map, x, y);
 end
 
 function opvp.Quest:nextWaypointText()
@@ -466,7 +479,7 @@ end
 function opvp.Quest:nextWaypointForMap(mapId)
     local x, y = C_QuestLog.GetNextWaypointForMap(self._id, mapId);
 
-    return opvp.Waypoint(x, y, mapId);
+    return opvp.Waypoint(mapId, x, y);
 end
 
 function opvp.Quest:objectives()
