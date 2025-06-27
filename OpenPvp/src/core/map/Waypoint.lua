@@ -30,9 +30,45 @@ local opvp = OpenPvp;
 
 opvp.Waypoint = opvp.CreateClass();
 
-function opvp.Waypoint:init(x, y, mapId)
-    self._pos = CreateVector2D(opvp.number_else(x), opvp.number_else(y));
+function opvp.Waypoint:player()
+    local pos = opvp.player.mapPosition();
+
+    return opvp.Waypoint(
+        opvp.player.mapId(),
+        pos.x,
+        pos.y
+    );
+end
+
+function opvp.Waypoint.__eq(self, other)
+    if opvp.IsInstance(other, opvp.Waypoint) then
+        if self ~= other then
+            return (
+                other._map == self._map and
+                other._pos.x == self._pos.x and
+                other._pos.y == self._pos.y and
+                other._pos.z == self._pos.z
+            );
+        else
+            return true;
+        end
+    else
+        return false;
+    end
+end
+
+function opvp.Waypoint:init(mapId, x, y, z)
+    self._pos = CreateVector3D(
+        opvp.number_else(x),
+        opvp.number_else(y),
+        opvp.number_else(z)
+    );
+
     self._map = opvp.number_else(mapId);
+end
+
+function opvp.Waypoint:isNull()
+    return self._map == 0;
 end
 
 function opvp.Waypoint:map()
@@ -43,10 +79,24 @@ function opvp.Waypoint:position()
     return self._pos:Clone();
 end
 
+function opvp.Waypoint:isUserWaypoint()
+    return self == opvp.map.userWaypoint();
+end
+
+function opvp.Waypoint:setUserWaypoint()
+    if self._map ~= 0 then
+        opvp.map.setUserWaypoint(self);
+    end
+end
+
 function opvp.Waypoint:x()
-    return self._x;
+    return self._pos.x;
 end
 
 function opvp.Waypoint:y()
-    return self._y;
+    return self._pos.y;
+end
+
+function opvp.Waypoint:z()
+    return self._pos.y;
 end
