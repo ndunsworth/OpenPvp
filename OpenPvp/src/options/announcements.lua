@@ -29,9 +29,9 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function opvp_options_announcements_init()
-    local opvp_chat_filter_icon = opvp.utils.textureAtlastMarkup("transmog-icon-chat", 14, 14);
+    local opvp_chat_filter_icon = opvp.utils.textureAtlasMarkup("transmog-icon-chat", 14, 14);
     local opvp_chat_filter_tooltip = "Enabling a feature may remove system chat messages (marked with " .. opvp_chat_filter_icon ..")";
-    local opvp_test_icon = opvp.utils.textureAtlastMarkup("QuestNormal", 14, 14);
+    local opvp_test_icon = opvp.utils.textureAtlasMarkup("QuestNormal", 14, 14);
 
     opvp.options.announcements = {};
 

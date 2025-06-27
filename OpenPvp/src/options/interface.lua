@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function opvp_options_interface_init()
-    local opvp_test_icon = opvp.utils.textureAtlastMarkup("QuestNormal", 14, 14);
+    local opvp_test_icon = opvp.utils.textureAtlasMarkup("QuestNormal", 14, 14);
 
     opvp.options.interface = {};
 

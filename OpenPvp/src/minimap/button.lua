@@ -29,10 +29,10 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local opvp_role_markup_lookup = {
-    [opvp.RoleType.NONE]   = opvp.utils.textureAtlastMarkup("UI-LFG-RoleIcon-Leader", 16, 16),
-    [opvp.RoleType.DPS]    = opvp.utils.textureAtlastMarkup("UI-LFG-RoleIcon-DPS", 16, 16),
-    [opvp.RoleType.HEALER] = opvp.utils.textureAtlastMarkup("UI-LFG-RoleIcon-Healer", 16, 16),
-    [opvp.RoleType.TANK]   = opvp.utils.textureAtlastMarkup("UI-LFG-RoleIcon-Tank", 16, 16),
+    [opvp.RoleType.NONE]   = opvp.utils.textureAtlasMarkup("UI-LFG-RoleIcon-Leader", 16, 16),
+    [opvp.RoleType.DPS]    = opvp.utils.textureAtlasMarkup("UI-LFG-RoleIcon-DPS", 16, 16),
+    [opvp.RoleType.HEALER] = opvp.utils.textureAtlasMarkup("UI-LFG-RoleIcon-Healer", 16, 16),
+    [opvp.RoleType.TANK]   = opvp.utils.textureAtlasMarkup("UI-LFG-RoleIcon-Tank", 16, 16),
 };
 
 local function opvp_role_markups(queue)
@@ -496,8 +496,8 @@ function opvp.private.OpenPvpMiniMapButton:addQueueInfoTooltip(tooltip)
 
     local queue;
 
-    local check_yes = opvp.utils.textureAtlastMarkup("common-icon-checkmark", 14, 14);
-    local check_no = opvp.utils.textureAtlastMarkup("common-icon-redx", 14, 14);
+    local check_yes = opvp.utils.textureAtlasMarkup("common-icon-checkmark", 14, 14);
+    local check_no = opvp.utils.textureAtlasMarkup("common-icon-redx", 14, 14);
 
     for n=1, #queues do
         queue = queues[n];
@@ -541,7 +541,7 @@ function opvp.private.OpenPvpMiniMapButton:addQuestsTooltip(tooltip)
         tooltip:AddDoubleLine(
             string.format(
                 "    %s %s",
-                opvp.utils.textureAtlastMarkup(quest:icon(true), 14, 14),
+                opvp.utils.textureAtlasMarkup(quest:icon(true), 14, 14),
                 quest:name()
             ),
             string.format(
@@ -570,8 +570,8 @@ function opvp.private.OpenPvpMiniMapButton:addQueueBonusTooltip(tooltip)
 
     local has_line = false;
 
-    local check_yes = opvp.utils.textureAtlastMarkup("common-icon-checkmark", 14, 14);
-    local check_no = opvp.utils.textureAtlastMarkup("common-icon-redx", 14, 14);
+    local check_yes = opvp.utils.textureAtlasMarkup("common-icon-checkmark", 14, 14);
+    local check_no = opvp.utils.textureAtlasMarkup("common-icon-redx", 14, 14);
 
     for n=1, #queues do
         queue = queues[n];

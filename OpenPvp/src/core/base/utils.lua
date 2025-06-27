@@ -307,7 +307,7 @@ function opvp.utils.table.size(tbl)
     return n;
 end
 
-function opvp.utils.textureAtlastMarkup(name, width, height, offsetX, offsetY, rVertexColor, gVertexColor, bVertexColor)
+function opvp.utils.textureAtlasMarkup(name, width, height, offsetX, offsetY, rVertexColor, gVertexColor, bVertexColor)
     return CreateAtlasMarkup(
         name,
         width,

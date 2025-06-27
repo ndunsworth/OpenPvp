@@ -29,7 +29,7 @@ local _, OpenPvp = ...
 local opvp = OpenPvp;
 
 local function opvp_options_audio_init()
-    local opvp_sample_icon = opvp.utils.textureAtlastMarkup("chatframe-button-icon-voicechat", 16, 16);
+    local opvp_sample_icon = opvp.utils.textureAtlasMarkup("chatframe-button-icon-voicechat", 16, 16);
 
     opvp.options.audio = {};
 
@@ -49,7 +49,7 @@ local function opvp_options_audio_init()
 Adds Earthen Male/Female NPC idle sounds to the games MuteSoundFile list.
 
 Does not alter the volume of any sound channels.]],
-        true
+        false
     );
 
     opvp.options.audio.general.muteFaerieFireSfx = opvp.options.audio.general.category:createOption(
@@ -163,7 +163,7 @@ This emote is based on the pinging players race/sex.]],
     opvp.options.audio.soundeffect.general.pingEmoteAssistSample = opvp.options.audio.soundeffect.general.category:createOption(
         opvp.Option.BUTTON,
         "PingEmoteAssistSample",
-        opvp.utils.textureAtlastMarkup("Ping_Wheel_Icon_Assist", 16, 16),
+        opvp.utils.textureAtlasMarkup("Ping_Wheel_Icon_Assist", 16, 16),
         "Assist"
     );
 
@@ -172,7 +172,7 @@ This emote is based on the pinging players race/sex.]],
     opvp.options.audio.soundeffect.general.pingEmoteAttackSample = opvp.options.audio.soundeffect.general.category:createOption(
         opvp.Option.BUTTON,
         "PingEmoteAttackSample",
-        opvp.utils.textureAtlastMarkup("Ping_Wheel_Icon_Attack", 16, 16),
+        opvp.utils.textureAtlasMarkup("Ping_Wheel_Icon_Attack", 16, 16),
         "Attack"
     );
 
@@ -181,7 +181,7 @@ This emote is based on the pinging players race/sex.]],
     opvp.options.audio.soundeffect.general.pingEmoteOmwSample = opvp.options.audio.soundeffect.general.category:createOption(
         opvp.Option.BUTTON,
         "PingEmoteOmwSample",
-        opvp.utils.textureAtlastMarkup("Ping_Wheel_Icon_OnMyWay", 16, 16),
+        opvp.utils.textureAtlasMarkup("Ping_Wheel_Icon_OnMyWay", 16, 16),
         "On My Way"
     );
 
@@ -190,7 +190,7 @@ This emote is based on the pinging players race/sex.]],
     opvp.options.audio.soundeffect.general.pingEmoteWarningSample = opvp.options.audio.soundeffect.general.category:createOption(
         opvp.Option.BUTTON,
         "PingEmoteWarningSample",
-        opvp.utils.textureAtlastMarkup("Ping_Wheel_Icon_Warning", 16, 16),
+        opvp.utils.textureAtlasMarkup("Ping_Wheel_Icon_Warning", 16, 16),
         "Warning"
     );
 

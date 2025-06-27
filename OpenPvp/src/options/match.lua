@@ -218,14 +218,14 @@ Chat Messages Filtered:
         opvp.Option.MATCH_TYPE,
         "BattleNetStatusDND",
         "Battle.net DND",
-        "Sets your Battle.net status to DND when in a pvp match.\n\nReverts to previous status after match completion."
+        "Sets your Battle.net status to DND while in a pvp match.\n\nReverts to previous status after match completion."
     );
 
     opvp.options.match.social.chatStatusDND = opvp.options.match.social.category:createOption(
         opvp.Option.MATCH_TYPE,
         "ChatStatusDND",
         "Chat Status DND",
-        "Sets your in game chat status to DND when in a pvp match.\n\nReverts to previous status after match completion."
+        "Sets your in game chat status to DND while in a pvp match.\n\nReverts to previous status after match completion."
     );
 
     opvp.options.match.layout = {};

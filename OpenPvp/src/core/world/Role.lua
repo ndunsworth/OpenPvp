@@ -118,9 +118,9 @@ function opvp.Role:setUnit(unitId)
 end
 
 opvp.Role.NONE    = opvp.Role(opvp.RoleType.NONE, "", "NONE", "", "");
-opvp.Role.DPS     = opvp.Role(opvp.RoleType.DPS, DAMAGER, "DAMAGER", "UI-Frame-DpsIcon", opvp.utils.textureAtlastMarkup("UI-Frame-DpsIcon"));
-opvp.Role.HEALER  = opvp.Role(opvp.RoleType.HEALER, HEALER, "HEALER", "UI-Frame-HealerIcon", opvp.utils.textureAtlastMarkup("UI-Frame-HealerIcon"));
-opvp.Role.TANK    = opvp.Role(opvp.RoleType.TANK, TANK, "TANK", "UI-Frame-TankIcon", opvp.utils.textureAtlastMarkup("UI-Frame-TankIcon"));
+opvp.Role.DPS     = opvp.Role(opvp.RoleType.DPS, DAMAGER, "DAMAGER", "UI-Frame-DpsIcon", opvp.utils.textureAtlasMarkup("UI-Frame-DpsIcon"));
+opvp.Role.HEALER  = opvp.Role(opvp.RoleType.HEALER, HEALER, "HEALER", "UI-Frame-HealerIcon", opvp.utils.textureAtlasMarkup("UI-Frame-HealerIcon"));
+opvp.Role.TANK    = opvp.Role(opvp.RoleType.TANK, TANK, "TANK", "UI-Frame-TankIcon", opvp.utils.textureAtlasMarkup("UI-Frame-TankIcon"));
 
 opvp.Role.ROLES = {
     opvp.Role.NONE,
