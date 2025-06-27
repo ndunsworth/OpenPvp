@@ -336,6 +336,9 @@ function opvp.QueueManager:_initializeQueues()
         self:_updateBattlefieldStatus(n)
     end
 
+    opvp.Queue.BRAWL:updateInfo();
+    opvp.Queue.EVENT:updateInfo();
+
     --~ self:_updateLFGStatus();
 end
 
