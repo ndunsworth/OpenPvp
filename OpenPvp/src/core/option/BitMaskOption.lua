@@ -72,7 +72,7 @@ function opvp.BitMaskOption:init(key, name, description, size, columns, value)
     self._columns  = max(1, min(self._size, columns));
 
     self._mask_all = opvp_mask_all_lookup[self._size];
-    self._mask     = opvp.number_else(value, self._mask_all);
+    self._mask     = bit.band(self._mask_all, opvp.number_else(value));
 
     self.changed = opvp.Signal(key);
 end
@@ -246,9 +246,23 @@ function opvp.BitMaskOption:maskAll()
 end
 
 function opvp.BitMaskOption:set(mask)
-    self._mask = 0;
+    mask = bit.band(self._mask_all, mask);
 
-    self:setBits(mask, true);
+    if mask == self._mask then
+        return;
+    end
+
+    self._mask = mask;
+
+    if self._frame ~= nil then
+        for n=1, self._size do
+            self._frame.checkboxes[n]:SetChecked(
+                bit.band(self._mask, bit.lshift(1, n - 1)) ~= 0
+            );
+        end
+    end
+
+    self.changed:emit();
 end
 
 function opvp.BitMaskOption:setBits(mask, state)
@@ -279,19 +293,15 @@ function opvp.BitMaskOption:setBits(mask, state)
 
     self:_setBits(mask, state);
 
-    if self._frame == nil then
-        self.changed:emit();
-
-        return;
+    if self._frame ~= nil then
+        for n=1, self._size do
+            self._frame.checkboxes[n]:SetChecked(
+                bit.band(self._mask, bit.lshift(1, n - 1))
+            );
+        end
     end
 
-    while mask ~= 0 do
-        index = opvp.math.ffs(mask);
-
-        self._frame.checkboxes[index + 1]:SetChecked(state);
-
-        mask = bit.band(mask, bit.bnot(bit.lshift(1, index)));
-    end
+    self.changed:emit();
 end
 
 function opvp.BitMaskOption:_setBits(mask, state)
