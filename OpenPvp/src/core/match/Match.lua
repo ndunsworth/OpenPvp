@@ -365,8 +365,16 @@ function opvp.Match:matchTeamSize()
     return self._desc:teamSize();
 end
 
-function opvp.Match:name()
-    return self._queue:name();
+function opvp.Match:name(includeMap)
+    if includeMap == true then
+        return string.format(
+            "%s (%s)",
+            self._queue:name(),
+            self:mapName()
+        );
+    else
+        return self._queue:name();
+    end
 end
 
 function opvp.Match:opponents()
@@ -767,7 +775,11 @@ function opvp.Match:_onMatchStateChanged(status, expected)
     );
 
     if status == expected then
-        if status == opvp.MatchStatus.ROUND_WARMUP then
+        if status == opvp.MatchStatus.ENTERED then
+            self:_onMatchEntered();
+        elseif status == opvp.MatchStatus.JOINED then
+            self:_onMatchJoined();
+        elseif status == opvp.MatchStatus.ROUND_WARMUP then
             self:_onMatchRoundWarmup();
         elseif status == opvp.MatchStatus.ROUND_ACTIVE then
             self:_onMatchRoundActive();
@@ -796,7 +808,7 @@ function opvp.Match:_onMatchStateChanged(status, expected)
             status == opvp.MatchStatus.COMPLETE
         )
     ) then
-        self._surrendered = true;
+        self:_setSurrendered(true);
 
         if self._status == opvp.MatchStatus.ROUND_ACTIVE then
             self:_onMatchRoundComplete();
@@ -998,6 +1010,10 @@ function opvp.Match:_setStatus(status)
     if signal ~= nil then
         signal:emit();
     end
+end
+
+function opvp.Match:_setSurrendered(state)
+    self._surrendered = state;
 end
 
 function opvp.Match:_updateOutcome()
