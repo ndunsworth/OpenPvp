@@ -117,11 +117,6 @@ function opvp.private.AutoDeclineInviteMatchFeature:_onPartyInviteEvent(
         return;
     end
 
-    --~ opvp.printWarning(
-        --~ "Party Invite - Match filter auto declined %s's request",
-        --~ player:name()
-    --~ );
-
     local player = opvp.Unit:createFromUnitGuid(inviterGUID);
 
     if player:isNull() then
