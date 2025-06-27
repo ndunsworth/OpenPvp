@@ -44,6 +44,10 @@ local opvp_user_player_singleton = nil;
 
 opvp.Player = opvp.CreateClass(opvp.Unit);
 
+function opvp.Player:instance()
+    return opvp_user_player_singleton;
+end
+
 function opvp.Player:init()
     opvp.Unit.init(self);
 
@@ -60,6 +64,7 @@ function opvp.Player:init()
     self._in_ffa              = false;
     self._played_total        = 0;
     self._played_level        = 0;
+    self._vigor               = 0;
     self._parties             = opvp.List();
     self._sky_riding          = UnitPowerBarID(opvp.unitid.PLAYER) == 631;
 
@@ -246,8 +251,8 @@ function opvp.Player:init()
     );
 end
 
-function opvp.Player:instance()
-    return opvp_user_player_singleton;
+function opvp.Player:chatStatus()
+    opvp.chat.status();
 end
 
 function opvp.Player:canToggleWarMode()
@@ -463,6 +468,22 @@ function opvp.Player:specsSize()
     return self:classInfo():specsSize();
 end
 
+function opvp.Player:setAvailable()
+    opvp.chat.setAvailable();
+end
+
+function opvp.Player:setAFK(msg)
+    opvp.chat.setAFK(msg);
+end
+
+function opvp.Player:setChatStatus(status, msg)
+    opvp.chat.setStatus(status, msg);
+end
+
+function opvp.Player:setDND(msg)
+    opvp.chat.setDND(msg);
+end
+
 function opvp.Player:timePlayed()
     return self._played_total;
 end
@@ -617,6 +638,16 @@ function opvp.Player:_onRestingChanged()
     self.restingChanged:emit(self:isResting());
 end
 
+function opvp.Player:_onVigorChanged()
+    local vigor = self._vigor_widget:totalValue();
+
+    if vigor ~= self._vigor then
+        self._vigor = vigor;
+
+        self.vigorChanged:emit(self._vigor);
+    end
+end
+
 function opvp.Player:_onPowerBarHide(unitId)
     if unitId ~= opvp.unitid.PLAYER then
         return;
@@ -626,7 +657,6 @@ function opvp.Player:_onPowerBarHide(unitId)
         UnitPowerBarID(opvp.unitid.PLAYER) ~= 631 and
         self._sky_riding == true
     ) then
-        print("vigor: no");
         self._sky_riding = false;
 
         self._vigor_widget:disconnect();
@@ -644,7 +674,6 @@ function opvp.Player:_onPowerBarShow(unitId)
         UnitPowerBarID(opvp.unitid.PLAYER) == 631 and
         self._sky_riding == false
     ) then
-        print("vigor: yes");
         self._sky_riding = true;
 
         self._vigor_widget:connect();
@@ -673,15 +702,15 @@ function opvp.Player:_onSpecChanged()
         opvp.printMessageOrDebug(
             opvp.options.announcements.player.specChanged:value(),
             opvp.strs.PLAYER_SPEC_CHANGED,
-            self._class:color():GenerateHexColor(),
-            spec:name()
+            self._spec:iconMarkup(),
+            self._spec:colorString(self._spec:name())
         );
     else
         opvp.printMessageOrDebug(
             opvp.options.announcements.player.specChanged:value(),
             opvp.strs.PLAYER_SPEC,
-            self._class:color():GenerateHexColor(),
-            spec:name()
+            self._spec:iconMarkup(),
+            self._spec:colorString(self._spec:name())
         );
     end
 
@@ -888,6 +917,10 @@ end
 
 opvp.player = {};
 
+function opvp.player.chatStatus()
+    return opvp_user_player_singleton:chatStatus();
+end
+
 function opvp.player.class()
     return opvp_user_player_singleton:class();
 end
@@ -1004,8 +1037,16 @@ function opvp.player.inSanctuary()
     return opvp_user_player_singleton:inSanctuary();
 end
 
+function opvp.player.isAFK()
+    return opvp_user_player_singleton:isAFK();
+end
+
 function opvp.player.isAlliance()
     return opvp_user_player_singleton:isAlliance();
+end
+
+function opvp.player.isDND()
+    return opvp_user_player_singleton:isDND();
 end
 
 function opvp.player.isSkyRiding()
@@ -1104,6 +1145,22 @@ function opvp.player.server()
     return opvp_user_player_singleton:server();
 end
 
+function opvp.player.setAvailable()
+    opvp_user_player_singleton:setAvailable();
+end
+
+function opvp.player.setAFK(msg)
+    opvp_user_player_singleton:setAFK(msg);
+end
+
+function opvp.player.setChatStatus(status, msg)
+    opvp_user_player_singleton:setChatStatus(status, msg);
+end
+
+function opvp.player.setDND(msg)
+    opvp_user_player_singleton:setDND(msg);
+end
+
 function opvp.player.sex()
     return opvp_user_player_singleton:sex();
 end
@@ -1171,7 +1228,10 @@ local function opvp_player_login_init()
         opvp_user_player_singleton._vigor_widget:connect();
     end
 
-    opvp_user_player_singleton._vigor_widget.updated:connect(opvp_user_player_singleton.vigorChanged);
+    opvp_user_player_singleton._vigor_widget.updated:connect(
+        opvp_user_player_singleton,
+        opvp_user_player_singleton._onVigorChanged
+    );
 
     opvp.printDebug("Player - Initialized");
 end

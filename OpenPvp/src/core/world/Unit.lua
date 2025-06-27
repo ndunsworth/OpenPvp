@@ -249,6 +249,10 @@ function opvp.Unit:id()
     return opvp.unit.tokenForGuid(self._guid);
 end
 
+function opvp.Unit:isAFK()
+    return opvp.unit.isAFK(self:id());
+end
+
 function opvp.Unit:isAlliance()
     return self._faction:isAlliance();
 end
@@ -259,6 +263,10 @@ end
 
 function opvp.Unit:isDeadOrGhost(unitId)
     return opvp.unit.isDeadOrGhost(self:id());
+end
+
+function opvp.Unit:isDND()
+    return opvp.unit.isDND(self:id());
 end
 
 function opvp.Unit:isFeignDeath(unitId)
@@ -463,12 +471,20 @@ function opvp.unit.health(unitId)
     return UnitHealth(unitId);
 end
 
+function opvp.unit.isAFK(unitId)
+    return UnitIsAFK(unitId);
+end
+
 function opvp.unit.isDead(unitId)
     return UnitIsDead(unitId);
 end
 
 function opvp.unit.isDeadOrGhost(unitId)
     return UnitIsDeadOrGhost(unitId);
+end
+
+function opvp.unit.isDND(unitId)
+    return UnitIsDND(unitId);
 end
 
 function opvp.unit.isFeignDeath(unitId)
