@@ -36,7 +36,8 @@ end
 
 function opvp.DebugAuraTracker:_onMemberAurasAdded(member, auras, fullUpdate)
     for id, aura in opvp.iter(auras) do
-        opvp.printDebug(
+        opvp.printMessageOrDebug(
+            not opvp.DEBUG,
             "opvp.DebugAuraTracker:_onMemberAurasAdded(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
             member:nameOrId(),
             aura:spellId(),
@@ -49,6 +50,7 @@ end
 function opvp.DebugAuraTracker:_onMemberAurasRemoved(member, auras, fullUpdate)
     for id, aura in opvp.iter(auras) do
         opvp.printDebug(
+            not opvp.DEBUG,
             "opvp.DebugAuraTracker:_onMemberAurasRemoved(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
             member:nameOrId(),
             aura:spellId(),
@@ -61,6 +63,7 @@ end
 function opvp.DebugAuraTracker:_onMemberAurasUpdated(member, auras, fullUpdate)
     for id, aura in opvp.iter(auras) do
         opvp.printDebug(
+            not opvp.DEBUG,
             "opvp.DebugAuraTracker:_onMemberAurasUpdated(\"%s\"), spellId=%d, spellName=\"%s\", duration=%s,",
             member:nameOrId(),
             aura:spellId(),
