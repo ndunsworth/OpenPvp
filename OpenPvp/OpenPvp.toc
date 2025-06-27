@@ -397,6 +397,7 @@ src/core/match/MatchRecord.lua
 src/core/match/MatchStat.lua
 src/core/match/MatchTeam.lua
 src/core/match/MatchTest.lua
+src/core/match/MatchTestAudio.lua
 src/core/match/MatchTypeOptionFeature.lua
 src/core/match/HideFrameMatchFeature.lua
 
@@ -484,6 +485,8 @@ src/feature/match/LayoutMatchFeature.lua
 src/feature/match/MuteNPCDialogMatchFeature.lua
 src/feature/match/ScreenshotMatchFeature.lua
 src/feature/match/ScreenshotMatchRoundFeature.lua
+src/feature/match/SetBattleNetStatusMatchFeature.lua
+src/feature/match/SetChatStatusMatchFeature.lua
 src/feature/match/ShowBattlefieldMapMatchFeature.lua
 
 ## src/bindings/Focus.lua
