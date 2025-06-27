@@ -530,14 +530,17 @@ function opvp.unit.level(unitId)
 end
 
 function opvp.unit.mapId(unitId)
-    return C_Map.GetBestMapForUnit(unitId);
+    return opvp.number_else(C_Map.GetBestMapForUnit(unitId));
 end
 
 function opvp.unit.mapPosition(unitId)
-    return C_Map.GetPlayerMapPosition(
-        opvp.unit.mapId(unitId),
-        unitId
-    );
+    local map = opvp.unit.mapId(unitId);
+
+    if map ~= 0 then
+        return C_Map.GetPlayerMapPosition(map, unitId);
+    else
+        return CreateVector2D(0, 0);
+    end
 end
 
 function opvp.unit.name(unitId)
