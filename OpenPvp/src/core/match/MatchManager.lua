@@ -114,6 +114,20 @@ function opvp.MatchManager:inMatch(ignoreTest)
     end
 end
 
+function opvp.MatchManager:isArena()
+    return (
+        self._match ~= nil and
+        self._match:isArena() == true
+    );
+end
+
+function opvp.MatchManager:isBattleground()
+    return (
+        self._match ~= nil and
+        self._match:isBattleground() == true
+    );
+end
+
 function opvp.MatchManager:isRated()
     return (
         self._match ~= nil and
@@ -160,7 +174,10 @@ function opvp.MatchManager:_onMatchJoined()
     --~ the event name doesnt it?
     self._joined = true;
 
-    self._match:_onMatchJoined();
+    self._match:_onMatchStateChanged(
+        opvp.MatchStatus.JOINED,
+        self._match:statusNext()
+    );
 
     local match_status = opvp.Match:statusFromActiveMatchState();
 
@@ -301,7 +318,10 @@ function opvp.MatchManager:_onQueueStart(queue)
         return;
     end
 
-    self._match:_onMatchEntered();
+    self._match:_onMatchStateChanged(
+        opvp.MatchStatus.ENTERED,
+        self._match:statusNext()
+    );
 end
 
 function opvp.MatchManager:_onQueueStatusChanged(queue)

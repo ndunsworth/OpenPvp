@@ -86,6 +86,14 @@ function opvp.match.inMatch(ignoreTest)
     return opvp_match_mgr_singleton:inMatch(ignoreTest);
 end
 
+function opvp.match.isArena()
+    return opvp_match_mgr_singleton:isArena();
+end
+
+function opvp.match.isBattleground()
+    return opvp_match_mgr_singleton:isBattleground();
+end
+
 function opvp.match.isRated()
     return opvp_match_mgr_singleton:isRated();
 end
