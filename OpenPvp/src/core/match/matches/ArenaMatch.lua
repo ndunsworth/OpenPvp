@@ -51,62 +51,6 @@ function opvp.ArenaMatch:_onMatchComplete()
 end
 
 function opvp.ArenaMatch:_onMatchRoundWarmup()
-    --~ self._test_timer = opvp.Timer(5);
-
-    --~ self._test_timer:setTriggerLimit(10);
-
-    --~ local test_func = function()
-        --~ local widget_ids = {
-            --~ C_UIWidgetManager.GetTopCenterWidgetSetID(),
-            --~ C_UIWidgetManager.GetPowerBarWidgetSetID(),
-            --~ C_UIWidgetManager.GetObjectiveTrackerWidgetSetID(),
-            --~ C_UIWidgetManager.GetBelowMinimapWidgetSetID()
-        --~ };
-
-        --~ for n=1, #widget_ids do
-            --~ local widget_set = widget_ids[n];
-            --~ local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(widget_set);
-
-            --~ for _, w in pairs(widgets) do
-                --~ print(widget_set, w.widgetType, w.widgetID);
-
-                --~ if w.widgetType == 0 then
-                    --~ local widget_info = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(w.widgetID);
-
-                    --~ if widget_info ~= nil then
-                        --~ print(widget_info.text);
-                    --~ end
-                --~ elseif w.widgetType == 2 then
-                    --~ local widget_info = C_UIWidgetManager.GetStatusBarWidgetVisualizationInfo(w.widgetID);
-
-                    --~ if widget_info ~= nil then
-                        --~ print(widget_info.text, widget_info.barValue);
-
-                        --~ DevTools_Dump(widget_info.partitionValues)
-                    --~ end
-                --~ elseif w.widgetType == 3 then
-                    --~ local widget_info = C_UIWidgetManager.GetDoubleStatusBarWidgetVisualizationInfo(w.widgetID);
-
-                    --~ if widget_info ~= nil then
-                        --~ print(widget_info.text, widget_info.leftBarValue, widget_info.rightBarValue);
-                    --~ end
-                --~ elseif w.widgetType == 8 then
-                    --~ local widget_info = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo(w.widgetID);
-
-                    --~ if widget_info ~= nil then
-                        --~ print(widget_info.text, widget_info.shownState, widget_info.enabledState);
-                    --~ end
-                --~ end
-            --~ end
-        --~ end
-    --~ end
-
-    --~ self._test_timer.timeout:connect(test_func);
-
-    --~ if self:isTest() == false then
-        --~ self._test_timer:start();
-    --~ end
-
     opvp.GenericMatch._onMatchRoundWarmup(self);
 end
 
