@@ -42,7 +42,16 @@ function opvp.private.ShowBattlefieldMapMatchFeature:_onFeatureActivated()
     BattlefieldMap_LoadUI();
 
     if BattlefieldMapFrame:IsShown() == false then
+        if self._close_btn_handler == nil then
+            self._close_btn_handler = opvp.HideFrameHandler(
+                BattlefieldMapFrame.BorderFrame.CloseButton,
+                opvp.HideFrameHandler.PARENT
+            );
+        end
+
         ToggleBattlefieldMap();
+
+        self._close_btn_handler:setEnabled(true);
 
         self._restore = true;
     end
@@ -52,6 +61,8 @@ end
 
 function opvp.private.ShowBattlefieldMapMatchFeature:_onFeatureDeactivated()
     if self._restore == true and BattlefieldMapFrame:IsShown() == true then
+        self._close_btn_handler:setEnabled(false);
+
         ToggleBattlefieldMap();
     end
 
