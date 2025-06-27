@@ -28,6 +28,74 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+opvp.BattleNetStatus = {
+    AVAILABLE = 1,
+    AFK       = 2,
+    DND       = 3
+};
+
+opvp.battlenet = {};
+
+function opvp.battlenet.isAFK()
+    return opvp.battlenet.status() == opvp.BattleNetStatus.AFK;
+end
+
+function opvp.battlenet.isAvailable()
+    return opvp.battlenet.status() == opvp.BattleNetStatus.AVAILABLE;
+end
+
+function opvp.battlenet.isDND()
+    return opvp.battlenet.status() == opvp.BattleNetStatus.DND;
+end
+
+function opvp.battlenet.setAvailable()
+    local info = C_BattleNet.GetAccountInfoByGUID(opvp.player.guid());
+
+    if info == nil then
+        return;
+    end
+
+    if info.isAFK == true then
+        BNSetAFK(false);
+    elseif info.isDND == true then
+        BNSetDND(false);
+    end
+end
+
+function opvp.battlenet.setStatus(status)
+    if status == opvp.battlenet.status() then
+        return;
+    elseif status == oopvp.BattleNetStatus.AFK then
+        BNSetAFK(true);
+    elseif info.isDND == true then
+        BNSetDND(true);
+    end
+end
+
+function opvp.battlenet.setAFK()
+    BNSetAFK(true);
+end
+
+function opvp.battlenet.setDND()
+    BNSetDND(true);
+end
+
+function opvp.battlenet.status()
+    local info = C_BattleNet.GetAccountInfoByGUID(opvp.player.guid());
+
+    if info == nil then
+        return opvp.BattleNetStatus.AVAILABLE;
+    end
+
+    if info.isAFK == true then
+        return opvp.BattleNetStatus.AFK;
+    elseif info.isDND == true then
+        return opvp.BattleNetStatus.DND;
+    else
+        return opvp.BattleNetStatus.AVAILABLE;
+    end;
+end
+
 opvp.friends = {};
 
 function opvp.friends.addIgnore(name)
