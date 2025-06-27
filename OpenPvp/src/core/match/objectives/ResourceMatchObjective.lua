@@ -28,30 +28,44 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.MatchObjectiveType = {
-    UNKNOWN  = 0,
-    FLAG     = 1,
-    NODE     = 2,
-    RESOURCE = 3
-};
+opvp.ResourceMatchObjective = opvp.CreateClass(opvp.MatchObjective);
 
-opvp.MatchObjective = opvp.CreateClass();
+function opvp.ResourceMatchObjective:init()
+    opvp.MatchObjective.init(self);
 
-function opvp.MatchObjective:init()
-    self._name            = "";
-    self._status_provider = opvp.MatchObjectiveStatusProvider:null();
+    self._data_provider = opvp.ResourceMatchObjectiveDataProvider();
 
-    self.statusChanged = opvp.Signal("opvp.MatchObjectiveStatusProvider.changed");
+    self._data_provider.valueChanged:connect(self, self._onValueChanged);
+
+    self.valueChanged = opvp.Signal("opvp.MatchObjectiveStatusProvider.valueChanged");
 end
 
-function opvp.MatchObjective:name()
-    return self._name;
+function opvp.ResourceMatchObjective:maximumValue()
+    return self._data_provider:maximumValue();
 end
 
-function opvp.MatchObjective:type()
-    return opvp.MatchObjectiveType.UNKNOWN;
+function opvp.ResourceMatchObjective:type()
+    return opvp.MatchObjectiveType.RESOURCE;
 end
 
-function opvp.MatchObjective:_setName(name)
-    self._name = name;
+function opvp.ResourceMatchObjective:value()
+    return self._data_provider:value();
+end
+
+function opvp.ResourceMatchObjective:_onValueChanged(value)
+    self:valueChanged(value);
+end
+
+function opvp.ResourceMatchObjective:_setDataProvider(provider)
+    assert(opvp.IsInstance(provider, opvp.ResourceMatchObjectiveDataProvider));
+
+    if provider == self._data_provider then
+        return;
+    end
+
+    self._data_provider.changed:disconnect(self, self._onValueChanged);
+
+    self._data_provider = provider;
+
+    self._data_provider.changed:connect(self, self._onValueChanged);
 end

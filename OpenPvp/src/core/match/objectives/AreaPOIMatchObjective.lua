@@ -28,30 +28,54 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.MatchObjectiveType = {
-    UNKNOWN  = 0,
-    FLAG     = 1,
-    NODE     = 2,
-    RESOURCE = 3
-};
+opvp.AreaPOIMatchObjective = opvp.CreateClass(opvp.ContestableMatchObjective);
 
-opvp.MatchObjective = opvp.CreateClass();
+function opvp.AreaPOIMatchObjective:init(provider)
+    if provider == nil then
+        provider = opvp.AreaPOIMatchObjectiveStatusProvider:null();
+    else
+        assert(
+            opvp.IsInstance(
+                provider,
+                opvp.AreaPOIMatchObjectiveStatusProvider
+            )
+        );
+    end
 
-function opvp.MatchObjective:init()
-    self._name            = "";
-    self._status_provider = opvp.MatchObjectiveStatusProvider:null();
-
-    self.statusChanged = opvp.Signal("opvp.MatchObjectiveStatusProvider.changed");
+    opvp.ContestableMatchObjective.init(self, provider);
 end
 
-function opvp.MatchObjective:name()
-    return self._name;
+function opvp.AreaPOIMatchObjective:isValidStatusProvider(provider)
+    return opvp.IsInstance(
+        provider,
+        opvp.AreaPOIMatchObjectiveStatusProvider
+    );
 end
 
-function opvp.MatchObjective:type()
-    return opvp.MatchObjectiveType.UNKNOWN;
+function opvp.AreaPOIMatchObjective:name()
+    return self._status_provider:name();
 end
 
-function opvp.MatchObjective:_setName(name)
-    self._name = name;
+function opvp.AreaPOIMatchObjective:poi()
+    return self._status_provider:poi();
+end
+
+function opvp.AreaPOIMatchObjective:position()
+    return self._status_provider:position();
+end
+
+function opvp.AreaPOIMatchObjective:type()
+    return opvp.MatchObjectiveType.NODE;
+end
+
+function opvp.AreaPOIMatchObjective:x()
+    return self._status_provider:x();
+end
+
+function opvp.AreaPOIMatchObjective:y()
+    return self._status_provider:y();
+end
+
+function opvp.AreaPOIMatchObjective:z()
+    return self._status_provider:x();
 end

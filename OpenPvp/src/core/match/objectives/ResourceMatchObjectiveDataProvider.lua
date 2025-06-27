@@ -28,30 +28,28 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.MatchObjectiveType = {
-    UNKNOWN  = 0,
-    FLAG     = 1,
-    NODE     = 2,
-    RESOURCE = 3
-};
+local opvp_null_provider;
 
-opvp.MatchObjective = opvp.CreateClass();
+opvp.ResourceMatchObjectiveDataProvider = opvp.CreateClass();
 
-function opvp.MatchObjective:init()
-    self._name            = "";
-    self._status_provider = opvp.MatchObjectiveStatusProvider:null();
-
-    self.statusChanged = opvp.Signal("opvp.MatchObjectiveStatusProvider.changed");
+function opvp.ResourceMatchObjectiveDataProvider:null()
+    return opvp_null_provider;
 end
 
-function opvp.MatchObjective:name()
-    return self._name;
+function opvp.ResourceMatchObjectiveDataProvider:init()
+    self.valueChanged = opvp.Signal("opvp.ResourceMatchObjectiveDataProvider.valueChanged");
 end
 
-function opvp.MatchObjective:type()
-    return opvp.MatchObjectiveType.UNKNOWN;
+function opvp.ResourceMatchObjectiveDataProvider:maximumValue()
+    return 0;
 end
 
-function opvp.MatchObjective:_setName(name)
-    self._name = name;
+function opvp.ResourceMatchObjectiveDataProvider:value()
+    return 0;
 end
+
+function opvp.ResourceMatchObjectiveDataProvider:_onValueChanged(value)
+    self:valueChanged(value);
+end
+
+opvp_null_provider = opvp.ResourceMatchObjectiveDataProvider();

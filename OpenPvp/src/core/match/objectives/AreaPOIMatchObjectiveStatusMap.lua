@@ -28,30 +28,22 @@
 local _, OpenPvpLib = ...
 local opvp = OpenPvpLib;
 
-opvp.MatchObjectiveType = {
-    UNKNOWN  = 0,
-    FLAG     = 1,
-    NODE     = 2,
-    RESOURCE = 3
-};
+opvp.AreaPOIMatchObjectiveStatusMap = opvp.CreateClass();
 
-opvp.MatchObjective = opvp.CreateClass();
-
-function opvp.MatchObjective:init()
-    self._name            = "";
-    self._status_provider = opvp.MatchObjectiveStatusProvider:null();
-
-    self.statusChanged = opvp.Signal("opvp.MatchObjectiveStatusProvider.changed");
+function opvp.AreaPOIMatchObjectiveStatusMap:init(cfg)
+    self._map = cfg;
 end
 
-function opvp.MatchObjective:name()
-    return self._name;
+function opvp.AreaPOIMatchObjectiveStatusMap:isValid(poi)
+    return self._map[poi:textureIndex()] ~= nil;
 end
 
-function opvp.MatchObjective:type()
-    return opvp.MatchObjectiveType.UNKNOWN;
-end
+function opvp.AreaPOIMatchObjectiveStatusMap:lookup(poi)
+    local status = self._map[poi:textureIndex()];
 
-function opvp.MatchObjective:_setName(name)
-    self._name = name;
+    if status ~= nil then
+        return status;
+    else
+        return opvp.MatchObjectiveStatus.DISABLED;
+    end
 end
