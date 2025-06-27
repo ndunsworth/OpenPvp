@@ -97,7 +97,7 @@ function opvp.BattlegroundMatch:_onOutcomeReady(outcomeType)
             opvp.printMessageOrDebug(
                 do_msg,
                 opvp.strs.MATCH_SCORE_ARENA,
-                spec:role():icon(),
+                spec:role():iconMarkup(),
                 member:nameOrId(true),
                 member:kills(),
                 member:deaths(),
@@ -115,7 +115,7 @@ function opvp.BattlegroundMatch:_onOutcomeReady(outcomeType)
             opvp.printMessageOrDebug(
                 do_msg,
                 opvp.strs.MATCH_SCORE_ARENA_RATED,
-                spec:role():icon(),
+                spec:role():iconMarkup(),
                 member:nameOrId(true),
                 member:cr(),
                 member:cr() + member:crGain(),

@@ -303,7 +303,7 @@ function opvp.ShuffleMatch:_onOutcomeReady(outcomeType)
         opvp.printMessageOrDebug(
             do_msg,
             opvp.strs.MATCH_SCORE_SHUFFLE,
-            spec:role():icon(),
+            spec:role():iconMarkup(),
             member:nameOrId(true),
             wins,
             member:cr(),
