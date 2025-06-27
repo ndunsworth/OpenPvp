@@ -67,8 +67,7 @@ function opvp.GuildSpamChatMessageFilter:isSenderValid(guid)
     return (
         opvp.party.utils.isGuidInGroup(guid, opvp.PartyCategory.HOME) == true or
         opvp.party.utils.isGuidInGroup(guid, opvp.PartyCategory.INSTANCE) == true or
-        opvp.friends.isFriend(guid) == true or
-        opvp.friends.isBattleNetFriend(guid) == true
+        opvp.friends.isAnyFriendByGuid(guid) == true
     );
 end
 
