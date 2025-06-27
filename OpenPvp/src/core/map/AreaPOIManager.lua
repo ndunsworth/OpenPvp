@@ -32,12 +32,20 @@ local opvp_areapoi_manager_singleton;
 
 opvp.AreaPOIManager = opvp.CreateClass();
 
+function opvp.AreaPOIManager:instance()
+    return opvp_areapoi_manager_singleton;
+end
+
 function opvp.AreaPOIManager:init(info)
     self._map_id = 0;
     self._pois   = {};
     self._size   = 0;
 
-    --~ opvp.event.AREA_POIS_UPDATED:connect(self, self._onUpdate);
+    self.poiUpdate = opvp.Signal("opvp.AreaPOIManager.poiUpdate");
+
+    opvp.event.AREA_POIS_UPDATED:connect(self, self.update);
+
+    opvp.OnLoadingScreenEnd:connect(self, self.update);
 end
 
 function opvp.AreaPOIManager:find(poiId)
@@ -52,54 +60,67 @@ function opvp.AreaPOIManager:size()
     return self._size;
 end
 
-function opvp.AreaPOIManager:_onUpdate()
+function opvp.AreaPOIManager:update()
     local poi, id;
     local map_id = opvp.player.mapId();
-    local pois = opvp.List:createFromArray(
-        C_AreaPoiInfo.GetAreaPOIForMap(map_id)
-    );
 
-    pois:merge(C_AreaPoiInfo.GetDragonridingRacesForMap(map_id));
-    pois:merge(C_AreaPoiInfo.GetDelvesForMap(map_id));
-    pois:merge(C_AreaPoiInfo.GetEventsForMap(map_id));
-    pois:merge(C_AreaPoiInfo.GetQuestHubsForMap(map_id));
+    local pois = opvp.List();
+
+    if map_id ~= 0 then
+        pois:merge(C_AreaPoiInfo.GetAreaPOIForMap(map_id));
+        pois:merge(C_AreaPoiInfo.GetDragonridingRacesForMap(map_id));
+        pois:merge(C_AreaPoiInfo.GetDelvesForMap(map_id));
+        pois:merge(C_AreaPoiInfo.GetEventsForMap(map_id));
+        pois:merge(C_AreaPoiInfo.GetQuestHubsForMap(map_id));
+    end
 
     self._size = pois:size();
 
-    if map_id ~= self._map_id then
-        table.wipe(self._pois);
+    local old_pois    = self._pois;
+    local new_pois    = {};
+    local update_pois = {};
+    local remove_pois = {};
 
+    self._pois = {};
+
+    if map_id ~= self._map_id then
         for n=1, pois:size() do
             id = pois:item(n);
 
             self._pois[id] = opvp.AreaPOI(map_id, id);
-
-            --~ print("opvp.AreaPOIManager:_onUpdate, new ", id, self._pois[id]:name());
         end
 
         self._map_id = map_id;
+
+        new_pois    = opvp.utils.copyTableShallow(self._pois);
+        remove_pois = old_pois;
     else
-        local cache = self._pois;
-
-        self._pois = {};
-
         for n=1, pois:size() do
             id = pois:item(n);
-            poi = cache[id];
+            poi = old_pois[id];
 
             if poi == nil then
-                self._pois[id] = opvp.AreaPOI(map_id, id);
-
-                --~ print("opvp.AreaPOIManager:_onUpdate, new ", id, self._pois[id]:name());
-            else
-                poi:update();
-
-                --~ print("opvp.AreaPOIManager:_onUpdate, update ", id, poi:name());
+                poi = opvp.AreaPOI(map_id, id);
 
                 self._pois[id] = poi;
+
+                new_pois[id]   = poi
+            else
+                self._pois[id]  = poi;
+
+                old_pois[id]    = nil;
+                update_pois[id] = poi;
             end
         end
+
+        remove_pois = old_pois;
+
+        for id, poi in pairs(update_pois) do
+            poi:update();
+        end
     end
+
+    self.poiUpdate:emit(new_pois, update_pois, remove_pois);
 end
 
 local function opvp_areapoi_manager_singleton_ctor()
