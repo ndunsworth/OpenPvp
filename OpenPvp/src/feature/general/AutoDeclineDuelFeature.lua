@@ -59,6 +59,8 @@ end
 function opvp.private.AutoDeclineDuelFeature:_onDuelRequested(name)
     if opvp.friends.isAnyFriendByName(name) == false then
         CancelDuel();
+
+        StaticPopup_Hide("DUEL_REQUESTED");
     end
 end
 
