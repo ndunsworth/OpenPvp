@@ -95,7 +95,7 @@ end
 local function opvp_uiwidget_server_singleton_ctor()
     opvp_uiwidget_server_singleton = opvp.UiWidgetServer();
 
-    opvp.printMessage("UiWidgetServer - Initialized");
+    opvp.printDebug("UiWidgetServer - Initialized");
 end
 
 opvp.OnAddonLoad:register(opvp_uiwidget_server_singleton_ctor);
