@@ -28,11 +28,19 @@
 local _, OpenPvp = ...
 local opvp = OpenPvp;
 
+local opvp_null_poi;
+
 opvp.AreaPOI = opvp.CreateClass();
 
+function opvp.AreaPOI:null()
+    return opvp_null_poi;
+end
+
 function opvp.AreaPOI:init(mapId, poiId)
-    self._map_id = mapId;
-    self._id     = poiId;
+    self._map_id = opvp.number_else(mapId);
+    self._id     = opvp.number_else(poiId);
+
+    self.updated = opvp.Signal("opvp.AreaPOI.changed");
 
     self:update();
 end
@@ -121,7 +129,15 @@ end
 
 function opvp.AreaPOI:update(info)
     if info == nil then
+        if self._id == 0 then
+            return;
+        end
+
         info = C_AreaPoiInfo.GetAreaPOIInfo(self._map_id, self._id);
+
+        if info == nil then
+            return;
+        end
     end
 
     self._id                    = info.areaPoiID;
@@ -141,5 +157,15 @@ function opvp.AreaPOI:update(info)
     self._quest_hover_highlight = info.highlightWorldQuestsOnHover;
     self._is_cur_event          = info.isCurrentEvent;
 
-    self._old = info;
+    self.updated:emit();
 end
+
+function opvp.AreaPOI:x()
+    return self._pos.x;
+end
+
+function opvp.AreaPOI:y()
+    return self._pos.y;
+end
+
+opvp_null_poi = opvp.AreaPOI();
